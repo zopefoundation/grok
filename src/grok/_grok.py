@@ -33,6 +33,7 @@ def check_subclass(obj, class_):
         return False
     return issubclass(obj, class_)
 
+AMBIGUOUS_CONTEXT = object()
 def grok(dotted_name):
     # TODO for now we only grok modules
     module = resolve(dotted_name)
@@ -46,12 +47,18 @@ def grok(dotted_name):
             continue
 
         if check_subclass(obj, Model):
-            context = obj
+            if context is None:
+                context = obj
+            else:
+                context = AMBIGUOUS_CONTEXT
         elif check_subclass(obj, Adapter):
             adapters.append(obj)
 
-    if adapters and context is None:
-        raise GrokError("Adapter without context")
+    if adapters:
+        if context is None:
+            raise GrokError("Adapter without context")
+        elif context is AMBIGUOUS_CONTEXT:
+            raise GrokError("Ambiguous contexts, please use grok.context.")
 
     for factory in adapters:
         component.provideAdapter(factory, adapts=(context,))

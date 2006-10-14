@@ -78,3 +78,14 @@ properly:
   True
   >>> isinstance(home, Home)
   True
+
+Clean up:
+
+  >>> cleanUp()
+
+Multiple models lead to ambiguity:
+
+  >>> grok.grok('grok.tests.multiple')
+  Traceback (most recent call last):
+    ...
+  GrokError: Ambiguous contexts, please use grok.context.
