@@ -14,6 +14,7 @@
 """Grok
 """
 import types
+import sys
 from zope.dottedname.resolve import resolve
 from zope import component
 
@@ -54,6 +55,9 @@ def grok(dotted_name):
         elif check_subclass(obj, Adapter):
             adapters.append(obj)
 
+    if getattr(module, '__grok_context__', None):
+        context = module.__grok_context__
+
     if adapters:
         if context is None:
             raise GrokError("Adapter without context")
@@ -62,3 +66,11 @@ def grok(dotted_name):
 
     for factory in adapters:
         component.provideAdapter(factory, adapts=(context,))
+
+def context(obj):    
+    locals = sys._getframe(1).f_locals
+
+    if '__grok_context__' in locals:
+        raise GrokError("grok.context can only be called once per class or module.")
+
+    locals['__grok_context__'] = obj
