@@ -66,11 +66,15 @@ def grok(dotted_name):
             raise GrokError("Ambiguous contexts, please use grok.context.")
         component.provideAdapter(factory, adapts=(adapter_context,))
 
-def context(obj):    
-    locals = sys._getframe(1).f_locals
+def context(obj):
+    frame = sys._getframe(1)
 
-    if '__grok_context__' in locals:
+    is_module = frame.f_locals is frame.f_globals
+    is_class = '__module__' in frame.f_locals
+    if not (is_module or is_class):
+        raise GrokError("grok.context can only be used on class or module level.")
+
+    if '__grok_context__' in frame.f_locals:
         raise GrokError("grok.context can only be called once per class "
                         "or module.")
-
-    locals['__grok_context__'] = obj
+    frame.f_locals['__grok_context__'] = obj

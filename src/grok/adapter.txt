@@ -179,3 +179,22 @@ You can't call grok.context multiple times on class level:
   Traceback (most recent call last):
     ...
   GrokError: grok.context can only be called once per class or module.
+
+Clean up:
+
+  >>> cleanUp()
+
+You can't call grok.context from a function:
+
+  >>> from grok.tests.functioncontext import func, SomeClass
+  >>> func()
+  Traceback (most recent call last):
+    ...
+  GrokError: grok.context can only be used on class or module level.
+
+You can't call grok.context from a method either:
+
+  >>> SomeClass().meth()
+  Traceback (most recent call last):
+    ...
+  GrokError: grok.context can only be used on class or module level.
