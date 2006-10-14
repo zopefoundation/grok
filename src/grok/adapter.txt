@@ -43,3 +43,23 @@ Grok error because import model doesn't count as context:
   Traceback (most recent call last):
     ...
   GrokError: Adapter without context
+
+Clean up:
+
+  >>> cleanUp()
+
+Grok does not depend on the alphabetical order:
+
+  >>> grok.grok('grok.tests.alphabetical')
+
+  >>> from grok.tests.alphabetical import IHome, Home, ZCave
+  >>> cave = ZCave()
+  >>> home = IHome(cave)
+
+  >>> IHome.providedBy(home)
+  True
+  >>> isinstance(home, Home)
+  True
+
+If the model is defined after the adapter, it should still be grokked
+properly:

@@ -36,7 +36,9 @@ def check_subclass(obj, class_):
 def grok(dotted_name):
     # TODO for now we only grok modules
     module = resolve(dotted_name)
+
     context = None
+    adapters = []
     for name in dir(module):
         obj = getattr(module, name)
 
@@ -46,6 +48,10 @@ def grok(dotted_name):
         if check_subclass(obj, Model):
             context = obj
         elif check_subclass(obj, Adapter):
-            if context is None:
-                raise GrokError("Adapter without context")
-            component.provideAdapter(obj, adapts=(context,))
+            adapters.append(obj)
+
+    if adapters and context is None:
+        raise GrokError("Adapter without context")
+
+    for factory in adapters:
+        component.provideAdapter(factory, adapts=(context,))
