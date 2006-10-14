@@ -58,19 +58,19 @@ def grok(dotted_name):
     if getattr(module, '__grok_context__', None):
         context = module.__grok_context__
 
-    if adapters:
-        if context is None:
-            raise GrokError("Adapter without context")
-        elif context is AMBIGUOUS_CONTEXT:
-            raise GrokError("Ambiguous contexts, please use grok.context.")
-
     for factory in adapters:
-        component.provideAdapter(factory, adapts=(context,))
+        adapter_context = getattr(factory, '__grok_context__', context)
+        if adapter_context is None:
+            raise GrokError("Adapter without context")
+        elif adapter_context is AMBIGUOUS_CONTEXT:
+            raise GrokError("Ambiguous contexts, please use grok.context.")
+        component.provideAdapter(factory, adapts=(adapter_context,))
 
 def context(obj):    
     locals = sys._getframe(1).f_locals
 
     if '__grok_context__' in locals:
-        raise GrokError("grok.context can only be called once per class or module.")
+        raise GrokError("grok.context can only be called once per class "
+                        "or module.")
 
     locals['__grok_context__'] = obj

@@ -134,3 +134,18 @@ You can't call grok.context multiple times on module level:
   Traceback (most recent call last):
     ...
   GrokError: grok.context can only be called once per class or module.
+
+Clean up:
+
+  >>> cleanUp()
+
+  >>> grok.grok('grok.tests.classcontext')
+
+  >>> from grok.tests.classcontext import IHome, Home, Cave
+  >>> cave = Cave()
+  >>> home = IHome(cave)
+
+  >>> IHome.providedBy(home)
+  True
+  >>> isinstance(home, Home)
+  True
