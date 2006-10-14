@@ -13,3 +13,6 @@
 ##############################################################################
 """Grok
 """
+
+from zope.interface import implements
+from _grok import Model, Adapter, grok
