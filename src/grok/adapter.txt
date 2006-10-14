@@ -94,7 +94,7 @@ Clean up:
 
   >>> cleanUp()
 
-Explicit module-level context:
+Explicit module-level context in case of multiple models:
 
   >>> grok.grok('grok.tests.modulecontext')
 
@@ -105,4 +105,21 @@ Explicit module-level context:
   >>> IHome.providedBy(home)
   True
   >>> isinstance(home, Home)
+  True
+
+Clean up:
+
+  >>> cleanUp()
+
+Explicit module-level context for an imported model:
+
+  >>> grok.grok('grok.tests.modulecontextimported')
+
+  >>> from grok.tests.modulecontextimported import IPainting, Painting, Cave
+  >>> cave = Cave()
+  >>> painting = IPainting(cave)
+
+  >>> IPainting.providedBy(painting)
+  True
+  >>> isinstance(painting, Painting)
   True
