@@ -40,6 +40,9 @@ def grok(dotted_name):
     for name in dir(module):
         obj = getattr(module, name)
 
+        if getattr(obj, '__module__', None) != dotted_name:
+            continue
+
         if check_subclass(obj, Model):
             context = obj
         elif check_subclass(obj, Adapter):

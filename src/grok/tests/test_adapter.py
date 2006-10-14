@@ -1,10 +1,11 @@
 import unittest
-from zope.testing.doctest import DocFileSuite
+from zope.testing import doctest
 
 def test_suite():
     return unittest.TestSuite((
-        DocFileSuite('adapter.txt',
-                     package='grok'),
+        doctest.DocFileSuite('adapter.txt',
+                             package='grok',
+                             optionflags=doctest.ELLIPSIS),
         ))
 
 if __name__ == '__main__':

@@ -19,3 +19,27 @@ If no model can be found in the module, we get an error:
   Traceback (most recent call last):
     ...
   GrokError: Adapter without context
+
+Clean up component registry:
+
+  >>> from zope.testing.cleanup import cleanUp
+  >>> cleanUp()
+
+Imported model and adapter won't be grokked:
+
+  >>> grok.grok('grok.tests.importedmodel')
+  >>> home = IHome(cave)
+  Traceback (most recent call last):
+    ...
+  TypeError: ('Could not adapt', <grok.tests.adapter.Cave object at ...>, <InterfaceClass grok.tests.adapter.IHome>)
+
+Clean up:
+
+  >>> cleanUp()
+
+Grok error because import model doesn't count as context:
+
+  >>> grok.grok('grok.tests.importedmodel2')
+  Traceback (most recent call last):
+    ...
+  GrokError: Adapter without context
