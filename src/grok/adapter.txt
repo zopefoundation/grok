@@ -12,3 +12,10 @@ Adapter
   True
   >>> isinstance(home, Home)
   True
+
+If no model can be found in the module, we get an error:
+
+  >>> grok.grok('grok.tests.nomodel')
+  Traceback (most recent call last):
+    ...
+  GrokError: Adapter without context
