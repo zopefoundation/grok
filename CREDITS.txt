@@ -1,0 +1,12 @@
+CREDITS
+=======
+
+* Martijn Faassen
+
+* Wolfgang Schnerring
+
+* Christian Theune
+
+* Philipp von Weitershausen
+
+* Christian Zagrodnick
