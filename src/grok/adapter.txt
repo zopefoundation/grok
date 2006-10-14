@@ -139,6 +139,8 @@ Clean up:
 
   >>> cleanUp()
 
+Explicit class-level context in case of multiple models:
+
   >>> grok.grok('grok.tests.classcontext')
 
   >>> from grok.tests.classcontext import IHome, Home, Cave
@@ -148,4 +150,21 @@ Clean up:
   >>> IHome.providedBy(home)
   True
   >>> isinstance(home, Home)
+  True
+
+Clean up:
+
+  >>> cleanUp()
+
+Explicit class-level context for an imported model:
+
+  >>> grok.grok('grok.tests.classcontextimported')
+
+  >>> from grok.tests.classcontextimported import IPainting, Painting, Cave
+  >>> cave = Cave()
+  >>> painting = IPainting(cave)
+
+  >>> IPainting.providedBy(painting)
+  True
+  >>> isinstance(painting, Painting)
   True
