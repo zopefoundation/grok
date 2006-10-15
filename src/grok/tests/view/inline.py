@@ -22,6 +22,10 @@ using a variable named `viewname_pt`:
   </body>
   </html>
 
+Note that the CavePainting instance is bound to the ``view`` name in
+the template.  This shows that the association of inline PageTemplate
+and the view class is successful.
+
 Templates that are not associated with a view class will still be
 registered on the model:
 

@@ -106,7 +106,7 @@ def grok(dotted_name):
         # find inline templates
         template = templates.get(name)
         if template:
-            templates.markUsed(name)
+            templates.markAssociated(name)
             factory.template = template
         else:
             if not getattr(factory, 'render', None):
@@ -118,12 +118,14 @@ def grok(dotted_name):
                                  provides=interface.Interface,
                                  name=name)
 
-    for name, unused_template in templates.listUnused():
+    for name, unassociated in templates.listUnassociatedTemplates():
         source = '<%s template in %s>' % (name, dotted_name)
         check_context(source, context)
 
         class TemplateView(View):
-            template = unused_template
+            template = unassociated
+
+        templates.markAssociated(name)
 
         component.provideAdapter(TemplateView,
                                  adapts=(context, IDefaultBrowserLayer),
@@ -136,10 +138,10 @@ class TemplateRegistry(object):
         self._reg = {}
 
     def register(self, name, template):
-        self._reg[name] = dict(template=template, used=False)
+        self._reg[name] = dict(template=template, associated=False)
 
-    def markUsed(self, name):
-        self._reg[name]['used'] = True
+    def markAssociated(self, name):
+        self._reg[name]['associated'] = True
 
     def get(self, name):
         entry = self._reg.get(name)
@@ -147,9 +149,9 @@ class TemplateRegistry(object):
             return None
         return entry['template']
 
-    def listUnused(self):
+    def listUnassociatedTemplates(self):
         for name, entry in self._reg.iteritems():
-            if not entry['used']:
+            if not entry['associated']:
                 yield name, entry['template']
 
 def defined_locally(obj, dotted_name):
