@@ -1,3 +1,12 @@
+"""
+Multiple models lead to ambiguity:
+
+  >>> grok.grok(__name__)
+  Traceback (most recent call last):
+    ...
+  GrokError: Ambiguous contexts, please use grok.context.
+
+"""
 import grok
 from zope import interface
 

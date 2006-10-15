@@ -1,5 +1,14 @@
+"""
+Grok error because import model doesn't count as context:
+
+  >>> grok.grok(__name__)
+  Traceback (most recent call last):
+    ...
+  GrokError: Adapter without context
+
+"""
 import grok
-from grok.tests.adapter import Cave
+from grok.tests.adapter.adapter import Cave
 from zope import interface
 
 class IPainting(interface.Interface):

@@ -1,3 +1,15 @@
+"""
+  >>> grok.grok(__name__)
+
+  >>> cave = Cave()
+  >>> home = IHome(cave)
+
+  >>> IHome.providedBy(home)
+  True
+  >>> isinstance(home, Home)
+  True
+"""
+
 import grok
 from zope import interface
 
