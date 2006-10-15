@@ -21,6 +21,14 @@ using a variable named `viewname_pt`:
   </ul>
   </body>
   </html>
+
+Templates that are not associated with a view class will still be
+registered on the model:
+
+  >>> view = component.getMultiAdapter((manfred, request), name='club')
+  >>> print view()
+  <html><body><h1>GROK CLUB MAMMOTH!</h1></body></html>
+
 """
 import grok
 
@@ -30,7 +38,7 @@ class Mammoth(grok.Model):
 class CavePainting(grok.View):
     pass
 
-cavepainting_pt = """\
+cavepainting = grok.PageTemplate("""\
 <html>
 <body>
 <h1 tal:content="string:Mammoth Cave Painting"/>
@@ -42,4 +50,8 @@ cavepainting_pt = """\
 </ul>
 </body>
 </html>
-"""
+""")
+
+club = grok.PageTemplate("""\
+<html><body><h1>GROK CLUB MAMMOTH!</h1></body></html>
+""")

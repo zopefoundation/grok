@@ -22,7 +22,7 @@ from zope import interface
 from zope.interface.interfaces import IInterface
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
-from zope.pagetemplate.pagetemplate import PageTemplate
+from zope.pagetemplate import pagetemplate
 from zope.app.pagetemplate.engine import TrustedAppPT
 
 class Model(object):
@@ -46,8 +46,19 @@ class View(BrowserPage):
         namespace['context'] = self.context
         return template.pt_render(namespace)
 
-class GrokTemplate(TrustedAppPT, PageTemplate):
+class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
     expand = 0
+
+    def __init__(self, template):
+        super(PageTemplate, self).__init__()
+        if not_unicode_or_ascii(template):
+            raise GrokError("Invalid page template. Page templates must be "
+                            "unicode or ASCII.")
+        self.write(template)
+
+        # XXX unfortunately using caller_module means that
+        # PageTemplate cannot be subclassed
+        self.__grok_module__ = caller_module()
 
 class GrokError(Exception):
     pass
@@ -60,10 +71,11 @@ def grok(dotted_name):
     context = None
     adapters = []
     views = []
+    templates = TemplateRegistry()
     for name in dir(module):
         obj = getattr(module, name)
 
-        if getattr(obj, '__module__', None) != dotted_name:
+        if not defined_locally(obj, dotted_name):
             continue
 
         if check_subclass(obj, Model):
@@ -75,6 +87,8 @@ def grok(dotted_name):
             adapters.append(obj)
         elif check_subclass(obj, View):
             views.append(obj)
+        elif isinstance(obj, PageTemplate):
+            templates.register(name, obj)
 
     if getattr(module, '__grok_context__', None):
         context = module.__grok_context__
@@ -90,15 +104,10 @@ def grok(dotted_name):
         name = getattr(factory, '__grok_name__', name)
 
         # find inline templates
-        template_name = name + '_pt'
-        template = getattr(module, template_name, None)
+        template = templates.get(name)
         if template:
-            if not_unicode_or_ascii(template):
-                raise GrokError("Invalid inline template '%s' for %r. Inline "
-                                "templates must be unicode or ASCII."
-                                % (template_name, factory))
-            factory.template = GrokTemplate()
-            factory.template.write(template)
+            templates.markUsed(name)
+            factory.template = template
         else:
             if not getattr(factory, 'render', None):
                 raise GrokError("View %r has no associated template or "
@@ -109,6 +118,46 @@ def grok(dotted_name):
                                  provides=interface.Interface,
                                  name=name)
 
+    for name, unused_template in templates.listUnused():
+        source = '<%s template in %s>' % (name, dotted_name)
+        check_context(source, context)
+
+        class TemplateView(View):
+            template = unused_template
+
+        component.provideAdapter(TemplateView,
+                                 adapts=(context, IDefaultBrowserLayer),
+                                 provides=interface.Interface,
+                                 name=name)
+
+class TemplateRegistry(object):
+
+    def __init__(self):
+        self._reg = {}
+
+    def register(self, name, template):
+        self._reg[name] = dict(template=template, used=False)
+
+    def markUsed(self, name):
+        self._reg[name]['used'] = True
+
+    def get(self, name):
+        entry = self._reg.get(name)
+        if entry is None:
+            return None
+        return entry['template']
+
+    def listUnused(self):
+        for name, entry in self._reg.iteritems():
+            if not entry['used']:
+                yield name, entry['template']
+
+def defined_locally(obj, dotted_name):
+    obj_module = getattr(obj, '__grok_module__', None)
+    if obj_module is None:
+        obj_module = getattr(obj, '__module__', None)
+    return obj_module == dotted_name
+
 def isclass(obj):
     """We cannot use ``inspect.isclass`` because it will return True for interfaces"""
     return type(obj) in (types.ClassType, type)
@@ -118,14 +167,17 @@ def check_subclass(obj, class_):
         return False
     return issubclass(obj, class_)
 
+def check_context(source, context):
+    if context is None:
+        raise GrokError("Cannot determine context for %s, please use "
+                        "grok.context." % source)
+    elif context is AMBIGUOUS_CONTEXT:
+        raise GrokError("Ambiguous contexts for %s, please use "
+                        "grok.context." % source)
+
 def determine_context(factory, module_context):
     context = getattr(factory, '__grok_context__', module_context)
-    if context is None:
-        raise GrokError("Cannot determine context for %r, please use "
-                        "grok.context." % factory)
-    elif context is AMBIGUOUS_CONTEXT:
-        raise GrokError("Ambiguous contexts for %r, please use "
-                        "grok.context." % factory)
+    check_context(repr(factory), context)
     return context
 
 def caller_is_module():
@@ -135,6 +187,9 @@ def caller_is_module():
 def caller_is_class():
     frame = sys._getframe(2)
     return '__module__' in frame.f_locals
+
+def caller_module():
+    return sys._getframe(2).f_globals['__name__']
 
 def set_local(name, value, error_message):
     frame = sys._getframe(2)
@@ -151,7 +206,6 @@ def not_unicode_or_ascii(value):
     return is_not_ascii(value)
 
 is_not_ascii = re.compile(eval(r'u"[\u0080-\uffff]"')).search
-    
 
 def context(obj):
     if not (IInterface.providedBy(obj) or isclass(obj)):

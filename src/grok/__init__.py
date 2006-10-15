@@ -15,4 +15,4 @@
 """
 
 from zope.interface import implements
-from _grok import Model, Adapter, View, grok, context, name
+from _grok import Model, Adapter, View, PageTemplate, grok, context, name
