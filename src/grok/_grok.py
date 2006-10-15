@@ -100,30 +100,31 @@ def determineContext(factory, module_context):
                         "grok.context." % factory)
     return context
 
+def caller_is_module():
+    frame = sys._getframe(2)
+    return frame.f_locals is frame.f_globals
+
+def caller_is_class():
+    frame = sys._getframe(2)
+    return '__module__' in frame.f_locals
+
+def set_local(name, value, error_message):
+    frame = sys._getframe(2)
+    name = '__grok_%s__' % name
+    if name in frame.f_locals:
+        raise GrokError(error_message)
+    frame.f_locals[name] = value
+    
 def context(obj):
     if not (IInterface.providedBy(obj) or isclass(obj)):
         raise GrokError("You can only pass classes or interfaces to "
                         "grok.context.")
-
-    frame = sys._getframe(1)
-
-    is_module = frame.f_locals is frame.f_globals
-    is_class = '__module__' in frame.f_locals
-    if not (is_module or is_class):
+    if not (caller_is_module() or caller_is_class()):
         raise GrokError("grok.context can only be used on class or module level.")
-
-    if '__grok_context__' in frame.f_locals:
-        raise GrokError("grok.context can only be called once per class "
-                        "or module.")
-    frame.f_locals['__grok_context__'] = obj
+    set_local('context', obj, "grok.context can only be called once per class "
+              "or module.")
 
 def name(name):
-    frame = sys._getframe(1)
-    is_class = '__module__' in frame.f_locals
-    if not is_class:
+    if not caller_is_class():
         raise GrokError("grok.name can only be used on class level.")
-
-    if '__grok_name__' in frame.f_locals:
-        raise GrokError("grok.name can only be called once per class.")
-
-    frame.f_locals['__grok_name__'] = name
+    set_local('name', name, "grok.name can only be called once per class.")
