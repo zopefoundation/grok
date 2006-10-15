@@ -254,3 +254,31 @@ You can also specify interfaces instead of classes with
 Clean up:
 
   >>> cleanUp()
+
+You can only use `grok.context` with interfaces or classes and not
+with anything else:
+
+  >>> from grok.tests import classorinterface
+  >>> classorinterface.function_context()
+  Traceback (most recent call last):
+    ...
+  GrokError: You can only pass classes or interfaces to grok.context.
+
+  >>> classorinterface.string_context()
+  Traceback (most recent call last):
+    ...
+  GrokError: You can only pass classes or interfaces to grok.context.
+
+  >>> classorinterface.module_context()
+  Traceback (most recent call last):
+    ...
+  GrokError: You can only pass classes or interfaces to grok.context.
+
+  >>> classorinterface.instance_context()
+  Traceback (most recent call last):
+    ...
+  GrokError: You can only pass classes or interfaces to grok.context.
+
+Clean up:
+
+  >>> cleanUp()

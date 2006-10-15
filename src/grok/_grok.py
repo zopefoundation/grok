@@ -17,6 +17,7 @@ import types
 import sys
 from zope.dottedname.resolve import resolve
 from zope import component
+from zope.interface.interfaces import IInterface
 
 class Model(object):
     pass
@@ -29,8 +30,12 @@ class Adapter(object):
 class GrokError(Exception):
     pass
 
+def isclass(obj):
+    """We cannot use ``inspect.isclass`` because it will return True for interfaces"""
+    return type(obj) in (types.ClassType, type)
+
 def check_subclass(obj, class_):
-    if type(obj) not in (types.ClassType, type):
+    if not isclass(obj):
         return False
     return issubclass(obj, class_)
 
@@ -67,6 +72,10 @@ def grok(dotted_name):
         component.provideAdapter(factory, adapts=(adapter_context,))
 
 def context(obj):
+    if not (IInterface.providedBy(obj) or isclass(obj)):
+        raise GrokError("You can only pass classes or interfaces to "
+                        "grok.context.")
+
     frame = sys._getframe(1)
 
     is_module = frame.f_locals is frame.f_globals
