@@ -4,7 +4,7 @@ Grok error because import model doesn't count as context:
   >>> grok.grok(__name__)
   Traceback (most recent call last):
     ...
-  GrokError: Adapter without context
+  GrokError: Cannot determine context for <class 'grok.tests.adapter.importedmodel2.Painting'>, please use grok.context.
 
 """
 import grok

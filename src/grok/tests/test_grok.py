@@ -25,7 +25,7 @@ def suiteFromPackage(name):
 
 def test_suite():
     suite = unittest.TestSuite()
-    for name in ['adapter']:
+    for name in ['adapter', 'view']:
         suite.addTest(suiteFromPackage(name))
     return suite
 

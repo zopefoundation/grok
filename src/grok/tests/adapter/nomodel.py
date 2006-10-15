@@ -4,7 +4,7 @@ If no model can be found in the module, we get an error:
   >>> grok.grok(__name__)
   Traceback (most recent call last):
     ...
-  GrokError: Adapter without context
+  GrokError: Cannot determine context for <class 'grok.tests.adapter.nomodel.Home'>, please use grok.context.
 
 """
 import grok

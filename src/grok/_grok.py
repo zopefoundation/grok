@@ -17,7 +17,10 @@ import types
 import sys
 from zope.dottedname.resolve import resolve
 from zope import component
+from zope import interface
 from zope.interface.interfaces import IInterface
+from zope.publisher.browser import BrowserPage
+from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 class Model(object):
     pass
@@ -26,6 +29,14 @@ class Adapter(object):
 
     def __init__(self, context):
         self.context = context
+
+class View(BrowserPage):
+
+    def __call__(self):
+        return self.render()
+
+    def render(self):
+        raise NotImplemented
 
 class GrokError(Exception):
     pass
@@ -46,6 +57,7 @@ def grok(dotted_name):
 
     context = None
     adapters = []
+    views = []
     for name in dir(module):
         obj = getattr(module, name)
 
@@ -59,17 +71,33 @@ def grok(dotted_name):
                 context = AMBIGUOUS_CONTEXT
         elif check_subclass(obj, Adapter):
             adapters.append(obj)
+        elif check_subclass(obj, View):
+            views.append(obj)
 
     if getattr(module, '__grok_context__', None):
         context = module.__grok_context__
 
     for factory in adapters:
-        adapter_context = getattr(factory, '__grok_context__', context)
-        if adapter_context is None:
-            raise GrokError("Adapter without context")
-        elif adapter_context is AMBIGUOUS_CONTEXT:
-            raise GrokError("Ambiguous contexts, please use grok.context.")
+        adapter_context = determineContext(factory, context)
         component.provideAdapter(factory, adapts=(adapter_context,))
+
+    for factory in views:
+        view_context = determineContext(factory, context)
+        name = factory.__name__.lower()
+        component.provideAdapter(factory,
+                                 adapts=(view_context, IDefaultBrowserLayer),
+                                 provides=interface.Interface,
+                                 name=name)
+
+def determineContext(factory, module_context):
+    context = getattr(factory, '__grok_context__', module_context)
+    if context is None:
+        raise GrokError("Cannot determine context for %r, please use "
+                        "grok.context." % factory)
+    elif context is AMBIGUOUS_CONTEXT:
+        raise GrokError("Ambiguous contexts for %r, please use "
+                        "grok.context." % factory)
+    return context
 
 def context(obj):
     if not (IInterface.providedBy(obj) or isclass(obj)):
