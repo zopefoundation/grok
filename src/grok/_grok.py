@@ -15,6 +15,7 @@
 """
 import types
 import sys
+import re
 from zope.dottedname.resolve import resolve
 from zope import component
 from zope import interface
@@ -114,7 +115,17 @@ def set_local(name, value, error_message):
     if name in frame.f_locals:
         raise GrokError(error_message)
     frame.f_locals[name] = value
+
+def not_unicode_or_ascii(value):
+    if isinstance(value, unicode):
+        return False
+    if not isinstance(value, str):
+        return True
+    return is_not_ascii(value)
+
+is_not_ascii = re.compile(eval(r'u"[\u0080-\uffff]"')).search
     
+
 def context(obj):
     if not (IInterface.providedBy(obj) or isclass(obj)):
         raise GrokError("You can only pass classes or interfaces to "
@@ -125,6 +136,8 @@ def context(obj):
               "or module.")
 
 def name(name):
+    if not_unicode_or_ascii(name):
+        raise GrokError("You can only pass unicode or ASCII to grok.name.")
     if not caller_is_class():
         raise GrokError("grok.name can only be used on class level.")
     set_local('name', name, "grok.name can only be called once per class.")
