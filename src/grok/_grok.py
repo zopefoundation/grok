@@ -46,9 +46,6 @@ class View(BrowserPage):
         namespace['context'] = self.context
         return template.pt_render(namespace)
 
-    def render(self):
-        raise NotImplementedError
-
 class GrokTemplate(TrustedAppPT, PageTemplate):
     expand = 0
 
@@ -102,6 +99,10 @@ def grok(dotted_name):
                                 % (template_name, factory))
             factory.template = GrokTemplate()
             factory.template.write(template)
+        else:
+            if not getattr(factory, 'render', None):
+                raise GrokError("View %r has no associated template or "
+                                "'render' method." % factory)
 
         component.provideAdapter(factory,
                                  adapts=(view_context, IDefaultBrowserLayer),
