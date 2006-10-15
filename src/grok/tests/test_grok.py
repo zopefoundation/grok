@@ -7,7 +7,8 @@ def tearDown(test):
 
 def grokTestSuite(pkg):
     return doctest.DocTestSuite(pkg, tearDown=tearDown,
-                                optionflags=doctest.ELLIPSIS)
+                                optionflags=doctest.ELLIPSIS+
+                                doctest.NORMALIZE_WHITESPACE)
 
 def suiteFromPackage(name):
     files = resource_listdir(__name__, name)

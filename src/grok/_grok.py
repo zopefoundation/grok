@@ -22,6 +22,8 @@ from zope import interface
 from zope.interface.interfaces import IInterface
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+from zope.pagetemplate.pagetemplate import PageTemplate
+from zope.app.pagetemplate.engine import TrustedAppPT
 
 class Model(object):
     pass
@@ -34,22 +36,24 @@ class Adapter(object):
 class View(BrowserPage):
 
     def __call__(self):
-        return self.render()
+        template = getattr(self, 'template', None)
+        if not template:
+            return self.render()
+
+        namespace = template.pt_getContext()
+        namespace['request'] = self.request
+        namespace['view'] = self
+        namespace['context'] = self.context
+        return template.pt_render(namespace)
 
     def render(self):
-        raise NotImplemented
+        raise NotImplementedError
+
+class GrokTemplate(TrustedAppPT, PageTemplate):
+    expand = 0
 
 class GrokError(Exception):
     pass
-
-def isclass(obj):
-    """We cannot use ``inspect.isclass`` because it will return True for interfaces"""
-    return type(obj) in (types.ClassType, type)
-
-def check_subclass(obj, class_):
-    if not isclass(obj):
-        return False
-    return issubclass(obj, class_)
 
 AMBIGUOUS_CONTEXT = object()
 def grok(dotted_name):
@@ -79,20 +83,41 @@ def grok(dotted_name):
         context = module.__grok_context__
 
     for factory in adapters:
-        adapter_context = determineContext(factory, context)
+        adapter_context = determine_context(factory, context)
         name = getattr(factory, '__grok_name__', '')
         component.provideAdapter(factory, adapts=(adapter_context,), name=name)
 
     for factory in views:
-        view_context = determineContext(factory, context)
+        view_context = determine_context(factory, context)
         name = factory.__name__.lower()
         name = getattr(factory, '__grok_name__', name)
+
+        # find inline templates
+        template_name = name + '_pt'
+        template = getattr(module, template_name, None)
+        if template:
+            if not_unicode_or_ascii(template):
+                raise GrokError("Invalid inline template %s for %r.  Inline "
+                                "templates must be unicode or ASCII."
+                                % (template_name, factory))
+            factory.template = GrokTemplate()
+            factory.template.write(template)
+
         component.provideAdapter(factory,
                                  adapts=(view_context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
                                  name=name)
 
-def determineContext(factory, module_context):
+def isclass(obj):
+    """We cannot use ``inspect.isclass`` because it will return True for interfaces"""
+    return type(obj) in (types.ClassType, type)
+
+def check_subclass(obj, class_):
+    if not isclass(obj):
+        return False
+    return issubclass(obj, class_)
+
+def determine_context(factory, module_context):
     context = getattr(factory, '__grok_context__', module_context)
     if context is None:
         raise GrokError("Cannot determine context for %r, please use "
