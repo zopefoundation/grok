@@ -169,10 +169,10 @@ def check_subclass(obj, class_):
 
 def check_context(source, context):
     if context is None:
-        raise GrokError("Cannot determine context for %s, please use "
+        raise GrokError("No module-level context for %s, please use "
                         "grok.context." % source)
     elif context is AMBIGUOUS_CONTEXT:
-        raise GrokError("Ambiguous contexts for %s, please use "
+        raise GrokError("Multiple possible contexts for %s, please use "
                         "grok.context." % source)
 
 def determine_context(factory, module_context):
