@@ -9,18 +9,24 @@ def grokTestSuite(pkg):
     return doctest.DocTestSuite(pkg, tearDown=tearDown,
                                 optionflags=doctest.ELLIPSIS)
 
-def test_suite():
-    adapterfiles = resource_listdir(__name__, 'adapter')
+def suiteFromPackage(name):
+    files = resource_listdir(__name__, name)
     suite = unittest.TestSuite()
-    for filename in adapterfiles:
+    for filename in files:
         if not filename.endswith('.py'):
             continue
         if filename.endswith('_fixture.py'):
             continue
         if filename == '__init__.py':
             continue
-        dottedname = 'grok.tests.adapter.' + filename[:-3]
+        dottedname = 'grok.tests.%s.%s' % (name, filename[:-3])
         suite.addTest(grokTestSuite(dottedname))
+    return suite
+
+def test_suite():
+    suite = unittest.TestSuite()
+    for name in ['adapter']:
+        suite.addTest(suiteFromPackage(name))
     return suite
 
 if __name__ == '__main__':
