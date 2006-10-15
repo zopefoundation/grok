@@ -12,3 +12,11 @@ CREDITS
 * Christian Zagrodnick
 
 * ME GROK
+
+Thank you
+---------
+
+* gocept for hosting the first grok sprint
+
+* Felicia Faassen Wong, Christian Zagrodnick and Magda Motyka for the
+  delicious food at the first grok sprint
