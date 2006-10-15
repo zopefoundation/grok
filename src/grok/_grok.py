@@ -84,6 +84,7 @@ def grok(dotted_name):
     for factory in views:
         view_context = determineContext(factory, context)
         name = factory.__name__.lower()
+        name = getattr(factory, '__grok_name__', name)
         component.provideAdapter(factory,
                                  adapts=(view_context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
@@ -115,3 +116,14 @@ def context(obj):
         raise GrokError("grok.context can only be called once per class "
                         "or module.")
     frame.f_locals['__grok_context__'] = obj
+
+def name(name):
+    frame = sys._getframe(1)
+    is_class = '__module__' in frame.f_locals
+    if not is_class:
+        raise GrokError("grok.name can only be used on class level.")
+
+    if '__grok_name__' in frame.f_locals:
+        raise GrokError("grok.name can only be called once per class.")
+
+    frame.f_locals['__grok_name__'] = name
