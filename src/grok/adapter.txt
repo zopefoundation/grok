@@ -224,3 +224,7 @@ You can also specify interfaces instead of classes with
   True
   >>> isinstance(home, Home)
   True
+
+Clean up:
+
+  >>> cleanUp()
