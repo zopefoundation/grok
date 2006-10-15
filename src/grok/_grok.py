@@ -100,23 +100,24 @@ def grok(dotted_name):
 
     for factory in views:
         view_context = determine_context(factory, context)
-        name = factory.__name__.lower()
-        name = getattr(factory, '__grok_name__', name)
+        factory_name = factory.__name__.lower()
 
         # find inline templates
-        template = templates.get(name)
+        template_name = getattr(factory, '__grok_template__', factory_name)
+        template = templates.get(template_name)
         if template:
-            templates.markAssociated(name)
+            templates.markAssociated(template_name)
             factory.template = template
         else:
             if not getattr(factory, 'render', None):
                 raise GrokError("View %r has no associated template or "
                                 "'render' method." % factory)
 
+        view_name = getattr(factory, '__grok_name__', factory_name)
         component.provideAdapter(factory,
                                  adapts=(view_context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
-                                 name=name)
+                                 name=view_name)
 
     for name, unassociated in templates.listUnassociatedTemplates():
         source = '<%s template in %s>' % (name, dotted_name)
@@ -218,9 +219,24 @@ def context(obj):
     set_local('context', obj, "grok.context can only be called once per class "
               "or module.")
 
-def name(name):
-    if not_unicode_or_ascii(name):
-        raise GrokError("You can only pass unicode or ASCII to grok.name.")
-    if not caller_is_class():
-        raise GrokError("grok.name can only be used on class level.")
-    set_local('name', name, "grok.name can only be called once per class.")
+class ClassDirective(object):
+    """
+    Class-level directive that puts unicode/ASCII values into the
+    class's locals as __grok_<name>__.
+    """
+
+    def __init__(self, name):
+        self.name = name
+
+    def __call__(self, val):
+        if not_unicode_or_ascii(val):
+            raise GrokError("You can only pass unicode or ASCII to "
+                            "grok.%s." % self.name)
+        if not caller_is_class():
+            raise GrokError("grok.%s can only be used on class level."
+                            % self.name)
+        set_local(self.name, val, "grok.%s can only be called once per class."
+                  % self.name)
+
+name = ClassDirective('name')
+template = ClassDirective('template')

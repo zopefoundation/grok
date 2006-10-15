@@ -33,6 +33,13 @@ registered on the model:
   >>> print view()
   <html><body><h1>GROK CLUB MAMMOTH!</h1></body></html>
 
+Finding a template does not depend on the view name, but on the class
+name:
+
+  >>> view = component.getMultiAdapter((manfred, request), name='hunting')
+  >>> print view()
+  <html><body><h1>GROK HUNT MAMMOTH!</h1></body></html>
+
 """
 import grok
 
@@ -59,3 +66,11 @@ cavepainting = grok.PageTemplate("""\
 club = grok.PageTemplate("""\
 <html><body><h1>GROK CLUB MAMMOTH!</h1></body></html>
 """)
+
+class Hunt(grok.View):
+    grok.name('hunting')
+
+hunt = grok.PageTemplate("""\
+<html><body><h1>GROK HUNT MAMMOTH!</h1></body></html>
+""")
+
