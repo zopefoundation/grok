@@ -80,7 +80,8 @@ def grok(dotted_name):
 
     for factory in adapters:
         adapter_context = determineContext(factory, context)
-        component.provideAdapter(factory, adapts=(adapter_context,))
+        name = getattr(factory, '__grok_name__', '')
+        component.provideAdapter(factory, adapts=(adapter_context,), name=name)
 
     for factory in views:
         view_context = determineContext(factory, context)
