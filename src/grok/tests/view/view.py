@@ -10,6 +10,10 @@
   >>> view()
   'A cave painting of a mammoth'
 
+  >>> view.context is manfred
+  True
+  >>> view.request is request
+  True
 """
 
 import grok
