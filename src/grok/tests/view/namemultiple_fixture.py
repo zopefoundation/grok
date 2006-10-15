@@ -1,3 +1,6 @@
+"""
+This should fail:
+"""
 import grok
 
 class MultipleNames(grok.View):
