@@ -97,7 +97,7 @@ def grok(dotted_name):
         template = getattr(module, template_name, None)
         if template:
             if not_unicode_or_ascii(template):
-                raise GrokError("Invalid inline template %s for %r.  Inline "
+                raise GrokError("Invalid inline template '%s' for %r. Inline "
                                 "templates must be unicode or ASCII."
                                 % (template_name, factory))
             factory.template = GrokTemplate()
