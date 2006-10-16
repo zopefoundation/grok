@@ -5,8 +5,6 @@ TODO
 Meta
 ====
 
-- setup grok-dev@zope.org (Philikon)
-
 - setup homepage (grok.zope.org or zope.org/grok, wiki or rest) (faassen)
 
 - tutorial (faassen)
