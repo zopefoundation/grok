@@ -1,6 +1,6 @@
 import grok
 
-grok.permission('grok.Complex')  # define permission first
+grok.definepermission('grok.Complex')  # define permission first
 
 class Complex(grok.Model):
     # this sets the default for all methods
