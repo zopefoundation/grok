@@ -113,12 +113,6 @@ Punt
 Views
 =====
 
-Step 4
-------
-
-- grok.resources() for templates
-- conflict detection between inline templates and file-system templates
-
 Step 5
 ------
 

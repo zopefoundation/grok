@@ -16,6 +16,7 @@
 import sys
 import os
 from pkg_resources import resource_listdir, resource_exists, resource_string
+import persistent
 from zope.dottedname.resolve import resolve
 from zope import component
 from zope import interface
@@ -30,7 +31,7 @@ from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext, Class
                             TextDirective, InterfaceOrClassDirective)
      
 
-class Model(object):
+class Model(persistent.Persistent):
     pass
 
 class Adapter(object):

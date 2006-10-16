@@ -1,0 +1,32 @@
+Preparing for grok development
+------------------------------
+
+Grok is installed via buildout <http://cheeseshop.python.org/pypi/zc.buildout>.
+
+You may have setuptools already installed for your system Python. In
+that case, you may need to upgrade it first because buildout requires
+a very recent version::
+
+    $ sudo easy_install -U setuptools
+
+If this command fails because easy_install is not available, there is
+a good chance you do not have setuptools available for your system
+Python. If so, there is no problem because setuptools will be
+installed locally by buildout.
+
+Bootstrap the buildout environment::
+
+    $ python bootstrap/bootstrap.py
+
+and run the buildout command::
+
+    $ bin/buildout
+    [lots of stuff will be downloaded and installed locally here]
+
+Running the tests
+-----------------
+
+XXX
+
+    $ cd parts/instance
+    $ ../../bin/test
