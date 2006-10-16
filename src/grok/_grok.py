@@ -105,6 +105,15 @@ def grok(dotted_name):
         # find inline templates
         template_name = getattr(factory, '__grok_template__', factory_name)
         template = templates.get(template_name)
+
+        if factory_name != template_name:
+            # grok.template is being used
+            if templates.get(factory_name):
+                raise GrokError("Multiple possible templates for view %r. It "
+                                "uses grok.template('%s'), but there is also "
+                                "a template called '%s'."
+                                % (factory, template_name, factory_name))
+
         if template:
             templates.markAssociated(template_name)
             factory.template = template
