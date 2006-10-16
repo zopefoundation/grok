@@ -12,5 +12,5 @@ encoded strings:
   ... </html>''')
   Traceback (most recent call last):
     ...
-  GrokError: Invalid page template. Page templates must be unicode or ASCII.
+  ValueError: Invalid page template. Page templates must be unicode or ASCII.
 """

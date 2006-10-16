@@ -17,3 +17,5 @@
 class GrokError(Exception):
     pass
 
+class GrokImportError(ImportError):
+    pass

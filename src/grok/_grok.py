@@ -27,7 +27,7 @@ from zope.pagetemplate import pagetemplate
 from zope.app.pagetemplate.engine import TrustedAppPT
 
 from grok import util
-from grok.error import GrokError
+from grok.error import GrokError, GrokImportError
 from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
                             ClassOrModuleDirectiveContext,
                             TextDirective, InterfaceOrClassDirective)
@@ -68,8 +68,8 @@ class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
     def __init__(self, template):
         super(PageTemplate, self).__init__()
         if util.not_unicode_or_ascii(template):
-            raise GrokError("Invalid page template. Page templates must be "
-                            "unicode or ASCII.")
+            raise ValueError("Invalid page template. Page templates must be "
+                             "unicode or ASCII.")
         self.write(template)
 
         # XXX unfortunately using caller_module means that

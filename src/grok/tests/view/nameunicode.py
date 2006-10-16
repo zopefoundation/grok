@@ -6,11 +6,11 @@ You can only pass unicode to `grok.name`:
   >>> pass_encodedstring()
   Traceback (most recent call last):
     ...
-  GrokError: You can only pass unicode or ASCII to grok.name.
+  GrokImportError: You can only pass unicode or ASCII to grok.name.
   >>> pass_object()
   Traceback (most recent call last):
     ...
-  GrokError: You can only pass unicode or ASCII to grok.name.
+  GrokImportError: You can only pass unicode or ASCII to grok.name.
 
 """
 import grok

@@ -4,14 +4,14 @@ You can't call grok.context from a function:
   >>> func()
   Traceback (most recent call last):
     ...
-  GrokError: grok.context can only be used on class or module level.
+  GrokImportError: grok.context can only be used on class or module level.
 
 You can't call grok.context from a method either:
 
   >>> SomeClass().meth()
   Traceback (most recent call last):
     ...
-  GrokError: grok.context can only be used on class or module level.
+  GrokImportError: grok.context can only be used on class or module level.
 
 """
 import grok
