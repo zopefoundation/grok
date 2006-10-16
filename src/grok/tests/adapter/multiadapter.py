@@ -1,0 +1,42 @@
+"""
+Multi-Adapters are supported by subclassing grok.MultiAdapter, giving
+multiple arguments to grok.adapts, and supplying a matching
+__init__():
+
+  >>> grok.grok(__name__)
+
+  >>> cave = Cave()
+  >>> fireplace = Fireplace()
+
+  >>> from zope import component
+  >>> home = component.getMultiAdapter((cave, fireplace))
+
+  >>> IHome.providedBy(home)
+  True
+  >>> isinstance(home, Home)
+  True
+  >>> home.cave is cave
+  True
+  >>> home.fireplace is fireplace
+  True
+"""
+
+import grok
+from zope import interface
+
+class Cave(grok.Model):
+    pass
+
+class Fireplace(grok.Model):
+    pass
+
+class IHome(interface.Interface):
+    pass
+
+class Home(grok.MultiAdapter):
+    grok.adapts(Cave, Fireplace)
+    grok.implements(IHome)
+
+    def __init__(self, cave, fireplace):
+        self.cave = cave
+        self.fireplace = fireplace

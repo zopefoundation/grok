@@ -39,6 +39,9 @@ class Adapter(object):
     def __init__(self, context):
         self.context = context
 
+class MultiAdapter(object):
+    pass
+
 class View(BrowserPage):
 
     def __call__(self):
@@ -78,6 +81,7 @@ def grok(dotted_name):
 
     context = None
     adapters = []
+    multiadapters = []
     views = []
     templates = TemplateRegistry()
     for name in dir(module):
@@ -93,6 +97,8 @@ def grok(dotted_name):
                 context = AMBIGUOUS_CONTEXT
         elif util.check_subclass(obj, Adapter):
             adapters.append(obj)
+        elif util.check_subclass(obj, MultiAdapter):
+            multiadapters.append(obj)
         elif util.check_subclass(obj, View):
             views.append(obj)
         elif isinstance(obj, PageTemplate):
@@ -124,6 +130,10 @@ def grok(dotted_name):
         adapter_context = determine_context(factory, context)
         name = directive_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, adapts=(adapter_context,), name=name)
+
+    for factory in multiadapters:
+        name = directive_annotation(factory, 'grok.name', '')
+        component.provideAdapter(factory, name=name)
 
     for factory in views:
         view_context = determine_context(factory, context)
