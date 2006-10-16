@@ -102,7 +102,12 @@ def grok(dotted_name):
 
             contents = resource_string(dotted_name, os.path.join(directory_name, resource))
             template = PageTemplate(contents)
-            templates.register(resource[:-3], template)
+            template_name = resource[:-3]
+            if templates.get(template_name):
+                raise GrokError("Conflicting templates found for name '%s' in module %r, "
+                                "both inline and in resource directory '%s'."
+                                % (template_name, module, directory_name))
+            templates.register(template_name, template)
 
     if getattr(module, '__grok_context__', None):
         context = module.__grok_context__
