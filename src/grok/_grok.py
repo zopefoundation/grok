@@ -41,6 +41,8 @@ class Adapter(object):
 class View(BrowserPage):
 
     def __call__(self):
+        self.before()
+
         template = getattr(self, 'template', None)
         if not template:
             return self.render()
@@ -50,6 +52,9 @@ class View(BrowserPage):
         namespace['view'] = self
         namespace['context'] = self.context
         return template.pt_render(namespace)
+
+    def before(self):
+        pass
 
 class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
     expand = 0
