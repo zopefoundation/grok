@@ -13,16 +13,11 @@ Meta
 
 - reference (theuni)
 
+
 Core
 ====
 
-- <grok package="..."/>
-
 - grok buildout
-
-- grok buildout integration
-
-- grok.grokkable (to allow grokking of imported things)
 
 - choice fields / sources 
 
@@ -65,8 +60,15 @@ Core
 - error reporting during grokking (provide file/line-number information
   on our extrinsically generated errors) (philikon)
 
+
 Need to discuss
 ---------------
+
+- grokking a package
+
+- grok buildout integration
+
+- grok.grokkable (to allow grokking of imported things)
 
 - skins
 
@@ -94,6 +96,7 @@ Need to discuss
 - have a custom security policy that is easier to understand than the
   default Zope 3 policy
 
+
 Punt
 ----
 
@@ -109,8 +112,6 @@ Punt
 
 Views
 =====
-
-
 
 Step 4
 ------
@@ -135,5 +136,3 @@ Future
 
 - support grok.template(template) in addition to
   grok.template('name_of_template') ?
-
-
