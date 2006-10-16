@@ -13,4 +13,11 @@ Views
 =====
 
 - grok.before
+
 - index views
+
+- grok.name, grok.template class restrictions (e.g. grok.template
+  should only be usable from grok.View subclasses)
+
+- support grok.template(template) in addition to
+  grok.template('name_of_template') ?
