@@ -20,6 +20,7 @@ import persistent
 from zope.dottedname.resolve import resolve
 from zope import component
 from zope import interface
+from zope.security.checker import defineChecker, getCheckerForInstancesOf, NoProxy
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from zope.pagetemplate import pagetemplate
@@ -27,9 +28,9 @@ from zope.app.pagetemplate.engine import TrustedAppPT
 
 from grok import util
 from grok.error import GrokError
-from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext, ClassOrModuleDirectiveContext,
+from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
+                            ClassOrModuleDirectiveContext,
                             TextDirective, InterfaceOrClassDirective)
-     
 
 class Model(persistent.Persistent):
     pass
@@ -80,6 +81,7 @@ def grok(dotted_name):
     module = resolve(dotted_name)
 
     context = None
+    models = []
     adapters = []
     multiadapters = []
     views = []
@@ -91,10 +93,7 @@ def grok(dotted_name):
             continue
 
         if util.check_subclass(obj, Model):
-            if context is None:
-                context = obj
-            else:
-                context = AMBIGUOUS_CONTEXT
+            models.append(obj)
         elif util.check_subclass(obj, Adapter):
             adapters.append(obj)
         elif util.check_subclass(obj, MultiAdapter):
@@ -113,18 +112,32 @@ def grok(dotted_name):
             if not resource.endswith(".pt"):
                 continue
 
-            contents = resource_string(dotted_name, os.path.join(directory_name, resource))
+            contents = resource_string(dotted_name,
+                                       os.path.join(directory_name, resource))
             template = PageTemplate(contents)
             template_name = resource[:-3]
             if templates.get(template_name):
-                raise GrokError("Conflicting templates found for name '%s' in module %r, "
-                                "both inline and in resource directory '%s'."
+                raise GrokError("Conflicting templates found for name '%s' "
+                                "in module %r, both inline and in resource "
+                                "directory '%s'."
                                 % (template_name, module, directory_name))
             templates.register(template_name, template)
+
+    if len(models) == 0:
+        context = None
+    elif len(models) == 1:
+        context = models[0]
+    else:
+        context = AMBIGUOUS_CONTEXT
 
     module_context = directive_annotation(module, 'grok.context', None)
     if module_context:
         context = module_context
+
+    for model in models:
+        # TODO minimal security here (read: everything is public)
+        if not getCheckerForInstancesOf(model):
+            defineChecker(model, NoProxy)
 
     for factory in adapters:
         adapter_context = determine_context(factory, context)
@@ -140,7 +153,8 @@ def grok(dotted_name):
         factory_name = factory.__name__.lower()
 
         # find inline templates
-        template_name = directive_annotation(factory, 'grok.template', factory_name)
+        template_name = directive_annotation(factory, 'grok.template',
+                                             factory_name)
         template = templates.get(template_name)
 
         if factory_name != template_name:
@@ -170,6 +184,9 @@ def grok(dotted_name):
                                  provides=interface.Interface,
                                  name=view_name)
 
+        # TODO minimal security here (read: everything is public)
+        defineChecker(factory, NoProxy)
+
     for name, unassociated in templates.listUnassociatedTemplates():
         source = '<%s template in %s>' % (name, dotted_name)
         check_context(source, context)
@@ -183,6 +200,9 @@ def grok(dotted_name):
                                  adapts=(context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
                                  name=name)
+
+        # TODO minimal security here (read: everything is public)
+        defineChecker(TemplateView, NoProxy)
 
 class TemplateRegistry(object):
 
@@ -234,5 +254,6 @@ def caller_module():
 # directives
 name = TextDirective('grok.name', ClassDirectiveContext())
 template = TextDirective('grok.template', ClassDirectiveContext())
-context = InterfaceOrClassDirective('grok.context', ClassOrModuleDirectiveContext())
+context = InterfaceOrClassDirective('grok.context',
+                                    ClassOrModuleDirectiveContext())
 resource = TextDirective('grok.resource', ModuleDirectiveContext())
