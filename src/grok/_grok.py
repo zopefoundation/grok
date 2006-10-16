@@ -94,7 +94,7 @@ def grok(dotted_name):
 
     # find filesystem resources
     module_name = dotted_name.split('.')[-1]
-    directory_name = getattr(module, '__grok_resource__', module_name)
+    directory_name = directive_annotation(module, 'grok.resource', module_name)
     if resource_exists(dotted_name, directory_name):
         resources = resource_listdir(dotted_name, directory_name)
         for resource in resources:
@@ -110,12 +110,13 @@ def grok(dotted_name):
                                 % (template_name, module, directory_name))
             templates.register(template_name, template)
 
-    if getattr(module, '__grok_context__', None):
-        context = module.__grok_context__
+    module_context = directive_annotation(module, 'grok.context', None)
+    if module_context:
+        context = module_context
 
     for factory in adapters:
         adapter_context = determine_context(factory, context)
-        name = getattr(factory, '__grok_name__', '')
+        name = directive_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, adapts=(adapter_context,), name=name)
 
     for factory in views:
@@ -123,7 +124,7 @@ def grok(dotted_name):
         factory_name = factory.__name__.lower()
 
         # find inline templates
-        template_name = getattr(factory, '__grok_template__', factory_name)
+        template_name = directive_annotation(factory, 'grok.template', factory_name)
         template = templates.get(template_name)
 
         if factory_name != template_name:
@@ -147,7 +148,7 @@ def grok(dotted_name):
                 raise GrokError("View %r has no associated template or "
                                 "'render' method." % factory)
 
-        view_name = getattr(factory, '__grok_name__', factory_name)
+        view_name = directive_annotation(factory, 'grok.name', factory_name)
         component.provideAdapter(factory,
                                  adapts=(view_context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
@@ -204,9 +205,12 @@ def check_context(source, context):
                         "grok.context." % source)
 
 def determine_context(factory, module_context):
-    context = getattr(factory, '__grok_context__', module_context)
+    context = directive_annotation(factory, 'grok.context', module_context)
     check_context(repr(factory), context)
     return context
+
+def directive_annotation(obj, name, default):
+    return getattr(obj, '__%s__' % name.replace('.', '_'), default)
 
 def caller_module():
     return sys._getframe(2).f_globals['__name__']
