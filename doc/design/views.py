@@ -40,10 +40,10 @@ class PDFSum(grok.View):
         return pdfdata
 
 
-sum_html = """
+sum = grok.PageTemplate("""\
 <p tal:content="view/calculateSum">...</p>
 <p tal:content="view/precalculatedSum">...</p>
-"""
+""")
 
 from zope import schema
 
@@ -70,7 +70,7 @@ class Index(grok.Form):
     def whatever(self, **data):
         pass
 
-index_html = """
+index = grok.PageTemplate("""\
 <form tal:attributes="action request/URL">
 <p tal:condition="exists:view/result">
   The result is: <span tal:replace="view/result" />
@@ -79,8 +79,7 @@ index_html = """
 XXX render fields
 XXX render actions
 </form>
-
-"""
+""")
 
 class CalculatorXMLRPC(grok.XMLRPC):
 
@@ -91,4 +90,3 @@ class CalculatorXMLRPC(grok.XMLRPC):
     @grok.require('something.else')
     def whatever(self):
         return ...
-
