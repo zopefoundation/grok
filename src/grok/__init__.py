@@ -16,4 +16,4 @@
 
 from zope.interface import implements
 from _grok import (Model, Adapter, View, PageTemplate,
-                   grok, context, name, template)
+                   grok, context, name, template, resource)

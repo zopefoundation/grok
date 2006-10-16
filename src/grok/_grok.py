@@ -93,7 +93,8 @@ def grok(dotted_name):
             templates.register(name, obj)
 
     # find filesystem resources
-    directory_name = dotted_name.split('.')[-1]
+    module_name = dotted_name.split('.')[-1]
+    directory_name = getattr(module, '__grok_resource__', module_name)
     if resource_exists(dotted_name, directory_name):
         resources = resource_listdir(dotted_name, directory_name)
         for resource in resources:
@@ -210,6 +211,8 @@ def determine_context(factory, module_context):
 def caller_module():
     return sys._getframe(2).f_globals['__name__']
 
+# directives
 name = TextDirective('grok.name', ClassDirectiveContext())
 template = TextDirective('grok.template', ClassDirectiveContext())
 context = InterfaceOrClassDirective('grok.context', ClassOrModuleDirectiveContext())
+resource = TextDirective('grok.resource', ModuleDirectiveContext())
