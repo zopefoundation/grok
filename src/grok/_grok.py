@@ -32,6 +32,7 @@ from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
                             ClassOrModuleDirectiveContext,
                             TextDirective, InterfaceOrClassDirective)
 
+
 class Model(persistent.Persistent):
     pass
 
@@ -105,7 +106,7 @@ def grok(dotted_name):
 
     # find filesystem resources
     module_name = dotted_name.split('.')[-1]
-    directory_name = directive_annotation(module, 'grok.resource', module_name)
+    directory_name = directive_annotation(module, 'grok.resources', module_name)
     if resource_exists(dotted_name, directory_name):
         resources = resource_listdir(dotted_name, directory_name)
         for resource in resources:
@@ -256,4 +257,4 @@ name = TextDirective('grok.name', ClassDirectiveContext())
 template = TextDirective('grok.template', ClassDirectiveContext())
 context = InterfaceOrClassDirective('grok.context',
                                     ClassOrModuleDirectiveContext())
-resource = TextDirective('grok.resource', ModuleDirectiveContext())
+resources = TextDirective('grok.resources', ModuleDirectiveContext())
