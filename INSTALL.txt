@@ -26,7 +26,9 @@ and run the buildout command::
 Running the tests
 -----------------
 
-XXX
+Due to a bug in Zope, we need to run the tests this way:
 
     $ cd parts/instance
     $ ../../bin/test
+
+otherwise you will get an error about not finding 'ftesting.zcml'.
