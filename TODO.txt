@@ -135,4 +135,6 @@ Future
   should only be usable from grok.View subclasses)
 
 - support grok.template(template) in addition to
-  grok.template('name_of_template') ?
+  grok.template('name_of_template')?
+
+- support grok.resource on view class level?
