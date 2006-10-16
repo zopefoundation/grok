@@ -17,8 +17,6 @@ Meta
 Core
 ====
 
-- grok buildout
-
 - choice fields / sources 
 
 - containers
@@ -39,8 +37,6 @@ Core
 
 - interfaces (nothing to do there)
 
-- adapters (done)
-
 - xml-rpc (theuni)
 
 - make it easier to write tests (wosc, faassen)
@@ -51,11 +47,7 @@ Core
 
 - add forms
 
-- multi-adapters
-
 - schema driven development (faassen, wosc)
-
-- a before method
 
 - error reporting during grokking (provide file/line-number information
   on our extrinsically generated errors) (philikon)
@@ -113,17 +105,11 @@ Punt
 Views
 =====
 
-Step 5
-------
-
-- static resources via grok.resources()
-
-Future
-------
-
-- grok.before
-
 - index views
+
+
+Open Questions
+==============
 
 - grok.name, grok.template class restrictions (e.g. grok.template
   should only be usable from grok.View subclasses)
