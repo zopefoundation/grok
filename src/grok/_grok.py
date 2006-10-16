@@ -16,6 +16,8 @@
 import types
 import sys
 import re
+import os
+from pkg_resources import resource_listdir, resource_exists, resource_string
 from zope.dottedname.resolve import resolve
 from zope import component
 from zope import interface
@@ -89,6 +91,18 @@ def grok(dotted_name):
             views.append(obj)
         elif isinstance(obj, PageTemplate):
             templates.register(name, obj)
+
+    # find filesystem resources
+    directory_name = dotted_name.split('.')[-1]
+    if resource_exists(dotted_name, directory_name):
+        resources = resource_listdir(dotted_name, directory_name)
+        for resource in resources:
+            if not resource.endswith(".pt"):
+                continue
+
+            contents = resource_string(dotted_name, os.path.join(directory_name, resource))
+            template = PageTemplate(contents)
+            templates.register(resource[:-3], template)
 
     if getattr(module, '__grok_context__', None):
         context = module.__grok_context__
