@@ -13,19 +13,22 @@
 ##############################################################################
 """Grok
 """
-import types
 import sys
-import re
 import os
 from pkg_resources import resource_listdir, resource_exists, resource_string
 from zope.dottedname.resolve import resolve
 from zope import component
 from zope import interface
-from zope.interface.interfaces import IInterface
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from zope.pagetemplate import pagetemplate
 from zope.app.pagetemplate.engine import TrustedAppPT
+
+from grok import util
+from grok.error import GrokError
+from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext, ClassOrModuleDirectiveContext,
+                            TextDirective, InterfaceOrClassDirective)
+     
 
 class Model(object):
     pass
@@ -53,7 +56,7 @@ class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
 
     def __init__(self, template):
         super(PageTemplate, self).__init__()
-        if not_unicode_or_ascii(template):
+        if util.not_unicode_or_ascii(template):
             raise GrokError("Invalid page template. Page templates must be "
                             "unicode or ASCII.")
         self.write(template)
@@ -61,9 +64,6 @@ class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
         # XXX unfortunately using caller_module means that
         # PageTemplate cannot be subclassed
         self.__grok_module__ = caller_module()
-
-class GrokError(Exception):
-    pass
 
 AMBIGUOUS_CONTEXT = object()
 def grok(dotted_name):
@@ -80,14 +80,14 @@ def grok(dotted_name):
         if not defined_locally(obj, dotted_name):
             continue
 
-        if check_subclass(obj, Model):
+        if util.check_subclass(obj, Model):
             if context is None:
                 context = obj
             else:
                 context = AMBIGUOUS_CONTEXT
-        elif check_subclass(obj, Adapter):
+        elif util.check_subclass(obj, Adapter):
             adapters.append(obj)
-        elif check_subclass(obj, View):
+        elif util.check_subclass(obj, View):
             views.append(obj)
         elif isinstance(obj, PageTemplate):
             templates.register(name, obj)
@@ -194,15 +194,6 @@ def defined_locally(obj, dotted_name):
         obj_module = getattr(obj, '__module__', None)
     return obj_module == dotted_name
 
-def isclass(obj):
-    """We cannot use ``inspect.isclass`` because it will return True for interfaces"""
-    return type(obj) in (types.ClassType, type)
-
-def check_subclass(obj, class_):
-    if not isclass(obj):
-        return False
-    return issubclass(obj, class_)
-
 def check_context(source, context):
     if context is None:
         raise GrokError("No module-level context for %s, please use "
@@ -216,60 +207,9 @@ def determine_context(factory, module_context):
     check_context(repr(factory), context)
     return context
 
-def caller_is_module():
-    frame = sys._getframe(2)
-    return frame.f_locals is frame.f_globals
-
-def caller_is_class():
-    frame = sys._getframe(2)
-    return '__module__' in frame.f_locals
-
 def caller_module():
     return sys._getframe(2).f_globals['__name__']
 
-def set_local(name, value, error_message):
-    frame = sys._getframe(2)
-    name = '__grok_%s__' % name
-    if name in frame.f_locals:
-        raise GrokError(error_message)
-    frame.f_locals[name] = value
-
-def not_unicode_or_ascii(value):
-    if isinstance(value, unicode):
-        return False
-    if not isinstance(value, str):
-        return True
-    return is_not_ascii(value)
-
-is_not_ascii = re.compile(eval(r'u"[\u0080-\uffff]"')).search
-
-def context(obj):
-    if not (IInterface.providedBy(obj) or isclass(obj)):
-        raise GrokError("You can only pass classes or interfaces to "
-                        "grok.context.")
-    if not (caller_is_module() or caller_is_class()):
-        raise GrokError("grok.context can only be used on class or module level.")
-    set_local('context', obj, "grok.context can only be called once per class "
-              "or module.")
-
-class ClassDirective(object):
-    """
-    Class-level directive that puts unicode/ASCII values into the
-    class's locals as __grok_<name>__.
-    """
-
-    def __init__(self, name):
-        self.name = name
-
-    def __call__(self, val):
-        if not_unicode_or_ascii(val):
-            raise GrokError("You can only pass unicode or ASCII to "
-                            "grok.%s." % self.name)
-        if not caller_is_class():
-            raise GrokError("grok.%s can only be used on class level."
-                            % self.name)
-        set_local(self.name, val, "grok.%s can only be called once per class."
-                  % self.name)
-
-name = ClassDirective('name')
-template = ClassDirective('template')
+name = TextDirective('grok.name', ClassDirectiveContext())
+template = TextDirective('grok.template', ClassDirectiveContext())
+context = InterfaceOrClassDirective('grok.context', ClassOrModuleDirectiveContext())
