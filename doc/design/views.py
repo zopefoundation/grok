@@ -14,7 +14,7 @@ class Sum(grok.View):
 
     def calculateSum(self):
         """you can pull this in the template through view/calculateSum"""
-
+    
     @grok.before
     def precalculatedSum(self):
         """executed before the template is rendered"""
@@ -54,9 +54,10 @@ class Index(grok.Form):
     called Index)
     """
 
-    operand = schema.Int(title=u'Operand')
-    operator = schema.Choice(...)
-    operand2 = schema.Int(...)
+    class fields:
+        operand = schema.Int(title=u'Operand')
+        operator = schema.Choice(...)
+        operand2 = schema.Int(...)
 
     @grok.action('Calculate')
     def calculate(self, operand, operator, operand2):
