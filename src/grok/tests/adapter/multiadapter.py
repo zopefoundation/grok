@@ -19,6 +19,19 @@ __init__():
   True
   >>> home.fireplace is fireplace
   True
+
+This also works for named adapters using grok.name:
+
+  >>> home = component.getMultiAdapter((cave, fireplace), name='home2')
+
+  >>> IHome.providedBy(home)
+  True
+  >>> isinstance(home, Home2)
+  True
+  >>> home.cave is cave
+  True
+  >>> home.fireplace is fireplace
+  True
 """
 
 import grok
@@ -36,6 +49,15 @@ class IHome(interface.Interface):
 class Home(grok.MultiAdapter):
     grok.adapts(Cave, Fireplace)
     grok.implements(IHome)
+
+    def __init__(self, cave, fireplace):
+        self.cave = cave
+        self.fireplace = fireplace
+
+class Home2(grok.MultiAdapter):
+    grok.adapts(Cave, Fireplace)
+    grok.implements(IHome)
+    grok.name('home2')
 
     def __init__(self, cave, fireplace):
         self.cave = cave
