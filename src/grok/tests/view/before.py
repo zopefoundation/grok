@@ -20,6 +20,7 @@ expressions can resolve paths:
   <html>
   <body>
   <h1>red</h1>
+  <h1>red</h1>
   </body>
   </html>
   
@@ -39,6 +40,7 @@ cavepainting = grok.PageTemplate("""\
 <html>
 <body>
 <h1 tal:content="view/color"/>
+<h1 tal:content="python: view.color"/>
 </body>
 </html>
 """)
