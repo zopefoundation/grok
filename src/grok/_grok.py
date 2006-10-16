@@ -115,6 +115,11 @@ def grok(dotted_name):
                                 % (factory, template_name, factory_name))
 
         if template:
+            if getattr(factory, 'render', None):
+                raise GrokError("Multiple possible ways to render view %r. "
+                                "It has both a 'render' method as well as "
+                                "an associated template." % factory)
+
             templates.markAssociated(template_name)
             factory.template = template
         else:
