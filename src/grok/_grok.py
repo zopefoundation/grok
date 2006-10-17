@@ -15,7 +15,6 @@
 """
 import os
 import sys
-from pkg_resources import resource_listdir, resource_exists, resource_string
 
 import persistent
 from zope import component
@@ -96,19 +95,23 @@ def grok(dotted_name):
                              adapts=(Model, IBrowserRequest),
                              provides=IDefaultViewName)
 
-    package_or_module = resolve(dotted_name)
-    for name in scan.modules(dotted_name, package_or_module.__file__):
-        grok_module(name)
+    module_info = scan.module_info_from_dotted_name(dotted_name)
+    grok_tree(module_info)
 
-def grok_module(dotted_name):
-    module = resolve(dotted_name)
 
-    models, adapters, multiadapters, views, templates, subscribers = \
-            scan_module(dotted_name, module)
+def grok_tree(module_info):
+    grok_module(module_info)
 
-    find_filesystem_templates(dotted_name, module, templates)
+    for sub_module_info in module_info.getSubModuleInfos():
+        grok_tree(sub_module_info)
 
-    context = determine_module_context(module, models)
+
+def grok_module(module_info):
+    models, adapters, multiadapters, views, templates, subscribers = scan_module(module_info)
+
+    find_filesystem_templates(module_info, templates)
+
+    context = determine_module_context(module_info, models)
 
     register_models(models)
     register_adapters(context, adapters)
@@ -117,18 +120,19 @@ def grok_module(dotted_name):
     register_unassociated_templates(context, templates)
     register_subscribers(subscribers)
 
-def scan_module(dotted_name, module):
+def scan_module(module_info):
     models = []
     adapters = []
     multiadapters = []
     views = []
     templates = TemplateRegistry()
-    subscribers = getattr(module, '__grok_subscribers__', [])
+    subscribers = module_info.getAnnotation('grok.subscribers', [])
 
+    module = module_info.getModule()
     for name in dir(module):
         obj = getattr(module, name)
 
-        if not defined_locally(obj, dotted_name):
+        if not defined_locally(obj, module_info.dotted_name):
             continue
 
         if util.check_subclass(obj, Model):
@@ -142,42 +146,42 @@ def scan_module(dotted_name, module):
         elif isinstance(obj, PageTemplate):
             templates.register(name, obj)
             obj.__grok_name__ = name
-            obj.__grok_location__ = dotted_name
+            obj.__grok_location__ = module_info.dotted_name
 
     return models, adapters, multiadapters, views, templates, subscribers
 
-def find_filesystem_templates(dotted_name, module, templates):
-    module_name = dotted_name.split('.')[-1]
-    directory_name = directive_annotation(module, 'grok.templatedir',
-                                          module_name)
-    if resource_exists(dotted_name, directory_name):
-        template_files = resource_listdir(dotted_name, directory_name)
+def find_filesystem_templates(module_info, templates):
+    template_dir_name = module_info.getAnnotation('grok.templatedir', module_info.name)
+    template_dir = module_info.getResourcePath(template_dir_name)
+    if os.path.isdir(template_dir):
+        template_files = os.listdir(template_dir)
         for template_file in template_files:
             if template_file.startswith('.') or template_file.endswith('~'):
                 continue
 
-            template_name = template_file[:-3]
-            template_path = os.path.join(directory_name, template_file)
-
             if not template_file.endswith('.pt'):
                 raise GrokError("Unrecognized file '%s' in template directory "
-                                "'%s'."  % (template_file, directory_name),
-                                module)
+                                "'%s'." % (template_file, template_dir),
+                                module_info.getModule())
 
-            contents = resource_string(dotted_name, template_path)
+            template_name = template_file[:-3] # cut off .pt
+            template_path = os.path.join(template_dir, template_file)
+
+            f = open(template_path, 'rb')
+            contents = f.read()
+            f.close()
+
             template = PageTemplate(contents)
             template.__grok_name__ = template_name
-            # XXX is this zip-safe?
-            template.__grok_location__ = os.path.join(
-                os.path.dirname(module.__file__), template_path)
+            template.__grok_location__ = template_path
 
             inline_template = templates.get(template_name)
             if inline_template:
                 raise GrokError("Conflicting templates found for name '%s' "
                                 "in module %r, both inline and in template "
                                 "directory '%s'."
-                                % (template_name, module, directory_name),
-                                inline_template)
+                                % (template_name, module_info.getModule(),
+                                   template_dir), inline_template)
             templates.register(template_name, template)
 
 def register_static_resources(dotted_name, package_directory):
@@ -200,12 +204,12 @@ def register_models(models):
 def register_adapters(context, adapters):
     for factory in adapters:
         adapter_context = determine_class_context(factory, context)
-        name = directive_annotation(factory, 'grok.name', '')
+        name = class_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, adapts=(adapter_context,), name=name)
 
 def register_multiadapters(multiadapters):
     for factory in multiadapters:
-        name = directive_annotation(factory, 'grok.name', '')
+        name = class_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, name=name)
 
 def register_views(context, views, templates):
@@ -214,7 +218,7 @@ def register_views(context, views, templates):
         factory_name = factory.__name__.lower()
 
         # find inline templates
-        template_name = directive_annotation(factory, 'grok.template',
+        template_name = class_annotation(factory, 'grok.template',
                                              factory_name)
         template = templates.get(template_name)
 
@@ -242,7 +246,7 @@ def register_views(context, views, templates):
                                 "'render' method." % factory,
                                 factory)
 
-        view_name = directive_annotation(factory, 'grok.name', factory_name)
+        view_name = class_annotation(factory, 'grok.name', factory_name)
         component.provideAdapter(factory,
                                  adapts=(view_context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
@@ -310,7 +314,7 @@ def check_context(component, context):
         raise GrokError("Multiple possible contexts for %r, please use "
                         "grok.context." % component, component)
 
-def determine_module_context(module, models):
+def determine_module_context(module_info, models):
     if len(models) == 0:
         context = None
     elif len(models) == 1:
@@ -318,18 +322,18 @@ def determine_module_context(module, models):
     else:
         context = AMBIGUOUS_CONTEXT
 
-    module_context = directive_annotation(module, 'grok.context', None)
+    module_context = module_info.getAnnotation('grok.context', None)
     if module_context:
         context = module_context
 
     return context
-    
+
 def determine_class_context(class_, module_context):
-    context = directive_annotation(class_, 'grok.context', module_context)
+    context = class_annotation(class_, 'grok.context', module_context)
     check_context(class_, context)
     return context
 
-def directive_annotation(obj, name, default):
+def class_annotation(obj, name, default):
     return getattr(obj, '__%s__' % name.replace('.', '_'), default)
 
 def caller_module():
