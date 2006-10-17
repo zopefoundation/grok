@@ -12,6 +12,8 @@
   <html>
   <body>
   <h1>Hello, world!</h1>
+  <span>Blue</span>
+  <span>Blue</span>
   </body>
   </html>
 
@@ -19,12 +21,14 @@
 import grok
 
 class Mammoth(grok.Model):
-    pass
+    teeth = u"Blue"
 
 index = grok.PageTemplate("""\
 <html>
 <body>
 <h1>Hello, world!</h1>
+<span tal:content="python:context.teeth">green</span>
+<span tal:content="context/teeth">green</span>
 </body>
 </html>
 """)

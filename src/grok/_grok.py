@@ -19,6 +19,7 @@ import sys
 import persistent
 from zope import component
 from zope import interface
+from zope.proxy import removeAllProxies
 from zope.dottedname.resolve import resolve
 import zope.component.interface
 from zope.component.interfaces import IDefaultViewName
@@ -55,6 +56,10 @@ class MultiAdapter(object):
 
 class View(BrowserPage):
 
+    def __init__(self, context, request):
+        self.context = removeAllProxies(context)
+        self.request = removeAllProxies(request)
+
     def __call__(self):
         self.before()
 
@@ -64,8 +69,9 @@ class View(BrowserPage):
 
         namespace = template.pt_getContext()
         namespace['request'] = self.request
+        # Jim would say: WAAAAAAAAAAAAH!
         namespace['view'] = self
-        namespace['context'] = self.context
+        namespace['context'] = removeAllProxies(self.context)
 
         module_info = template.__grok_module_info__
         directory_resource = component.queryAdapter(self.request,
