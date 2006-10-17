@@ -15,6 +15,12 @@ Meta
 Core
 ====
 
+- if __init__.py appears in the 'static' directory -> bail out
+
+- if there's a 'static.py' -> bail out
+
+- tests: does suppressing of pagetemplateresources work?
+
 - choice fields / sources (theuni)
 
 - containers
