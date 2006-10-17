@@ -52,7 +52,9 @@ Core
 Need to discuss
 ---------------
 
-- grokking a package
+- change naming convention for template directories from
+  "<modulename>" to "template_<modulename>" or similar, to avoid
+  confusion?
 
 - grok buildout integration
 
@@ -61,6 +63,8 @@ Need to discuss
 - skins
 
 - form redirect
+
+- grok.resourcedir (multiple? per package? ...?)
 
 - authentication (pau integration) (faassen)
 
@@ -97,6 +101,8 @@ Punt
   go between the different schema implementations
 
 - containment constraints (wait for zope 3 to do them right)
+
+- reload
 
 
 Open Questions
