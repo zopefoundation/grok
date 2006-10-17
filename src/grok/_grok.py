@@ -20,6 +20,7 @@ import persistent
 from zope.dottedname.resolve import resolve
 from zope import component
 from zope import interface
+import zope.component.interface
 from zope.component.interfaces import IDefaultViewName
 from zope.security.checker import defineChecker, getCheckerForInstancesOf, NoProxy
 from zope.publisher.browser import BrowserPage
@@ -31,8 +32,9 @@ from grok import util, scan
 from grok.error import GrokError, GrokImportError
 from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
                             ClassOrModuleDirectiveContext,
-                            TextDirective, InterfaceOrClassDirective)
+                            TextDirective, InterfaceOrClassDirective, frame_is_module)
 
+AMBIGUOUS_CONTEXT = object()
 
 class Model(persistent.Persistent):
     pass
@@ -80,9 +82,6 @@ class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
     def __repr__(self):
         return '<%s template in %s>' % (self.__grok_name__, self.__grok_location__)
 
-
-AMBIGUOUS_CONTEXT = object()
-
 def grok(dotted_name):
     # register the name 'index' as the default view name
     # TODO this needs to be moved to grok startup time (similar to ZCML-time)
@@ -97,12 +96,27 @@ def grok(dotted_name):
 def grok_module(dotted_name):
     module = resolve(dotted_name)
 
-    context = None
+    models, adapters, multiadapters, views, templates, subscribers = scan_module(dotted_name, module)
+    
+    find_filesystem_templates(dotted_name, module, templates)
+
+    context = determine_module_context(module, models)
+
+    register_models(models)
+    register_adapters(context, adapters)
+    register_multiadapters(multiadapters)
+    register_views(context, views, templates)
+    register_unassociated_templates(context, templates)
+    register_subscribers(subscribers)
+
+def scan_module(dotted_name, module):
     models = []
     adapters = []
     multiadapters = []
     views = []
     templates = TemplateRegistry()
+    subscribers = getattr(module, '__grok_subscribers__', [])
+
     for name in dir(module):
         obj = getattr(module, name)
 
@@ -122,7 +136,9 @@ def grok_module(dotted_name):
             obj.__grok_name__ = name
             obj.__grok_location__ = dotted_name
 
-    # find filesystem resources
+    return models, adapters, multiadapters, views, templates, subscribers
+
+def find_filesystem_templates(dotted_name, module, templates):
     module_name = dotted_name.split('.')[-1]
     directory_name = directive_annotation(module, 'grok.resources', module_name)
     if resource_exists(dotted_name, directory_name):
@@ -149,33 +165,27 @@ def grok_module(dotted_name):
                                 inline_template)
             templates.register(template_name, template)
 
-    if len(models) == 0:
-        context = None
-    elif len(models) == 1:
-        context = models[0]
-    else:
-        context = AMBIGUOUS_CONTEXT
 
-    module_context = directive_annotation(module, 'grok.context', None)
-    if module_context:
-        context = module_context
-
+def register_models(models):
     for model in models:
         # TODO minimal security here (read: everything is public)
         if not getCheckerForInstancesOf(model):
             defineChecker(model, NoProxy)
 
+def register_adapters(context, adapters):
     for factory in adapters:
-        adapter_context = determine_context(factory, context)
+        adapter_context = determine_class_context(factory, context)
         name = directive_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, adapts=(adapter_context,), name=name)
 
+def register_multiadapters(multiadapters):
     for factory in multiadapters:
         name = directive_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, name=name)
 
+def register_views(context, views, templates):
     for factory in views:
-        view_context = determine_context(factory, context)
+        view_context = determine_class_context(factory, context)
         factory_name = factory.__name__.lower()
 
         # find inline templates
@@ -216,6 +226,7 @@ def grok_module(dotted_name):
         # TODO minimal security here (read: everything is public)
         defineChecker(factory, NoProxy)
 
+def register_unassociated_templates(context, templates):
     for name, unassociated in templates.listUnassociatedTemplates():
         check_context(unassociated, context)
 
@@ -231,6 +242,12 @@ def grok_module(dotted_name):
 
         # TODO minimal security here (read: everything is public)
         defineChecker(TemplateView, NoProxy)
+
+def register_subscribers(subscribers):
+    for factory, subscribed in subscribers:
+        component.provideHandler(factory, adapts=subscribed)
+        for iface in subscribed:
+            zope.component.interface.provideInterface('', iface)
 
 class TemplateRegistry(object):
 
@@ -268,9 +285,23 @@ def check_context(component, context):
         raise GrokError("Multiple possible contexts for %r, please use "
                         "grok.context." % component, component)
 
-def determine_context(factory, module_context):
-    context = directive_annotation(factory, 'grok.context', module_context)
-    check_context(factory, context)
+def determine_module_context(module, models):
+    if len(models) == 0:
+        context = None
+    elif len(models) == 1:
+        context = models[0]
+    else:
+        context = AMBIGUOUS_CONTEXT
+
+    module_context = directive_annotation(module, 'grok.context', None)
+    if module_context:
+        context = module_context
+
+    return context
+    
+def determine_class_context(class_, module_context):
+    context = directive_annotation(class_, 'grok.context', module_context)
+    check_context(class_, context)
     return context
 
 def directive_annotation(obj, name, default):
@@ -285,3 +316,21 @@ template = TextDirective('grok.template', ClassDirectiveContext())
 context = InterfaceOrClassDirective('grok.context',
                                     ClassOrModuleDirectiveContext())
 resources = TextDirective('grok.resources', ModuleDirectiveContext())
+
+# decorators
+class SubscribeDecorator:
+    def __init__(self, *args):
+        self.subscribed = args
+
+    def __call__(self, function):
+        frame = sys._getframe(1)
+        if not frame_is_module(frame):
+            raise GrokImportError("@grok.subscribe can only be used on module level.")
+
+        if not self.subscribed:
+            raise GrokImportError("@grok.subscribe requires at least one argument.")
+
+        subscribers = frame.f_locals.get('__grok_subscribers__', None)
+        if subscribers is None:
+            frame.f_locals['__grok_subscribers__'] = subscribers = []
+        subscribers.append((function, self.subscribed))

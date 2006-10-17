@@ -16,7 +16,10 @@
 
 from zope.interface import implements
 from zope.component import adapts
+from zope.lifecycleevent import IObjectCreatedEvent, ObjectCreatedEvent
+from zope.event import notify
 
 from grok._grok import (Model, Adapter, MultiAdapter, View, PageTemplate,
                    grok, context, name, template, resources, )
+from grok._grok import SubscribeDecorator as subscribe
 from grok.error import GrokError, GrokImportError

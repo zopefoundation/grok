@@ -1,6 +1,10 @@
 import unittest
 from pkg_resources import resource_listdir
 from zope.testing import doctest, cleanup
+import zope.component.eventtesting
+
+def setUpZope(test):
+    zope.component.eventtesting.setUp(test)
 
 def cleanUpZope(test):
     cleanup.cleanUp()
@@ -17,7 +21,9 @@ def suiteFromPackage(name):
             continue
 
         dottedname = 'grok.tests.%s.%s' % (name, filename[:-3])
-        test = doctest.DocTestSuite(dottedname, tearDown=cleanUpZope,
+        test = doctest.DocTestSuite(dottedname,
+                                    setUp=setUpZope,
+                                    tearDown=cleanUpZope,
                                     optionflags=doctest.ELLIPSIS+
                                     doctest.NORMALIZE_WHITESPACE)
 
@@ -26,7 +32,7 @@ def suiteFromPackage(name):
 
 def test_suite():
     suite = unittest.TestSuite()
-    for name in ['adapter', 'error', 'view', 'security', 'scan']:
+    for name in ['adapter', 'error', 'view', 'security', 'scan', 'event']:
         suite.addTest(suiteFromPackage(name))
     return suite
 
