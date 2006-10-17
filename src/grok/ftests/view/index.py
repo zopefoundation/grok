@@ -7,7 +7,7 @@
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
-  >>> browser.open("http://localhost/manfred/@@painting")
+  >>> browser.open("http://localhost/manfred")
   >>> print browser.contents
   <html>
   <body>
@@ -21,7 +21,7 @@ import grok
 class Mammoth(grok.Model):
     pass
 
-painting = grok.PageTemplate("""\
+index = grok.PageTemplate("""\
 <html>
 <body>
 <h1>Hello, world!</h1>

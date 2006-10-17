@@ -20,9 +20,10 @@ import persistent
 from zope.dottedname.resolve import resolve
 from zope import component
 from zope import interface
+from zope.component.interfaces import IDefaultViewName
 from zope.security.checker import defineChecker, getCheckerForInstancesOf, NoProxy
 from zope.publisher.browser import BrowserPage
-from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+from zope.publisher.interfaces.browser import IDefaultBrowserLayer, IBrowserRequest
 from zope.pagetemplate import pagetemplate
 from zope.app.pagetemplate.engine import TrustedAppPT
 
@@ -82,6 +83,12 @@ class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
 
 AMBIGUOUS_CONTEXT = object()
 def grok(dotted_name):
+    # register the name 'index' as the default view name
+    # TODO this needs to be moved to grok startup time (similar to ZCML-time)
+    component.provideAdapter('index',
+                             adapts=(Model, IBrowserRequest),
+                             provides=IDefaultViewName)
+
     # TODO for now we only grok modules
     module = resolve(dotted_name)
 
