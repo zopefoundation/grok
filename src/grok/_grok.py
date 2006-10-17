@@ -27,7 +27,7 @@ from zope.publisher.interfaces.browser import IDefaultBrowserLayer, IBrowserRequ
 from zope.pagetemplate import pagetemplate
 from zope.app.pagetemplate.engine import TrustedAppPT
 
-from grok import util
+from grok import util, scan
 from grok.error import GrokError, GrokImportError
 from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
                             ClassOrModuleDirectiveContext,
@@ -82,6 +82,7 @@ class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
 
 
 AMBIGUOUS_CONTEXT = object()
+
 def grok(dotted_name):
     # register the name 'index' as the default view name
     # TODO this needs to be moved to grok startup time (similar to ZCML-time)
@@ -89,7 +90,11 @@ def grok(dotted_name):
                              adapts=(Model, IBrowserRequest),
                              provides=IDefaultViewName)
 
-    # TODO for now we only grok modules
+    package_or_module = resolve(dotted_name)
+    for name in scan.modules(dotted_name, package_or_module.__file__):
+        grok_module(name)
+
+def grok_module(dotted_name):
     module = resolve(dotted_name)
 
     context = None
