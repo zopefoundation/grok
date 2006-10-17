@@ -29,8 +29,6 @@ Core
 
 - traversal - not megrok.routes (philikon)
 
-- events / subscribers (wosc)
-
 - global utilities (wosc)
 
 - interfaces (nothing to do there)
@@ -86,6 +84,7 @@ Need to discuss
 - have a custom security policy that is easier to understand than the
   default Zope 3 policy
 
+- use ZCML's conflict resolution machinery
 
 Punt
 ----
@@ -98,12 +97,6 @@ Punt
   go between the different schema implementations
 
 - containment constraints (wait for zope 3 to do them right)
-
-
-Views
-=====
-
-- index views
 
 
 Open Questions
