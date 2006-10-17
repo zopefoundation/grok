@@ -9,6 +9,8 @@
   True
   >>> module_info.dotted_name
   'grok.tests.scan.stoneage'
+  >>> module_info.package_dotted_name
+  'grok.tests.scan.stoneage'
   >>> module_info.name
   'stoneage'
 
@@ -38,6 +40,8 @@ cave is a module, not a package.
   False
   >>> cave_module_info.dotted_name
   'grok.tests.scan.stoneage.cave'
+  >>> module_info.package_dotted_name
+  'grok.tests.scan.stoneage'
   >>> cave_module_info.name
   'cave'
   >>> cave_module_info.getSubModuleInfos()

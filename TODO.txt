@@ -60,6 +60,9 @@ Core
 Need to discuss
 ---------------
 
+- fall back to a static resource that is defined in a package on a higher
+  level if no static resource directory is defined locally in a package?
+
 - change naming convention for template directories from
   "<modulename>" to "template_<modulename>" or similar, to avoid
   confusion?

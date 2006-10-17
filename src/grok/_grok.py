@@ -66,6 +66,12 @@ class View(BrowserPage):
         namespace['request'] = self.request
         namespace['view'] = self
         namespace['context'] = self.context
+
+        module_info = template.__grok_module_info__
+        directory_resource = component.queryAdapter(self.request,
+                interface.Interface, name=module_info.package_dotted_name)
+        # XXX need to check whether we really want None here
+        namespace['static'] = directory_resource
         return template.pt_render(namespace)
 
     def before(self):
@@ -81,6 +87,8 @@ class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
                              "unicode or ASCII.")
         self.write(template)
 
+        # __grok_module__ is needed to make defined_locally() return True for
+        # inline templates
         # XXX unfortunately using caller_module means that
         # PageTemplate cannot be subclassed
         self.__grok_module__ = caller_module()
@@ -88,6 +96,12 @@ class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
     def __repr__(self):
         return '<%s template in %s>' % (self.__grok_name__,
                                         self.__grok_location__)
+
+    def _annotateGrokInfo(self, module_info, name, location):
+        self.__grok_module_info__ = module_info
+        self.__grok_name__ = name
+        self.__grok_location__ = location
+
 
 def grok(dotted_name):
     # register the name 'index' as the default view name
@@ -153,8 +167,7 @@ def scan_module(module_info):
             views.append(obj)
         elif isinstance(obj, PageTemplate):
             templates.register(name, obj)
-            obj.__grok_name__ = name
-            obj.__grok_location__ = module_info.dotted_name
+            obj._annotateGrokInfo(module_info, name, module_info.dotted_name)
 
     return models, adapters, multiadapters, views, templates, subscribers
 
@@ -180,8 +193,10 @@ def find_filesystem_templates(module_info, templates):
             f.close()
 
             template = PageTemplate(contents)
-            template.__grok_name__ = template_name
-            template.__grok_location__ = template_path
+            template._annotateGrokInfo(module_info, template_name,
+                                       template_path)
+            #template.__grok_name__ = template_name
+            #template.__grok_location__ = template_path
 
             inline_template = templates.get(template_name)
             if inline_template:

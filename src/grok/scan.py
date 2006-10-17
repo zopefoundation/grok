@@ -36,7 +36,14 @@ class ModuleInfo(object):
             path = path[:-1]
         self.path = path
         self.dotted_name = dotted_name
-        self.name = dotted_name.split('.')[-1]
+
+        name_parts = dotted_name.split('.')
+        self.name = name_parts[-1]
+        if self.isPackage():
+            self.package_dotted_name = dotted_name
+        else:
+            self.package_dotted_name = '.'.join(name_parts[:-1])
+
         self._module = None
 
     def getResourcePath(self, name):
