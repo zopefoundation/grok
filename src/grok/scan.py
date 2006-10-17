@@ -19,6 +19,7 @@ import setuptools
 from glob import glob
 from zope.dottedname.resolve import resolve
 
+#TODO: not ZIP-safe
 def modules(dotted_name, module_path):
     yield dotted_name
 
