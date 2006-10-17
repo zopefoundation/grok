@@ -16,7 +16,16 @@
 
 from zope.interface import implements
 from zope.component import adapts
-from zope.lifecycleevent import IObjectCreatedEvent, ObjectCreatedEvent
+from zope.lifecycleevent import (
+    IObjectCreatedEvent, ObjectCreatedEvent,
+    IObjectModifiedEvent, ObjectModifiedEvent,
+    IObjectCopiedEvent, ObjectCopiedEvent)
+from zope.app.container.contained import (
+    IObjectAddedEvent, ObjectAddedEvent,
+    IObjectMovedEvent, ObjectMovedEvent, 
+    IObjectRemovedEvent, ObjectRemovedEvent,
+    IContainerModifiedEvent, ContainerModifiedEvent)
+
 from zope.event import notify
 
 from grok._grok import (Model, Adapter, MultiAdapter, View, PageTemplate,
