@@ -1,5 +1,5 @@
 """
-You can explicitly specify the resource directory using grok.resources on module level:
+You can explicitly specify the template directory using grok.templatedir on module level:
 
   >>> grok.grok(__name__)
 
@@ -18,7 +18,7 @@ You can explicitly specify the resource directory using grok.resources on module
 """
 import grok
 
-grok.resources('resourcedirectoryname')
+grok.templatedir('templatedirectoryname')
 
 class Mammoth(grok.Model):
     pass

@@ -140,26 +140,26 @@ def scan_module(dotted_name, module):
 
 def find_filesystem_templates(dotted_name, module, templates):
     module_name = dotted_name.split('.')[-1]
-    directory_name = directive_annotation(module, 'grok.resources', module_name)
+    directory_name = directive_annotation(module, 'grok.templatedir', module_name)
     if resource_exists(dotted_name, directory_name):
-        resources = resource_listdir(dotted_name, directory_name)
-        for resource in resources:
-            if not resource.endswith(".pt"):
+        template_files = resource_listdir(dotted_name, directory_name)
+        for template_file in template_files:
+            if not template_file.endswith(".pt"):
                 continue
-            template_name = resource[:-3]
-            resource_path = os.path.join(directory_name, resource)
+            template_name = template_file[:-3]
+            template_path = os.path.join(directory_name, template_file)
 
-            contents = resource_string(dotted_name, resource_path)
+            contents = resource_string(dotted_name, template_path)
             template = PageTemplate(contents)
             template.__grok_name__ = template_name
             # XXX is this zip-safe?
             template.__grok_location__ = os.path.join(
-                os.path.dirname(module.__file__), resource_path)
+                os.path.dirname(module.__file__), template_path)
 
             inline_template = templates.get(template_name)
             if inline_template:
                 raise GrokError("Conflicting templates found for name '%s' "
-                                "in module %r, both inline and in resource "
+                                "in module %r, both inline and in template "
                                 "directory '%s'."
                                 % (template_name, module, directory_name),
                                 inline_template)
@@ -315,7 +315,7 @@ name = TextDirective('grok.name', ClassDirectiveContext())
 template = TextDirective('grok.template', ClassDirectiveContext())
 context = InterfaceOrClassDirective('grok.context',
                                     ClassOrModuleDirectiveContext())
-resources = TextDirective('grok.resources', ModuleDirectiveContext())
+templatedir = TextDirective('grok.templatedir', ModuleDirectiveContext())
 
 # decorators
 class SubscribeDecorator:

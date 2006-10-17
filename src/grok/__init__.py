@@ -29,6 +29,6 @@ from zope.app.container.contained import (
 from zope.event import notify
 
 from grok._grok import (Model, Adapter, MultiAdapter, View, PageTemplate,
-                   grok, context, name, template, resources, )
+                   grok, context, name, template, templatedir, )
 from grok._grok import SubscribeDecorator as subscribe
 from grok.error import GrokError, GrokImportError
