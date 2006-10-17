@@ -144,10 +144,15 @@ def find_filesystem_templates(dotted_name, module, templates):
     if resource_exists(dotted_name, directory_name):
         template_files = resource_listdir(dotted_name, directory_name)
         for template_file in template_files:
-            if not template_file.endswith(".pt"):
+            if template_file.startswith('.') or template_file.endswith('~'):
                 continue
+
             template_name = template_file[:-3]
             template_path = os.path.join(directory_name, template_file)
+
+            if not template_file.endswith('.pt'):
+                raise GrokError("Unrecognized file '%s' in template directory '%s'."
+                                % (template_file, directory_name), module)
 
             contents = resource_string(dotted_name, template_path)
             template = PageTemplate(contents)
