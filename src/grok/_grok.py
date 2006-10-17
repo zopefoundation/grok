@@ -27,6 +27,7 @@ from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer, IBrowserRequest
 from zope.pagetemplate import pagetemplate
 from zope.app.pagetemplate.engine import TrustedAppPT
+from zope.app.publisher.browser.directoryresource import DirectoryResourceFactory
 
 from grok import util, scan
 from grok.error import GrokError, GrokImportError
@@ -90,7 +91,10 @@ def grok(dotted_name):
                              provides=IDefaultViewName)
 
     package_or_module = resolve(dotted_name)
-    for name in scan.modules(dotted_name, package_or_module.__file__):
+    for name, path in scan.modules(dotted_name, package_or_module.__file__):
+        if is_package(name):
+            register_static_resources(name, path)
+
         grok_module(name)
 
 def grok_module(dotted_name):
@@ -170,6 +174,16 @@ def find_filesystem_templates(dotted_name, module, templates):
                                 inline_template)
             templates.register(template_name, template)
 
+def register_static_resources(dotted_name, package_directory):
+    path = os.path.join(package_directory, 'static')
+
+    if os.path.exists(path):
+#         if not os.path.isdir(path):
+#             raise GrokError("")
+
+        resource_factory = DirectoryResourceFactory(path, NoProxy, dotted_name)
+        component.provideAdapter(resource_factory, (IDefaultBrowserLayer,),
+                                 interface.Interface, name=dotted_name)
 
 def register_models(models):
     for model in models:
