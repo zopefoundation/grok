@@ -29,8 +29,9 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest)
 from zope.pagetemplate import pagetemplate
 from zope.app.pagetemplate.engine import TrustedAppPT
-from zope.app.publisher.browser.directoryresource import \
-     DirectoryResourceFactory
+from zope.app.publisher.browser import directoryresource
+from zope.app.publisher.browser.pagetemplateresource import \
+    PageTemplateResourceFactory
 
 from grok import util, scan
 from grok.error import GrokError, GrokImportError
@@ -101,6 +102,13 @@ def grok(dotted_name):
 
 def grok_tree(module_info):
     grok_module(module_info)
+
+    if not module_info.isPackage():
+        return
+
+    resource_path = module_info.getResourcePath('static')
+    if os.path.isdir(resource_path):
+        register_static_resources(module_info.dotted_name, resource_path)
 
     for sub_module_info in module_info.getSubModuleInfos():
         grok_tree(sub_module_info)
@@ -184,16 +192,68 @@ def find_filesystem_templates(module_info, templates):
                                    template_dir), inline_template)
             templates.register(template_name, template)
 
-def register_static_resources(dotted_name, package_directory):
-    path = os.path.join(package_directory, 'static')
 
-    if os.path.exists(path):
-#         if not os.path.isdir(path):
-#             raise GrokError("")
+class GrokDirectoryResource(directoryresource.DirectoryResource):
+    # We subclass this, because we want to override the default factories for
+    # the resources so that .pt and .html do not get created as page
+    # templates
 
-        resource_factory = DirectoryResourceFactory(path, NoProxy, dotted_name)
-        component.provideAdapter(resource_factory, (IDefaultBrowserLayer,),
-                                 interface.Interface, name=dotted_name)
+    resource_factories = {}
+    for type, factory in (directoryresource.DirectoryResource.
+                          resource_factories.items()):
+        if factory is PageTemplateResourceFactory:
+            continue
+        resource_factories[type] = factory
+
+
+class GrokDirectoryResourceFactory(object):
+    # We need this to allow hooking up our own GrokDirectoryResource
+    # and to set the checker to None (until we have our own checker)
+
+    def __init__(self, path, name):
+        # XXX we're not sure about the checker=None here
+        self.__dir = directoryresource.Directory(path, None, name)
+        self.__name = name
+
+    def __call__(self, request):
+        resource = GrokDirectoryResource(self.__dir, request)
+        resource.__Security_checker__ = GrokChecker()
+        resource.__name__ = self.__name
+        return resource
+
+class GrokChecker(object):
+    # ME GROK ANGRY.
+    # ME GROK NOT KNOW WHY CHECKER.
+
+    # We have no idea why we need a custom checker here. One hint was
+    # that the DirectoryResource already does something manually with
+    # setting up the 'correct' checker for itself and we seem to interfere
+    # with that. However, we couldn't figure out what's going on and this
+    # solves our problem for now. 
+
+    # XXX re-implement this in a sane way.
+
+    def __init__(self):
+        pass
+
+    def check_getattr(self, object, name):
+        pass
+
+    def check_setattr(self, ob, name):
+        pass
+
+    def check(self, ob, operation):
+        pass
+
+    def proxy(self, value):
+        return value
+
+
+def register_static_resources(dotted_name, resource_directory):
+    resource_factory = GrokDirectoryResourceFactory(resource_directory,
+                                                    dotted_name)
+    component.provideAdapter(resource_factory, (IDefaultBrowserLayer,),
+                             interface.Interface, name=dotted_name)
 
 def register_models(models):
     for model in models:
