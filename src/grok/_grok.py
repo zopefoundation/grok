@@ -91,10 +91,7 @@ def grok(dotted_name):
                              provides=IDefaultViewName)
 
     package_or_module = resolve(dotted_name)
-    for name, path in scan.modules(dotted_name, package_or_module.__file__):
-        if is_package(name):
-            register_static_resources(name, path)
-
+    for name in scan.modules(dotted_name, package_or_module.__file__):
         grok_module(name)
 
 def grok_module(dotted_name):

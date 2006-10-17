@@ -25,7 +25,7 @@ def modules(dotted_name, module_path):
     if not (module_path.endswith('__init__.py')
             or module_path.endswith('__init__.pyc')):
         return
-    
+
     package_directory = os.path.dirname(module_path)
     seen = []
     for entry in sorted(os.listdir(package_directory)):
