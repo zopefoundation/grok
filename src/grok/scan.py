@@ -15,8 +15,8 @@
 """
 
 import os
-from glob import glob
 import setuptools
+from glob import glob
 from zope.dottedname.resolve import resolve
 
 def modules(dotted_name, module_path):

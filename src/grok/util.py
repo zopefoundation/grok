@@ -17,7 +17,6 @@
 import re
 import types
 
-
 def not_unicode_or_ascii(value):
     if isinstance(value, unicode):
         return False
@@ -28,11 +27,11 @@ def not_unicode_or_ascii(value):
 is_not_ascii = re.compile(eval(r'u"[\u0080-\uffff]"')).search
 
 def isclass(obj):
-    """We cannot use ``inspect.isclass`` because it will return True for interfaces"""
+    """We cannot use ``inspect.isclass`` because it will return True
+    for interfaces"""
     return type(obj) in (types.ClassType, type)
 
 def check_subclass(obj, class_):
     if not isclass(obj):
         return False
     return issubclass(obj, class_)
-

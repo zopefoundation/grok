@@ -13,27 +13,32 @@
 ##############################################################################
 """Grok
 """
-import sys
 import os
+import sys
 from pkg_resources import resource_listdir, resource_exists, resource_string
+
 import persistent
-from zope.dottedname.resolve import resolve
 from zope import component
 from zope import interface
+from zope.dottedname.resolve import resolve
 import zope.component.interface
 from zope.component.interfaces import IDefaultViewName
-from zope.security.checker import defineChecker, getCheckerForInstancesOf, NoProxy
+from zope.security.checker import (defineChecker, getCheckerForInstancesOf,
+                                   NoProxy)
 from zope.publisher.browser import BrowserPage
-from zope.publisher.interfaces.browser import IDefaultBrowserLayer, IBrowserRequest
+from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
+                                               IBrowserRequest)
 from zope.pagetemplate import pagetemplate
 from zope.app.pagetemplate.engine import TrustedAppPT
-from zope.app.publisher.browser.directoryresource import DirectoryResourceFactory
+from zope.app.publisher.browser.directoryresource import \
+     DirectoryResourceFactory
 
 from grok import util, scan
 from grok.error import GrokError, GrokImportError
 from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
                             ClassOrModuleDirectiveContext,
-                            TextDirective, InterfaceOrClassDirective, frame_is_module)
+                            TextDirective, InterfaceOrClassDirective,
+                            frame_is_module)
 
 AMBIGUOUS_CONTEXT = object()
 
@@ -81,7 +86,8 @@ class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
         self.__grok_module__ = caller_module()
 
     def __repr__(self):
-        return '<%s template in %s>' % (self.__grok_name__, self.__grok_location__)
+        return '<%s template in %s>' % (self.__grok_name__,
+                                        self.__grok_location__)
 
 def grok(dotted_name):
     # register the name 'index' as the default view name
@@ -97,8 +103,9 @@ def grok(dotted_name):
 def grok_module(dotted_name):
     module = resolve(dotted_name)
 
-    models, adapters, multiadapters, views, templates, subscribers = scan_module(dotted_name, module)
-    
+    models, adapters, multiadapters, views, templates, subscribers = \
+            scan_module(dotted_name, module)
+
     find_filesystem_templates(dotted_name, module, templates)
 
     context = determine_module_context(module, models)
@@ -141,7 +148,8 @@ def scan_module(dotted_name, module):
 
 def find_filesystem_templates(dotted_name, module, templates):
     module_name = dotted_name.split('.')[-1]
-    directory_name = directive_annotation(module, 'grok.templatedir', module_name)
+    directory_name = directive_annotation(module, 'grok.templatedir',
+                                          module_name)
     if resource_exists(dotted_name, directory_name):
         template_files = resource_listdir(dotted_name, directory_name)
         for template_file in template_files:
@@ -152,8 +160,9 @@ def find_filesystem_templates(dotted_name, module, templates):
             template_path = os.path.join(directory_name, template_file)
 
             if not template_file.endswith('.pt'):
-                raise GrokError("Unrecognized file '%s' in template directory '%s'."
-                                % (template_file, directory_name), module)
+                raise GrokError("Unrecognized file '%s' in template directory "
+                                "'%s'."  % (template_file, directory_name),
+                                module)
 
             contents = resource_string(dotted_name, template_path)
             template = PageTemplate(contents)
@@ -341,10 +350,12 @@ class SubscribeDecorator:
     def __call__(self, function):
         frame = sys._getframe(1)
         if not frame_is_module(frame):
-            raise GrokImportError("@grok.subscribe can only be used on module level.")
+            raise GrokImportError("@grok.subscribe can only be used on module "
+                                  "level.")
 
         if not self.subscribed:
-            raise GrokImportError("@grok.subscribe requires at least one argument.")
+            raise GrokImportError("@grok.subscribe requires at least one "
+                                  "argument.")
 
         subscribers = frame.f_locals.get('__grok_subscribers__', None)
         if subscribers is None:

@@ -29,7 +29,8 @@ def frame_is_class(frame):
     return '__module__' in frame.f_locals    
 
 class IDirectiveContext(interface.Interface):
-    description = interface.Attribute("The correct place in which the directive can be used.")
+    description = interface.Attribute("The correct place in which the "
+                                      "directive can be used.")
 
     def matches(frame):
         """returns whether the given frame is the correct place in
