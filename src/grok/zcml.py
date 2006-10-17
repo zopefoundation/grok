@@ -15,10 +15,10 @@
 """
 from zope import interface
 import zope.configuration.fields
+import grok
 
 class IGrokDirective(interface.Interface):
-    """
-    
+    """Grok a package or module.
     """
 
     package = zope.configuration.fields.GlobalObject(
@@ -26,4 +26,6 @@ class IGrokDirective(interface.Interface):
         description=u"The package or module to be analyzed by grok.",
         required=False,
         )
-    
+
+def grokDirective(_context, package):
+    grok.grok(package.__name__)

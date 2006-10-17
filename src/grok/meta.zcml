@@ -5,8 +5,8 @@
   <meta:directives namespace="http://namespaces.zope.org/grok">
     <meta:directive
         name="grok"
-        schema=".metadirectives.IGrokDirective"
-        handler=".metaconfigure.grokDirective"
+        schema=".zcml.IGrokDirective"
+        handler=".zcml.grokDirective"
         />
   </meta:directives>
 </configure>
