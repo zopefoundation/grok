@@ -48,6 +48,8 @@ Core
 - error reporting during grokking (provide file/line-number information
   on our extrinsically generated errors) (philikon)
 
+- do not accept automatic directory guessing convention for __init__.py, bail
+  out with grok error instead
 
 Need to discuss
 ---------------
