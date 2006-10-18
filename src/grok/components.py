@@ -75,6 +75,10 @@ class View(BrowserPage):
         namespace['static'] = directory_resource
         return template.pt_render(namespace)
 
+    def __getitem__(self, key):
+        # XXX give nice error message if template is None
+        return self.template.macros[key]
+
     def before(self):
         pass
 

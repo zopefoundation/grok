@@ -8,3 +8,8 @@ body {
     border:1px solid #999999;
     padding:1em;
 }
+
+#footer {
+    font-size:70%;
+    color:#999999;
+}
