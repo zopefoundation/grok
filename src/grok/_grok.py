@@ -311,6 +311,7 @@ def register_adapters(context, adapters):
 def register_multiadapters(multiadapters):
     for factory in multiadapters:
         check_implements_one(factory)
+        check_adapts(factory)
         name = class_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, name=name)
 
@@ -426,6 +427,12 @@ def check_implements_one(class_):
     if len(list(interface.implementedBy(class_))) != 1:
         raise GrokError("%r must implement exactly one interface "
                         "(use grok.implements to specify)."
+                        % class_, class_)
+
+def check_adapts(class_):
+    if component.adaptedBy(class_) is None:
+        raise GrokError("%r must specify which contexts it adapts "
+                        "(use grok.adapts to specify)."
                         % class_, class_)
 
 def determine_module_context(module_info, models):
