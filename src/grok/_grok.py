@@ -304,16 +304,19 @@ def register_models(models):
 def register_adapters(context, adapters):
     for factory in adapters:
         adapter_context = determine_class_context(factory, context)
+        check_implements_one(factory)
         name = class_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, adapts=(adapter_context,), name=name)
 
 def register_multiadapters(multiadapters):
     for factory in multiadapters:
+        check_implements_one(factory)
         name = class_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, name=name)
 
 def register_utilities(utilities):
     for factory in utilities:
+        check_implements_one(factory)
         name = class_annotation(factory, 'grok.name', '')
         component.provideUtility(factory(), name=name)
 
@@ -418,6 +421,12 @@ def check_context(component, context):
     elif context is AMBIGUOUS_CONTEXT:
         raise GrokError("Multiple possible contexts for %r, please use "
                         "grok.context." % component, component)
+
+def check_implements_one(class_):
+    if len(list(interface.implementedBy(class_))) != 1:
+        raise GrokError("%r must implement exactly one interface "
+                        "(use grok.implements to specify)."
+                        % class_, class_)
 
 def determine_module_context(module_info, models):
     if len(models) == 0:
