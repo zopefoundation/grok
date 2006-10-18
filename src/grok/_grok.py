@@ -128,6 +128,9 @@ def grok_tree(module_info):
 
     resource_path = module_info.getResourcePath('static')
     if os.path.isdir(resource_path):
+        if scan.is_package(resource_path):
+            raise GrokError("The 'static' resource directory must not "
+                            "be a python package.", module_info.getModule())
         register_static_resources(module_info.dotted_name, resource_path)
 
     for sub_module_info in module_info.getSubModuleInfos():
@@ -135,7 +138,8 @@ def grok_tree(module_info):
 
 
 def grok_module(module_info):
-    models, adapters, multiadapters, views, templates, subscribers = scan_module(module_info)
+    (models, adapters, multiadapters,
+     views, templates, subscribers) = scan_module(module_info)
 
     find_filesystem_templates(module_info, templates)
 
