@@ -15,10 +15,6 @@ Meta
 Core
 ====
 
-- if __init__.py appears in the 'static' directory -> bail out
-
-- if there's a 'static.py' -> bail out
-
 - tests: does suppressing of pagetemplateresources work?
 
 - choice fields / sources (theuni)
@@ -100,6 +96,8 @@ Need to discuss
   default Zope 3 policy
 
 - use ZCML's conflict resolution machinery
+
+- FooBase convention + grok.baseclass to not grok certain classes
 
 Punt
 ----
