@@ -21,17 +21,22 @@ from zope.lifecycleevent import (
     IObjectCreatedEvent, ObjectCreatedEvent,
     IObjectModifiedEvent, ObjectModifiedEvent,
     IObjectCopiedEvent, ObjectCopiedEvent)
+
 from zope.app.container.contained import (
     IObjectAddedEvent, ObjectAddedEvent,
     IObjectMovedEvent, ObjectMovedEvent, 
     IObjectRemovedEvent, ObjectRemovedEvent,
     IContainerModifiedEvent, ContainerModifiedEvent)
 
-from grok._grok import (Model, Adapter, MultiAdapter, View, PageTemplate, Utility,
-                        grok, context, name, template, templatedir, )
+from grok._grok import Model, Adapter, MultiAdapter, View, XMLRPC
+from grok._grok import PageTemplate, Utility
+
+from grok._grok import grok, context, name, template, templatedir
+
 from grok._grok import SubscribeDecorator as subscribe
 from grok.error import GrokError, GrokImportError
 
+# Our __init__ provides the grok API directly so using 'import grok' is enough.
 from grok.interfaces import IGrokAPI
 from zope.interface import moduleProvides
 moduleProvides(IGrokAPI)

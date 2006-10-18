@@ -15,6 +15,7 @@
 """
 import os
 import sys
+import inspect
 
 import persistent
 from zope import component
@@ -29,10 +30,13 @@ from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest)
 from zope.pagetemplate import pagetemplate
+
 from zope.app.pagetemplate.engine import TrustedAppPT
 from zope.app.publisher.browser import directoryresource
 from zope.app.publisher.browser.pagetemplateresource import \
     PageTemplateResourceFactory
+from zope.app.publisher.xmlrpc import MethodPublisher
+from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 
 from grok import util, scan
 from grok.error import GrokError, GrokImportError
@@ -40,6 +44,7 @@ from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
                             ClassOrModuleDirectiveContext,
                             TextDirective, InterfaceOrClassDirective,
                             frame_is_module)
+
 
 AMBIGUOUS_CONTEXT = object()
 
@@ -85,6 +90,12 @@ class View(BrowserPage):
 
     def before(self):
         pass
+
+
+class XMLRPC(object):
+    pass
+
+
 
 class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
     expand = 0
@@ -140,7 +151,7 @@ def grok_tree(module_info):
                 raise GrokError("A package can not contain both a 'static' "
                                 "resource directory and a module named "
                                 "'static.py'", module_info.getModule())
-                
+
         register_static_resources(module_info.dotted_name, resource_path)
 
     for sub_module_info in module_info.getSubModuleInfos():
@@ -149,7 +160,7 @@ def grok_tree(module_info):
 
 def grok_module(module_info):
     (models, adapters, multiadapters, utilities,
-     views, templates, subscribers) = scan_module(module_info)
+     views, xmlrpc_views, templates, subscribers) = scan_module(module_info)
 
     find_filesystem_templates(module_info, templates)
 
@@ -160,15 +171,20 @@ def grok_module(module_info):
     register_multiadapters(multiadapters)
     register_utilities(utilities)
     register_views(context, views, templates)
+    register_xmlrpc(context, xmlrpc_views)
     register_unassociated_templates(context, templates)
     register_subscribers(subscribers)
 
+
 def scan_module(module_info):
-    models = []
-    adapters = []
-    multiadapters = []
-    utilities = []
-    views = []
+    components = {
+            Model: [],
+            Adapter: [],
+            MultiAdapter: [],
+            Utility: [],
+            View: [],
+            XMLRPC: []
+            }
     templates = TemplateRegistry()
     subscribers = module_info.getAnnotation('grok.subscribers', [])
 
@@ -179,22 +195,19 @@ def scan_module(module_info):
         if not defined_locally(obj, module_info.dotted_name):
             continue
 
-        if util.check_subclass(obj, Model):
-            models.append(obj)
-        elif util.check_subclass(obj, Adapter):
-            adapters.append(obj)
-        elif util.check_subclass(obj, MultiAdapter):
-            multiadapters.append(obj)
-        elif util.check_subclass(obj, View):
-            views.append(obj)
-        elif util.check_subclass(obj, Utility):
-            utilities.append(obj)
-        elif isinstance(obj, PageTemplate):
+        if isinstance(obj, PageTemplate):
             templates.register(name, obj)
             obj._annotateGrokInfo(module_info, name, module_info.dotted_name)
+            continue
 
-    return (models, adapters, multiadapters, utilities,
-            views, templates, subscribers)
+        for candidate_class, found_list in components.items():
+            if util.check_subclass(obj, candidate_class):
+                found_list.append(obj)
+                break
+
+    return (components[Model], components[Adapter], 
+            components[MultiAdapter], components[Utility],
+            components[View], components[XMLRPC], templates, subscribers)
 
 def find_filesystem_templates(module_info, templates):
     template_dir_name = module_info.getAnnotation('grok.templatedir', module_info.name)
@@ -320,6 +333,22 @@ def register_utilities(utilities):
         check_implements_one(factory)
         name = class_annotation(factory, 'grok.name', '')
         component.provideUtility(factory(), name=name)
+
+def register_xmlrpc(context, views):
+    for view in views:
+        view_context = determine_class_context(view, context)
+        candidates = [getattr(view, name) for name in dir(view)]
+        methods = [c for c in candidates if inspect.ismethod(c)]
+
+        for method in methods:
+            # Make sure that the class inherits MethodPublisher, so that the views
+            # have a location
+            method_view = type(view.__name__, (view, MethodPublisher), 
+                               {'__call__':method,
+                                '__Security_checker__':GrokChecker()})
+            component.provideAdapter(
+                method_view, (view_context, IXMLRPCRequest), interface.Interface,
+                name=method.__name__)
 
 def register_views(context, views, templates):
     for factory in views:

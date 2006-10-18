@@ -30,8 +30,6 @@ Core
 
 - local registrations (philikon)
 
-- xml-rpc (theuni)
-
 - make it easier to write tests (wosc, faassen)
 
 - grok.App (philikon)
@@ -42,6 +40,10 @@ Core
 
 - error reporting during grokking (provide file/line-number information
   on our extrinsically generated errors) (philikon)
+
+- maybe: transform register_foo() functions that take lists into functions
+  that operate on a single entity and provide a decorator (@iterate) to 
+  call the function for each item (theuni)
 
 Need to discuss
 ---------------
