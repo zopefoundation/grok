@@ -10,16 +10,10 @@ When a GrokImportError occurs, ZCML will give the proper stack trace:
   ...     xmlns="http://namespaces.zope.org/zope"
   ...     xmlns:grok="http://namespaces.zope.org/grok"
   ...     >
-  ...     <grok:grok package="grok.tests.scan.directiveerror"/>
+  ...     <grok:grok package="grok.tests.zcml.directiveimporterror_fixture"/>
   ... </configure>''', context=context)
   Traceback (most recent call last):
     ...
   ZopeXMLConfigurationError: File "...", line ...
-  GrokError: No module-level context for
-  <class 'grok.tests.scan.directiveerror.CavePainting'>, please use grok.context.
-
+  GrokImportError: grok.template can only be used on class level.
 """
-import grok
-
-class CavePainting(grok.View):
-    pass

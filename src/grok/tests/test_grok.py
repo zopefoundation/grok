@@ -32,7 +32,8 @@ def suiteFromPackage(name):
 
 def test_suite():
     suite = unittest.TestSuite()
-    for name in ['adapter', 'error', 'view', 'security', 'scan', 'event']:
+    for name in ['adapter', 'error', 'view', 'security', 'scan',
+                 'event', 'zcml']:
         suite.addTest(suiteFromPackage(name))
     return suite
 
