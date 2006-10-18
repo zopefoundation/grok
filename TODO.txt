@@ -26,20 +26,15 @@ Core
 - testing strategy for the tutorial (faassen)
 
 - security: grok.permission, grok.require, ... and the needed additions
-
   to the security policy (philikon, theuni)
 
 - traversal - not megrok.routes (philikon)
 
-- global utilities (wosc)
-
-- interfaces (nothing to do there)
+- local registrations (philikon)
 
 - xml-rpc (theuni)
 
 - make it easier to write tests (wosc, faassen)
-
-- local registrations (philikon)
 
 - grok.App (philikon)
 
@@ -124,3 +119,6 @@ Open Questions
   grok.template('name_of_template')?
 
 - support grok.resource on view class level?
+
+- should grok.context and grok.Model be order-dependent?
+  (so their meaning becomes "below here, this is the context")
