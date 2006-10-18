@@ -128,9 +128,16 @@ def grok_tree(module_info):
 
     resource_path = module_info.getResourcePath('static')
     if os.path.isdir(resource_path):
-        if scan.is_package(resource_path):
-            raise GrokError("The 'static' resource directory must not "
-                            "be a python package.", module_info.getModule())
+        static_module = module_info.getSubModuleInfo('static')
+        if static_module is not None:
+            if static_module.isPackage():
+                raise GrokError("The 'static' resource directory must not "
+                                "be a python package.", module_info.getModule())
+            else:
+                raise GrokError("A package can not contain both a 'static' "
+                                "resource directory and a module named "
+                                "'static.py'", module_info.getModule())
+                
         register_static_resources(module_info.dotted_name, resource_path)
 
     for sub_module_info in module_info.getSubModuleInfos():
