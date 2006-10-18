@@ -1,0 +1,85 @@
+% Complete documentation on the extended LaTeX markup used for Python
+% documentation is available in ``Documenting Python'', which is part
+% of the standard documentation for Python.  It may be found online
+% at:
+%
+%     http://www.python.org/doc/current/doc/doc.html
+
+\documentclass{manual}
+\RequirePackage[latin9]{inputenc}
+\usepackage{graphicx}
+
+\title{grok reference}
+
+% Please at least include a long-lived email address;
+% the rest is at your discretion.
+\authoraddress{
+    The grok team\\
+    Email: <grok-dev@zope.org>
+}
+
+\date{\today}   % update before release!
+                % Use an explicit date so that reformatting
+                % doesn't cause a new date to be used.  Setting
+                % the date to \today can be used during draft
+                % stages to make it easier to handle versions.
+
+\release{unreleased}      % release version; this is used to define the
+                          % \version macro
+
+\makeindex          % tell \index to actually write the .idx file
+
+\begin{document}
+
+\maketitle
+
+% This makes the contents more accessible from the front page of the HTML.
+\ifhtml
+\chapter*{Front matter\label{front}}
+\fi
+
+\copyright 2006 gocept gmbh \& co. kg, Martijn Faassen and Philipp von
+Weitershausen
+
+Licensed under the Zope Public License, Version 2.1 (the ``License''); you may
+not use this file except in compliance with the License. You may obtain a copy
+of the License at \url{http://www.zope.org/Resources/ZPL}.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY EXPRESSED
+OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+\begin{abstract}
+
+\noindent
+
+Grok: now even cavemen can use Zope 3!
+
+\begin{notice}
+``Grok means to understand so thoroughly that the observer becomes a part of the
+observed --- merge, blend, intermarry, lose identity in group experience.
+It means almost everything that we mean by religion, philosophy, and
+science --- it means as little to us (because we are from Earth) as color
+means to a blind man.'' -- Robert A. Heinlein, Stranger in a Strange Land
+\end{notice}
+
+\end{abstract}
+
+\tableofcontents
+
+\include{model}
+
+%\include{view}
+
+%\include{adapter}
+
+%\include{resources}
+
+\end{document}
