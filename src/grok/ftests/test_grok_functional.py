@@ -1,6 +1,6 @@
 import unittest
 from pkg_resources import resource_listdir
-from zope.testing import doctest, cleanup
+from zope.testing import doctest
 from zope.app.testing.functional import HTTPCaller, getRootFolder, FunctionalTestSetup, sync, Functional
 
 # XXX bastardized from zope.app.testing.functional.FunctionalDocFileSuite :-(

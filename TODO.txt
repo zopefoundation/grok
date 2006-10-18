@@ -17,8 +17,6 @@ Core
 
 - choice fields / sources (theuni)
 
-- containers
-
 - annotations (faassen)
 
 - testing strategy for the tutorial (faassen)

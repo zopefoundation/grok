@@ -17,28 +17,21 @@ import os
 import sys
 import inspect
 
-import persistent
 from zope import component
 from zope import interface
-from zope.proxy import removeAllProxies
-from zope.dottedname.resolve import resolve
 import zope.component.interface
 from zope.component.interfaces import IDefaultViewName
 from zope.security.checker import (defineChecker, getCheckerForInstancesOf,
                                    NoProxy)
-from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest)
-from zope.pagetemplate import pagetemplate
 
-from zope.app.pagetemplate.engine import TrustedAppPT
-from zope.app.publisher.browser import directoryresource
-from zope.app.publisher.browser.pagetemplateresource import \
-    PageTemplateResourceFactory
 from zope.app.publisher.xmlrpc import MethodPublisher
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 
-from grok import util, scan
+import grok
+
+from grok import util, scan, components, security
 from grok.error import GrokError, GrokImportError
 from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
                             ClassOrModuleDirectiveContext,
@@ -48,86 +41,12 @@ from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
 
 AMBIGUOUS_CONTEXT = object()
 
-class Model(persistent.Persistent):
-    pass
 
-class Adapter(object):
-
-    def __init__(self, context):
-        self.context = context
-
-class Utility(object):
-    pass
-
-class MultiAdapter(object):
-    pass
-
-class View(BrowserPage):
-
-    def __init__(self, context, request):
-        self.context = removeAllProxies(context)
-        self.request = removeAllProxies(request)
-
-    def __call__(self):
-        self.before()
-
-        template = getattr(self, 'template', None)
-        if not template:
-            return self.render()
-
-        namespace = template.pt_getContext()
-        namespace['request'] = self.request
-        # Jim would say: WAAAAAAAAAAAAH!
-        namespace['view'] = self
-        namespace['context'] = removeAllProxies(self.context)
-
-        module_info = template.__grok_module_info__
-        directory_resource = component.queryAdapter(self.request,
-                interface.Interface, name=module_info.package_dotted_name)
-        # XXX need to check whether we really want None here
-        namespace['static'] = directory_resource
-        return template.pt_render(namespace)
-
-    def before(self):
-        pass
-
-
-class XMLRPC(object):
-    pass
-
-
-
-class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
-    expand = 0
-
-    def __init__(self, template):
-        super(PageTemplate, self).__init__()
-        if util.not_unicode_or_ascii(template):
-            raise ValueError("Invalid page template. Page templates must be "
-                             "unicode or ASCII.")
-        self.write(template)
-
-        # __grok_module__ is needed to make defined_locally() return True for
-        # inline templates
-        # XXX unfortunately using caller_module means that
-        # PageTemplate cannot be subclassed
-        self.__grok_module__ = caller_module()
-
-    def __repr__(self):
-        return '<%s template in %s>' % (self.__grok_name__,
-                                        self.__grok_location__)
-
-    def _annotateGrokInfo(self, module_info, name, location):
-        self.__grok_module_info__ = module_info
-        self.__grok_name__ = name
-        self.__grok_location__ = location
-
-
-def grok(dotted_name):
+def do_grok(dotted_name):
     # register the name 'index' as the default view name
     # TODO this needs to be moved to grok startup time (similar to ZCML-time)
     component.provideAdapter('index',
-                             adapts=(Model, IBrowserRequest),
+                             adapts=(grok.Model, IBrowserRequest),
                              provides=IDefaultViewName)
 
     module_info = scan.module_info_from_dotted_name(dotted_name)
@@ -178,12 +97,12 @@ def grok_module(module_info):
 
 def scan_module(module_info):
     components = {
-            Model: [],
-            Adapter: [],
-            MultiAdapter: [],
-            Utility: [],
-            View: [],
-            XMLRPC: []
+            grok.Model: [],
+            grok.Adapter: [],
+            grok.MultiAdapter: [],
+            grok.Utility: [],
+            grok.View: [],
+            grok.XMLRPC: []
             }
     templates = TemplateRegistry()
     subscribers = module_info.getAnnotation('grok.subscribers', [])
@@ -195,7 +114,7 @@ def scan_module(module_info):
         if not defined_locally(obj, module_info.dotted_name):
             continue
 
-        if isinstance(obj, PageTemplate):
+        if isinstance(obj, grok.PageTemplate):
             templates.register(name, obj)
             obj._annotateGrokInfo(module_info, name, module_info.dotted_name)
             continue
@@ -205,9 +124,9 @@ def scan_module(module_info):
                 found_list.append(obj)
                 break
 
-    return (components[Model], components[Adapter], 
-            components[MultiAdapter], components[Utility],
-            components[View], components[XMLRPC], templates, subscribers)
+    return (components[grok.Model], components[grok.Adapter], 
+            components[grok.MultiAdapter], components[grok.Utility],
+            components[grok.View], components[grok.XMLRPC], templates, subscribers)
 
 def find_filesystem_templates(module_info, templates):
     template_dir_name = module_info.getAnnotation('grok.templatedir', module_info.name)
@@ -230,7 +149,7 @@ def find_filesystem_templates(module_info, templates):
             contents = f.read()
             f.close()
 
-            template = PageTemplate(contents)
+            template = grok.PageTemplate(contents)
             template._annotateGrokInfo(module_info, template_name,
                                        template_path)
             #template.__grok_name__ = template_name
@@ -246,64 +165,8 @@ def find_filesystem_templates(module_info, templates):
             templates.register(template_name, template)
 
 
-class GrokDirectoryResource(directoryresource.DirectoryResource):
-    # We subclass this, because we want to override the default factories for
-    # the resources so that .pt and .html do not get created as page
-    # templates
-
-    resource_factories = {}
-    for type, factory in (directoryresource.DirectoryResource.
-                          resource_factories.items()):
-        if factory is PageTemplateResourceFactory:
-            continue
-        resource_factories[type] = factory
-
-
-class GrokDirectoryResourceFactory(object):
-    # We need this to allow hooking up our own GrokDirectoryResource
-    # and to set the checker to None (until we have our own checker)
-
-    def __init__(self, path, name):
-        # XXX we're not sure about the checker=None here
-        self.__dir = directoryresource.Directory(path, None, name)
-        self.__name = name
-
-    def __call__(self, request):
-        resource = GrokDirectoryResource(self.__dir, request)
-        resource.__Security_checker__ = GrokChecker()
-        resource.__name__ = self.__name
-        return resource
-
-class GrokChecker(object):
-    # ME GROK ANGRY.
-    # ME GROK NOT KNOW WHY CHECKER.
-
-    # We have no idea why we need a custom checker here. One hint was
-    # that the DirectoryResource already does something manually with
-    # setting up the 'correct' checker for itself and we seem to interfere
-    # with that. However, we couldn't figure out what's going on and this
-    # solves our problem for now. 
-
-    # XXX re-implement this in a sane way.
-
-    def __init__(self):
-        pass
-
-    def check_getattr(self, object, name):
-        pass
-
-    def check_setattr(self, ob, name):
-        pass
-
-    def check(self, ob, operation):
-        pass
-
-    def proxy(self, value):
-        return value
-
-
 def register_static_resources(dotted_name, resource_directory):
-    resource_factory = GrokDirectoryResourceFactory(resource_directory,
+    resource_factory = components.DirectoryResourceFactory(resource_directory,
                                                     dotted_name)
     component.provideAdapter(resource_factory, (IDefaultBrowserLayer,),
                              interface.Interface, name=dotted_name)
@@ -344,8 +207,9 @@ def register_xmlrpc(context, views):
             # Make sure that the class inherits MethodPublisher, so that the views
             # have a location
             method_view = type(view.__name__, (view, MethodPublisher), 
-                               {'__call__':method,
-                                '__Security_checker__':GrokChecker()})
+                               {'__call__': method,
+                                '__Security_checker__': security.GrokChecker()}
+                               )
             component.provideAdapter(
                 method_view, (view_context, IXMLRPCRequest), interface.Interface,
                 name=method.__name__)
@@ -397,7 +261,7 @@ def register_unassociated_templates(context, templates):
     for name, unassociated in templates.listUnassociatedTemplates():
         check_context(unassociated, context)
 
-        class TemplateView(View):
+        class TemplateView(grok.View):
             template = unassociated
 
         templates.markAssociated(name)
@@ -486,15 +350,6 @@ def determine_class_context(class_, module_context):
 def class_annotation(obj, name, default):
     return getattr(obj, '__%s__' % name.replace('.', '_'), default)
 
-def caller_module():
-    return sys._getframe(2).f_globals['__name__']
-
-# directives
-name = TextDirective('grok.name', ClassDirectiveContext())
-template = TextDirective('grok.template', ClassDirectiveContext())
-context = InterfaceOrClassDirective('grok.context',
-                                    ClassOrModuleDirectiveContext())
-templatedir = TextDirective('grok.templatedir', ModuleDirectiveContext())
 
 # decorators
 class SubscribeDecorator:

@@ -28,11 +28,10 @@ from zope.app.container.contained import (
     IObjectRemovedEvent, ObjectRemovedEvent,
     IContainerModifiedEvent, ContainerModifiedEvent)
 
-from grok._grok import Model, Adapter, MultiAdapter, View, XMLRPC
-from grok._grok import PageTemplate, Utility
-
-from grok._grok import grok, context, name, template, templatedir
-
+from grok.components import Model, Adapter, MultiAdapter, View, XMLRPC
+from grok.components import PageTemplate, Utility, Container
+from grok.directive import context, name, template, templatedir
+from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import SubscribeDecorator as subscribe
 from grok.error import GrokError, GrokImportError
 

@@ -16,6 +16,7 @@
 
 import re
 import types
+import sys
 
 def not_unicode_or_ascii(value):
     if isinstance(value, unicode):
@@ -35,3 +36,6 @@ def check_subclass(obj, class_):
     if not isclass(obj):
         return False
     return issubclass(obj, class_)
+
+def caller_module():
+    return sys._getframe(2).f_globals['__name__']
