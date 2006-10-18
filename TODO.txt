@@ -15,8 +15,6 @@ Meta
 Core
 ====
 
-- tests: does suppressing of pagetemplateresources work?
-
 - choice fields / sources (theuni)
 
 - containers
