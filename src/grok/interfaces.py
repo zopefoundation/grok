@@ -21,6 +21,7 @@ class IGrokBaseClasses(interface.Interface):
                                 "(models).")
     Adapter = interface.Attribute("Base class for adapters.")
     MultiAdapter = interface.Attribute("Base class for multi-adapters.")
+    Utility = interface.Attribute("Base class for utilities.")
     View = interface.Attribute("Base class for browser views.")
 
 class IGrokErrors(interface.Interface):

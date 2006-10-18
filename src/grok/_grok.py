@@ -51,6 +51,9 @@ class Adapter(object):
     def __init__(self, context):
         self.context = context
 
+class Utility(object):
+    pass
+
 class MultiAdapter(object):
     pass
 
@@ -145,7 +148,7 @@ def grok_tree(module_info):
 
 
 def grok_module(module_info):
-    (models, adapters, multiadapters,
+    (models, adapters, multiadapters, utilities,
      views, templates, subscribers) = scan_module(module_info)
 
     find_filesystem_templates(module_info, templates)
@@ -155,6 +158,7 @@ def grok_module(module_info):
     register_models(models)
     register_adapters(context, adapters)
     register_multiadapters(multiadapters)
+    register_utilities(utilities)
     register_views(context, views, templates)
     register_unassociated_templates(context, templates)
     register_subscribers(subscribers)
@@ -163,6 +167,7 @@ def scan_module(module_info):
     models = []
     adapters = []
     multiadapters = []
+    utilities = []
     views = []
     templates = TemplateRegistry()
     subscribers = module_info.getAnnotation('grok.subscribers', [])
@@ -182,11 +187,14 @@ def scan_module(module_info):
             multiadapters.append(obj)
         elif util.check_subclass(obj, View):
             views.append(obj)
+        elif util.check_subclass(obj, Utility):
+            utilities.append(obj)
         elif isinstance(obj, PageTemplate):
             templates.register(name, obj)
             obj._annotateGrokInfo(module_info, name, module_info.dotted_name)
 
-    return models, adapters, multiadapters, views, templates, subscribers
+    return (models, adapters, multiadapters, utilities,
+            views, templates, subscribers)
 
 def find_filesystem_templates(module_info, templates):
     template_dir_name = module_info.getAnnotation('grok.templatedir', module_info.name)
@@ -303,6 +311,11 @@ def register_multiadapters(multiadapters):
     for factory in multiadapters:
         name = class_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, name=name)
+
+def register_utilities(utilities):
+    for factory in utilities:
+        name = class_annotation(factory, 'grok.name', '')
+        component.provideUtility(factory(), name=name)
 
 def register_views(context, views, templates):
     for factory in views:
