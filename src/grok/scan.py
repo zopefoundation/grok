@@ -86,6 +86,18 @@ class ModuleInfo(object):
                     os.path.join(entry_path, '__init__.py'), dotted_name))
         return module_infos
 
+    def getSubModuleInfo(self, name):
+        path = os.path.join(os.path.dirname(self.path), name)
+        if is_package(path):
+            return ModuleInfo(os.path.join(path, '__init__.py'),
+                              '%s.%s' % (self.package_dotted_name, name))
+        elif os.path.isfile(path + '.py') or os.path.isfile(path + '.pyc'):
+                return ModuleInfo(path + '.py',
+                                  '%s.%s' % (self.package_dotted_name, name))
+        else:
+            return None
+        
+
     def getAnnotation(self, key, default):
         key = key.replace('.', '_')
         key = '__%s__' % key

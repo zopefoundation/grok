@@ -13,6 +13,12 @@
   'grok.tests.scan.stoneage'
   >>> module_info.name
   'stoneage'
+  >>> module_info.getSubModuleInfo('cave')
+  <ModuleInfo object for 'grok.tests.scan.stoneage.cave'>
+  >>> module_info.getSubModuleInfo('hunt')
+  <ModuleInfo object for 'grok.tests.scan.stoneage.hunt'>
+  >>> print module_info.getSubModuleInfo('doesnotexist')
+  None
 
   >>> module = module_info.getModule()
   >>> module
