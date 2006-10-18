@@ -1,0 +1,5 @@
+<html>
+<body>
+<h1 tal:content="string:will not be interpreted"/>
+</body>
+</html>

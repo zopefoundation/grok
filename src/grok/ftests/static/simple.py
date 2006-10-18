@@ -24,4 +24,14 @@ We use a special name 'static' in page templates to allow easy linking to resour
   </body>
   </html>
 
+Static also means that page templates will not be interpreted:
+
+  >>> browser.open('http://localhost/@@/grok.ftests.static.simple_fixture/static.pt')
+  >>> print browser.contents
+  <html>
+  <body>
+  <h1 tal:content="string:will not be interpreted"/>
+  </body>
+  </html>
+
 """
