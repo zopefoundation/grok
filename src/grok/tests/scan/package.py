@@ -26,4 +26,10 @@
   <h1>ME GROK HUNT MAMMOTH!</h1>
   </body>
   </html>
+
+grok() currently does a fair bit of bootstrapping. This is a whitebox test to check whether we do this only once:
+
+  >>> grok._grok._bootstrapped
+  True
+
 """
