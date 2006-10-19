@@ -8,7 +8,7 @@ the grok.Model:
   >>> print manfred.name
   None
   >>> print manfred.size
-  None
+  Quite normal
   >>> manfred.somethingelse
   Traceback (most recent call last):
     ...
@@ -38,7 +38,7 @@ from zope import schema
 class Mammoth(grok.Model):
     class fields:
         name = schema.TextLine(title=u"Name")
-        size = schema.TextLine(title=u"Size")
+        size = schema.TextLine(title=u"Size", default=u"Quite normal")
         somethingelse = None
 
 class Edit(grok.EditForm):

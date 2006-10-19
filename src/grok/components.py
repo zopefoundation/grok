@@ -42,7 +42,7 @@ class Model(persistent.Persistent):
         instance = super(Model, class_).__new__(class_, args, kw)
 
         for field in schema_fields(instance):
-            setattr(instance, field.__name__, None)
+            setattr(instance, field.__name__, field.default)
 
         return instance
 
