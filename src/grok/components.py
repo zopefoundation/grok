@@ -36,11 +36,15 @@ from zope.app.publisher.browser import directoryresource
 from zope.app.publisher.browser.pagetemplateresource import \
     PageTemplateResourceFactory
 from zope.app.container.btree import BTreeContainer
+from zope.app.container.contained import Contained
 
 from grok import util, security
 
 
-class Model(persistent.Persistent):
+class Model(Contained, persistent.Persistent):  
+    # XXX Inheritance order is important here. If we reverse this, 
+    # then containers can't be models anymore because no unambigous MRO 
+    # can be established.
     pass
 
 
@@ -187,6 +191,7 @@ class ModelTraverser(Traverser):
         traverser = util.class_annotation(self.context, 'grok.traverse', None)
         if traverser:
             return traverser(name)
+
 
 class Form(View):
     def _init(self):

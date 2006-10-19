@@ -13,9 +13,26 @@ The grok.Container is just a convenient subclass of the BTreeContainer that live
     >>> isinstance(bag, BTreeContainer)
     True
 
+We had problems when switching to grok.Container with the __parent__ attribute
+being set, we better make sure this doesn't happen again:
+
+    >>> skull = Bone()
+    >>> print skull.__parent__
+    None
+    >>> print skull.__name__
+    None
+    >>> bag['skull'] = skull
+    >>> skull.__parent__
+    <grok.tests.container.container.BoneBag object at 0x...>
+    >>> skull.__name__
+    u'skull'
+
 """
 
 import grok
 
 class BoneBag(grok.Model, grok.Container):
+    pass
+
+class Bone(grok.Model):
     pass
