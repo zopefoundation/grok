@@ -14,6 +14,16 @@ the grok.Model:
     ...
   AttributeError: 'Mammoth' object has no attribute 'somethingelse'
 
+If the 'fields' attribute is not an old-style class, it will not trigger any
+attribute generation:
+
+  >>> cave = Cave()
+  >>> cave.ignored
+  Traceback (most recent call last):
+    ...
+  AttributeError: 'Cave' object has no attribute 'ignored'
+
+
 A grok.EditForm is a special grok.View that renders an edit form.
 
 We need to set up the default formlib template first, because even though we
@@ -41,5 +51,10 @@ class Mammoth(grok.Model):
         size = schema.TextLine(title=u"Size", default=u"Quite normal")
         somethingelse = None
 
+grok.context(Mammoth)
+
 class Edit(grok.EditForm):
     pass
+
+class Cave(grok.Model):
+    fields = ['ignored']

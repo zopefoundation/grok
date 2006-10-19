@@ -15,6 +15,8 @@
 """
 
 import persistent
+import types
+
 from zope import component
 from zope import interface
 from zope import schema
@@ -204,10 +206,11 @@ def schema_fields(obj):
     fields = []
     fields_class = getattr(obj, 'fields', None)
     if fields_class is not None:
-        for name in dir(fields_class):
-            field = getattr(fields_class, name)
-            if IField.providedBy(field):
-                if not getattr(field, '__name__', None):
-                    field.__name__ = name
-                fields.append(field)
+        if type(fields_class) == types.ClassType:
+            for name in dir(fields_class):
+                field = getattr(fields_class, name)
+                if IField.providedBy(field):
+                    if not getattr(field, '__name__', None):
+                        field.__name__ = name
+                    fields.append(field)
     return fields
