@@ -353,4 +353,7 @@ def traverseDecorator(function):
         raise GrokImportError("@grok.traverse can only be used on class "
                               "level.")
 
+    if '__grok_traverse__' in frame.f_locals:
+        raise GrokImportError("@grok.traverse can only be used once per class.")
+
     frame.f_locals['__grok_traverse__'] = function
