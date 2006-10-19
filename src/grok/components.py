@@ -39,14 +39,10 @@ from zope.app.container.btree import BTreeContainer
 
 from grok import util, security
 
+
 class Model(persistent.Persistent):
-    def __new__(class_, *args, **kw):
-        instance = super(Model, class_).__new__(class_, args, kw)
+    pass
 
-        for field in schema_fields(instance):
-            setattr(instance, field.__name__, field.default)
-
-        return instance
 
 class Container(BTreeContainer):
     pass
@@ -196,7 +192,7 @@ class Form(View):
     def _init(self):
         fields = schema_fields(self.context)
         self.form_fields = form.Fields(*fields)
-            
+
         self.template = component.getAdapter(self, INamedTemplate,
                                              name='default')
     def __call__(self):

@@ -109,6 +109,9 @@ def grok_module(module_info):
     register_unassociated_templates(context, templates, module_info)
     register_subscribers(subscribers)
 
+    # Do various other initializations
+    initialize_schema(models)
+
 
 def scan_module(module_info):
     components = {
@@ -196,6 +199,12 @@ def register_models(models):
         # TODO minimal security here (read: everything is public)
         if not getCheckerForInstancesOf(model):
             defineChecker(model, NoProxy)
+
+def initialize_schema(models):
+    # Set the default values as class attributes to make formlib work
+    for model in models:
+        for field in components.schema_fields(model):
+            setattr(model, field.__name__, field.default)
 
 def register_adapters(context, adapters):
     for factory in adapters:
