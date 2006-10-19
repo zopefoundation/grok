@@ -19,10 +19,13 @@ class IGrokBaseClasses(interface.Interface):
 
     Model = interface.Attribute("Base class for persistent content objects "
                                 "(models).")
+    Container = interface.Attribute("Base class for containers.")
     Adapter = interface.Attribute("Base class for adapters.")
     MultiAdapter = interface.Attribute("Base class for multi-adapters.")
     Utility = interface.Attribute("Base class for utilities.")
     View = interface.Attribute("Base class for browser views.")
+    XMLRPC = interface.Attribute("Base class for XML-RPC methods.")
+    Traverser = interface.Attribute("Base class for custom traversers.")
 
 class IGrokErrors(interface.Interface):
 
@@ -72,6 +75,9 @@ class IGrokDecorators(interface.Interface):
     def subscribe(*classes_or_interfaces):
         """Declare that a function subscribes to an event or a
         combination of objects and events."""
+
+    traverse = interface.Attribute("Specify a method to be used for "
+                                   "traversing URL paths.")
 
 class IGrokEvents(interface.Interface):
 
