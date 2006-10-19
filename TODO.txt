@@ -32,9 +32,13 @@ Core
 
 - grok.App (philikon)
 
-- add forms
-
-- schema driven development (faassen, wosc)
+- forms / schema driven development (faassen, wosc)
+  * list form for grok.Container (w/ zc.table?)
+  * delete action on list form
+  * add form
+  
+  * custom templates for forms (make formlib macros available in some form?)
+  * support nested class 'fields' directly on a view (do we really want this?)
 
 - error reporting during grokking (provide file/line-number information
   on our extrinsically generated errors) (philikon)
