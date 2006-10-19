@@ -11,30 +11,18 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""The grok demo wiki
+"""XML/RPC access to the wiki pages
 """
 
 import grok
 import grokwiki.page
 
-class Wiki(grok.Model, grok.Container):
-    """This is our wiki application wich contains all wiki pages."""
 
-    @grok.traverse
-    def getWikiPage(self, name):
-        # XXX This should be the default of grok.Container
-        return self[name]
+class WikiPageRPC(grok.XMLRPC):
+    grok.context(grokwiki.page.WikiPage)
 
-class WikiIndex(grok.View):
-    grok.name('index')
+    def edit(self, text):
+        self.context.update(text)
 
-    def render(self):
-        self.request.response.redirect('home')
-
-
-@grok.subscribe(Wiki, grok.IObjectAddedEvent)
-def setupHomepage(wiki, event):
-    """Creates a home page for every wiki."""
-    import pdb; pdb.set_trace() 
-    page = grokwiki.page.WikiPage()
-    wiki['home'] = page
+    def show(self):
+        return self.context.text

@@ -1,0 +1,27 @@
+<html metal:define-macro="main">
+    <head>
+        <link rel="stylesheet" tal:attributes="href static/wiki.css" type="text/css">
+    </head>
+
+    <body
+        tal:define="wiki context/__parent__;
+                    wiki_url wiki/@@absolute_url">
+        <div metal:define-slot="content">
+            Page content goes here ...
+        </div>
+
+        <hr/>
+        <h3>Other pages</h3>
+        <p>
+            <span tal:repeat="page wiki">
+                <a tal:attributes="href string:$wiki_url/$page"
+                   tal:content="page"
+                   />
+            </span>
+        </p>
+        <hr/>
+        <div id="footer">
+        This Wiki was grokked by Zope 3.
+        </div>
+    </body>
+</html>
