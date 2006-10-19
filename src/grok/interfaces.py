@@ -125,3 +125,6 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
     def PageTemplate(template):
         """Create a Grok PageTemplate object from ``template`` source
         text.  This can be used for inline PageTemplates."""
+
+    def schema_fields(class_):
+        """Return a list of schema fields defined for a model or view."""

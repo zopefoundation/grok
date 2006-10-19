@@ -31,7 +31,7 @@ from zope.app.container.contained import (
 
 from grok.components import Model, Adapter, MultiAdapter, View, XMLRPC
 from grok.components import PageTemplate, Utility, Container, Traverser
-from grok.components import EditForm, DisplayForm
+from grok.components import EditForm, DisplayForm, schema_fields
 from grok.directive import context, name, template, templatedir
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import SubscribeDecorator as subscribe
