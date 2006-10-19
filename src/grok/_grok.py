@@ -61,6 +61,7 @@ def do_grok(dotted_name):
     global _bootstrapped
     if not _bootstrapped:
         bootstrap()
+        _boostrapped = True
 
     module_info = scan.module_info_from_dotted_name(dotted_name)
     grok_tree(module_info)
