@@ -80,8 +80,9 @@ class ModuleInfo(object):
                 module_infos.append(ModuleInfo(entry_path, dotted_name))
             # Case two: packages
             elif is_package(entry_path):
-                # We can blindly use __init__.py even if only __init__.pyc exists
-                # because we never actually use that filename.
+                # We can blindly use __init__.py even if only
+                # __init__.pyc exists because we never actually use
+                # that filename.
                 module_infos.append(ModuleInfo(
                     os.path.join(entry_path, '__init__.py'), dotted_name))
         return module_infos
