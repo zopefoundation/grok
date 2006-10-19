@@ -11,6 +11,8 @@ Meta
 
 - reference (theuni)
 
+- Check demo applications for issues with patterns (grok wiki, ldap address
+  book)
 
 Core
 ====
@@ -39,6 +41,8 @@ Core
   
   * custom templates for forms (make formlib macros available in some form?)
   * support nested class 'fields' directly on a view (do we really want this?)
+
+- provide custom (better looking) template and styles for formlib 
 
 - error reporting during grokking (provide file/line-number information
   on our extrinsically generated errors) (philikon)
