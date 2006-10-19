@@ -192,15 +192,26 @@ class ModelTraverser(Traverser):
         if traverser:
             return traverser(name)
 
-class EditForm(View, form.EditForm):
-    def __init__(self, context, request):
-        super(EditForm, self).__init__(context, request)
-
+class Form(View):
+    def _init(self):
         fields = schema_fields(self.context)
         self.form_fields = form.Fields(*fields)
             
         self.template = component.getAdapter(self, INamedTemplate,
                                              name='default')
+    def __call__(self):
+        self.update()
+        return self.render()
+
+class EditForm(Form, form.EditForm):
+    def __init__(self, context, request):
+        super(EditForm, self).__init__(context, request)
+        self._init()
+
+class DisplayForm(Form, form.DisplayForm):
+    def __init__(self, context, request):
+        super(DisplayForm, self).__init__(context, request)
+        self._init()
 
 def schema_fields(obj):
     fields = []

@@ -19,6 +19,15 @@ A grok.EditForm is a special grok.View that renders an edit form.
   ...Really big...
   ...
 
+grok.DisplayForm renders a display form:
+
+  >>> browser.open("http://localhost/manfred/@@display")
+  >>> print browser.contents
+  <!DOCTYPE ...
+  ...Manfred the Mammoth...
+  ...Really big...
+  ...
+
 """
 import grok
 from zope import schema
@@ -29,4 +38,7 @@ class Mammoth(grok.Model):
         size = schema.TextLine(title=u"Size")
 
 class Edit(grok.EditForm):
+    pass
+
+class Display(grok.DisplayForm):
     pass
