@@ -106,7 +106,7 @@ def grok_module(module_info):
     register_views(context, views, templates)
     register_xmlrpc(context, xmlrpc_views)
     register_traversers(context, traversers)
-    register_unassociated_templates(context, templates)
+    register_unassociated_templates(context, templates, module_info)
     register_subscribers(subscribers)
 
 
@@ -132,7 +132,12 @@ def scan_module(module_info):
 
         if isinstance(obj, grok.PageTemplate):
             templates.register(name, obj)
-            obj._annotateGrokInfo(module_info, name, module_info.dotted_name)
+            obj._annotateGrokInfo(name, module_info.dotted_name)
+            continue
+        # XXX refactor
+        elif util.check_subclass(obj, grok.View):
+            obj.module_info = module_info
+            components[grok.View].append(obj)
             continue
 
         for candidate_class, found_list in components.items():
@@ -168,10 +173,7 @@ def find_filesystem_templates(module_info, templates):
             f.close()
 
             template = grok.PageTemplate(contents)
-            template._annotateGrokInfo(module_info, template_name,
-                                       template_path)
-            #template.__grok_name__ = template_name
-            #template.__grok_location__ = template_path
+            template._annotateGrokInfo(template_name, template_path)
 
             inline_template = templates.get(template_name)
             if inline_template:
@@ -282,12 +284,14 @@ def register_traversers(context, traversers):
                                  adapts=(factory_context, IBrowserRequest),
                                  provides=IBrowserPublisher)
 
-def register_unassociated_templates(context, templates):
+def register_unassociated_templates(context, templates, module_info):
     for name, unassociated in templates.listUnassociatedTemplates():
         util.check_context(unassociated, context)
 
+        module_info_ = module_info
         class TemplateView(grok.View):
             template = unassociated
+            module_info = module_info_
 
         templates.markAssociated(name)
 

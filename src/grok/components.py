@@ -17,12 +17,16 @@
 import persistent
 from zope import component
 from zope import interface
+from zope import schema
 from zope.security.proxy import removeSecurityProxy
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import (IBrowserPublisher,
                                                IBrowserRequest)
 from zope.pagetemplate import pagetemplate
+from zope.formlib import form
+from zope.formlib.namedtemplate import INamedTemplate
+from zope.schema.interfaces import IField
 
 from zope.app.pagetemplate.engine import TrustedAppPT
 from zope.app.publisher.browser import getDefaultViewName
@@ -34,8 +38,13 @@ from zope.app.container.btree import BTreeContainer
 from grok import util, security
 
 class Model(persistent.Persistent):
-    pass
+    def __new__(class_, *args, **kw):
+        instance = super(Model, class_).__new__(class_, args, kw)
 
+        for field in schema_fields(instance):
+            setattr(instance, field.__name__, None)
+
+        return instance
 
 class Container(BTreeContainer):
     pass
@@ -61,6 +70,8 @@ class View(BrowserPage):
         # Jim would say: WAAAAAAAAAAAAH!
         self.context = removeSecurityProxy(context)
         self.request = removeSecurityProxy(request)
+        self.directory_resource = component.queryAdapter(self.request,
+                interface.Interface, name=self.module_info.package_dotted_name)
 
     def __call__(self):
         self.before()
@@ -73,12 +84,8 @@ class View(BrowserPage):
         namespace['request'] = self.request
         namespace['view'] = self
         namespace['context'] = self.context
-
-        module_info = template.__grok_module_info__
-        directory_resource = component.queryAdapter(self.request,
-                interface.Interface, name=module_info.package_dotted_name)
-        # XXX need to check whether we really want None here
-        namespace['static'] = directory_resource
+        # XXX need to check whether we really want to put None here if missing
+        namespace['static'] = self.directory_resource
         return template.pt_render(namespace)
 
     def __getitem__(self, key):
@@ -113,8 +120,7 @@ class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
         return '<%s template in %s>' % (self.__grok_name__,
                                         self.__grok_location__)
 
-    def _annotateGrokInfo(self, module_info, name, location):
-        self.__grok_module_info__ = module_info
+    def _annotateGrokInfo(self, name, location):
         self.__grok_name__ = name
         self.__grok_location__ = location
 
@@ -146,7 +152,6 @@ class DirectoryResourceFactory(object):
         resource.__Security_checker__ = security.GrokChecker()
         resource.__name__ = self.__name
         return resource
-
 
 class Traverser(object):
     interface.implements(IBrowserPublisher)
@@ -184,3 +189,30 @@ class ModelTraverser(Traverser):
         traverser = util.class_annotation(self.context, 'grok.traverse', None)
         if traverser:
             return traverser(name)
+
+class EditForm(View, form.EditForm):
+    def __init__(self, context, request):
+        super(EditForm, self).__init__(context, request)
+
+        fields = schema_fields(self.context)
+        self.form_fields = form.Fields(*fields)
+            
+        self.template = component.getAdapter(self, INamedTemplate,
+                                             name='default')
+
+    def __call__(self):
+        self.before()
+        self.update()
+        return self.render()
+
+def schema_fields(obj):
+    fields = []
+    fields_class = getattr(obj, 'fields', None)
+    if fields_class is not None:
+        for name in dir(fields_class):
+            field = getattr(fields_class, name)
+            if IField.providedBy(field):
+                if not getattr(field, '__name__', None):
+                    field.__name__ = name
+                fields.append(field)
+    return fields
