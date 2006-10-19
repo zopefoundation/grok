@@ -16,6 +16,7 @@
 
 from zope.interface import implements
 from zope.component import adapts
+from zope.formlib.form import action
 from zope.event import notify
 from zope.lifecycleevent import (
     IObjectCreatedEvent, ObjectCreatedEvent,

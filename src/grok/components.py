@@ -208,6 +208,9 @@ class EditForm(Form, form.EditForm):
         super(EditForm, self).__init__(context, request)
         self._init()
 
+    def default_handle_apply(self, action, data):
+         form.EditForm.handle_edit_action.success_handler(self, action, data)
+
 class DisplayForm(Form, form.DisplayForm):
     def __init__(self, context, request):
         super(DisplayForm, self).__init__(context, request)

@@ -77,6 +77,9 @@ class IGrokDecorators(interface.Interface):
         """Declare that a function subscribes to an event or a
         combination of objects and events."""
 
+    def action():
+        """XXX see zope.formlib.form.action"""
+
     traverse = interface.Attribute("Specify a method to be used for "
                                    "traversing URL paths.")
 
