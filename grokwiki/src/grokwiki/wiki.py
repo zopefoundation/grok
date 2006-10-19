@@ -35,6 +35,5 @@ class WikiIndex(grok.View):
 @grok.subscribe(Wiki, grok.IObjectAddedEvent)
 def setupHomepage(wiki, event):
     """Creates a home page for every wiki."""
-    import pdb; pdb.set_trace() 
     page = grokwiki.page.WikiPage()
     wiki['home'] = page
