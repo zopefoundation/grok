@@ -200,11 +200,6 @@ class EditForm(View, form.EditForm):
         self.template = component.getAdapter(self, INamedTemplate,
                                              name='default')
 
-    def __call__(self):
-        self.before()
-        self.update()
-        return self.render()
-
 def schema_fields(obj):
     fields = []
     fields_class = getattr(obj, 'fields', None)
