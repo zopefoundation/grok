@@ -24,7 +24,8 @@ from zope.component.interfaces import IDefaultViewName
 from zope.security.checker import (defineChecker, getCheckerForInstancesOf,
                                    NoProxy)
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
-                                               IBrowserRequest)
+                                               IBrowserRequest,
+                                               IBrowserPublisher)
 
 from zope.app.publisher.xmlrpc import MethodPublisher
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
@@ -36,18 +37,30 @@ from grok.error import GrokError, GrokImportError
 from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
                             ClassOrModuleDirectiveContext,
                             TextDirective, InterfaceOrClassDirective,
-                            frame_is_module)
+                            frame_is_module, frame_is_class)
 
 
-AMBIGUOUS_CONTEXT = object()
-
-
-def do_grok(dotted_name):
+_bootstrapped = False
+def bootstrap():
+    component.provideAdapter(components.ModelTraverser)
     # register the name 'index' as the default view name
-    # TODO this needs to be moved to grok startup time (similar to ZCML-time)
     component.provideAdapter('index',
                              adapts=(grok.Model, IBrowserRequest),
                              provides=IDefaultViewName)
+
+# add a cleanup hook so that grok will bootstrap itself again whenever
+# the Component Architecture is torn down.
+def resetBootstrap():
+    global _bootstrapped
+    _bootstrapped = False
+from zope.testing.cleanup import addCleanUp
+addCleanUp(resetBootstrap)
+
+
+def do_grok(dotted_name):
+    global _bootstrapped
+    if not _bootstrapped:
+        bootstrap()
 
     module_info = scan.module_info_from_dotted_name(dotted_name)
     grok_tree(module_info)
@@ -78,12 +91,12 @@ def grok_tree(module_info):
 
 
 def grok_module(module_info):
-    (models, adapters, multiadapters, utilities,
-     views, xmlrpc_views, templates, subscribers) = scan_module(module_info)
+    (models, adapters, multiadapters, utilities, views, xmlrpc_views,
+     traversers, templates, subscribers) = scan_module(module_info)
 
     find_filesystem_templates(module_info, templates)
 
-    context = determine_module_context(module_info, models)
+    context = util.determine_module_context(module_info, models)
 
     register_models(models)
     register_adapters(context, adapters)
@@ -91,6 +104,7 @@ def grok_module(module_info):
     register_utilities(utilities)
     register_views(context, views, templates)
     register_xmlrpc(context, xmlrpc_views)
+    register_traversers(context, traversers)
     register_unassociated_templates(context, templates)
     register_subscribers(subscribers)
 
@@ -102,7 +116,8 @@ def scan_module(module_info):
             grok.MultiAdapter: [],
             grok.Utility: [],
             grok.View: [],
-            grok.XMLRPC: []
+            grok.XMLRPC: [],
+            grok.Traverser: []
             }
     templates = TemplateRegistry()
     subscribers = module_info.getAnnotation('grok.subscribers', [])
@@ -111,7 +126,7 @@ def scan_module(module_info):
     for name in dir(module):
         obj = getattr(module, name)
 
-        if not defined_locally(obj, module_info.dotted_name):
+        if not util.defined_locally(obj, module_info.dotted_name):
             continue
 
         if isinstance(obj, grok.PageTemplate):
@@ -126,10 +141,12 @@ def scan_module(module_info):
 
     return (components[grok.Model], components[grok.Adapter], 
             components[grok.MultiAdapter], components[grok.Utility],
-            components[grok.View], components[grok.XMLRPC], templates, subscribers)
+            components[grok.View], components[grok.XMLRPC],
+            components[grok.Traverser], templates, subscribers)
 
 def find_filesystem_templates(module_info, templates):
-    template_dir_name = module_info.getAnnotation('grok.templatedir', module_info.name)
+    template_dir_name = module_info.getAnnotation('grok.templatedir',
+                                                  module_info.name)
     template_dir = module_info.getResourcePath(template_dir_name)
     if os.path.isdir(template_dir):
         template_files = os.listdir(template_dir)
@@ -179,27 +196,27 @@ def register_models(models):
 
 def register_adapters(context, adapters):
     for factory in adapters:
-        adapter_context = determine_class_context(factory, context)
-        check_implements_one(factory)
-        name = class_annotation(factory, 'grok.name', '')
+        adapter_context = util.determine_class_context(factory, context)
+        util.check_implements_one(factory)
+        name = util.class_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, adapts=(adapter_context,), name=name)
 
 def register_multiadapters(multiadapters):
     for factory in multiadapters:
-        check_implements_one(factory)
-        check_adapts(factory)
-        name = class_annotation(factory, 'grok.name', '')
+        util.check_implements_one(factory)
+        util.check_adapts(factory)
+        name = util.class_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, name=name)
 
 def register_utilities(utilities):
     for factory in utilities:
-        check_implements_one(factory)
-        name = class_annotation(factory, 'grok.name', '')
+        util.check_implements_one(factory)
+        name = util.class_annotation(factory, 'grok.name', '')
         component.provideUtility(factory(), name=name)
 
 def register_xmlrpc(context, views):
     for view in views:
-        view_context = determine_class_context(view, context)
+        view_context = util.determine_class_context(view, context)
         candidates = [getattr(view, name) for name in dir(view)]
         methods = [c for c in candidates if inspect.ismethod(c)]
 
@@ -216,12 +233,12 @@ def register_xmlrpc(context, views):
 
 def register_views(context, views, templates):
     for factory in views:
-        view_context = determine_class_context(factory, context)
+        view_context = util.determine_class_context(factory, context)
         factory_name = factory.__name__.lower()
 
         # find inline templates
-        template_name = class_annotation(factory, 'grok.template',
-                                             factory_name)
+        template_name = util.class_annotation(factory, 'grok.template',
+                                              factory_name)
         template = templates.get(template_name)
 
         if factory_name != template_name:
@@ -248,7 +265,7 @@ def register_views(context, views, templates):
                                 "'render' method." % factory,
                                 factory)
 
-        view_name = class_annotation(factory, 'grok.name', factory_name)
+        view_name = util.class_annotation(factory, 'grok.name', factory_name)
         component.provideAdapter(factory,
                                  adapts=(view_context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
@@ -257,9 +274,16 @@ def register_views(context, views, templates):
         # TODO minimal security here (read: everything is public)
         defineChecker(factory, NoProxy)
 
+def register_traversers(context, traversers):
+    for factory in traversers:
+        factory_context = util.determine_class_context(factory, context)
+        component.provideAdapter(factory,
+                                 adapts=(factory_context, IBrowserRequest),
+                                 provides=IBrowserPublisher)
+
 def register_unassociated_templates(context, templates):
     for name, unassociated in templates.listUnassociatedTemplates():
-        check_context(unassociated, context)
+        util.check_context(unassociated, context)
 
         class TemplateView(grok.View):
             template = unassociated
@@ -302,54 +326,6 @@ class TemplateRegistry(object):
             if not entry['associated']:
                 yield name, entry['template']
 
-def defined_locally(obj, dotted_name):
-    obj_module = getattr(obj, '__grok_module__', None)
-    if obj_module is None:
-        obj_module = getattr(obj, '__module__', None)
-    return obj_module == dotted_name
-
-def check_context(component, context):
-    if context is None:
-        raise GrokError("No module-level context for %r, please use "
-                        "grok.context." % component, component)
-    elif context is AMBIGUOUS_CONTEXT:
-        raise GrokError("Multiple possible contexts for %r, please use "
-                        "grok.context." % component, component)
-
-def check_implements_one(class_):
-    if len(list(interface.implementedBy(class_))) != 1:
-        raise GrokError("%r must implement exactly one interface "
-                        "(use grok.implements to specify)."
-                        % class_, class_)
-
-def check_adapts(class_):
-    if component.adaptedBy(class_) is None:
-        raise GrokError("%r must specify which contexts it adapts "
-                        "(use grok.adapts to specify)."
-                        % class_, class_)
-
-def determine_module_context(module_info, models):
-    if len(models) == 0:
-        context = None
-    elif len(models) == 1:
-        context = models[0]
-    else:
-        context = AMBIGUOUS_CONTEXT
-
-    module_context = module_info.getAnnotation('grok.context', None)
-    if module_context:
-        context = module_context
-
-    return context
-
-def determine_class_context(class_, module_context):
-    context = class_annotation(class_, 'grok.context', module_context)
-    check_context(class_, context)
-    return context
-
-def class_annotation(obj, name, default):
-    return getattr(obj, '__%s__' % name.replace('.', '_'), default)
-
 
 # decorators
 class SubscribeDecorator:
@@ -370,3 +346,11 @@ class SubscribeDecorator:
         if subscribers is None:
             frame.f_locals['__grok_subscribers__'] = subscribers = []
         subscribers.append((function, self.subscribed))
+
+def traverseDecorator(function):
+    frame = sys._getframe(1)
+    if not frame_is_class(frame):
+        raise GrokImportError("@grok.traverse can only be used on class "
+                              "level.")
+
+    frame.f_locals['__grok_traverse__'] = function

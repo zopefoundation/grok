@@ -29,10 +29,11 @@ from zope.app.container.contained import (
     IContainerModifiedEvent, ContainerModifiedEvent)
 
 from grok.components import Model, Adapter, MultiAdapter, View, XMLRPC
-from grok.components import PageTemplate, Utility, Container
+from grok.components import PageTemplate, Utility, Container, Traverser
 from grok.directive import context, name, template, templatedir
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import SubscribeDecorator as subscribe
+from grok._grok import traverseDecorator as traverse
 from grok.error import GrokError, GrokImportError
 
 # Our __init__ provides the grok API directly so using 'import grok' is enough.

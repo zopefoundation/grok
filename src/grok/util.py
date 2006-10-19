@@ -18,6 +18,11 @@ import re
 import types
 import sys
 
+from zope import component
+from zope import interface
+
+from grok.error import GrokError, GrokImportError
+
 def not_unicode_or_ascii(value):
     if isinstance(value, unicode):
         return False
@@ -27,15 +32,74 @@ def not_unicode_or_ascii(value):
 
 is_not_ascii = re.compile(eval(r'u"[\u0080-\uffff]"')).search
 
+
 def isclass(obj):
     """We cannot use ``inspect.isclass`` because it will return True
     for interfaces"""
     return type(obj) in (types.ClassType, type)
+
 
 def check_subclass(obj, class_):
     if not isclass(obj):
         return False
     return issubclass(obj, class_)
 
+
 def caller_module():
     return sys._getframe(2).f_globals['__name__']
+
+
+def class_annotation(obj, name, default):
+    return getattr(obj, '__%s__' % name.replace('.', '_'), default)
+
+
+def defined_locally(obj, dotted_name):
+    obj_module = getattr(obj, '__grok_module__', None)
+    if obj_module is None:
+        obj_module = getattr(obj, '__module__', None)
+    return obj_module == dotted_name
+
+
+AMBIGUOUS_CONTEXT = object()
+def check_context(component, context):
+    if context is None:
+        raise GrokError("No module-level context for %r, please use "
+                        "grok.context." % component, component)
+    elif context is AMBIGUOUS_CONTEXT:
+        raise GrokError("Multiple possible contexts for %r, please use "
+                        "grok.context." % component, component)
+
+
+def check_implements_one(class_):
+    if len(list(interface.implementedBy(class_))) != 1:
+        raise GrokError("%r must implement exactly one interface "
+                        "(use grok.implements to specify)."
+                        % class_, class_)
+
+
+def check_adapts(class_):
+    if component.adaptedBy(class_) is None:
+        raise GrokError("%r must specify which contexts it adapts "
+                        "(use grok.adapts to specify)."
+                        % class_, class_)
+
+
+def determine_module_context(module_info, models):
+    if len(models) == 0:
+        context = None
+    elif len(models) == 1:
+        context = models[0]
+    else:
+        context = AMBIGUOUS_CONTEXT
+
+    module_context = module_info.getAnnotation('grok.context', None)
+    if module_context:
+        context = module_context
+
+    return context
+
+
+def determine_class_context(class_, module_context):
+    context = class_annotation(class_, 'grok.context', module_context)
+    check_context(class_, context)
+    return context

@@ -17,11 +17,15 @@
 import persistent
 from zope import component
 from zope import interface
-from zope.proxy import removeAllProxies
+from zope.security.proxy import removeSecurityProxy
 from zope.publisher.browser import BrowserPage
+from zope.publisher.interfaces import NotFound
+from zope.publisher.interfaces.browser import (IBrowserPublisher,
+                                               IBrowserRequest)
 from zope.pagetemplate import pagetemplate
 
 from zope.app.pagetemplate.engine import TrustedAppPT
+from zope.app.publisher.browser import getDefaultViewName
 from zope.app.publisher.browser import directoryresource
 from zope.app.publisher.browser.pagetemplateresource import \
     PageTemplateResourceFactory
@@ -46,14 +50,17 @@ class Adapter(object):
 class Utility(object):
     pass
 
+
 class MultiAdapter(object):
     pass
+
 
 class View(BrowserPage):
 
     def __init__(self, context, request):
-        self.context = removeAllProxies(context)
-        self.request = removeAllProxies(request)
+        # Jim would say: WAAAAAAAAAAAAH!
+        self.context = removeSecurityProxy(context)
+        self.request = removeSecurityProxy(request)
 
     def __call__(self):
         self.before()
@@ -64,9 +71,8 @@ class View(BrowserPage):
 
         namespace = template.pt_getContext()
         namespace['request'] = self.request
-        # Jim would say: WAAAAAAAAAAAAH!
         namespace['view'] = self
-        namespace['context'] = removeAllProxies(self.context)
+        namespace['context'] = self.context
 
         module_info = template.__grok_module_info__
         directory_resource = component.queryAdapter(self.request,
@@ -85,7 +91,6 @@ class View(BrowserPage):
 
 class XMLRPC(object):
     pass
-
 
 
 class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
@@ -142,3 +147,40 @@ class DirectoryResourceFactory(object):
         resource.__name__ = self.__name
         return resource
 
+
+class Traverser(object):
+    interface.implements(IBrowserPublisher)
+
+    def __init__(self, context, request):
+        # Jim would say: WAAAAAAAAAAAAH!
+        self.context = removeSecurityProxy(context)
+        self.request = removeSecurityProxy(request)
+
+    def browserDefault(self, request):
+        view_name = getDefaultViewName(self.context, request)
+        view_uri = "@@%s" % view_name
+        return self.context, (view_uri,)
+
+    def publishTraverse(self, request, name):
+        subob = self.traverse(name)
+        if subob:
+            return subob
+
+        view = component.queryMultiAdapter((self.context, request), name=name)
+        if view:
+            return view
+
+        raise NotFound(self.context, name, request)
+
+    def traverse(self, name):
+        # this will be overridden by subclasses
+        pass
+
+
+class ModelTraverser(Traverser):
+    component.adapts(Model, IBrowserRequest)
+
+    def traverse(self, name):
+        traverser = util.class_annotation(self.context, 'grok.traverse', None)
+        if traverser:
+            return traverser(name)
