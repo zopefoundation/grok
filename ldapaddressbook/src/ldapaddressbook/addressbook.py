@@ -21,6 +21,12 @@ from zope import schema
 import grok
 
 
+LDAP_SERVER = "ldap://ldaphost:389"
+LDAP_LOGIN = "cn=admin,dc=example,dc=com"
+LDAP_PASSWORD = "password"
+LDAP_SEARCH_BASE = "ou=Addresses,dc=example,dc=com"
+
+
 class AddressBook(grok.Model):
 
     @grok.traverse
@@ -33,9 +39,11 @@ class AddressBook(grok.Model):
     def listContacts(self):
         return get_contact_list()
 
+
 class AddressBookListing(grok.View):
     grok.context(AddressBook)
     grok.name("index")
+
 
 addressbooklisting = grok.PageTemplate("""\
 <html>
@@ -46,6 +54,7 @@ addressbooklisting = grok.PageTemplate("""\
 </ul>
 </body>
 </html>""")
+
 
 class Contact(grok.Model):
 
@@ -113,9 +122,9 @@ class EditContact(grok.EditForm):
 # LDAP helper functions
 
 def get_contact_list():
-    l = ldap.initialize("ldap://uter.whq.gocept.com:389")
-    l.simple_bind_s("cn=admin,dc=gocept,dc=com","asdf")
-    results = l.search_s("ou=Addresses,dc=gocept,dc=com", ldap.SCOPE_SUBTREE, "(objectclass=inetOrgPerson)")
+    l = ldap.initialize(LDAP_SERVER)
+    l.simple_bind_s(LDAP_LOGIN, LDAP_PASSWORD)
+    results = l.search_s(LDAP_SEARCH_BASE, ldap.SCOPE_SUBTREE, "(objectclass=inetOrgPerson)")
     if results is None:
         return []
     cnames = [unicode(x[1]['cn'][0], 'utf-8') for x in results]
@@ -123,9 +132,9 @@ def get_contact_list():
     return cnames
 
 def get_contact(cname):
-    l = ldap.initialize("ldap://ldaphost:389")
-    l.simple_bind_s("cn=admin,dc=example,dc=com", "password")
-    results = l.search_s("ou=Addresses,dc=example,dc=com", 
+    l = ldap.initialize(LDAP_SERVER)
+    l.simple_bind_s(LDAP_LOGIN, LDAP_PASSWORD)
+    results = l.search_s(LDAP_SEARCH_BASE,
                          ldap.SCOPE_SUBTREE,
                          "(&(objectclass=inetOrgPerson)(cn=%s))" % cname)
     if results:
