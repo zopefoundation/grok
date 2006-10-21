@@ -6,10 +6,17 @@ functionality.
     \section{\function{grok.subscribe} -- Register a function as a subscriber
     for an event}
 
-    Similar to Zope 3's \function{zope.component.subscriber} decorator, the
-    function where it is applied to is registered as a subscriber for an event. 
 
+        \begin{funcdesc}{subscribe}{*classes_or_interfaces}
 
+        Declare that the decorated function subscribes to an event or a
+        combination of objects and events. (Similar to Zope 3's
+        \function{subscriber} decorator.)
+
+        Applicable on module-level for functions. Requires at least one class
+        or interface as argument.
+
+        \end{funcdesc}
 
 
     \section{grok.action}
