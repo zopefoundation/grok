@@ -154,8 +154,9 @@ def scan_module(module_info):
             components[grok.Traverser], templates, subscribers)
 
 def find_filesystem_templates(module_info, templates):
-    template_dir_name = module_info.getAnnotation('grok.templatedir',
-                                                  module_info.name)
+    template_dir_name = module_info.getAnnotation(
+        'grok.templatedir',
+        module_info.name + '_templates')
     template_dir = module_info.getResourcePath(template_dir_name)
     if os.path.isdir(template_dir):
         template_files = os.listdir(template_dir)

@@ -7,7 +7,7 @@ template directory, there is an error:
     ...
   GrokError: Conflicting templates found for name 'cavepainting' in module
   <module 'grok.tests.view.dirandinlinetemplate' from '...'>,
-  both inline and in template directory '...dirandinlinetemplate'.
+  both inline and in template directory '...dirandinlinetemplate_templates'.
 
 """
 import grok
