@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='addressbook',
+    name='ldapaddressbook',
     version='0.1',
     author='Christian Theune',
     author_email='ct@gocept.com',
-    url='http://svn.gocept.com/grok-applications/addressbook/trunk',
+    url='http://svn.zope.org/repos/main/grok/trunk/',
     description="""\
 Allows to edit addressbook entries of ~inetOrgPerson in LDAP
 """,
