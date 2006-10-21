@@ -8,7 +8,7 @@
 
     <browser:addMenuItem
         class=".addressbook.AddressBook"
-        title="Addressbook"
+        title="LDAP Addressbook"
         description="LDAP Addressbook"
         permission="zope.ManageContent"
         />
