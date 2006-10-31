@@ -47,6 +47,8 @@ Core
 - error reporting during grokking (provide file/line-number information
   on our extrinsically generated errors) (philikon)
 
+- FooBase convention + grok.baseclass to not grok certain classes
+
 - maybe: transform register_foo() functions that take lists into functions
   that operate on a single entity and provide a decorator (@iterate) to 
   call the function for each item (theuni)
@@ -54,12 +56,10 @@ Core
 Need to discuss
 ---------------
 
+- TALES path expressions to generate URLs?
+
 - fall back to a static resource that is defined in a package on a higher
   level if no static resource directory is defined locally in a package?
-
-- change naming convention for template directories from
-  "<modulename>" to "template_<modulename>" or similar, to avoid
-  confusion?
 
 - grok buildout integration
 
@@ -95,8 +95,6 @@ Need to discuss
 
 - use ZCML's conflict resolution machinery
 
-- FooBase convention + grok.baseclass to not grok certain classes
-
 - do not accept automatic template directory guessing convention for __init__.py, bail
   out with grok error instead?
 
@@ -111,6 +109,8 @@ Need to discuss
 - should grok.context and grok.Model be order-dependent?
   (so their meaning becomes "below here, this is the context")
 
+- page template reloads without having to restart
+
 Punt
 ----
 
@@ -122,5 +122,3 @@ Punt
   go between the different schema implementations
 
 - containment constraints (wait for zope 3 to do them right)
-
-- reload
