@@ -132,3 +132,20 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
 class IGrokView(interface.Interface):
     """Grok views all provide this interface.
     """
+    def redirect(url):
+       """Redirect to given URL"""
+
+    def url(obj=None, name=None):
+        """Construct URL.
+        
+        If no arguments given, construct URL to view itself.
+    
+        If only obj argument is given, construct URL to obj.
+        
+        If only name is given as the first argument, construct view URL
+        to view with that name on our context.
+        
+        If both object and name arguments are supplied, construct
+        URL to view on that object.
+        """ 
+
