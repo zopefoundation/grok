@@ -114,8 +114,10 @@ def grok_module(module_info):
 
 
 def scan_module(module_info):
+    models = []
     components = {
-            grok.Model: [],
+            grok.Model: models,
+            grok.Container: models,
             grok.Adapter: [],
             grok.MultiAdapter: [],
             grok.Utility: [],

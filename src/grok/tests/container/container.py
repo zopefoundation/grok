@@ -1,6 +1,8 @@
 """
 
-The grok.Container is just a convenient subclass of the BTreeContainer that lives in the Zope 3 core:
+The grok.Container is a a model that is also a container.  It has a
+dictionary API. It in fact stores its information in a BTree so
+you can store a lot of items in a scalable way.
 
     >>> grok.grok(__name__)
 
@@ -12,7 +14,7 @@ The grok.Container is just a convenient subclass of the BTreeContainer that live
     >>> from zope.app.container.btree import BTreeContainer
     >>> isinstance(bag, BTreeContainer)
     True
-
+     
 We had problems when switching to grok.Container with the __parent__ attribute
 being set, we better make sure this doesn't happen again:
 
@@ -31,8 +33,8 @@ being set, we better make sure this doesn't happen again:
 
 import grok
 
-class BoneBag(grok.Model, grok.Container):
+class BoneBag(grok.Container):
     pass
-
+    
 class Bone(grok.Model):
     pass
