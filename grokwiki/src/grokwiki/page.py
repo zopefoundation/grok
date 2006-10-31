@@ -14,10 +14,6 @@
 """The grok demo wiki
 """
 import re
-
-from zope.app import zapi
-from zope.app.folder.folder import Folder
-
 import grok
 
 
