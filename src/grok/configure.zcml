@@ -1,0 +1,26 @@
+<configure    
+  xmlns="http://namespaces.zope.org/zope">
+
+  <!-- we register special IAbsoluteURL views on grok views so that
+       can have them inspect __view_name__ instead of __name__.  
+       __name__ is already used as the class name, and overriding it
+       may make error messages more confusing.  -->
+
+  <view
+      for=".interfaces.IGrokView"
+      name="absolute_url"
+      factory=".components.GrokViewAbsoluteURL"
+      type="zope.publisher.interfaces.http.IHTTPRequest"
+      permission="zope.Public"
+      allowed_interface="zope.traversing.browser.interfaces.IAbsoluteURL"
+      />
+
+  <view
+      for=".interfaces.IGrokView"
+      factory=".components.GrokViewAbsoluteURL"
+      type="zope.publisher.interfaces.http.IHTTPRequest"
+      permission="zope.Public"
+      provides="zope.traversing.browser.interfaces.IAbsoluteURL"
+      />
+
+</configure>

@@ -128,3 +128,7 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
 
     def schema_fields(class_):
         """Return a list of schema fields defined for a model or view."""
+
+class IGrokView(interface.Interface):
+    """Grok views all provide this interface.
+    """

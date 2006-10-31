@@ -16,6 +16,7 @@
 
 import persistent
 import types
+import urllib
 
 from zope import component
 from zope import interface
@@ -29,6 +30,9 @@ from zope.pagetemplate import pagetemplate
 from zope.formlib import form
 from zope.formlib.namedtemplate import INamedTemplate
 from zope.schema.interfaces import IField
+from zope.traversing.browser.interfaces import IAbsoluteURL
+from zope.traversing.browser.absoluteurl import AbsoluteURL
+from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
 
 from zope.app.pagetemplate.engine import TrustedAppPT
 from zope.app.publisher.browser import getDefaultViewName
@@ -38,7 +42,7 @@ from zope.app.publisher.browser.pagetemplateresource import \
 from zope.app.container.btree import BTreeContainer
 from zope.app.container.contained import Contained
 
-from grok import util, security
+from grok import util, security, interfaces
 
 
 class Model(Contained, persistent.Persistent):  
@@ -67,7 +71,8 @@ class MultiAdapter(object):
 
 
 class View(BrowserPage):
-
+    interface.implements(interfaces.IGrokView)
+    
     def __init__(self, context, request):
         # Jim would say: WAAAAAAAAAAAAH!
         self.context = removeSecurityProxy(context)
@@ -94,9 +99,41 @@ class View(BrowserPage):
         # XXX give nice error message if template is None
         return self.template.macros[key]
 
+    def url(self, obj=None, name=None):
+        # if the first argument is a string, that's the name. There should
+        # be no second argument
+        if isinstance(obj, basestring):
+            if name is not None:
+                raise TypeError(
+                    'url() takes either obj argument, obj, string arguments, '
+                    'or string argument')
+            name = obj
+            obj = None
+            
+        if name is None and obj is None:
+            # create URL to view itself
+            obj = self
+        elif name is not None and obj is None:
+            # create URL to view on context
+            obj = self.context
+        url = component.getMultiAdapter((obj, self.request), IAbsoluteURL)()
+        if name is None:
+            # URL to obj itself
+            return url
+        # URL to view on obj
+        return url + '/' + urllib.quote(name.encode('utf-8'),
+                                        SAFE_URL_CHARACTERS)
+    
     def before(self):
         pass
 
+
+class GrokViewAbsoluteURL(AbsoluteURL):
+    def _getContextName(self, context):
+        return getattr(context, '__view_name__', None)
+    # XXX breadcrumbs method on AbsoluteURL breaks as it does not use
+    # _getContextName to get to the name of the view. What does breadcrumbs do?
+    
 
 class XMLRPC(object):
     pass

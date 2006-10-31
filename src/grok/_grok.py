@@ -279,6 +279,8 @@ def register_views(context, views, templates):
                                 factory)
 
         view_name = util.class_annotation(factory, 'grok.name', factory_name)
+        # __view_name__ is needed to support IAbsoluteURL on views
+        factory.__view_name__ = view_name
         component.provideAdapter(factory,
                                  adapts=(view_context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
@@ -305,6 +307,7 @@ def register_unassociated_templates(context, templates, module_info):
 
         templates.markAssociated(name)
 
+        TemplateView.__view_name__ = name
         component.provideAdapter(TemplateView,
                                  adapts=(context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
