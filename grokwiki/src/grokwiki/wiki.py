@@ -29,8 +29,7 @@ class WikiIndex(grok.View):
     grok.name('index')
 
     def render(self):
-        self.request.response.redirect('home')
-
+        self.redirect(self.url('home'))
 
 @grok.subscribe(Wiki, grok.IObjectAddedEvent)
 def setupHomepage(wiki, event):

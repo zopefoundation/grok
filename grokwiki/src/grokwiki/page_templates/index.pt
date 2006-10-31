@@ -5,6 +5,6 @@
         <div tal:content="structure view/rendered_text" class="wikicontent">
         </div>
 
-        <p><a tal:attributes="href string:${context/@@absolute_url}/edit">Edit this page</a></p>
+        <p><a tal:attributes="href python:view.url('edit')">Edit this page</a></p>
     </div>
 </html>

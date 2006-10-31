@@ -41,7 +41,7 @@ class WikiPage(grok.Model):
 class Index(grok.View):
 
     def before(self):
-        wiki_url = zapi.absoluteURL(self.context.__parent__, self.request)
+        wiki_url = self.url(self.context.__parent__)
         self.rendered_text, replacements = (
             LINK_PATTERN.subn(r'<a href="%s/\1">\1</a>' % wiki_url, 
                               self.context.text))
@@ -50,11 +50,9 @@ class Edit(grok.View):
 
     def before(self):
         text = self.request.form.get('wikidata')
-        self.wiki = self.context.__parent__
         if not text:
-            return  # Just render the template
+            return # Just render the template
 
         # Update the text and redirect
         self.context.update(text)
-        wiki_url = zapi.absoluteURL(self.wiki, self.request)
-        self.request.response.redirect("%s/%s" % (wiki_url, self.context.__name__))
+        self.redirect(self.url(self.context))

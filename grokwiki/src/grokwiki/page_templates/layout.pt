@@ -4,8 +4,7 @@
     </head>
 
     <body
-        tal:define="wiki context/__parent__;
-                    wiki_url wiki/@@absolute_url">
+        tal:define="wiki context/__parent__">
         <div metal:define-slot="content">
             Page content goes here ...
         </div>
@@ -14,7 +13,7 @@
         <h3>Other pages</h3>
         <p>
             <span tal:repeat="page wiki">
-                <a tal:attributes="href string:$wiki_url/$page"
+                <a tal:attributes="href python:view.url(wiki, page)"
                    tal:content="page"
                    />
             </span>
