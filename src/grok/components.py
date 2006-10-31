@@ -123,6 +123,9 @@ class View(BrowserPage):
         # URL to view on obj
         return url + '/' + urllib.quote(name.encode('utf-8'),
                                         SAFE_URL_CHARACTERS)
+
+    def redirect(self, url):
+        return self.request.response.redirect(url)
     
     def before(self):
         pass
