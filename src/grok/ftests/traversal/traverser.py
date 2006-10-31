@@ -1,5 +1,5 @@
 """
-Apart from using the ``@grok.traverse`` decorator on a model, you can
+Apart from using the ``traverse`` method on a model, you can
 also create a separate traverser component:
 
   >>> import grok

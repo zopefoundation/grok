@@ -43,6 +43,8 @@ from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
 _bootstrapped = False
 def bootstrap():
     component.provideAdapter(components.ModelTraverser)
+    component.provideAdapter(components.ContainerTraverser)
+    
     # register the name 'index' as the default view name
     component.provideAdapter('index',
                              adapts=(grok.Model, IBrowserRequest),
@@ -369,14 +371,3 @@ class SubscribeDecorator:
         if subscribers is None:
             frame.f_locals['__grok_subscribers__'] = subscribers = []
         subscribers.append((function, self.subscribed))
-
-def traverseDecorator(function):
-    frame = sys._getframe(1)
-    if not frame_is_class(frame):
-        raise GrokImportError("@grok.traverse can only be used on class "
-                              "level.")
-
-    if '__grok_traverse__' in frame.f_locals:
-        raise GrokImportError("@grok.traverse can only be used once per class.")
-
-    frame.f_locals['__grok_traverse__'] = function

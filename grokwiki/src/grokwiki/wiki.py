@@ -20,11 +20,6 @@ import grokwiki.page
 class Wiki(grok.Container):
     """This is our wiki application wich contains all wiki pages."""
 
-    @grok.traverse
-    def getWikiPage(self, name):
-        # XXX This should be the default of grok.Container
-        return self[name]
-
 class WikiIndex(grok.View):
     grok.name('index')
 

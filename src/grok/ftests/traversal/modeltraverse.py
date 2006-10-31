@@ -1,6 +1,6 @@
 """
-Models can determine how they want to be traversed by using the
-``@grok.traverse`` decorator:
+Models can determine how they want to be traversed by
+implementing a 'traverse' method:
 
   >>> import grok
   >>> from grok.ftests.traversal.modeltraverse import Herd
@@ -31,10 +31,12 @@ import grok
 
 class Herd(grok.Model):
 
-    @grok.traverse
     def getMammoth(self, name):
         return Mammoth(name)
 
+    def traverse(self, name):
+        return self.getMammoth(name)
+    
 class Mammoth(grok.Model):
 
     def __init__(self, name):

@@ -228,11 +228,22 @@ class ModelTraverser(Traverser):
     component.adapts(Model, IBrowserRequest)
 
     def traverse(self, name):
-        traverser = util.class_annotation(self.context, 'grok.traverse', None)
-        if traverser:
-            return traverser(name)
+        traverse = getattr(self.context, 'traverse', None)
+        if traverse:
+            return traverse(name)
 
+class ContainerTraverser(Traverser):
+    component.adapts(Container, IBrowserRequest)
 
+    def traverse(self, name):
+        traverse = getattr(self.context, 'traverse', None)
+        if traverse:
+            result = traverse(name)
+            if result is not None:
+                return result
+        # try to get the item from the container
+        return self.context.get(name)
+        
 class Form(View):
     def _init(self):
         fields = schema_fields(self.context)
