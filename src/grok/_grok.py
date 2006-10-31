@@ -47,7 +47,10 @@ def bootstrap():
     component.provideAdapter('index',
                              adapts=(grok.Model, IBrowserRequest),
                              provides=IDefaultViewName)
-
+    component.provideAdapter('index',
+                             adapts=(grok.Container, IBrowserRequest),
+                             provides=IDefaultViewName)
+    
 # add a cleanup hook so that grok will bootstrap itself again whenever
 # the Component Architecture is torn down.
 def resetBootstrap():
