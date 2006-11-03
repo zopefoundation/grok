@@ -20,9 +20,7 @@ import grokwiki.page
 class Wiki(grok.Container):
     """This is our wiki application wich contains all wiki pages."""
 
-class WikiIndex(grok.View):
-    grok.name('index')
-
+class Index(grok.View):
     def render(self):
         self.redirect(self.url('home'))
 
