@@ -1,0 +1,84 @@
+Grok tutorial
+=============
+
+Welcome to the Grok tutorial! Grok is an extension to Zope 3 that
+makes it easier and quicker to develop web applications for Zope 3,
+*without* losing the power and flexibility of Zope 3 itself. Grok
+builds on existing Zope 3 technology like the component architecture
+but exposes them in a different way to the developer.
+
+In this tutorial, we will be writing a simple wiki. We'll lead you all
+the way from the start, setting up Grok on your computer, to a simple
+but complete wiki implementation. All you're expected to know is the
+Python programming language and a basic understanding of web
+programming.
+
+Setting up Grok
+---------------
+
+In order to set up Grok so you can start development, you need a
+computer that is connected to the internet and the grokstart_
+download. Unpack grokstart_ somewhere. It will result in a directory
+called 'grokstart'. Then inside that directory, run the following with
+a Python 2.4 interpreter::
+
+  $ python bootstrap.py
+ 
+This will bootstrap the "buildout" system, which then can be used to
+install grok. Still in the same directory, run the following command:
+
+  $ bin/buildout
+
+Now you have to wait a while as the system downloads grok, Zope 3, and
+any other dependencies from the internet and installs them.
+
+Grok, along with Zope 3 is now ready to go. A Zope 3 instance has been
+installed in the 'parts/instance' directory. Of course it doesn't
+contain any Grok applications yet - we're to write one in this
+tutorial.
+
+What you've just used is a technology called Buildout. Buildout is not
+Zope 3 specific. It is a generic system that builds heavily on
+existing Python technology like setuptools and eggs. Buildout goes
+beyond distribution of libraries and applications; it allows the
+installation of servers, C libraries and much more.
+
+Note: it may be that you have an older version of setuptools installed
+on your system. bootstrap.py will complain in this case. You can
+upgrade to the most recent version of setuptools by running the
+following (with permissions to write to your Python installation, so
+possibly you need to use `sudo` or become root):
+
+  $ easy_install -U setuptools
+
+Note: renaming grokstart to something else.
+
+Creating the tutorial project
+-----------------------------
+
+In order to start writing code with Grok we first need to set up a
+Python project that will contain the code. It's not hard to do by
+hand, but it's a bit of typing, so your buildout has a tool installed
+called `pyprogen` which helps with the generation of a new project.
+Let's run it from the `grokstart` buildout directory::
+
+  $ bin/pyprogen groktut
+
+A new directo
+
+
+A modern Python project
+typically is a directory that contains a `setup.py` to install the
+project using distutils or setuptools and `src` directory that
+contains a Python package (a directory with a file `__init__.py` in
+it. The project directory can also contain things like a `README.txt`,
+`INSTALL.txt` and so on.
+
+Grok comes with a tool to easily create such projects, called
+pyprogen.  pyprogen takes care of creating the right directories and a
+minimal `setup.py`.
+
+
+It also adds the project to the buildout.cfg so
+that it is automatically included in the installation and a testrunner
+is generated.
