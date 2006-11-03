@@ -53,6 +53,9 @@ Core
   that operate on a single entity and provide a decorator (@iterate) to 
   call the function for each item (theuni)
 
+- grok.utility() needs to work on module level so we can register imported
+  objects as global utilities.
+
 Need to discuss
 ---------------
 
