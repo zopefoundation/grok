@@ -29,6 +29,7 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
 
 from zope.app.publisher.xmlrpc import MethodPublisher
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
+from zope.app.component.site import LocalSiteManager
 
 import grok
 
@@ -52,7 +53,15 @@ def bootstrap():
     component.provideAdapter('index',
                              adapts=(grok.Container, IBrowserRequest),
                              provides=IDefaultViewName)
-    
+    # register a subscriber for when grok.Sites are added to make them
+    # into Zope 3 sites
+    component.provideHandler(
+        addSiteHandler, adapts=(grok.Site, grok.IObjectAddedEvent))
+
+def addSiteHandler(site, event):
+    sitemanager = LocalSiteManager(site)
+    site.setSiteManager(sitemanager)
+
 # add a cleanup hook so that grok will bootstrap itself again whenever
 # the Component Architecture is torn down.
 def resetBootstrap():

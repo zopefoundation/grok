@@ -41,6 +41,7 @@ from zope.app.publisher.browser.pagetemplateresource import \
     PageTemplateResourceFactory
 from zope.app.container.btree import BTreeContainer
 from zope.app.container.contained import Contained
+from zope.app.component.site import SiteManagerContainer
 
 from grok import util, security, interfaces
 
@@ -56,6 +57,9 @@ class Container(BTreeContainer):
     pass
 
 
+class Site(SiteManagerContainer):
+    pass
+    
 class Adapter(object):
 
     def __init__(self, context):

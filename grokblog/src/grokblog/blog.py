@@ -2,14 +2,8 @@ from datetime import datetime, timedelta
 import grok
 
 from zope import interface, schema
-from zope.app.component.hooks import setSite, getSite
-from zope.app.component.site import LocalSiteManager
-from zope.app.component.interfaces import IPossibleSite
-from zope.app.component.site import SiteManagerContainer
 
-class Blog(grok.Container, SiteManagerContainer):
-    interface.implements(IPossibleSite)
-
+class Blog(grok.Container, grok.Site):
     def __init__(self):
         super(Blog, self).__init__()
         self['entries'] = Entries()
@@ -20,12 +14,6 @@ class Blog(grok.Container, SiteManagerContainer):
         except ValueError:
             return None
         return Year(year)
-
-@grok.subscribe(Blog, grok.IObjectAddedEvent)
-def blogAdded(blog, event):
-    sitemanager = LocalSiteManager(blog)
-    blog.setSiteManager(sitemanager)
-    setSite(blog)
     
 class Entries(grok.Container):
     pass
@@ -86,7 +74,7 @@ class DayIndex(grok.View):
         return "Entries: %s" % ' '.join([entry.__name__ for entry in entries])
 
 def entriesInDateRange(from_, until):
-    entries = getSite()['entries']
+    entries = grok.getSite()['entries']
     for entry in entries.values():
         if from_ <= entry.published <= until:
             yield entry

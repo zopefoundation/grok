@@ -20,6 +20,7 @@ class IGrokBaseClasses(interface.Interface):
     Model = interface.Attribute("Base class for persistent content objects "
                                 "(models).")
     Container = interface.Attribute("Base class for containers.")
+    Site = interface.Attribute("Mixin class for sites.")
     Adapter = interface.Attribute("Base class for adapters.")
     MultiAdapter = interface.Attribute("Base class for multi-adapters.")
     Utility = interface.Attribute("Base class for utilities.")
@@ -122,6 +123,9 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
     def notify(event):
         """Send ``event`` to event subscribers."""
 
+    def getSite():
+        """Get the current site."""
+        
     def PageTemplate(template):
         """Create a Grok PageTemplate object from ``template`` source
         text.  This can be used for inline PageTemplates."""
