@@ -23,12 +23,28 @@ and run the buildout command::
     $ bin/buildout
     [lots of stuff will be downloaded and installed locally here]
 
+Running the demo applications
+-----------------------------
+
+Start the instance:
+
+   $ cd parts/instance
+   $ bin/zopectl fg
+
+If you now connect to port 8080 and log in with username 'grok',
+password 'grok', you should be able to add the grok-based applications
+(such as grokwiki) from the menu.
+
 Running the tests
 -----------------
 
-Due to a bug in Zope, we need to run the tests this way:
+Due to a bug in Zope, we need to run the tests this way, from a
+special instance directory:
 
-    $ cd parts/instance
+    $ cd parts/testinstance
     $ ../../bin/test
 
-otherwise you will get an error about not finding 'ftesting.zcml'.
+otherwise you will get an error about not finding
+'ftesting.zcml'. We've set up a special test instance just for running
+the test from, which includes the minimum needed ZCML (so the tests
+run faster).
