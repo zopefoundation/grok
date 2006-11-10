@@ -15,6 +15,9 @@ Grok: the blog
     zip_safe=False,
     license='ZPL',
 
-    install_requires=['setuptools',
-                     ],
+    install_requires=[
+        'grok',
+        'docutils',
+        'setuptools',
+        ],
 )

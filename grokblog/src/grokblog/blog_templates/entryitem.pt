@@ -1,0 +1,9 @@
+<div class="entry">
+  <h2>
+    <a tal:attributes="href python:view.url(context)">
+      <tal:block content="context/title"/>
+    </a>
+    (<span class="published" tal:content="context/published"/>)
+  </h2>
+  <p tal:content="structure context/@@body"/>
+</div>

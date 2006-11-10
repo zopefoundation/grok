@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <title>add entry</title>
+  </head>
+  <body>
+    <h1>add entry</h1>
+    <form tal:attributes="action python:view.url()" method="POST">
+      id: <input type="text" name="id" value="" /><br />
+      title: <input type="text" name="title" value="" /><br />
+      body: <textarea name="body"></textarea><br />
+      <input type="submit" value="Add Entry" />
+    </form>
+  </body>
+</html>
