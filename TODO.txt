@@ -98,8 +98,8 @@ Need to discuss
 
 - use ZCML's conflict resolution machinery
 
-- do not accept automatic template directory guessing convention for __init__.py, bail
-  out with grok error instead?
+- do not accept automatic template directory guessing convention for
+  __init__.py, bail out with grok error instead?
 
 - grok.name, grok.template class restrictions (e.g. grok.template
   should only be usable from grok.View subclasses)
