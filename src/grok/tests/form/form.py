@@ -41,6 +41,16 @@ a formlib form.
   2
   >>> [w.__name__ for w in view.form_fields]
   ['name', 'size']
+
+It is important to keep the order of the fields:
+
+  >>> view = component.getMultiAdapter(
+  ...    (DifferentMammoth(), request), name='editdifferent')
+  >>> len(view.form_fields)
+  2
+  >>> [w.__name__ for w in view.form_fields]
+  ['size', 'name']
+
 """
 import grok
 from zope import schema
@@ -51,10 +61,18 @@ class Mammoth(grok.Model):
         size = schema.TextLine(title=u"Size", default=u"Quite normal")
         somethingelse = None
 
-grok.context(Mammoth)
 
 class Edit(grok.EditForm):
-    pass
+    grok.context(Mammoth)
 
 class Cave(grok.Model):
     fields = ['ignored']
+
+class DifferentMammoth(grok.Model):
+    class fields:
+        # mind the different order of fields
+        size = schema.TextLine(title=u"Size", default=u"Quite normal")
+        name = schema.TextLine(title=u"Name")
+
+class EditDifferent(grok.EditForm):
+    grok.context(DifferentMammoth)

@@ -46,9 +46,9 @@ from zope.app.component.site import SiteManagerContainer
 from grok import util, security, interfaces
 
 
-class Model(Contained, persistent.Persistent):  
-    # XXX Inheritance order is important here. If we reverse this, 
-    # then containers can't be models anymore because no unambigous MRO 
+class Model(Contained, persistent.Persistent):
+    # XXX Inheritance order is important here. If we reverse this,
+    # then containers can't be models anymore because no unambigous MRO
     # can be established.
     pass
 
@@ -59,7 +59,7 @@ class Container(BTreeContainer):
 
 class Site(SiteManagerContainer):
     pass
-    
+
 class Adapter(object):
 
     def __init__(self, context):
@@ -76,7 +76,7 @@ class MultiAdapter(object):
 
 class View(BrowserPage):
     interface.implements(interfaces.IGrokView)
-    
+
     def __init__(self, context, request):
         # Jim would say: WAAAAAAAAAAAAH!
         self.context = removeSecurityProxy(context)
@@ -113,7 +113,7 @@ class View(BrowserPage):
                     'or string argument')
             name = obj
             obj = None
-            
+
         if name is None and obj is None:
             # create URL to view itself
             obj = self
@@ -130,7 +130,7 @@ class View(BrowserPage):
 
     def redirect(self, url):
         return self.request.response.redirect(url)
-    
+
     def before(self):
         pass
 
@@ -140,7 +140,7 @@ class GrokViewAbsoluteURL(AbsoluteURL):
         return getattr(context, '__view_name__', None)
     # XXX breadcrumbs method on AbsoluteURL breaks as it does not use
     # _getContextName to get to the name of the view. What does breadcrumbs do?
-    
+
 
 class XMLRPC(object):
     pass
@@ -247,7 +247,7 @@ class ContainerTraverser(Traverser):
                 return result
         # try to get the item from the container
         return self.context.get(name)
-        
+
 class Form(View):
     def _init(self):
         fields = schema_fields(self.context)
@@ -275,12 +275,15 @@ class DisplayForm(Form, form.DisplayForm):
 def schema_fields(obj):
     fields = []
     fields_class = getattr(obj, 'fields', None)
-    if fields_class is not None:
-        if type(fields_class) == types.ClassType:
-            for name in dir(fields_class):
-                field = getattr(fields_class, name)
-                if IField.providedBy(field):
-                    if not getattr(field, '__name__', None):
-                        field.__name__ = name
-                    fields.append(field)
+    if fields_class is None:
+        return fields
+    if type(fields_class) != types.ClassType:
+        return fields
+    for name in dir(fields_class):
+        field = getattr(fields_class, name)
+        if IField.providedBy(field):
+            if not getattr(field, '__name__', None):
+                field.__name__ = name
+            fields.append(field)
+    fields.sort(key=lambda field: field.order)
     return fields
