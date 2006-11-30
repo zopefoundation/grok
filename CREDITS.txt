@@ -9,6 +9,8 @@ CREDITS
 
 * Philipp von Weitershausen
 
+* Jan-Wijbrand Kolman
+
 * Christian Zagrodnick
 
 * ME GROK
