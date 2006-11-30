@@ -125,13 +125,14 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
 
     def getSite():
         """Get the current site."""
-        
+
     def PageTemplate(template):
         """Create a Grok PageTemplate object from ``template`` source
         text.  This can be used for inline PageTemplates."""
 
-    def schema_fields(class_):
-        """Return a list of schema fields defined for a model or view."""
+    def Fields(*args, **kw):
+        """Return a list of formlib fields based on interfaces and/or schema
+        fields."""
 
 class IGrokView(interface.Interface):
     """Grok views all provide this interface.
@@ -141,14 +142,14 @@ class IGrokView(interface.Interface):
 
     def url(obj=None, name=None):
         """Construct URL.
-        
+
         If no arguments given, construct URL to view itself.
-    
+
         If only obj argument is given, construct URL to obj.
-        
+
         If only name is given as the first argument, construct URL
         to context/name.
-        
+
         If both object and name arguments are supplied, construct
         URL to obj/name.
         """

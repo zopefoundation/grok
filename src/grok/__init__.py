@@ -16,7 +16,7 @@
 
 from zope.interface import implements
 from zope.component import adapts
-from zope.formlib.form import action
+from zope.formlib.form import action, Fields
 from zope.event import notify
 from zope.app.component.hooks import getSite
 from zope.lifecycleevent import (
@@ -26,13 +26,13 @@ from zope.lifecycleevent import (
 
 from zope.app.container.contained import (
     IObjectAddedEvent, ObjectAddedEvent,
-    IObjectMovedEvent, ObjectMovedEvent, 
+    IObjectMovedEvent, ObjectMovedEvent,
     IObjectRemovedEvent, ObjectRemovedEvent,
     IContainerModifiedEvent, ContainerModifiedEvent)
 
 from grok.components import Model, Adapter, MultiAdapter, View, XMLRPC
 from grok.components import PageTemplate, Utility, Container, Traverser, Site
-from grok.components import EditForm, DisplayForm, schema_fields
+from grok.components import EditForm, DisplayForm
 from grok.directive import context, name, template, templatedir
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import SubscribeDecorator as subscribe
