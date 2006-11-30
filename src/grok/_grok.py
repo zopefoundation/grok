@@ -45,7 +45,7 @@ _bootstrapped = False
 def bootstrap():
     component.provideAdapter(components.ModelTraverser)
     component.provideAdapter(components.ContainerTraverser)
-    
+
     # register the name 'index' as the default view name
     component.provideAdapter('index',
                              adapts=(grok.Model, IBrowserRequest),
@@ -106,26 +106,24 @@ def grok_tree(module_info):
 
 
 def grok_module(module_info):
-    (models, adapters, multiadapters, utilities, views, xmlrpc_views,
-     traversers, templates, subscribers) = scan_module(module_info)
+    components, templates, subscribers = scan_module(module_info)
 
     find_filesystem_templates(module_info, templates)
 
-    context = util.determine_module_context(module_info, models)
+    context = util.determine_module_context(module_info, components[grok.Model])
 
-    register_models(models)
-    register_adapters(context, adapters)
-    register_multiadapters(multiadapters)
-    register_utilities(utilities)
-    register_views(context, views, templates)
-    register_xmlrpc(context, xmlrpc_views)
-    register_traversers(context, traversers)
+    register_models(components[grok.Model])
+    register_adapters(context, components[grok.Adapter])
+    register_multiadapters(components[grok.MultiAdapter])
+    register_utilities(components[grok.Utility])
+    register_views(context, components[grok.View], templates)
+    register_xmlrpc(context, components[grok.XMLRPC])
+    register_traversers(context, components[grok.Traverser])
     register_unassociated_templates(context, templates, module_info)
     register_subscribers(subscribers)
 
     # Do various other initializations
-    initialize_schema(models)
-
+    initialize_schema(components[grok.Model])
 
 def scan_module(module_info):
     models = []
@@ -164,10 +162,7 @@ def scan_module(module_info):
                 found_list.append(obj)
                 break
 
-    return (components[grok.Model], components[grok.Adapter], 
-            components[grok.MultiAdapter], components[grok.Utility],
-            components[grok.View], components[grok.XMLRPC],
-            components[grok.Traverser], templates, subscribers)
+    return components, templates, subscribers
 
 def find_filesystem_templates(module_info, templates):
     template_dir_name = module_info.getAnnotation(
@@ -252,7 +247,7 @@ def register_xmlrpc(context, views):
         for method in methods:
             # Make sure that the class inherits MethodPublisher, so that the views
             # have a location
-            method_view = type(view.__name__, (view, MethodPublisher), 
+            method_view = type(view.__name__, (view, MethodPublisher),
                                {'__call__': method,
                                 '__Security_checker__': security.GrokChecker()}
                                )
