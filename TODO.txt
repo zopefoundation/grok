@@ -34,27 +34,36 @@ Core
 
 - grok.App (philikon)
 
-- forms / schema driven development (faassen, wosc)
-  * list form for grok.Container (w/ zc.table?)
-  * delete action on list form
-  * add form
-  
-  * custom templates for forms (make formlib macros available in some form?)
-  * support nested class 'fields' directly on a view (do we really want this?)
-
-- provide custom (better looking) template and styles for formlib 
-
 - error reporting during grokking (provide file/line-number information
   on our extrinsically generated errors) (philikon)
 
 - FooBase convention + grok.baseclass to not grok certain classes
 
 - maybe: transform register_foo() functions that take lists into functions
-  that operate on a single entity and provide a decorator (@iterate) to 
+  that operate on a single entity and provide a decorator (@iterate) to
   call the function for each item (theuni)
 
 - grok.utility() needs to work on module level so we can register imported
   objects as global utilities.
+
+Schema/formlib support
+----------------------
+
+- support rendering a form from an interface
+
+- support nested class 'fields' directly on a view (do we really want this?)
+
+- provide default (better looking) template and styles for formlib in grok
+
+- custom templates for forms
+
+- add form
+
+- list form for grok.Container (w/ zc.table?)
+
+- delete action on list form
+
+- make formlib macros available in some form?
 
 Need to discuss
 ---------------
@@ -113,6 +122,10 @@ Need to discuss
   (so their meaning becomes "below here, this is the context")
 
 - page template reloads without having to restart
+
+- Do we want to initialize model attributes for any schema that the model
+  implements (in addition to the initialization that is taking place for the
+  model-level fields)?
 
 Punt
 ----
