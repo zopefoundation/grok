@@ -250,8 +250,10 @@ class ContainerTraverser(Traverser):
 
 class Form(View):
     def _init(self):
-        fields = schema_fields(self.context)
-        self.form_fields = form.Fields(*fields)
+        fields = form.Fields(*schema_fields(self.context))
+        fields += form.Fields(*interface.providedBy(self.context))
+        fields = fields.omit('__name__')
+        self.form_fields = fields
 
         self.template = component.getAdapter(self, INamedTemplate,
                                              name='default')
