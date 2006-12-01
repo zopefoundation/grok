@@ -85,6 +85,11 @@ def get_form_fields(factory, context):
     fields = getattr(factory, 'form_fields', None)
     if fields is not None:
         return fields
+    return get_auto_fields(context)
+
+def get_auto_fields(context):
+    """Get the form fields for context.
+    """
     # for an interface context, we generate them from that interface
     if IInterface.providedBy(context):
         return form.Fields(context)
@@ -96,6 +101,8 @@ def get_form_fields(factory, context):
     # we pull in this field by default, but we don't want it in our form
     fields = fields.omit('__name__')
     return fields
+
+AutoFields = get_auto_fields
 
 def load_template(name):
     filename = os.path.join(os.path.dirname(__file__), 'templates', name)
