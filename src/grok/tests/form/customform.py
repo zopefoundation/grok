@@ -4,19 +4,11 @@ form_fields manually:
 
   >>> grok.grok(__name__)
 
-We need to set up the default formlib template first, because even though we
-don't use the formlib NamedTemplates directly they need to be present to create
-a formlib form.
-
-  >>> from zope import component
-  >>> from zope.formlib import form
-  >>> component.provideAdapter(form.default_page_template, name='default')
-
-  >>> from zope.publisher.browser import TestRequest
-  >>> request = TestRequest()
-
 We only expect a single field to be present in the form, as we omitted 'size':
 
+  >>> from zope import component
+  >>> from zope.publisher.browser import TestRequest
+  >>> request = TestRequest()
   >>> view = component.getMultiAdapter((Mammoth(), request), name='edit')
   >>> len(view.form_fields)
   1

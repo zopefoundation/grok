@@ -6,14 +6,7 @@ A grok.Model may implement one or more interfaces that are schemas:
 
 A grok.EditForm is a special grok.View that renders an edit form.
 
-We need to set up the default formlib template first, because even though we
-don't use the formlib NamedTemplates directly they need to be present to create
-a formlib form.
-
   >>> from zope import component
-  >>> from zope.formlib import form
-  >>> component.provideAdapter(form.default_page_template, name='default')
-
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()
   >>> view = component.getMultiAdapter((manfred, request), name='edit')
