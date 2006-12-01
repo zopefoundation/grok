@@ -36,18 +36,16 @@ class Index(grok.View):
     def before(self):
         self.body = renderRest(self.context.body)
 
-class Edit(grok.View):
+class Edit(grok.EditForm):
     grok.name('edit')
 
-    def before(self):
-        title = self.request.form.get('title', '')
-        if not title:
-            return
-        body = self.request.form.get('body', '')
-        self.context.title = title
-        self.context.body = body
-        self.redirect(self.url(self.context))
+    form_fields = grok.AutoFields(Entry).omit('published')
 
+    @grok.action('Edit')
+    def edit(self, **data):
+        self.applyChanges(**data)
+        self.redirect(self.url(self.context))
+        
 class Body(grok.View):
     grok.name('body')
 
