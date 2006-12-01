@@ -16,7 +16,7 @@ class action(form.action):
 class Action(form.Action):
     def success(self, data):
         if self.success_handler is not None:
-            return self.success_handler(self.form.grok_form, self, data)
+            return self.success_handler(self.form.grok_form, **data)
 
 def setup_editform(factory, context):
     """Construct the real edit form, taking needed information from factory.

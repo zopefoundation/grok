@@ -289,7 +289,7 @@ class EditForm(Form):
     label = ''
     status = ''
     
-    def applyChanges(self, action, data):
+    def applyChanges(self, **data):
         if form.applyChanges(self.context, self.form.form_fields, data,
                              self.form.adapters):
             event.notify(ObjectModifiedEvent(self.context))

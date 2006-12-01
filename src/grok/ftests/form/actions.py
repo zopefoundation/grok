@@ -41,10 +41,10 @@ class Mammoth(grok.Model):
 
 class Edit(grok.EditForm):
     @grok.action("Apply")
-    def handle_apply(self, action, data):
-        self.applyChanges(action, data)
+    def handle_apply(self, **data):
+        self.applyChanges(**data)
 
     @grok.action("Hairy")
-    def handle_hairy(self, action, data):
-        self.applyChanges(action, data)
+    def handle_hairy(self, **data):
+        self.applyChanges(**data)
         self.context.size += " and hairy"
