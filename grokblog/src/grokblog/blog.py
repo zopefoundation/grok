@@ -1,9 +1,6 @@
 import random
 from datetime import datetime, timedelta
-from docutils.core import publish_parts
 import grok
-
-from zope import interface, schema
 
 class Blog(grok.Container, grok.Site):
     def __init__(self):
@@ -19,19 +16,6 @@ class Blog(grok.Container, grok.Site):
 
 class Entries(grok.Container):
     pass
-
-class IEntry(interface.Interface):
-    published = schema.Datetime(title=u'Published')
-    title = schema.TextLine(title=u'Title')
-    body = schema.Text(title=u'Body')
-
-class Entry(grok.Model):
-    interface.implements(IEntry)
-
-    def __init__(self, title, body):
-        self.title = title
-        self.published = datetime.now()
-        self.body = body
 
 class Year(grok.Model):
     def __init__(self, year):
@@ -130,74 +114,9 @@ class BlogIndex(grok.View):
     def renderEntry(self, entry):
         return renderRest(entry.body)
 
-class AddEntry(grok.View):
-    grok.context(Blog)
-    grok.name('add')
-
-    def before(self):
-        id = self.request.form.get('id')
-        if not id:
-            return
-        title = self.request.form.get('title', '')
-        body = self.request.form.get('body', '')
-        self.context['entries'][id] = Entry(title, body)
-        self.redirect(self.url(self.context))
-
 class EntriesIndex(grok.View):
     grok.context(Entries)
     grok.name('index')
 
     def render(self):
         return "Entries: %s" % ' '.join(self.context.keys())
-
-rest_settings = {'file_insertion_enabled': False}
-
-def renderRest(source):
-    return publish_parts(
-        source, writer_name='html', settings_overrides=rest_settings
-        )['html_body']
-
-class EntryIndex(grok.View):
-    grok.context(IEntry)
-    grok.name('index')
-
-    def before(self):
-        self.body = renderRest(self.context.body)
-
-class EntryEdit(grok.View):
-    grok.context(IEntry)
-    grok.name('edit')
-
-    def before(self):
-        title = self.request.form.get('title', '')
-        if not title:
-            return
-        body = self.request.form.get('body', '')
-        self.context.title = title
-        self.context.body = body
-        self.redirect(self.url(self.context))
-
-class EntryBody(grok.View):
-    grok.context(IEntry)
-    grok.name('body')
-
-    def render(self):
-        return renderRest(self.context.body)
-
-class EntryItem(grok.View):
-    grok.context(IEntry)
-    grok.name('item')
-
-class EntryRandomDate(grok.View):
-    grok.context(IEntry)
-    grok.name('random_date')
-
-    def render(self):
-        self.context.published = datetime(
-            2006,
-            11,
-            random.randrange(1, 29),
-            random.randrange(0, 24),
-            random.randrange(0, 60),
-            )
-        return str(self.context.published)
