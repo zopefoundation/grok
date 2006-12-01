@@ -15,12 +15,13 @@
 """
 
 import persistent
-import types
 import urllib
 
 from zope import component
 from zope import interface
 from zope import schema
+from zope import event
+from zope.lifecycleevent import ObjectModifiedEvent
 from zope.security.proxy import removeSecurityProxy
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
@@ -29,7 +30,6 @@ from zope.publisher.interfaces.browser import (IBrowserPublisher,
 from zope.pagetemplate import pagetemplate
 from zope.formlib import form
 from zope.formlib.namedtemplate import INamedTemplate
-from zope.schema.interfaces import IField
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.browser.absoluteurl import AbsoluteURL
 from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
@@ -249,43 +249,45 @@ class ContainerTraverser(Traverser):
         return self.context.get(name)
 
 class Form(View):
-    def _init(self):
-        fields = form.Fields(*schema_fields(self.context))
-        fields += form.Fields(*interface.providedBy(self.context))
-        fields = fields.omit('__name__')
-        self.form_fields = fields
+    def __init__(self, context, request):
+        super(Form, self).__init__(context, request)
+        self.form = self.__real_form__(context, request)
+        # we need this pointer to the actual grok-level form in our
+        # custom Action
+        self.form.grok_form = self
 
-        self.template = component.getAdapter(self, INamedTemplate,
-                                             name='default')
     def __call__(self):
-        self.update()
-        return self.render()
+        form = self.form
 
-class EditForm(Form, form.EditForm):
-    def __init__(self, context, request):
-        super(EditForm, self).__init__(context, request)
-        self._init()
+        # update form
+        form.update()
 
-    def default_handle_apply(self, action, data):
-         form.EditForm.handle_edit_action.success_handler(self, action, data)
+        # this code is extracted and modified from form.render
+        
+        # if the form has been updated, it may already have a result
+        if form.form_result is None:
+            # we reset, in case data has changed in a way that
+            # causes the widgets to have different data
+            if form.form_reset:
+                form.resetForm()
+                form.form_reset = False
+            # recalculate result
+            form.form_result = super(Form, self).__call__()
 
-class DisplayForm(Form, form.DisplayForm):
-    def __init__(self, context, request):
-        super(DisplayForm, self).__init__(context, request)
-        self._init()
+        return form.form_result
+    
+class EditForm(Form):
+    label = ''
+    status = ''
+    
+    def applyChanges(self, action, data):
+        if form.applyChanges(self.context, self.form.form_fields, data,
+                             self.form.adapters):
+            event.notify(ObjectModifiedEvent(self.context))
+            self.status = "Updated"
+        else:
+            self.status = "No changes"
 
-def schema_fields(obj):
-    fields = []
-    fields_class = getattr(obj, 'fields', None)
-    if fields_class is None:
-        return fields
-    if type(fields_class) != types.ClassType:
-        return fields
-    for name in dir(fields_class):
-        field = getattr(fields_class, name)
-        if IField.providedBy(field):
-            if not getattr(field, '__name__', None):
-                field.__name__ = name
-            fields.append(field)
-    fields.sort(key=lambda field: field.order)
-    return fields
+class DisplayForm(Form):
+    label = ''
+    status = ''

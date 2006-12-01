@@ -28,7 +28,8 @@ class IGrokBaseClasses(interface.Interface):
     XMLRPC = interface.Attribute("Base class for XML-RPC methods.")
     Traverser = interface.Attribute("Base class for custom traversers.")
     EditForm = interface.Attribute("Base class for edit forms.")
-
+    DisplayForm = interface.Attribute("Base class form display forms.")
+    
 class IGrokErrors(interface.Interface):
 
     def GrokError(message, component):
@@ -133,6 +134,10 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
     def Fields(*args, **kw):
         """Return a list of formlib fields based on interfaces and/or schema
         fields."""
+
+    def action(label, actions=None, **options):
+        """grok-specific action decorator.
+        """
 
 class IGrokView(interface.Interface):
     """Grok views all provide this interface.

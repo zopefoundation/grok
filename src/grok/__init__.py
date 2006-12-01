@@ -16,7 +16,7 @@
 
 from zope.interface import implements
 from zope.component import adapts
-from zope.formlib.form import action, Fields
+from zope.formlib.form import Fields
 from zope.event import notify
 from zope.app.component.hooks import getSite
 from zope.lifecycleevent import (
@@ -37,6 +37,7 @@ from grok.directive import context, name, template, templatedir
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import SubscribeDecorator as subscribe
 from grok.error import GrokError, GrokImportError
+from grok.formlib import action
 
 # Our __init__ provides the grok API directly so using 'import grok' is enough.
 from grok.interfaces import IGrokAPI

@@ -26,14 +26,13 @@ from zope.security.checker import (defineChecker, getCheckerForInstancesOf,
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher)
-
 from zope.app.publisher.xmlrpc import MethodPublisher
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.app.component.site import LocalSiteManager
 
 import grok
 
-from grok import util, scan, components, security
+from grok import util, scan, components, security, formlib
 from grok.error import GrokError, GrokImportError
 from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
                             ClassOrModuleDirectiveContext,
@@ -110,7 +109,8 @@ def grok_module(module_info):
 
     find_filesystem_templates(module_info, templates)
 
-    context = util.determine_module_context(module_info, components[grok.Model])
+    context = util.determine_module_context(module_info,
+                                            components[grok.Model])
 
     register_models(components[grok.Model])
     register_adapters(context, components[grok.Adapter])
@@ -123,7 +123,7 @@ def grok_module(module_info):
     register_subscribers(subscribers)
 
     # Do various other initializations
-    initialize_schema(components[grok.Model])
+    formlib.initialize_schema(components[grok.Model])
 
 def scan_module(module_info):
     models = []
@@ -212,12 +212,6 @@ def register_models(models):
         if not getCheckerForInstancesOf(model):
             defineChecker(model, NoProxy)
 
-def initialize_schema(models):
-    # Set the default values as class attributes to make formlib work
-    for model in models:
-        for field in components.schema_fields(model):
-            setattr(model, field.__name__, field.default)
-
 def register_adapters(context, adapters):
     for factory in adapters:
         adapter_context = util.determine_class_context(factory, context)
@@ -258,9 +252,16 @@ def register_xmlrpc(context, views):
 def register_views(context, views, templates):
     for factory in views:
         view_context = util.determine_class_context(factory, context)
+
+        # some extra work to take care of if this view is a form
+        if util.check_subclass(factory, components.EditForm):
+            formlib.setup_editform(factory, view_context)
+        elif util.check_subclass(factory, components.DisplayForm):
+            formlib.setup_displayform(factory, view_context)
+            
         factory_name = factory.__name__.lower()
 
-        # find inline templates
+        # find templates
         template_name = util.class_annotation(factory, 'grok.template',
                                               factory_name)
         template = templates.get(template_name)
@@ -273,21 +274,40 @@ def register_views(context, views, templates):
                                 "a template called '%s'."
                                 % (factory, template_name, factory_name),
                                 factory)
+            
+        # we never accept a 'render' method for forms
+        if util.check_subclass(factory, components.Form):
+            if getattr(factory, 'render', None):
+                raise GrokError(
+                    "It is not allowed to specify a custom 'render' "
+                    "method for form %r. Forms either use the default "
+                    "template or a custom-supplied one." % factory,
+                    factory)
 
         if template:
             if getattr(factory, 'render', None):
-                raise GrokError("Multiple possible ways to render view %r. "
-                                "It has both a 'render' method as well as "
-                                "an associated template." % factory,
-                                factory)
+                # we do not accept render and template both for a view
+                raise GrokError(
+                    "Multiple possible ways to render view %r. "
+                    "It has both a 'render' method as well as "
+                    "an associated template." % factory,
+                    factory)
 
             templates.markAssociated(template_name)
             factory.template = template
         else:
             if not getattr(factory, 'render', None):
-                raise GrokError("View %r has no associated template or "
-                                "'render' method." % factory,
-                                factory)
+                if util.check_subclass(factory, components.EditForm):
+                    # we have a edit form without template
+                    factory.template = formlib.defaultEditTemplate
+                elif util.check_subclass(factory, components.DisplayForm):
+                    # we have a display form without template
+                    factory.template = formlib.defaultDisplayTemplate
+                else:
+                    # we do not accept a view without any way to render it
+                    raise GrokError("View %r has no associated template or "
+                                    "'render' method." % factory,
+                                    factory)
 
         view_name = util.class_annotation(factory, 'grok.name', factory_name)
         # __view_name__ is needed to support IAbsoluteURL on views
@@ -296,7 +316,7 @@ def register_views(context, views, templates):
                                  adapts=(view_context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
                                  name=view_name)
-
+        
         # TODO minimal security here (read: everything is public)
         defineChecker(factory, NoProxy)
 

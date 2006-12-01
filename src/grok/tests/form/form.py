@@ -37,18 +37,18 @@ a formlib form.
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()
   >>> view = component.getMultiAdapter((manfred, request), name='edit')
-  >>> len(view.form_fields)
+  >>> len(view.form.form_fields)
   2
-  >>> [w.__name__ for w in view.form_fields]
+  >>> [w.__name__ for w in view.form.form_fields]
   ['name', 'size']
 
 It is important to keep the order of the fields:
 
   >>> view = component.getMultiAdapter(
   ...    (DifferentMammoth(), request), name='editdifferent')
-  >>> len(view.form_fields)
+  >>> len(view.form.form_fields)
   2
-  >>> [w.__name__ for w in view.form_fields]
+  >>> [w.__name__ for w in view.form.form_fields]
   ['size', 'name']
 
 """
