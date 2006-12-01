@@ -111,7 +111,6 @@ def grok_module(module_info):
 
     context = util.determine_module_context(module_info,
                                             components[grok.Model])
-
     register_models(components[grok.Model])
     register_adapters(context, components[grok.Adapter])
     register_multiadapters(components[grok.MultiAdapter])
@@ -143,10 +142,12 @@ def scan_module(module_info):
     module = module_info.getModule()
     for name in dir(module):
         obj = getattr(module, name)
-
+        # we don't care about picking up module-level annotations from grok
+        if name.startswith('__grok_'):
+            continue        
         if not util.defined_locally(obj, module_info.dotted_name):
             continue
-
+        
         if isinstance(obj, grok.PageTemplate):
             templates.register(name, obj)
             obj._annotateGrokInfo(name, module_info.dotted_name)

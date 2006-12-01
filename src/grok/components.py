@@ -41,6 +41,7 @@ from zope.app.publisher.browser.pagetemplateresource import \
     PageTemplateResourceFactory
 from zope.app.container.btree import BTreeContainer
 from zope.app.container.contained import Contained
+from zope.app.container.interfaces import IReadContainer
 from zope.app.component.site import SiteManagerContainer
 
 from grok import util, security, interfaces
@@ -217,10 +218,18 @@ class Traverser(object):
         if subob:
             return subob
 
+        # XXX special logic here to deal with views and containers.
+        # would be preferrable if we could fall back on normal Zope
+        # traversal behavior
         view = component.queryMultiAdapter((self.context, request), name=name)
         if view:
             return view
 
+        if IReadContainer.providedBy(self.context):
+            item = self.context.get(name)
+            if item:
+                return item
+    
         raise NotFound(self.context, name, request)
 
     def traverse(self, name):
