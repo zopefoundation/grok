@@ -25,7 +25,7 @@ attribute generation:
 
 A grok.EditForm is a special grok.View that renders an edit form.
 
-  >>> from zope import component  
+  >>> from zope import component
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()
   >>> view = component.getMultiAdapter((manfred, request), name='edit')
@@ -52,7 +52,6 @@ class Mammoth(grok.Model):
         name = schema.TextLine(title=u"Name")
         size = schema.TextLine(title=u"Size", default=u"Quite normal")
         somethingelse = None
-
 
 class Edit(grok.EditForm):
     grok.context(Mammoth)
