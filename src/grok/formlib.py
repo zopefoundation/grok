@@ -18,6 +18,16 @@ class Action(form.Action):
         if self.success_handler is not None:
             return self.success_handler(self.form.grok_form, **data)
 
+def Fields(*args, **kw):
+    fields = []
+    for key, value in kw.items():
+        if IField.providedBy(value):
+            value.__name__ = key
+            fields.append(value)
+            del kw[key]
+    fields.sort(key=lambda field: field.order)
+    return form.Fields(*(args + tuple(fields)), **kw)
+    
 def setup_editform(factory, context):
     """Construct the real edit form, taking needed information from factory.
     """
