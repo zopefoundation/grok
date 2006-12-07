@@ -1,4 +1,5 @@
 from datetime import datetime
+import random
 from docutils.core import publish_parts
 
 import grok
@@ -11,52 +12,45 @@ class Entry(grok.Model):
         published = schema.Datetime(title=u'Published')
         title = schema.TextLine(title=u'Title')
         body = schema.Text(title=u'Body')
-        
+
     def __init__(self, title, body):
         self.title = title
         self.published = datetime.now()
         self.body = body
 
-class Add(grok.View):
+class Add(grok.AddForm):
     grok.context(Blog)
-    grok.name('add')
 
-    def before(self):
-        id = self.request.form.get('id')
-        if not id:
-            return
-        title = self.request.form.get('title', '')
-        body = self.request.form.get('body', '')
+    form_fields = grok.Fields(
+        id=schema.TextLine(title=u"id"))
+    form_fields += grok.AutoFields(Entry).omit('published')
+
+    @grok.action('Add entry')
+    def add(self, id, title, body):
         self.context['entries'][id] = Entry(title, body)
         self.redirect(self.url(self.context))
 
 class Index(grok.View):
-    grok.name('index')
 
     def before(self):
         self.body = renderRest(self.context.body)
 
 class Edit(grok.EditForm):
-    grok.name('edit')
 
     form_fields = grok.AutoFields(Entry).omit('published')
 
-    @grok.action('Edit')
+    @grok.action('Save changes')
     def edit(self, **data):
         self.applyChanges(**data)
         self.redirect(self.url(self.context))
-        
+
 class Body(grok.View):
-    grok.name('body')
 
     def render(self):
         return renderRest(self.context.body)
 
-class Item(grok.View):
-    grok.name('item')
-
 class RandomDate(grok.View):
-    grok.name('random_date')
+    # for testing purposes
 
     def render(self):
         self.context.published = datetime(
@@ -68,7 +62,14 @@ class RandomDate(grok.View):
             )
         return str(self.context.published)
 
-rest_settings = {'file_insertion_enabled': False}
+rest_settings = {
+    # Disable inclusion of external files, which is a security risk.
+    'file_insertion_enabled': False,
+    # Disable the promotion of a lone top-level section title to document title
+    # (and disable the promotion of a subsequent section title to document
+    # subtitle).
+    'doctitle_xform': False
+    }
 
 def renderRest(source):
     return publish_parts(
