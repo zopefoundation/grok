@@ -38,13 +38,26 @@ def setup_displayform(factory, context):
     """
     # get actions; by default no actions at all
     actions_ = getattr(factory, 'actions', form.Actions())
-    
+
     class RealDisplayForm(form.DisplayForm):
         form_fields = get_form_fields(factory, context)
         actions = actions_
     # we do not use the class annotation infrastructure as we use
     # this information during *runtime* not groktime.
     factory.__real_form__ = RealDisplayForm
+
+def setup_addform(factory, context):
+    """Construct the real add form, taking needed information from factory.
+    """
+    # get actions; by default no actions at all
+    actions_ = getattr(factory, 'actions', form.Actions())
+
+    class RealAddForm(form.AddForm):
+        form_fields = get_form_fields(factory, context)
+        actions = actions_
+    # we do not use the class annotation infrastructure as we use
+    # this information during *runtime* not groktime.
+    factory.__real_form__ = RealAddForm
 
 def initialize_schema(models):
     """Set the default values as class attributes to make formlib work
@@ -110,7 +123,7 @@ def load_template(name):
     result = f.read()
     f.close()
     return result
-    
+
 defaultEditTemplate = components.PageTemplate(load_template(
     'default_edit_form.pt'))
 

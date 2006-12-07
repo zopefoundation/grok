@@ -144,10 +144,10 @@ def scan_module(module_info):
         obj = getattr(module, name)
         # we don't care about picking up module-level annotations from grok
         if name.startswith('__grok_'):
-            continue        
+            continue
         if not util.defined_locally(obj, module_info.dotted_name):
             continue
-        
+
         if isinstance(obj, grok.PageTemplate):
             templates.register(name, obj)
             obj._annotateGrokInfo(name, module_info.dotted_name)
@@ -259,7 +259,9 @@ def register_views(context, views, templates):
             formlib.setup_editform(factory, view_context)
         elif util.check_subclass(factory, components.DisplayForm):
             formlib.setup_displayform(factory, view_context)
-            
+        elif util.check_subclass(factory, components.AddForm):
+            formlib.setup_addform(factory, view_context)
+
         factory_name = factory.__name__.lower()
 
         # find templates
@@ -275,7 +277,7 @@ def register_views(context, views, templates):
                                 "a template called '%s'."
                                 % (factory, template_name, factory_name),
                                 factory)
-            
+
         # we never accept a 'render' method for forms
         if util.check_subclass(factory, components.Form):
             if getattr(factory, 'render', None):
@@ -304,6 +306,9 @@ def register_views(context, views, templates):
                 elif util.check_subclass(factory, components.DisplayForm):
                     # we have a display form without template
                     factory.template = formlib.defaultDisplayTemplate
+                elif util.check_subclass(factory, components.AddForm):
+                    # we have an add form without template
+                    factory.template = formlib.defaultEditTemplate
                 else:
                     # we do not accept a view without any way to render it
                     raise GrokError("View %r has no associated template or "
@@ -317,7 +322,7 @@ def register_views(context, views, templates):
                                  adapts=(view_context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
                                  name=view_name)
-        
+
         # TODO minimal security here (read: everything is public)
         defineChecker(factory, NoProxy)
 

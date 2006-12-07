@@ -229,7 +229,7 @@ class Traverser(object):
             item = self.context.get(name)
             if item:
                 return item
-    
+
         raise NotFound(self.context, name, request)
 
     def traverse(self, name):
@@ -272,7 +272,7 @@ class Form(View):
         form.update()
 
         # this code is extracted and modified from form.render
-        
+
         # if the form has been updated, it may already have a result
         if form.form_result is None:
             # we reset, in case data has changed in a way that
@@ -284,11 +284,11 @@ class Form(View):
             form.form_result = super(Form, self).__call__()
 
         return form.form_result
-    
+
 class EditForm(Form):
     label = ''
     status = ''
-    
+
     def applyChanges(self, **data):
         if form.applyChanges(self.context, self.form.form_fields, data,
                              self.form.adapters):
@@ -296,6 +296,10 @@ class EditForm(Form):
             self.status = "Updated"
         else:
             self.status = "No changes"
+
+class AddForm(Form):
+    label = ''
+    status = ''
 
 class DisplayForm(Form):
     label = ''
