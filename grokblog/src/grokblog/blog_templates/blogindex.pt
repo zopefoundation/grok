@@ -1,14 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <head>
-    <title>blog title</title>
+    <title tal:content="context/title"/>
   </head>
   <body>
-    <h1>blog index</h1>
+    <h1 tal:content="context/title"/>
+    <h2 tal:content="context/tagline"/>
     <a tal:attributes="href python:view.url('add')">Add Blog Entry</a>
-    <tal:block repeat="entry view/entries">
-      <tal:block content="structure entry/@@item"/>
-    </tal:block>
+
+    <div class="entries">
+      <tal:block repeat="entry view/entries">
+        <tal:block content="structure entry/@@item"/>
+      </tal:block>
+    </div>
 
   </body>
 </html>
