@@ -9,6 +9,6 @@
       (<span class="published" tal:content="context/published"/>)
     </h1>
     <a tal:attributes="href python:view.url('edit')">edit...</a>
-    <p tal:content="structure context/@@body"/>
+    <tal:block content="structure context/@@body"/>
   </body>
 </html>
