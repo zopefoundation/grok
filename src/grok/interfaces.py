@@ -28,7 +28,8 @@ class IGrokBaseClasses(interface.Interface):
     XMLRPC = interface.Attribute("Base class for XML-RPC methods.")
     Traverser = interface.Attribute("Base class for custom traversers.")
     EditForm = interface.Attribute("Base class for edit forms.")
-    DisplayForm = interface.Attribute("Base class form display forms.")
+    DisplayForm = interface.Attribute("Base class for display forms.")
+    AddForm = interface.Attribute("Base class for add forms.")
     
 class IGrokErrors(interface.Interface):
 
