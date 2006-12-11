@@ -9,15 +9,53 @@ If no default can be assumed for a value, grok will explicitly tell you what is
 missing and how you can provide a default or explicit assignment for the value
 in question.
 
-    \section{grok.implements}
+    \section{\function{grok.implements}}
 
-    \section{grok.context}
+    \section{\function{grok.context}}
 
-    \section{grok.name}
+    \section{\function{grok.name}}
 
-    \section{grok.template}
+    Used to associate a component with a name. Typically this directive is
+    optional. The default behaviour when no name is given depends on the
+    component.
 
-    \section{grok.templatedir}
+    \section{\function{grok.template}}
 
-    \section{grok.templatedir}
+    \section{\function{grok.templatedir}}
+
+    \section{\function{grok.resourcedir --- XXX Not implemented yet}}
+
+Resource directories are used to embed static resources like HTML-,
+JavaScript-, CSS- and other files in your application. 
+
+XXX insert directive description here (first: define the name, second: describe
+the default behaviour if the directive isn't given)
+
+A resource directory is created when a package contains a directory with the
+name ``\file{static}''.  All files from this directory become accessible from a
+browser under the URL
+\file{http://<servername>/++resource++<packagename>/<filename>}.
+
+\begin{bf}Example:\end{bf} The package \module{a.b.c} is grokked and contains a
+directory \file{static} which contains the file \file{example.css}. The
+stylesheet will be available via
+\file{http://<servername>/++resource++a.b.c/example.css}.
+
+\begin{notice}A package can never have both a ``static'' directory and a Python module
+with the name ``static.py'' at the same time. grok will remind you of this
+conflict when grokking a package by displaying an error message.
+
+\end{notice}
+
+\subsection{Linking to resources from templates}
+
+    grok provides a convenient way to calculate the URLs to static resource
+    using the keyword \keyword{static} in page templates:
+
+    \begin{verbatim}
+    <link rel="stylesheet" tal:attributes="href static/example.css" type="text/css">
+    \end{verbatim}
+
+    The keyword \keyword{static} will be replaced by the reference to the
+    resource directory for the package in which the template was registered.
 

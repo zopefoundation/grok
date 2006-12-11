@@ -10,12 +10,14 @@ functionality.
         \begin{funcdesc}{subscribe}{*classes_or_interfaces}
 
         Declare that the decorated function subscribes to an event or a
-        combination of objects and events. (Similar to Zope 3's
-        \function{subscriber} decorator.)
+        combination of objects and events and register it.
+        
 
         Applicable on module-level for functions. Requires at least one class
         or interface as argument.
 
+        (Similar to Zope 3's \function{subscriber} decorator, but automatically
+        performs the registration of the component.)
         \end{funcdesc}
 
 

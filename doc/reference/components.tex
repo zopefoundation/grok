@@ -3,20 +3,91 @@
 The \module{grok} module defines a set of components that provide basic Zope 3
 functionality in a convenient way.
 
-    \section{grok.Model}
+\section{\class{grok.Model}}
 
-    \section{grok.Container}
+    Base class to define an application model object.
 
-    \section{grok.Adapter}
+    Model classes support persistence and containment.
 
-    \section{grok.MultiAdapter}
+\section{grok.Container}
 
-    \section{grok.Utility}
+    Mixin base class to define a container object. The container supports the
+    zope.app.container.interfaces.IContainer interface and is implemented using
+    a BTree, providing reasonable performance for large object collections.
 
-    \section{grok.View}
+    Typically used together with \class{grok.Model}.
 
-    \section{grok.XMLRPC}
+\section{grok.Adapter}
 
-    \section{grok.Traverser}
+    Implementation, configuration, and registration of Zope 3 adapters.
 
-    \section{grok.EditForm}
+
+    \begin{classdesc*}{grok.Adapter}
+        Base class to define an adapter. Adapters are automatically registered
+        when a module is grokked.
+
+        \begin{memberdesc}{context}
+            The adapted object.
+        \end{memberdesc}
+
+    \begin{bf}Directives:\end{bf}
+
+    \begin{itemize}
+        \item[\function{grok.context(context_obj)}] required, identifies the required object for the
+        adaptation.
+
+        \item[\function{grok.implements(interface)}] required, identifies the interface the adapter implements.
+
+        \item[\function{grok.name(name)}] optional, identifies the name used for the adapter
+        registration. If ommitted, no name will be used.
+    \end{itemize}
+    \end{classdesc*}
+
+    \begin{bf}Example:\end{bf}
+
+    \begin{verbatim}
+class EuropeanToUS(grok.Adapter):
+    """A travel-version of a power adapter that adapts european sockets to
+    american sockets.
+    
+    """
+    grok.implements(IUSPowerSocket)
+    grok.context(EuropeanPowerSocket)
+    grok.name('travel-adapter') # Optional, can be ommitted
+
+    def power(self):
+        return self.context.power
+    \end{verbatim}
+
+\section{grok.MultiAdapter}
+
+    Base class to define a multi-adapter. Multi-adapters are automatically
+    registered.
+
+    The class-level directive \function{grok.adapts} is used to identify
+    the objects that can be adapted.
+
+    The class-level directive \function{grok.implements} is used to identify
+    the interface(s) this adapter implements.
+
+    The class-level directive \function{grok.name} is used to register the
+    multi-adapter with a name. If ommitted, no name will be used.
+
+\section{grok.Utility}
+
+    Base class to define a utility. Utilities are automatically registered.
+
+    The class-level directive \function{grok.implements} is used to identify
+    the interface this utility implements. Utilities must provide exactly one
+    interface.
+
+    The class-level directive \function{grok.name} is used to register the
+    utility with a name. If ommitted, no name will be used.
+
+\section{grok.View}
+
+\section{grok.XMLRPC}
+
+\section{grok.Traverser}
+
+\section{grok.EditForm}
