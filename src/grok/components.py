@@ -46,6 +46,25 @@ from zope.app.component.site import SiteManagerContainer
 
 from grok import util, security, interfaces
 
+class ClassGrokker(object):
+    # subclasses should have a component_class class variable
+    
+    def match(self, obj):
+        return util.check_subclass(obj, self.component_class)
+    
+    def register(self, context, name, factory, module_info, templates):
+        raise NotImplementedError
+
+
+class InstanceGrokker(object):
+    # subclasses should have a component_class class variable
+    
+    def match(self, obj):
+        return isinstance(obj, self.component_class)
+   
+    def register(self, context, name, instance, module_info, templates):
+        raise NotImplementedError
+
 
 class Model(Contained, persistent.Persistent):
     # XXX Inheritance order is important here. If we reverse this,

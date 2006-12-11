@@ -120,3 +120,7 @@ class ModuleInfo(object):
 def module_info_from_dotted_name(dotted_name):
     module = resolve(dotted_name)
     return ModuleInfo(module.__file__, dotted_name)
+
+def module_info_from_module(module):
+    return ModuleInfo(module.__file__, module.__name__)
+

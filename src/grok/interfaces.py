@@ -16,7 +16,10 @@
 from zope import interface
 
 class IGrokBaseClasses(interface.Interface):
-
+    ClassGrokker = interface.Attribute("Base class to define a class "
+                                       "grokker.")
+    InstanceGrokker = interface.Attribute("Base class to define an "
+                                          "instance grokker.")
     Model = interface.Attribute("Base class for persistent content objects "
                                 "(models).")
     Container = interface.Attribute("Base class for containers.")

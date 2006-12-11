@@ -15,29 +15,20 @@
 """
 import os
 import sys
-import inspect
 
 from zope import component
 from zope import interface
 import zope.component.interface
 from zope.component.interfaces import IDefaultViewName
-from zope.security.checker import (defineChecker, getCheckerForInstancesOf,
-                                   NoProxy)
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
-                                               IBrowserRequest,
-                                               IBrowserPublisher)
-from zope.app.publisher.xmlrpc import MethodPublisher
-from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
+                                               IBrowserRequest)
 from zope.app.component.site import LocalSiteManager
 
 import grok
 
-from grok import util, scan, components, security, formlib
+from grok import util, scan, components, grokker, meta
 from grok.error import GrokError, GrokImportError
-from grok.directive import (ClassDirectiveContext, ModuleDirectiveContext,
-                            ClassOrModuleDirectiveContext,
-                            TextDirective, InterfaceOrClassDirective,
-                            frame_is_module, frame_is_class)
+from grok.directive import frame_is_module
 
 
 _bootstrapped = False
@@ -57,6 +48,9 @@ def bootstrap():
     component.provideHandler(
         addSiteHandler, adapts=(grok.Site, grok.IObjectAddedEvent))
 
+    # now grok the grokkers
+    grokker.grokkerRegistry.grok(scan.module_info_from_module(meta))
+    
 def addSiteHandler(site, event):
     sitemanager = LocalSiteManager(site)
     site.setSiteManager(sitemanager)
@@ -103,284 +97,24 @@ def grok_tree(module_info):
     for sub_module_info in module_info.getSubModuleInfos():
         grok_tree(sub_module_info)
 
-
 def grok_module(module_info):
-    components, templates, subscribers = scan_module(module_info)
+    grokker.grokkerRegistry.grok(module_info)
 
-    find_filesystem_templates(module_info, templates)
-
-    context = util.determine_module_context(module_info,
-                                            components[grok.Model])
-    register_models(components[grok.Model])
-    register_adapters(context, components[grok.Adapter])
-    register_multiadapters(components[grok.MultiAdapter])
-    register_utilities(components[grok.Utility])
-    register_views(context, components[grok.View], templates)
-    register_xmlrpc(context, components[grok.XMLRPC])
-    register_traversers(context, components[grok.Traverser])
-    register_unassociated_templates(context, templates, module_info)
-    register_subscribers(subscribers)
-
-    # Do various other initializations
-    formlib.initialize_schema(components[grok.Model])
-
-def scan_module(module_info):
-    models = []
-    components = {
-            grok.Model: models,
-            grok.Container: models,
-            grok.Adapter: [],
-            grok.MultiAdapter: [],
-            grok.Utility: [],
-            grok.View: [],
-            grok.XMLRPC: [],
-            grok.Traverser: []
-            }
-    templates = TemplateRegistry()
-    subscribers = module_info.getAnnotation('grok.subscribers', [])
-
-    module = module_info.getModule()
-    for name in dir(module):
-        obj = getattr(module, name)
-        # we don't care about picking up module-level annotations from grok
-        if name.startswith('__grok_'):
-            continue
-        if not util.defined_locally(obj, module_info.dotted_name):
-            continue
-
-        if isinstance(obj, grok.PageTemplate):
-            templates.register(name, obj)
-            obj._annotateGrokInfo(name, module_info.dotted_name)
-            continue
-        # XXX refactor
-        elif util.check_subclass(obj, grok.View):
-            obj.module_info = module_info
-            components[grok.View].append(obj)
-            continue
-
-        for candidate_class, found_list in components.items():
-            if util.check_subclass(obj, candidate_class):
-                found_list.append(obj)
-                break
-
-    return components, templates, subscribers
-
-def find_filesystem_templates(module_info, templates):
-    template_dir_name = module_info.getAnnotation(
-        'grok.templatedir',
-        module_info.name + '_templates')
-    template_dir = module_info.getResourcePath(template_dir_name)
-    if os.path.isdir(template_dir):
-        template_files = os.listdir(template_dir)
-        for template_file in template_files:
-            if template_file.startswith('.') or template_file.endswith('~'):
-                continue
-
-            if not template_file.endswith('.pt'):
-                raise GrokError("Unrecognized file '%s' in template directory "
-                                "'%s'." % (template_file, template_dir),
-                                module_info.getModule())
-
-            template_name = template_file[:-3] # cut off .pt
-            template_path = os.path.join(template_dir, template_file)
-
-            f = open(template_path, 'rb')
-            contents = f.read()
-            f.close()
-
-            template = grok.PageTemplate(contents)
-            template._annotateGrokInfo(template_name, template_path)
-
-            inline_template = templates.get(template_name)
-            if inline_template:
-                raise GrokError("Conflicting templates found for name '%s' "
-                                "in module %r, both inline and in template "
-                                "directory '%s'."
-                                % (template_name, module_info.getModule(),
-                                   template_dir), inline_template)
-            templates.register(template_name, template)
-
-
+    # XXX we should ideally also make it pluggable to register decorators like
+    # the ones for subscribers.
+    register_subscribers(module_info.getAnnotation('grok.subscribers', []))    
+    
 def register_static_resources(dotted_name, resource_directory):
     resource_factory = components.DirectoryResourceFactory(resource_directory,
                                                     dotted_name)
     component.provideAdapter(resource_factory, (IDefaultBrowserLayer,),
                              interface.Interface, name=dotted_name)
 
-def register_models(models):
-    for model in models:
-        # TODO minimal security here (read: everything is public)
-        if not getCheckerForInstancesOf(model):
-            defineChecker(model, NoProxy)
-
-def register_adapters(context, adapters):
-    for factory in adapters:
-        adapter_context = util.determine_class_context(factory, context)
-        util.check_implements_one(factory)
-        name = util.class_annotation(factory, 'grok.name', '')
-        component.provideAdapter(factory, adapts=(adapter_context,), name=name)
-
-def register_multiadapters(multiadapters):
-    for factory in multiadapters:
-        util.check_implements_one(factory)
-        util.check_adapts(factory)
-        name = util.class_annotation(factory, 'grok.name', '')
-        component.provideAdapter(factory, name=name)
-
-def register_utilities(utilities):
-    for factory in utilities:
-        util.check_implements_one(factory)
-        name = util.class_annotation(factory, 'grok.name', '')
-        component.provideUtility(factory(), name=name)
-
-def register_xmlrpc(context, views):
-    for view in views:
-        view_context = util.determine_class_context(view, context)
-        candidates = [getattr(view, name) for name in dir(view)]
-        methods = [c for c in candidates if inspect.ismethod(c)]
-
-        for method in methods:
-            # Make sure that the class inherits MethodPublisher, so that the views
-            # have a location
-            method_view = type(view.__name__, (view, MethodPublisher),
-                               {'__call__': method,
-                                '__Security_checker__': security.GrokChecker()}
-                               )
-            component.provideAdapter(
-                method_view, (view_context, IXMLRPCRequest), interface.Interface,
-                name=method.__name__)
-
-def register_views(context, views, templates):
-    for factory in views:
-        view_context = util.determine_class_context(factory, context)
-
-        # some extra work to take care of if this view is a form
-        if util.check_subclass(factory, components.EditForm):
-            formlib.setup_editform(factory, view_context)
-        elif util.check_subclass(factory, components.DisplayForm):
-            formlib.setup_displayform(factory, view_context)
-        elif util.check_subclass(factory, components.AddForm):
-            formlib.setup_addform(factory, view_context)
-
-        factory_name = factory.__name__.lower()
-
-        # find templates
-        template_name = util.class_annotation(factory, 'grok.template',
-                                              factory_name)
-        template = templates.get(template_name)
-
-        if factory_name != template_name:
-            # grok.template is being used
-            if templates.get(factory_name):
-                raise GrokError("Multiple possible templates for view %r. It "
-                                "uses grok.template('%s'), but there is also "
-                                "a template called '%s'."
-                                % (factory, template_name, factory_name),
-                                factory)
-
-        # we never accept a 'render' method for forms
-        if util.check_subclass(factory, components.Form):
-            if getattr(factory, 'render', None):
-                raise GrokError(
-                    "It is not allowed to specify a custom 'render' "
-                    "method for form %r. Forms either use the default "
-                    "template or a custom-supplied one." % factory,
-                    factory)
-
-        if template:
-            if getattr(factory, 'render', None):
-                # we do not accept render and template both for a view
-                raise GrokError(
-                    "Multiple possible ways to render view %r. "
-                    "It has both a 'render' method as well as "
-                    "an associated template." % factory,
-                    factory)
-
-            templates.markAssociated(template_name)
-            factory.template = template
-        else:
-            if not getattr(factory, 'render', None):
-                if util.check_subclass(factory, components.EditForm):
-                    # we have a edit form without template
-                    factory.template = formlib.defaultEditTemplate
-                elif util.check_subclass(factory, components.DisplayForm):
-                    # we have a display form without template
-                    factory.template = formlib.defaultDisplayTemplate
-                elif util.check_subclass(factory, components.AddForm):
-                    # we have an add form without template
-                    factory.template = formlib.defaultEditTemplate
-                else:
-                    # we do not accept a view without any way to render it
-                    raise GrokError("View %r has no associated template or "
-                                    "'render' method." % factory,
-                                    factory)
-
-        view_name = util.class_annotation(factory, 'grok.name', factory_name)
-        # __view_name__ is needed to support IAbsoluteURL on views
-        factory.__view_name__ = view_name
-        component.provideAdapter(factory,
-                                 adapts=(view_context, IDefaultBrowserLayer),
-                                 provides=interface.Interface,
-                                 name=view_name)
-
-        # TODO minimal security here (read: everything is public)
-        defineChecker(factory, NoProxy)
-
-def register_traversers(context, traversers):
-    for factory in traversers:
-        factory_context = util.determine_class_context(factory, context)
-        component.provideAdapter(factory,
-                                 adapts=(factory_context, IBrowserRequest),
-                                 provides=IBrowserPublisher)
-
-def register_unassociated_templates(context, templates, module_info):
-    for name, unassociated in templates.listUnassociatedTemplates():
-        util.check_context(unassociated, context)
-
-        module_info_ = module_info
-        class TemplateView(grok.View):
-            template = unassociated
-            module_info = module_info_
-
-        templates.markAssociated(name)
-
-        TemplateView.__view_name__ = name
-        component.provideAdapter(TemplateView,
-                                 adapts=(context, IDefaultBrowserLayer),
-                                 provides=interface.Interface,
-                                 name=name)
-
-        # TODO minimal security here (read: everything is public)
-        defineChecker(TemplateView, NoProxy)
-
 def register_subscribers(subscribers):
     for factory, subscribed in subscribers:
         component.provideHandler(factory, adapts=subscribed)
         for iface in subscribed:
             zope.component.interface.provideInterface('', iface)
-
-class TemplateRegistry(object):
-
-    def __init__(self):
-        self._reg = {}
-
-    def register(self, name, template):
-        self._reg[name] = dict(template=template, associated=False)
-
-    def markAssociated(self, name):
-        self._reg[name]['associated'] = True
-
-    def get(self, name):
-        entry = self._reg.get(name)
-        if entry is None:
-            return None
-        return entry['template']
-
-    def listUnassociatedTemplates(self):
-        for name, entry in self._reg.iteritems():
-            if not entry['associated']:
-                yield name, entry['template']
-
 
 # decorators
 class SubscribeDecorator:

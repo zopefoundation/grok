@@ -69,13 +69,6 @@ def setup_addform(factory, context):
     # this information during *runtime* not groktime.
     factory.__real_form__ = RealAddForm
 
-def initialize_schema(models):
-    """Set the default values as class attributes to make formlib work
-    """
-    for model in models:
-        for field in get_context_schema_fields(model):
-            setattr(model, field.__name__, field.default)
-
 def get_context_schema_fields(context):
     """Get the schema fields for a context object.
     """
