@@ -16,6 +16,8 @@
 
 import ldap
 
+
+
 from zope import schema
 
 import grok
@@ -27,10 +29,10 @@ LDAP_PASSWORD = "password"
 LDAP_SEARCH_BASE = "ou=Addresses,dc=example,dc=com"
 
 
+
 class AddressBook(grok.Model):
 
-    @grok.traverse
-    def getContact(self, name):
+    def traverse(self, name):
         contact = Contact(name)
         contact.__parent__ = self
         contact.__name__ = name
@@ -59,48 +61,46 @@ addressbooklisting = grok.PageTemplate("""\
 class Contact(grok.Model):
 
     class fields:
-        cn = schema.TextLine(title=u"Display name")
-        #displayName = fileAs
+        cn = schema.TextLine(title=u"LDAP CN", readonly=True)
 
-        givenName = schema.TextLine(title=u"First name")
+        givenName = schema.TextLine(title=u"First name", required=False)
         sn = schema.TextLine(title=u"Last name")
-        initials = schema.TextLine(title=u"Initials")
+        initials = schema.TextLine(title=u"Initials", required=False)
 
         # jpegPhoto
-        description = schema.TextLine(title=u"Description")
+        description = schema.TextLine(title=u"Description", required=False)
 
-        title = schema.TextLine(title=u"Title")
+        title = schema.TextLine(title=u"Title", required=False)
 
-        o = schema.TextLine(title=u"Organisation")
-        ou = schema.TextLine(title=u"Organisational Unit")
-        businessRole = schema.TextLine(title=u"Role")
+        o = schema.TextLine(title=u"Organisation", required=False)
+        ou = schema.TextLine(title=u"Organisational Unit", required=False)
+        businessRole = schema.TextLine(title=u"Role", required=False)
 
-        category = schema.TextLine(title=u"Category")
+        category = schema.TextLine(title=u"Category", required=False)
 
-        mail = schema.TextLine(title=u"Email")
+        mail = schema.List(title=u"Email", required=False,
+                value_type=schema.TextLine())
 
-        telephoneNumber = schema.TextLine(title=u"Phone (business)")
-        mobile = schema.TextLine(title=u"Mobiltelefon")
-        facsimileTelephoneNumber = schema.TextLine(title=u"Telefax (business)")
-        homePhone = schema.TextLine(title=u"Phone (private)")
-        otherPhone = schema.TextLine(title=u"Phone (other)")
+        telephoneNumber = schema.TextLine(title=u"Phone (business)", required=False)
+        mobile = schema.TextLine(title=u"Mobiltelefon", required=False)
+        facsimileTelephoneNumber = schema.TextLine(title=u"Telefax (business)", required=False)
+        homePhone = schema.TextLine(title=u"Phone (private)", required=False)
 
-        note = schema.TextLine(title=u"Note")
+        note = schema.TextLine(title=u"Note", required=False)
 
-        postalAddress = schema.Text(title=u"Address (business)")
-        postalCode = schema.TextLine(title=u"ZIP")
-        street = schema.TextLine(title=u"Street")
-        l = schema.TextLine(title=u"City")
-        st = schema.TextLine(title=u"State")
+        postalAddress = schema.Text(title=u"Address (business)", required=False)
+        postalCode = schema.TextLine(title=u"ZIP", required=False)
+        street = schema.TextLine(title=u"Street", required=False)
+        l = schema.TextLine(title=u"City", required=False)
+        st = schema.TextLine(title=u"State", required=False)
 
-        homePostalAddress = schema.Text(title=u"Address (private)")
-        otherPostalAddress = schema.Text(title=u"Address (other)")
+        homePostalAddress = schema.Text(title=u"Address (private)", required=False)
 
-        labeledURI = schema.TextLine(title=u"Homepage")
+        labeledURI = schema.TextLine(title=u"Homepage", required=False)
 
-    def __init__(self, cname):
+    def __init__(self, cn):
         # Initialize from LDAP data
-        data = get_contact(cname)
+        data = get_contact(cn)
         if data is not None:
             for field in grok.schema_fields(Contact):
                 field_data = data.get(field.__name__)
@@ -110,13 +110,25 @@ class Contact(grok.Model):
                     setattr(self, field.__name__, field_data[0])
                 elif isinstance(field, schema.Text):
                     setattr(self, field.__name__, '\n'.join(field_data))
+                elif isinstance(field, schema.List):
+                    setattr(self, field.__name__, field_data)
                 else:
                     raise TypeError, "Invalid schema field type: %r" % field
+
+    def update(self, data):
+        for key, value in data.items():
+            setattr(self, key, value)
+        store_contact(self)
 
 
 class EditContact(grok.EditForm):
     grok.context(Contact)
     grok.name("index")
+
+    @grok.action("Apply")
+    def apply(self, action, data):
+        # XXX UI feedback and modification event triggering
+        self.context.update(data)
 
 
 # LDAP helper functions
@@ -125,18 +137,20 @@ def get_contact_list():
     l = ldap.initialize(LDAP_SERVER)
     l.simple_bind_s(LDAP_LOGIN, LDAP_PASSWORD)
     results = l.search_s(LDAP_SEARCH_BASE, ldap.SCOPE_SUBTREE, "(objectclass=inetOrgPerson)")
+    import pprint
+    pprint.pprint(results)
     if results is None:
         return []
-    cnames = [unicode(x[1]['cn'][0], 'utf-8') for x in results]
-    cnames.sort()
-    return cnames
+    cns = [unicode(x[1]['cn'][0], 'utf-8') for x in results]
+    cns.sort()
+    return cns
 
-def get_contact(cname):
+def get_contact(cn):
     l = ldap.initialize(LDAP_SERVER)
     l.simple_bind_s(LDAP_LOGIN, LDAP_PASSWORD)
     results = l.search_s(LDAP_SEARCH_BASE,
                          ldap.SCOPE_SUBTREE,
-                         "(&(objectclass=inetOrgPerson)(cn=%s))" % cname)
+                         "(&(objectclass=inetOrgPerson)(cn=%s))" % cn)
     if results:
         # Get data dictionary
         data = results[0][1] 
@@ -144,3 +158,22 @@ def get_contact(cname):
             value = [unicode(v, 'utf-8') for v in value]
             data[key] = value
         return data
+
+def store_contact(contact):
+    l = ldap.initialize(LDAP_SERVER)
+    l.simple_bind_s(LDAP_LOGIN, LDAP_PASSWORD)
+    dn = "cn=%s,%s" % (contact.cn.encode('utf-8'), LDAP_SEARCH_BASE)
+
+    modlist = []
+    for field in  grok.schema_fields(contact):
+        value = field.get(contact)
+        if value is None:
+            value  = []
+        elif isinstance(field, schema.Text):
+            value = value.split("\n")
+        elif not isinstance(value, list):
+            value = [value]
+        value = map(lambda x:x.encode('utf-8'), value)
+
+        modlist.append((ldap.MOD_REPLACE, field.__name__, value))
+    l.modify_s(dn, modlist)
