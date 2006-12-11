@@ -61,6 +61,7 @@ class Container(BTreeContainer):
 class Site(SiteManagerContainer):
     pass
 
+
 class Adapter(object):
 
     def __init__(self, context):
@@ -200,6 +201,7 @@ class DirectoryResourceFactory(object):
         resource.__name__ = self.__name
         return resource
 
+
 class Traverser(object):
     interface.implements(IBrowserPublisher)
 
@@ -245,6 +247,7 @@ class ModelTraverser(Traverser):
         if traverse:
             return traverse(name)
 
+
 class ContainerTraverser(Traverser):
     component.adapts(Container, IBrowserRequest)
 
@@ -257,6 +260,7 @@ class ContainerTraverser(Traverser):
         # try to get the item from the container
         return self.context.get(name)
 
+
 class Form(View):
     def __init__(self, context, request):
         super(Form, self).__init__(context, request)
@@ -268,7 +272,6 @@ class Form(View):
     def __call__(self):
         form = self.form
 
-        # update form
         form.update()
 
         # this code is extracted and modified from form.render
@@ -285,6 +288,7 @@ class Form(View):
 
         return form.form_result
 
+
 class EditForm(Form):
     label = ''
     status = ''
@@ -297,9 +301,11 @@ class EditForm(Form):
         else:
             self.status = "No changes"
 
+
 class AddForm(Form):
     label = ''
     status = ''
+
 
 class DisplayForm(Form):
     label = ''
