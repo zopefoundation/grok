@@ -29,7 +29,7 @@ from zope.app.container.contained import (
     IObjectRemovedEvent, ObjectRemovedEvent,
     IContainerModifiedEvent, ContainerModifiedEvent)
 
-from grok.components import ClassGrokker, InstanceGrokker
+from grok.components import ClassGrokker, InstanceGrokker, ModuleGrokker
 from grok.components import Model, Adapter, MultiAdapter, View, XMLRPC
 from grok.components import PageTemplate, Utility, Container, Traverser, Site
 from grok.components import EditForm, DisplayForm, AddForm

@@ -3,14 +3,23 @@ from grok import util, templatereg
 
 class GrokkerRegistry(object):
     def __init__(self):
-        self._grokkers = {}
+        self.clear()
+
+    def clear(self):
+        self._grokkers = []
+        # register the meta grokkers manually as we can't grok those
+        self.registerGrokker(ClassGrokkerGrokker())
+        self.registerGrokker(InstanceGrokkerGrokker())
+        self.registerGrokker(ModuleGrokkerGrokker())
         
     def registerGrokker(self, grokker):
-        self._grokkers[grokker.component_class] = grokker
+        self._grokkers.append(grokker)
 
     def scan(self, module_info):
         components = {}
-        for grokker in self._grokkers.values():
+        for grokker in self._grokkers:
+            if isinstance(grokker, grok.ModuleGrokker):
+                continue
             components[grokker.component_class] = []
     
         module = module_info.getModule()
@@ -22,7 +31,7 @@ class GrokkerRegistry(object):
                 continue
             # XXX find way to get rid of this inner loop by doing hash table
             # lookup?
-            for grokker in self._grokkers.values():
+            for grokker in self._grokkers:
                 if grokker.match(obj):
                     components[grokker.component_class].append((name, obj))
                     break
@@ -41,37 +50,33 @@ class GrokkerRegistry(object):
         
         templates = templatereg.TemplateRegistry()
 
-        # XXX because templates are instances and we need access to
-        # registered module-level templates during class grokking,
-        # we need to make sure we do PageTemplate grokking before any
-        # other grokking. We need to revise this as we work out
-        # extensible template grokking. Possibly we need to introduce
-        # a priority for grokkers so we can sort them.
-        page_templates = scanned_results.pop(grok.PageTemplate, None)
-        if page_templates is not None:
-            grokker = self._grokkers[grok.PageTemplate]
-            for name, component in page_templates:
-                grokker.register(context,
-                                 name, component,
-                                 module_info, templates)
-
-        # XXX filesystem level templates need to be scanned for after
-        # inline templates to produce the right errors
-        templates.findFilesystem(module_info)
-
-        # now grok the rest
-        for component_class, components in scanned_results.items():
-            grokker = self._grokkers[component_class]
+        # sort grokkers by priority
+        grokkers = sorted(self._grokkers, 
+                          key=lambda grokker: grokker.priority)
+        # we want to handle high priority first
+        grokkers.reverse()
+    
+        # run through all grokkers registering found components in order
+        for grokker in grokkers:
+            # if we run into a ModuleGrokker, just do simple registration.
+            # this allows us to hook up grokkers to the process that actually
+            # do not respond to anything in the module but for instance
+            # to the filesystem to find templates
+            if isinstance(grokker, grok.ModuleGrokker):
+                grokker.register(context, module_info, templates)
+                continue
+            
+            components = scanned_results.get(grokker.component_class, [])
             for name, component in components:
                 grokker.register(context,
                                  name, component,
                                  module_info, templates)
-    
+
         templates.registerUnassociated(context, module_info)
 
 
-# deep meta mode here - we define grokkers for grok.ClassGrokker and
-# grok.InstanceGrokker.
+# deep meta mode here - we define grokkers for grok.ClassGrokker,
+# grok.InstanceGrokker, and grokker.ModuleGrokker.
 
 class MetaGrokker(grok.ClassGrokker):
     def register(self, context, name, factory, module_info, templates):
@@ -83,9 +88,9 @@ class ClassGrokkerGrokker(MetaGrokker):
 class InstanceGrokkerGrokker(MetaGrokker):
     component_class = grok.InstanceGrokker
 
+class ModuleGrokkerGrokker(MetaGrokker):
+    component_class = grok.ModuleGrokker
+    
 # the global grokker registry
 grokkerRegistry = GrokkerRegistry()
 
-# register the meta grokkers manually as we can't grok those
-grokkerRegistry.registerGrokker(ClassGrokkerGrokker())
-grokkerRegistry.registerGrokker(InstanceGrokkerGrokker())

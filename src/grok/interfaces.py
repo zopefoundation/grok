@@ -20,6 +20,8 @@ class IGrokBaseClasses(interface.Interface):
                                        "grokker.")
     InstanceGrokker = interface.Attribute("Base class to define an "
                                           "instance grokker.")
+    ModuleGrokker = interface.Attribute("Base class to define a "
+                                        "module grokker.")
     Model = interface.Attribute("Base class for persistent content objects "
                                 "(models).")
     Container = interface.Attribute("Base class for containers.")

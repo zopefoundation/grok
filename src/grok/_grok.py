@@ -18,10 +18,9 @@ import sys
 
 from zope import component
 from zope import interface
-import zope.component.interface
+
 from zope.component.interfaces import IDefaultViewName
-from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
-                                               IBrowserRequest)
+from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.app.component.site import LocalSiteManager
 
 import grok
@@ -59,6 +58,8 @@ def addSiteHandler(site, event):
 # the Component Architecture is torn down.
 def resetBootstrap():
     global _bootstrapped
+    # we need to make sure that the grokker registry is clean again
+    grokker.grokkerRegistry.clear()
     _bootstrapped = False
 from zope.testing.cleanup import addCleanUp
 addCleanUp(resetBootstrap)
@@ -75,47 +76,11 @@ def do_grok(dotted_name):
 
 
 def grok_tree(module_info):
-    grok_module(module_info)
-
-    if not module_info.isPackage():
-        return
-
-    resource_path = module_info.getResourcePath('static')
-    if os.path.isdir(resource_path):
-        static_module = module_info.getSubModuleInfo('static')
-        if static_module is not None:
-            if static_module.isPackage():
-                raise GrokError("The 'static' resource directory must not "
-                                "be a python package.", module_info.getModule())
-            else:
-                raise GrokError("A package can not contain both a 'static' "
-                                "resource directory and a module named "
-                                "'static.py'", module_info.getModule())
-
-        register_static_resources(module_info.dotted_name, resource_path)
+    grokker.grokkerRegistry.grok(module_info)
 
     for sub_module_info in module_info.getSubModuleInfos():
         grok_tree(sub_module_info)
-
-def grok_module(module_info):
-    grokker.grokkerRegistry.grok(module_info)
-
-    # XXX we should ideally also make it pluggable to register decorators like
-    # the ones for subscribers.
-    register_subscribers(module_info.getAnnotation('grok.subscribers', []))    
-    
-def register_static_resources(dotted_name, resource_directory):
-    resource_factory = components.DirectoryResourceFactory(resource_directory,
-                                                    dotted_name)
-    component.provideAdapter(resource_factory, (IDefaultBrowserLayer,),
-                             interface.Interface, name=dotted_name)
-
-def register_subscribers(subscribers):
-    for factory, subscribed in subscribers:
-        component.provideHandler(factory, adapts=subscribed)
-        for iface in subscribed:
-            zope.component.interface.provideInterface('', iface)
-
+        
 # decorators
 class SubscribeDecorator:
     def __init__(self, *args):

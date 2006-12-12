@@ -1,5 +1,7 @@
+import os
 import inspect
 
+import zope.component.interface
 from zope import interface, component
 from zope.security.checker import (defineChecker, getCheckerForInstancesOf,
                                    NoProxy)
@@ -166,10 +168,62 @@ class TraverserGrokker(grok.ClassGrokker):
         component.provideAdapter(factory,
                                  adapts=(factory_context, IBrowserRequest),
                                  provides=IBrowserPublisher)
-
-class PageTemplateGrokker(grok.InstanceGrokker):
+    
+class ModulePageTemplateGrokker(grok.InstanceGrokker):
+    # this needs to happen before any other grokkers execute that actually
+    # use the templates
+    priority = 1000
+    
     component_class = grok.PageTemplate
 
     def register(self, context, name, instance, module_info, templates):
         templates.register(name, instance)
         instance._annotateGrokInfo(name, module_info.dotted_name)
+
+class FilesystemPageTemplateGrokker(grok.ModuleGrokker):
+    # do this early on, but after ModulePageTemplateGrokker, as
+    # findFilesystem depends on module-level templates to be
+    # already grokked for error reporting
+    priority = 999
+    
+    def register(self, context, module_info, templates):
+        templates.findFilesystem(module_info)
+
+class SubscriberGrokker(grok.ModuleGrokker):
+
+    def register(self, context, module_info, templates):
+        subscribers = module_info.getAnnotation('grok.subscribers', [])
+    
+        for factory, subscribed in subscribers:
+            component.provideHandler(factory, adapts=subscribed)
+            for iface in subscribed:
+                zope.component.interface.provideInterface('', iface)
+
+class StaticResourcesGrokker(grok.ModuleGrokker):
+
+    def register(self, context, module_info, templates):
+        # we're only interested in static resources if this module
+        # happens to be a package
+        if not module_info.isPackage():
+            return
+        
+        resource_path = module_info.getResourcePath('static')
+        if os.path.isdir(resource_path):
+            static_module = module_info.getSubModuleInfo('static')
+            if static_module is not None:
+                if static_module.isPackage():
+                    raise GrokError(
+                        "The 'static' resource directory must not "
+                        "be a python package.",
+                        module_info.getModule())
+                else:
+                    raise GrokError(
+                        "A package can not contain both a 'static' "
+                        "resource directory and a module named "
+                        "'static.py'", module_info.getModule())
+        
+        resource_factory = components.DirectoryResourceFactory(
+            resource_path, module_info.dotted_name)
+        component.provideAdapter(
+            resource_factory, (IDefaultBrowserLayer,),
+            interface.Interface, name=module_info.dotted_name)
