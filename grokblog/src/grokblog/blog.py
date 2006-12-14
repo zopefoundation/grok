@@ -25,9 +25,6 @@ class BlogIndex(grok.View):
     def entries(self):
         return lastEntries(10)
 
-    def renderEntry(self, entry):
-        return renderRest(entry.body)
-
 class BlogEdit(grok.EditForm):
     grok.context(Blog)
     grok.name('edit')

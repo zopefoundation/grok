@@ -6,7 +6,7 @@
   <body>
     <h1 tal:content="context/title"/>
     <h2 tal:content="context/tagline"/>
-    <a tal:attributes="href python:view.url('add')">Add Blog Entry</a>
+    <a tal:attributes="href python:view.url('addrest')">Add Blog Entry</a>
 
     <div class="entries">
       <tal:block repeat="entry view/entries">

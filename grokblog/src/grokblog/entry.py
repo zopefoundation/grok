@@ -1,66 +1,57 @@
 from datetime import datetime
-import random
 from docutils.core import publish_parts
 
-import grok
-from zope import schema
+from zope import schema, interface
 
-from blog import Blog
+import grok
+
+from grokblog.blog import Blog
+from grokblog import interfaces
 
 class Entry(grok.Model):
-    class fields:
-        published = schema.Datetime(title=u'Published')
-        title = schema.TextLine(title=u'Title')
-        body = schema.Text(title=u'Body')
+    interface.implements(interfaces.IEntry)
 
-    def __init__(self, title, body):
+    def __init__(self, title, summary, rightsinfo):
         self.title = title
+        self.updated = datetime.now()
         self.published = datetime.now()
-        self.body = body
+        self.summary = summary
+        self.rightsinfo = rightsinfo
+        
+class RestructuredTextEntry(Entry):
+    interface.implements(interfaces.IRestructuredTextEntry)
 
-class Add(grok.AddForm):
+    def __init__(self, title, summary, rightsinfo, content):
+        super(RestructuredTextEntry, self).__init__(title, summary, rightsinfo)
+        self.content = content
+
+grok.context(RestructuredTextEntry)
+
+class AddRest(grok.AddForm):
     grok.context(Blog)
 
     form_fields = grok.Fields(
         id=schema.TextLine(title=u"id"))
-    form_fields += grok.AutoFields(Entry).omit('published')
+    form_fields += grok.AutoFields(RestructuredTextEntry).omit(
+        'published', 'updated')
 
     @grok.action('Add entry')
-    def add(self, id, title, body):
-        self.context['entries'][id] = Entry(title, body)
+    def add(self, id, **data):
+        self.context['entries'][id] = RestructuredTextEntry(**data)
         self.redirect(self.url(self.context))
 
-class Index(grok.View):
-
-    def before(self):
-        self.body = renderRest(self.context.body)
-
 class Edit(grok.EditForm):
-
-    form_fields = grok.AutoFields(Entry).omit('published')
+    form_fields = grok.AutoFields(RestructuredTextEntry).omit(
+        'published', 'updated')
 
     @grok.action('Save changes')
     def edit(self, **data):
         self.applyChanges(**data)
         self.redirect(self.url(self.context))
 
-class Body(grok.View):
-
+class RenderedContent(grok.View):
     def render(self):
-        return renderRest(self.context.body)
-
-class RandomDate(grok.View):
-    # for testing purposes
-
-    def render(self):
-        self.context.published = datetime(
-            2006,
-            11,
-            random.randrange(1, 29),
-            random.randrange(0, 24),
-            random.randrange(0, 60),
-            )
-        return str(self.context.published)
+        return renderRest(self.context.content)
 
 rest_settings = {
     # Disable inclusion of external files, which is a security risk.

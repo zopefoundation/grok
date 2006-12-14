@@ -5,5 +5,5 @@
     </a>
     (<span class="published" tal:content="context/published"/>)
   </h2>
-  <tal:block content="structure context/@@body"/>
+  <tal:block content="structure context/@@renderedcontent"/>
 </div>
