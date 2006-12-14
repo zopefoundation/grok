@@ -15,13 +15,22 @@ class GrokkerRegistry(object):
     def registerGrokker(self, grokker):
         self._grokkers.append(grokker)
 
+    def _getGrokkersInOrder(self):
+        # sort grokkers by priority
+        grokkers = sorted(self._grokkers, 
+                          key=lambda grokker: grokker.priority)
+        # we want to handle high priority first
+        grokkers.reverse()
+        return grokkers
+    
     def scan(self, module_info):
         components = {}
         for grokker in self._grokkers:
             if isinstance(grokker, grok.ModuleGrokker):
                 continue
             components[grokker.component_class] = []
-    
+
+        grokkers = self._getGrokkersInOrder()
         module = module_info.getModule()
         for name in dir(module):
             obj = getattr(module, name)
@@ -31,7 +40,7 @@ class GrokkerRegistry(object):
                 continue
             # XXX find way to get rid of this inner loop by doing hash table
             # lookup?
-            for grokker in self._grokkers:
+            for grokker in grokkers:
                 if grokker.match(obj):
                     components[grokker.component_class].append((name, obj))
                     break
@@ -49,15 +58,9 @@ class GrokkerRegistry(object):
         context = util.determine_module_context(module_info, possible_contexts)
         
         templates = templatereg.TemplateRegistry()
-
-        # sort grokkers by priority
-        grokkers = sorted(self._grokkers, 
-                          key=lambda grokker: grokker.priority)
-        # we want to handle high priority first
-        grokkers.reverse()
-    
+   
         # run through all grokkers registering found components in order
-        for grokker in grokkers:
+        for grokker in self._getGrokkersInOrder():
             # if we run into a ModuleGrokker, just do simple registration.
             # this allows us to hook up grokkers to the process that actually
             # do not respond to anything in the module but for instance
