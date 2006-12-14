@@ -24,6 +24,12 @@ With AutoFields:
   >>> [w.__name__ for w in view.form.form_fields]
   ['name', 'size', 'speciality']
 
+  >>> antimanfred = YetAnotherMammoth()
+  >>> view = component.getMultiAdapter((antimanfred, request), name='edit3')
+  >>> len(view.form.form_fields)
+  3
+  >>> [w.__name__ for w in view.form.form_fields]
+  ['name', 'size', 'speciality']
 """
 import grok
 from zope import interface, schema
@@ -46,3 +52,13 @@ class Edit2(grok.EditForm):
 
     form_fields = grok.AutoFields(Mammoth)
 
+# situation where subclass implements something on top of base class
+class AnotherMammoth(grok.Model):
+    interface.implements(IMammoth)
+
+class YetAnotherMammoth(AnotherMammoth):
+    interface.implements(ISpecialMammoth)
+
+class Edit3(grok.EditForm):
+    grok.context(YetAnotherMammoth)
+    

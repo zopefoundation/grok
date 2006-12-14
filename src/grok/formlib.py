@@ -113,12 +113,36 @@ def get_auto_fields(context):
     # we're autogenerating them from any model-specific
     # fields along with any schemas defined by the context
     fields = form.Fields(*get_context_schema_fields(context))
-    fields += form.Fields(*interface.implementedBy(context))
+    fields += form.Fields(*most_specialized_interfaces(context))
     # we pull in this field by default, but we don't want it in our form
     fields = fields.omit('__name__')
     return fields
 
 AutoFields = get_auto_fields
+
+def most_specialized_interfaces(context):
+    """Get interfaces for an object without any duplicates.
+
+    Interfaces in a declaration for an object may already have been seen
+    because it is also inherited by another interface. Don't return the
+    interface twice, as that would result in duplicate names when creating
+    the form.
+    """
+    declaration = interface.implementedBy(context)
+    seen = []
+    for iface in declaration.flattened():
+        if interface_seen(seen, iface):
+            continue
+        seen.append(iface)
+    return seen
+
+def interface_seen(seen, iface):
+    """Return True if interface already is seen.
+    """
+    for seen_iface in seen:
+        if seen_iface.extends(iface):
+            return True
+    return False
 
 def load_template(name):
     filename = os.path.join(os.path.dirname(__file__), 'templates', name)
