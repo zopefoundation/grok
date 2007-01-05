@@ -46,27 +46,31 @@ from zope.app.component.site import SiteManagerContainer
 
 from grok import util, security, interfaces
 
-class ClassGrokker(object):
+
+class GrokkerBase(object):
+    """A common base class for all grokkers.
+    """
+
+    priority = 0
+
+
+class ClassGrokker(GrokkerBase):
     """Grokker for particular classes in a module.
     """
     # subclasses should have a component_class class variable
 
-    priority = 0
-    
     def match(self, obj):
         return util.check_subclass(obj, self.component_class)
-    
+
     def register(self, context, name, factory, module_info, templates):
         raise NotImplementedError
 
 
-class InstanceGrokker(object):
+class InstanceGrokker(GrokkerBase):
     """Grokker for particular instances in a module.
     """
     # subclasses should have a component_class class variable
 
-    priority = 0
-    
     def match(self, obj):
         return isinstance(obj, self.component_class)
    
@@ -74,10 +78,9 @@ class InstanceGrokker(object):
         raise NotImplementedError
 
 
-class ModuleGrokker(object):
+class ModuleGrokker(GrokkerBase):
     """Grokker that gets executed once for a module.
     """
-    priority = 0
 
     def match(self, obj):
         # we never match with any object
