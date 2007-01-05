@@ -173,7 +173,7 @@ class ModulePageTemplateGrokker(grok.InstanceGrokker):
     # this needs to happen before any other grokkers execute that actually
     # use the templates
     priority = 1000
-    
+
     component_class = grok.PageTemplate
 
     def register(self, context, name, instance, module_info, templates):
