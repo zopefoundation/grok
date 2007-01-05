@@ -22,7 +22,7 @@ class GrokkerRegistry(object):
         # we want to handle high priority first
         grokkers.reverse()
         return grokkers
-    
+
     def scan(self, module_info):
         components = {}
         for grokker in self._grokkers:
