@@ -1,14 +1,31 @@
 import grok
 
-class CalcApp(grok.App):
-    """calculator model that's also a site
-
-    whenever you create one of those, all local utilities will be
-    registered with it automatically.
-    """
-
-class Calculator(grok.Utility):
+class Calculator(grok.GlobalUtility):
     grok.implements(ICalculator)  # if this is not specified, it breaks
     grok.name('')  # this is actually the default
-    grok.register(site=CalcApp)  # register this only in calculator app sites
+    grok.utility_provides(ICalculator) # this is actually the default
 
+grok.global_utility(factory, provides=IFace, name=u'', setup=None)
+
+class Calculator(grok.LocalUtility):
+    grok.utility_provides(ICalculator)
+
+class Anything(grok.Model):
+    pass
+
+class NonPersistent(object):
+    pass
+
+class SpecialAnything(Anything):
+    pass
+
+class Foo(grok.Model, grok.Site):    
+    grok.local_utility(Anything, hide=False, name_in_container='foo',
+                       persistent=None)
+    grok.local_adapter()
+    grok.local_view()
+
+class Foo2(Foo):
+    grok.local_utility(SpecialAnything)
+
+    
