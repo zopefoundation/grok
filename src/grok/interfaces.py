@@ -79,6 +79,10 @@ class IGrokDirectives(interface.Interface):
         of the directory.  This can be overridden using
         ``templatedir``."""
 
+    def provides(interface):
+        """Explicitly specify with which interface a component will be looked up.
+        """
+
 class IGrokDecorators(interface.Interface):
 
     def subscribe(*classes_or_interfaces):

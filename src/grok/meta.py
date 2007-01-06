@@ -33,30 +33,34 @@ class AdapterGrokker(grok.ClassGrokker):
 
     def register(self, context, name, factory, module_info, templates):
         adapter_context = util.determine_class_context(factory, context)
-        util.check_implements_one(factory)
+        provides = util.class_annotation(factory, 'grok.provides', None)
+        if provides is None:
+            util.check_implements_one(factory)
         name = util.class_annotation(factory, 'grok.name', '')
-        try:
-            component.provideAdapter(factory, adapts=(adapter_context,),
-                                     name=name)
-        except TypeError:
-            import pdb; pdb.set_trace()
+        component.provideAdapter(factory, adapts=(adapter_context,),
+                                 provides=provides,
+                                 name=name)
             
 class MultiAdapterGrokker(grok.ClassGrokker):
     component_class = grok.MultiAdapter
     
     def register(self, context, name, factory, module_info, templates):
-        util.check_implements_one(factory)
+        provides = util.class_annotation(factory, 'grok.provides', None)
+        if provides is None:
+            util.check_implements_one(factory)
         util.check_adapts(factory)
         name = util.class_annotation(factory, 'grok.name', '')
-        component.provideAdapter(factory, name=name)
+        component.provideAdapter(factory, provides=provides, name=name)
 
 class GlobalUtilityGrokker(grok.ClassGrokker):
     component_class = grok.GlobalUtility
 
     def register(self, context, name, factory, module_info, templates):
-        util.check_implements_one(factory)
+        provides = util.class_annotation(factory, 'grok.provides', None)
+        if provides is None:
+            util.check_implements_one(factory)
         name = util.class_annotation(factory, 'grok.name', '')
-        component.provideUtility(factory(), name=name)
+        component.provideUtility(factory(), provides=provides, name=name)
 
 class XMLRPCGrokker(grok.ClassGrokker):
     component_class = grok.XMLRPC

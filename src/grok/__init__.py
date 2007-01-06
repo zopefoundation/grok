@@ -33,7 +33,7 @@ from grok.components import ClassGrokker, InstanceGrokker, ModuleGrokker
 from grok.components import Model, Adapter, MultiAdapter, View, XMLRPC
 from grok.components import PageTemplate, GlobalUtility, Container, Traverser, Site
 from grok.components import EditForm, DisplayForm, AddForm
-from grok.directive import context, name, template, templatedir
+from grok.directive import context, name, template, templatedir, provides
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import SubscribeDecorator as subscribe
 from grok.error import GrokError, GrokImportError

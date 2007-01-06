@@ -112,6 +112,15 @@ class InterfaceOrClassDirective(Directive):
             raise GrokImportError("You can only pass classes or interfaces to "
                                   "%s." % self.name)
 
+class InterfaceDirective(Directive):
+    """
+    Directive that only accepts interface values.
+    """
+
+    def check(self, value):
+        if not (IInterface.providedBy(value)):
+            raise GrokImportError("You can only pass interfaces to "
+                                  "%s." % self.name)
 
 # Define grok directives
 name = TextDirective('grok.name', ClassDirectiveContext())
@@ -119,3 +128,4 @@ template = TextDirective('grok.template', ClassDirectiveContext())
 context = InterfaceOrClassDirective('grok.context',
                                     ClassOrModuleDirectiveContext())
 templatedir = TextDirective('grok.templatedir', ModuleDirectiveContext())
+provides = InterfaceDirective('grok.provides', ClassDirectiveContext())

@@ -6,7 +6,7 @@ interface:
   Traceback (most recent call last):
     ...
   GrokError: <class 'grok.tests.adapter.implementsnone.Home'> must
-  implement exactly one interface (use grok.implements to specify).
+  implement at least one interface (use grok.implements to specify).
 """
 import grok
 

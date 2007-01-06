@@ -5,7 +5,7 @@ Subclasses of grok.GlobalUtility must implement exactly one interface:
   Traceback (most recent call last):
     ...
   GrokError: <class 'grok.tests.utility.implementsnone.Club'> must
-  implement exactly one interface (use grok.implements to specify).
+  implement at least one interface (use grok.implements to specify).
 """
 import grok
 

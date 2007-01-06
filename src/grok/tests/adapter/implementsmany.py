@@ -5,7 +5,8 @@ interface:
   >>> grok.grok(__name__)
   Traceback (most recent call last):
     ...
-  GrokError: <class 'grok.tests.adapter.implementsmany.Home'> must implement exactly one interface (use grok.implements to specify).
+  GrokError: <class 'grok.tests.adapter.implementsmany.Home'> is implementing
+  more than one interface (use grok.provides to specify which one to use).
 """
 import grok
 

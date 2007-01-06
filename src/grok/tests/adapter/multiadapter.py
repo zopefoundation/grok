@@ -32,6 +32,20 @@ This also works for named adapters using grok.name:
   True
   >>> home.fireplace is fireplace
   True
+
+Multiadapters that implement more than one interface can use grok.provides to
+specify the one to use:
+
+  >>> home = component.getMultiAdapter((cave, fireplace), name='home3')
+
+  >>> IHome.providedBy(home)
+  True
+  >>> isinstance(home, Home3)
+  True
+  >>> home.cave is cave
+  True
+  >>> home.fireplace is fireplace
+  True
 """
 
 import grok
@@ -58,6 +72,19 @@ class Home2(grok.MultiAdapter):
     grok.adapts(Cave, Fireplace)
     grok.implements(IHome)
     grok.name('home2')
+
+    def __init__(self, cave, fireplace):
+        self.cave = cave
+        self.fireplace = fireplace
+
+class IFireplace(interface.Interface):
+    pass
+
+class Home3(grok.MultiAdapter):
+    grok.adapts(Cave, Fireplace)
+    grok.implements(IHome, IFireplace)
+    grok.provides(IHome)
+    grok.name('home3')
 
     def __init__(self, cave, fireplace):
         self.cave = cave
