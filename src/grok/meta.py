@@ -50,8 +50,8 @@ class MultiAdapterGrokker(grok.ClassGrokker):
         name = util.class_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, name=name)
 
-class UtilityGrokker(grok.ClassGrokker):
-    component_class = grok.Utility
+class GlobalUtilityGrokker(grok.ClassGrokker):
+    component_class = grok.GlobalUtility
 
     def register(self, context, name, factory, module_info, templates):
         util.check_implements_one(factory)

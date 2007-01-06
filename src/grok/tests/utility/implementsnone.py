@@ -1,5 +1,5 @@
 """
-Subclasses of grok.Utility must implement exactly one interface:
+Subclasses of grok.GlobalUtility must implement exactly one interface:
 
   >>> grok.grok(__name__)
   Traceback (most recent call last):
@@ -9,5 +9,5 @@ Subclasses of grok.Utility must implement exactly one interface:
 """
 import grok
 
-class Club(grok.Utility):
+class Club(grok.GlobalUtility):
     pass

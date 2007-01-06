@@ -112,7 +112,7 @@ class Adapter(object):
         self.context = context
 
 
-class Utility(object):
+class GlobalUtility(object):
     pass
 
 

@@ -1,5 +1,5 @@
 """
-Global utilities can be created by subclassing grok.Utility:
+Global utilities can be created by subclassing grok.GlobalUtility:
 
   >>> grok.grok(__name__)
   >>> from zope import component
@@ -25,9 +25,9 @@ from zope import interface
 class IClub(interface.Interface):
     pass
 
-class NormalClub(grok.Utility):
+class NormalClub(grok.GlobalUtility):
     grok.implements(IClub)
 
-class HugeClub(grok.Utility):
+class HugeClub(grok.GlobalUtility):
     grok.implements(IClub)
     grok.name('huge')    
