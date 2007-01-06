@@ -20,5 +20,5 @@ Build the PDF
 The file 'reference.pdf' will contain the PDF version of the manual after this
 call:
 
-  $ mkhowto --html reference.tex
+  $ mkhowto --pdf reference.tex
 
