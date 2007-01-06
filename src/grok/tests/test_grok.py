@@ -34,7 +34,7 @@ def test_suite():
     suite = unittest.TestSuite()
     for name in ['adapter', 'error', 'view', 'scan', 'event',
                  'zcml', 'static', 'utility', 'xmlrpc', 'container',
-                 'traversal', 'form', 'site', 'grokker']:
+                 'traversal', 'form', 'site', 'grokker', 'directive']:
         suite.addTest(suiteFromPackage(name))
     return suite
 

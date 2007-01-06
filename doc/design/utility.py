@@ -3,9 +3,9 @@ import grok
 class Calculator(grok.GlobalUtility):
     grok.implements(ICalculator)  # if this is not specified, it breaks
     grok.name('')  # this is actually the default
-    grok.utility_provides(ICalculator) # this is actually the default
+    grok.provides(ICalculator) # this is actually the default
 
-grok.global_utility(factory, provides=IFace, name=u'', setup=None)
+grok.global_utility(factory, provides=IFace, name=u'')
 
 class Calculator(grok.LocalUtility):
     grok.utility_provides(ICalculator)
