@@ -22,7 +22,6 @@ from zope import interface
 from zope import schema
 from zope import event
 from zope.lifecycleevent import ObjectModifiedEvent
-from zope.security.proxy import removeSecurityProxy
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import (IBrowserPublisher,
@@ -44,7 +43,7 @@ from zope.app.container.contained import Contained
 from zope.app.container.interfaces import IReadContainer
 from zope.app.component.site import SiteManagerContainer
 
-from grok import util, security, interfaces
+from grok import util, interfaces
 
 
 class GrokkerBase(object):
@@ -124,9 +123,7 @@ class View(BrowserPage):
     interface.implements(interfaces.IGrokView)
 
     def __init__(self, context, request):
-        # Jim would say: WAAAAAAAAAAAAH!
-        self.context = removeSecurityProxy(context)
-        self.request = removeSecurityProxy(request)
+        super(View, self).__init__(context, request)
         self.directory_resource = component.queryAdapter(self.request,
                 interface.Interface, name=self.module_info.package_dotted_name)
 
@@ -241,7 +238,6 @@ class DirectoryResourceFactory(object):
 
     def __call__(self, request):
         resource = DirectoryResource(self.__dir, request)
-        resource.__Security_checker__ = security.GrokChecker()
         resource.__name__ = self.__name
         return resource
 
@@ -250,9 +246,8 @@ class Traverser(object):
     interface.implements(IBrowserPublisher)
 
     def __init__(self, context, request):
-        # Jim would say: WAAAAAAAAAAAAH!
-        self.context = removeSecurityProxy(context)
-        self.request = removeSecurityProxy(request)
+        self.context = context
+        self.request = request
 
     def browserDefault(self, request):
         view_name = getDefaultViewName(self.context, request)

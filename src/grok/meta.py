@@ -3,8 +3,6 @@ import inspect
 
 import zope.component.interface
 from zope import interface, component
-from zope.security.checker import (defineChecker, getCheckerForInstancesOf,
-                                   NoProxy)
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher)
@@ -12,16 +10,13 @@ from zope.app.publisher.xmlrpc import MethodPublisher
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 
 import grok
-from grok import util, components, security, formlib
+from grok import util, components, formlib
 from grok.error import GrokError
 
 class ModelGrokker(grok.ClassGrokker):
     component_class = grok.Model
 
     def register(self, context, name, factory, module_info, templates):
-        if not getCheckerForInstancesOf(factory):
-            defineChecker(factory, NoProxy)
-
         for field in formlib.get_context_schema_fields(factory):
             setattr(factory, field.__name__, field.default)       
 
@@ -75,8 +70,7 @@ class XMLRPCGrokker(grok.ClassGrokker):
             # views have a location
             method_view = type(
                 factory.__name__, (factory, MethodPublisher),
-                {'__call__': method,
-                 '__Security_checker__': security.GrokChecker()}
+                {'__call__': method}
                 )
             component.provideAdapter(
                 method_view, (view_context, IXMLRPCRequest),
@@ -160,9 +154,6 @@ class ViewGrokker(grok.ClassGrokker):
                                  adapts=(view_context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
                                  name=view_name)
-
-        # TODO minimal security here (read: everything is public)
-        defineChecker(factory, NoProxy)
 
 class TraverserGrokker(grok.ClassGrokker):
     component_class = grok.Traverser

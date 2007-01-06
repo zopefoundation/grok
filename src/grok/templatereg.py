@@ -1,15 +1,15 @@
 import os
 
 from zope import interface, component
-from zope.security.checker import (defineChecker, getCheckerForInstancesOf,
-                                   NoProxy)
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 import grok
 from grok import util
 from grok.error import GrokError
 
+
 class TemplateRegistry(object):
+
     def __init__(self):
         self._reg = {}
 
@@ -84,6 +84,3 @@ class TemplateRegistry(object):
                                      adapts=(context, IDefaultBrowserLayer),
                                      provides=interface.Interface,
                                      name=name)
-
-            # TODO minimal security here (read: everything is public)
-            defineChecker(TemplateView, NoProxy)
