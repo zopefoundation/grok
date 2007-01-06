@@ -34,4 +34,10 @@ Static also means that page templates will not be interpreted:
   </body>
   </html>
 
+We also support subdirectories for resources:
+
+  >>> browser.open('http://localhost/@@/grok.ftests.static.simple_fixture/subdir/otherfile.txt')
+  >>> print browser.contents
+  This is yet another file.
+
 """
