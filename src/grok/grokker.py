@@ -55,6 +55,7 @@ class GrokkerRegistry(object):
         # this should be made extensible
         possible_contexts = [obj for (name, obj) in
                              (scanned_results.get(grok.Model, []) +
+                              scanned_results.get(grok.LocalUtility, []) +
                               scanned_results.get(grok.Container, []))]
         context = util.determine_module_context(module_info, possible_contexts)
         

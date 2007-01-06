@@ -8,6 +8,7 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserPublisher)
 from zope.app.publisher.xmlrpc import MethodPublisher
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
+from zope.app.container.interfaces import INameChooser
 
 import grok
 from grok import util, components, formlib
@@ -22,6 +23,9 @@ class ModelGrokker(grok.ClassGrokker):
 
 class ContainerGrokker(ModelGrokker):
     component_class = grok.Container
+    
+class LocalUtilityGrokker(ModelGrokker):
+    component_class = grok.LocalUtility
     
 class AdapterGrokker(grok.ClassGrokker):
     component_class = grok.Adapter
@@ -232,4 +236,45 @@ class GlobalUtilityDirectiveGrokker(grok.ModuleGrokker):
             component.provideUtility(info.factory(),
                                      provides=info.provides,
                                      name=info.name)
+class SiteGrokker(grok.ClassGrokker):
+    component_class = grok.Site
+    priority = 500
+    continue_scanning = True
 
+    def register(self, context, name, factory, module_info, templates):
+        infos = util.class_annotation(factory, 'grok.local_utility', None)
+        if infos is None:
+            return
+        subscriber = LocalUtilityRegistrationSubscriber(infos)
+        component.provideHandler(subscriber,
+                                 adapts=(factory, grok.IObjectAddedEvent))
+
+class LocalUtilityRegistrationSubscriber(object):
+    def __init__(self, infos):
+        self.infos = infos
+
+    def __call__(self, site, event):
+        for info in self.infos:
+            utility = info.factory()
+            site_manager = site.getSiteManager()
+            
+            # store utility
+            if info.hide:
+                container = site_manager['default']
+            else:
+                container = site
+                
+            name_in_container = info.name_in_container 
+            if name_in_container is None:
+                name_in_container = INameChooser(container).chooseName(
+                    info.factory.__class__.__name__,
+                    utility)
+            container[name_in_container] = utility
+
+            # execute setup callback
+            if info.setup is not None:
+                info.setup(utility)
+
+            # register utility
+            site_manager.registerUtility(utility, provided=info.provides,
+                                         name=info.name)

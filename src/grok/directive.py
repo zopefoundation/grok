@@ -181,6 +181,26 @@ class GlobalUtilityInfo(object):
         self.provides = provides
         self.name = name
 
+class LocalUtilityDirective(MultipleTimesDirective):
+    def check_arguments(self, factory, provides=None, name=u'',
+                        setup=None, hide=True, name_in_container=None):
+        if provides is not None and not IInterface.providedBy(provides):
+            raise GrokImportError("You can only pass an interface to the "
+                                  "provides argument of %s." % self.name)
+
+    def value_factory(self, *args, **kw):
+        return LocalUtilityInfo(*args, **kw)
+
+class LocalUtilityInfo(object):
+    def __init__(self, factory, provides=None, name=u'',
+                 setup=None, hide=True, name_in_container=None):
+        self.factory = factory
+        self.provides = provides
+        self.name = name
+        self.setup = setup
+        self.hide = hide
+        self.name_in_container = name_in_container
+
 # Define grok directives
 name = TextDirective('grok.name', ClassDirectiveContext())
 template = TextDirective('grok.template', ClassDirectiveContext())
@@ -190,3 +210,5 @@ templatedir = TextDirective('grok.templatedir', ModuleDirectiveContext())
 provides = InterfaceDirective('grok.provides', ClassDirectiveContext())
 global_utility = GlobalUtilityDirective('grok.global_utility',
                                         ModuleDirectiveContext())
+local_utility = LocalUtilityDirective('grok.local_utility',
+                                      ClassDirectiveContext())

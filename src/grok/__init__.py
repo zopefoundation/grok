@@ -31,11 +31,11 @@ from zope.app.container.contained import (
 
 from grok.components import ClassGrokker, InstanceGrokker, ModuleGrokker
 from grok.components import Model, Adapter, MultiAdapter, View, XMLRPC
-from grok.components import PageTemplate, GlobalUtility, Container, Traverser
-from grok.components import Site
+from grok.components import PageTemplate, Container, Traverser
+from grok.components import Site, GlobalUtility, LocalUtility
 from grok.components import EditForm, DisplayForm, AddForm
 from grok.directive import (context, name, template, templatedir, provides,
-                            global_utility)
+                            global_utility, local_utility)
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import SubscribeDecorator as subscribe
 from grok.error import GrokError, GrokImportError

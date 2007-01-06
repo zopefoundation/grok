@@ -29,6 +29,7 @@ class IGrokBaseClasses(interface.Interface):
     Adapter = interface.Attribute("Base class for adapters.")
     MultiAdapter = interface.Attribute("Base class for multi-adapters.")
     GlobalUtility = interface.Attribute("Base class for global utilities.")
+    LocalUtility = interface.Attribute("Base class for local utilities.")
     View = interface.Attribute("Base class for browser views.")
     XMLRPC = interface.Attribute("Base class for XML-RPC methods.")
     Traverser = interface.Attribute("Base class for custom traversers.")
@@ -81,6 +82,28 @@ class IGrokDirectives(interface.Interface):
 
     def provides(interface):
         """Explicitly specify with which interface a component will be looked up.
+        """
+
+    def global_utility(factory, provides=None, name=u''):
+        """Register a global utility.
+
+        factory - the factory that creates the global utility
+        provides - the interface the utility should be looked up with
+        name - the name of the utility
+        """
+
+    def local_utility(factory, provides=None, name=u'',
+                      setup=None, hidden=True, name_in_container=None):
+        """Register a local utility.
+
+        factory - the factory that creates the local utility
+        provides - the interface the utility should be looked up with
+        name - the name of the utility
+        setup - a callable that receives the utility as its single argument,
+                it is called after the utility has been created and stored
+        hidden - if True, the utility will be stored below ++etc++site
+                 if False, the utility will be stored directly in the site
+        name_in_container - the name to use for storing the utility
         """
 
 class IGrokDecorators(interface.Interface):

@@ -115,6 +115,10 @@ class GlobalUtility(object):
     pass
 
 
+class LocalUtility(Model):
+    pass
+
+
 class MultiAdapter(object):
     pass
 
