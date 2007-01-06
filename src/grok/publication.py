@@ -41,14 +41,17 @@ class GrokBrowserPublication(ZopePublicationSansProxy, BrowserPublication):
             request, ob)
         return removeSecurityProxy(obj), path
 
+
 class GrokBrowserFactory(BrowserFactory):
 
     def __call__(self):
         request, publication = super(GrokBrowserFactory, self).__call__()
         return request, GrokBrowserPublication
 
+
 class GrokXMLRPCPublication(ZopePublicationSansProxy, BaseHTTPPublication):
     pass
+
 
 class GrokXMLRPCFactory(XMLRPCFactory):
 
