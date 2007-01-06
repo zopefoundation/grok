@@ -52,6 +52,7 @@ class GrokkerBase(object):
     """
 
     priority = 0
+    continue_scanning = False
 
 
 class ClassGrokker(GrokkerBase):

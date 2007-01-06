@@ -43,7 +43,8 @@ class GrokkerRegistry(object):
             for grokker in grokkers:
                 if grokker.match(obj):
                     components[grokker.component_class].append((name, obj))
-                    break
+                    if not grokker.continue_scanning:
+                        break
 
         return components
 
