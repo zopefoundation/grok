@@ -69,11 +69,10 @@ class Directive(object):
     ('.' in the name are replaced with '_').
     """
 
-    def __init__(self, name, directive_context, value_factory):
+    def __init__(self, name, directive_context):
         self.name = name
         self.local_name = '__%s__' % name.replace('.', '_')
         self.directive_context = directive_context
-        self.value_factory = value_factory
 
     def __call__(self, *args, **kw):
         self.check_argument_signature(*args, **kw)
@@ -107,6 +106,9 @@ class Directive(object):
                                   % (self.name,
                                      self.directive_context.description))
 
+    def value_factory(self, *args, **kw):
+        raise NotImplementedError
+
     def store(self, frame, value):
         raise NotImplementedError
 
@@ -118,7 +120,23 @@ class OnceDirective(Directive):
                                      self.directive_context.description))
         frame.f_locals[self.local_name] = value
 
-class TextDirective(OnceDirective):
+class SingleValueOnceDirective(OnceDirective):
+    def check_arguments(self, value):
+        raise NotImplementedError
+
+    # Even though the value_factory is called with (*args, **kw), we're safe
+    # since check_arguments would have bailed out with a TypeError if the number
+    # arguments we were called with was not what we expect here.
+    def value_factory(self, value):
+        return value
+
+class MultipleTimesDirective(Directive):
+    def store(self, frame, value):
+        values = frame.f_locals.get(self.local_name, [])
+        values.append(value)
+        frame.f_locals[self.local_name] = values
+
+class TextDirective(SingleValueOnceDirective):
     """
     Directive that only accepts unicode/ASCII values.
     """
@@ -128,7 +146,7 @@ class TextDirective(OnceDirective):
             raise GrokImportError("You can only pass unicode or ASCII to "
                                   "%s." % self.name)
 
-class InterfaceOrClassDirective(OnceDirective):
+class InterfaceOrClassDirective(SingleValueOnceDirective):
     """
     Directive that only accepts classes or interface values.
     """
@@ -138,7 +156,7 @@ class InterfaceOrClassDirective(OnceDirective):
             raise GrokImportError("You can only pass classes or interfaces to "
                                   "%s." % self.name)
 
-class InterfaceDirective(OnceDirective):
+class InterfaceDirective(SingleValueOnceDirective):
     """
     Directive that only accepts interface values.
     """
@@ -147,26 +165,28 @@ class InterfaceDirective(OnceDirective):
         if not (IInterface.providedBy(value)):
             raise GrokImportError("You can only pass interfaces to "
                                   "%s." % self.name)
-        
-# Even though the value_factory is called with (*args, **kw), we're safe since
-# check_arguments would have bailed out with a TypeError if the number arguments
-# we were called with was not what we expect here.
-def single_value_factory(value):
-    return value
+
+class GlobalUtilityDirective(MultipleTimesDirective):
+    def check_arguments(self, factory, provides=None, name=u''):
+        if provides is not None and not IInterface.providedBy(provides):
+            raise GrokImportError("You can only pass an interface to the "
+                                  "provides argument of %s." % self.name)
+
+    def value_factory(self, *args, **kw):
+        return GlobalUtilityInfo(*args, **kw)
+
+class GlobalUtilityInfo(object):
+    def __init__(self, factory, provides=None, name=u''):
+        self.factory = factory
+        self.provides = provides
+        self.name = name
 
 # Define grok directives
-name = TextDirective('grok.name',
-                     ClassDirectiveContext(),
-                     single_value_factory)
-template = TextDirective('grok.template',
-                         ClassDirectiveContext(),
-                         single_value_factory)
+name = TextDirective('grok.name', ClassDirectiveContext())
+template = TextDirective('grok.template', ClassDirectiveContext())
 context = InterfaceOrClassDirective('grok.context',
-                                    ClassOrModuleDirectiveContext(),
-                                    single_value_factory)
-templatedir = TextDirective('grok.templatedir',
-                            ModuleDirectiveContext(),
-                            single_value_factory)
-provides = InterfaceDirective('grok.provides',
-                              ClassDirectiveContext(),
-                              single_value_factory)
+                                    ClassOrModuleDirectiveContext())
+templatedir = TextDirective('grok.templatedir', ModuleDirectiveContext())
+provides = InterfaceDirective('grok.provides', ClassDirectiveContext())
+global_utility = GlobalUtilityDirective('grok.global_utility',
+                                        ModuleDirectiveContext())
