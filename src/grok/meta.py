@@ -222,3 +222,14 @@ class StaticResourcesGrokker(grok.ModuleGrokker):
         component.provideAdapter(
             resource_factory, (IDefaultBrowserLayer,),
             interface.Interface, name=module_info.dotted_name)
+
+class GlobalUtilityDirectiveGrokker(grok.ModuleGrokker):
+
+    def register(self, context, module_info, templates):
+        infos = module_info.getAnnotation('grok.global_utility', [])
+    
+        for info in infos:
+            component.provideUtility(info.factory(),
+                                     provides=info.provides,
+                                     name=info.name)
+
