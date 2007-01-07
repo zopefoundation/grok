@@ -338,50 +338,45 @@ class SiteGrokker(grok.ClassGrokker):
 
         # store infos on site class
         factory.__grok_utilities_to_install__ = infos
-        subscriber = LocalUtilityRegistrationSubscriber()
-        component.provideHandler(subscriber,
+        component.provideHandler(localUtilityRegistrationSubscriber,
                                  adapts=(factory, grok.IObjectAddedEvent))
 
-class LocalUtilityRegistrationSubscriber(object):
+def localUtilityRegistrationSubscriber(site, event):
     """A subscriber that fires to set up local utilities.
-    
-    This class is deliberately stateless. This means that there
-    can be no instance variables.
     """
-    def __call__(self, site, event):
-        installed = getattr(site, '__grok_utilities_installed__', False)
-        if installed:
-            return
-    
-        for info in util.class_annotation(site.__class__,
-                                          'grok.utilities_to_install', []):
-            utility = info.factory()
-            site_manager = site.getSiteManager()
-            
-            # store utility
-            if not info.public:
-                container = site_manager['default']
-            else:
-                container = site
-                
-            name_in_container = info.name_in_container 
-            if name_in_container is None:
-                name_in_container = INameChooser(container).chooseName(
-                    info.factory.__class__.__name__,
-                    utility)
-            container[name_in_container] = utility
+    installed = getattr(site, '__grok_utilities_installed__', False)
+    if installed:
+        return
 
-            # execute setup callback
-            if info.setup is not None:
-                info.setup(utility)
+    for info in util.class_annotation(site.__class__,
+                                      'grok.utilities_to_install', []):
+        utility = info.factory()
+        site_manager = site.getSiteManager()
 
-            # register utility
-            site_manager.registerUtility(utility, provided=info.provides,
-                                         name=info.name)
+        # store utility
+        if not info.public:
+            container = site_manager['default']
+        else:
+            container = site
 
-        # we are done. If this subscriber gets fired again, we therefore
-        # do not register utilities anymore
-        site.__grok_utilities_installed__ = True
+        name_in_container = info.name_in_container 
+        if name_in_container is None:
+            name_in_container = INameChooser(container).chooseName(
+                info.factory.__class__.__name__,
+                utility)
+        container[name_in_container] = utility
+
+        # execute setup callback
+        if info.setup is not None:
+            info.setup(utility)
+
+        # register utility
+        site_manager.registerUtility(utility, provided=info.provides,
+                                     name=info.name)
+
+    # we are done. If this subscriber gets fired again, we therefore
+    # do not register utilities anymore
+    site.__grok_utilities_installed__ = True
         
 class DefinePermissionGrokker(grok.ModuleGrokker):
 
