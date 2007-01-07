@@ -303,7 +303,7 @@ class SiteGrokker(grok.ClassGrokker):
     continue_scanning = True
 
     def register(self, context, name, factory, module_info, templates):
-        infos = util.class_annotation(factory, 'grok.local_utility', None)
+        infos = util.class_annotation_list(factory, 'grok.local_utility', None)
         if infos is None:
             return
 
@@ -329,22 +329,31 @@ class SiteGrokker(grok.ClassGrokker):
 
                 util.check_implements_one_from_list(provides, info.factory)
                 info.provides = provides[0]
-        
-        subscriber = LocalUtilityRegistrationSubscriber(infos)
+
+        # store infos on site class
+        factory.__grok_utilities_to_install__ = infos
+        subscriber = LocalUtilityRegistrationSubscriber()
         component.provideHandler(subscriber,
                                  adapts=(factory, grok.IObjectAddedEvent))
 
 class LocalUtilityRegistrationSubscriber(object):
-    def __init__(self, infos):
-        self.infos = infos
-
+    """A subscriber that fires to set up local utilities.
+    
+    This class is deliberately stateless. This means that there
+    can be no instance variables.
+    """
     def __call__(self, site, event):
-        for info in self.infos:
+        installed = getattr(site, '__grok_utilities_installed__', False)
+        if installed:
+            return
+    
+        for info in util.class_annotation(site.__class__,
+                                          'grok.utilities_to_install', []):
             utility = info.factory()
             site_manager = site.getSiteManager()
             
             # store utility
-            if info.hide:
+            if info.hidden:
                 container = site_manager['default']
             else:
                 container = site
@@ -364,6 +373,10 @@ class LocalUtilityRegistrationSubscriber(object):
             site_manager.registerUtility(utility, provided=info.provides,
                                          name=info.name)
 
+        # we are done. If this subscriber gets fired again, we therefore
+        # do not register utilities anymore
+        site.__grok_utilities_installed__ = True
+        
 class DefinePermissionGrokker(grok.ModuleGrokker):
 
     priority = 1500
