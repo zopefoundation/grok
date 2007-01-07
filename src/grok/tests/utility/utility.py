@@ -38,6 +38,65 @@ use with 'grok.provides':
   True
   >>> isinstance(nightclub, NightClub)
   True
+
+Utilities (including classes that do not subclass from grok.GlobalUtility) can
+be (re-)registered using grok.global_utility:
+
+  >>> fireplace = component.getUtility(IFireplace)
+  >>> IFireplace.providedBy(fireplace)
+  True
+  >>> isinstance(fireplace, Fireplace)
+  True
+
+  >>> fireplace = component.getUtility(IFireplace, name='hot')
+  >>> IFireplace.providedBy(fireplace)
+  True
+  >>> isinstance(fireplace, Fireplace)
+  True
+
+  >>> home = component.getUtility(IHome)
+  >>> IHome.providedBy(home)
+  True
+  >>> isinstance(home, Home)
+  True
+
+  >>> night = component.getUtility(INightClub, name='cool')
+  >>> IClub.providedBy(night)
+  True
+  >>> isinstance(night, NightClub)
+  True
+  
+  >>> spiky = component.getUtility(ISpikyClub)
+  >>> ISpikyClub.providedBy(spiky)
+  True
+  >>> isinstance(spiky, NightClub)
+  True
+
+When re-registering a grok.GlobalUtility, the directives grok.name and
+grok.provides on the class will be used, but can be overriden in the
+grok.global_utility directive:
+
+  >>> small = component.getUtility(ISmallClub, name='tiny')
+  >>> ISmallClub.providedBy(small)
+  True
+  >>> isinstance(small, SmallClub)
+  True
+
+  >>> small2 = component.getUtility(ITinyClub, name='tiny')
+  >>> ISmallClub.providedBy(small2)
+  True
+  >>> isinstance(small2, SmallClub)
+  True
+  >>> small is not small2
+  True
+
+  >>> small3 = component.getUtility(ISmallClub, name='small')
+  >>> ISmallClub.providedBy(small3)
+  True
+  >>> isinstance(small3, SmallClub)
+  True
+  >>> small3 is not small2 and small3 is not small
+  True
 """
 import grok
 from zope import interface
@@ -46,6 +105,12 @@ class IClub(interface.Interface):
     pass
 
 class ISpikyClub(IClub):
+    pass
+
+class ISmallClub(IClub):
+    pass
+
+class ITinyClub(IClub):
     pass
 
 class INightClub(interface.Interface):
@@ -66,3 +131,30 @@ class SpikyClub(grok.GlobalUtility):
 class NightClub(grok.GlobalUtility):
     grok.implements(INightClub, ISpikyClub)
     grok.provides(INightClub)
+
+class SmallClub(grok.GlobalUtility):
+    grok.implements(ISmallClub, ITinyClub)
+    grok.provides(ISmallClub)
+    grok.name('tiny')
+
+class IFireplace(interface.Interface):
+    pass
+
+class IHome(interface.Interface):
+    pass
+
+class Fireplace(object):
+    grok.implements(IFireplace)
+
+class Home(object):
+    grok.implements(IFireplace, IHome)
+
+grok.global_utility(Fireplace)
+grok.global_utility(Fireplace, name='hot')
+grok.global_utility(Home, provides=IHome)
+
+grok.global_utility(NightClub, name='cool')
+grok.global_utility(NightClub, provides=ISpikyClub)
+
+grok.global_utility(SmallClub, provides=ITinyClub)
+grok.global_utility(SmallClub, name='small')

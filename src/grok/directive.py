@@ -179,7 +179,13 @@ class GlobalUtilityDirective(MultipleTimesDirective):
 class GlobalUtilityInfo(object):
     def __init__(self, factory, provides=None, name=u''):
         self.factory = factory
+        
+        if provides is None:
+            provides = util.class_annotation(factory, 'grok.provides', None)
         self.provides = provides
+        
+        if name is u'':
+            name = util.class_annotation(factory, 'grok.name', u'')
         self.name = name
 
 class LocalUtilityDirective(MultipleTimesDirective):

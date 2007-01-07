@@ -247,9 +247,12 @@ class GlobalUtilityDirectiveGrokker(grok.ModuleGrokker):
         infos = module_info.getAnnotation('grok.global_utility', [])
     
         for info in infos:
+            if info.provides is None:
+                util.check_implements_one(info.factory)
             component.provideUtility(info.factory(),
                                      provides=info.provides,
                                      name=info.name)
+
 class SiteGrokker(grok.ClassGrokker):
     component_class = grok.Site
     priority = 500
