@@ -17,9 +17,6 @@ Core
 
 - testing strategy for the tutorial (faassen)
 
-- security: grok.permission, grok.require, ... and the needed additions
-  to the security policy (philikon, theuni)
-
 - traversal - not megrok.routes (philikon)
 
 - local registrations (philikon)
