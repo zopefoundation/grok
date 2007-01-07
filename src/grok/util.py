@@ -71,11 +71,14 @@ def check_context(component, context):
 
 
 def check_implements_one(class_):
-    if len(list(interface.implementedBy(class_))) < 1:
+    check_implements_one_from_list(list(interface.implementedBy(class_)), class_)
+
+def check_implements_one_from_list(list, class_):
+    if len(list) < 1:
         raise GrokError("%r must implement at least one interface "
                         "(use grok.implements to specify)."
                         % class_, class_)
-    elif len(list(interface.implementedBy(class_))) > 1:
+    elif len(list) > 1:
         raise GrokError("%r is implementing more than one interface "
                         "(use grok.provides to specify which one to use)."
                         % class_, class_)

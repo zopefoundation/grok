@@ -259,6 +259,30 @@ class SiteGrokker(grok.ClassGrokker):
         infos = util.class_annotation(factory, 'grok.local_utility', None)
         if infos is None:
             return
+
+        for info in infos:
+            if info.provides is None:
+                provides = []
+                if util.check_subclass(info.factory, grok.LocalUtility):
+                    baseInterfaces = interface.implementedBy(grok.LocalUtility)
+                    utilityInterfaces = interface.implementedBy(info.factory)
+                    provides = list(utilityInterfaces - baseInterfaces)
+
+                    if len(provides) == 0 and len(list(utilityInterfaces)) > 0:
+                        raise GrokError(
+                            "Cannot determine which interface to use "
+                            "for utility registration of %r. "
+                            "It implements an interface that is a specialization "
+                            "of an interface implemented by grok.LocalUtility. "
+                            "Specify the interface by either using grok.provides "
+                            "on the utility or passing 'provides' to "
+                            "grok.local_utility." % info.factory, info.factory)
+                else:
+                    provides = list(interface.implementedBy(info.factory))
+
+                util.check_implements_one_from_list(provides, info.factory)
+                info.provides = provides[0]
+        
         subscriber = LocalUtilityRegistrationSubscriber(infos)
         component.provideHandler(subscriber,
                                  adapts=(factory, grok.IObjectAddedEvent))

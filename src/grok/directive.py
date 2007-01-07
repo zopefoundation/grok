@@ -19,6 +19,7 @@ import inspect
 from zope import interface
 from zope.interface.interfaces import IInterface
 
+import grok
 from grok import util
 from grok.error import GrokImportError
 
@@ -195,6 +196,8 @@ class LocalUtilityInfo(object):
     def __init__(self, factory, provides=None, name=u'',
                  setup=None, hide=True, name_in_container=None):
         self.factory = factory
+        if provides is None:
+            provides = util.class_annotation(factory, 'grok.provides', None)
         self.provides = provides
         self.name = name
         self.setup = setup
