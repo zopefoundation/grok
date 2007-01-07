@@ -6,8 +6,11 @@ from zope import interface, component
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher)
-from zope.app.publisher.xmlrpc import MethodPublisher
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
+from zope.security.checker import NamesChecker, defineChecker
+from zope.security.permission import Permission
+
+from zope.app.publisher.xmlrpc import MethodPublisher
 from zope.app.container.interfaces import INameChooser
 
 import grok
@@ -63,7 +66,7 @@ class GlobalUtilityGrokker(grok.ClassGrokker):
 
 class XMLRPCGrokker(grok.ClassGrokker):
     component_class = grok.XMLRPC
-    
+
     def register(self, context, name, factory, module_info, templates):
         view_context = util.determine_class_context(factory, context)
         candidates = [getattr(factory, name) for name in dir(factory)]
@@ -80,6 +83,9 @@ class XMLRPCGrokker(grok.ClassGrokker):
                 method_view, (view_context, IXMLRPCRequest),
                 interface.Interface,
                 name=method.__name__)
+
+            checker = NamesChecker(['__call__'])
+            defineChecker(method_view, checker)
 
 class ViewGrokker(grok.ClassGrokker):
     component_class = grok.View
@@ -158,6 +164,14 @@ class ViewGrokker(grok.ClassGrokker):
                                  adapts=(view_context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
                                  name=view_name)
+
+        # protect view, public by default
+        permission = util.class_annotation(factory, 'grok.require', None)
+        if permission is None:
+            checker = NamesChecker(['__call__'])
+        else:
+            checker = NamesChecker(['__call__'], permission)
+        defineChecker(factory, checker)
 
 class TraverserGrokker(grok.ClassGrokker):
     component_class = grok.Traverser
@@ -278,3 +292,11 @@ class LocalUtilityRegistrationSubscriber(object):
             # register utility
             site_manager.registerUtility(utility, provided=info.provides,
                                          name=info.name)
+
+class DefinePermissionGrokker(grok.ModuleGrokker):
+
+    def register(self, context, module_info, templates):
+        permissions = module_info.getAnnotation('grok.define_permission', [])
+        for permission in permissions:
+            # TODO permission title and description
+            component.provideUtility(Permission(permission), name=permission)

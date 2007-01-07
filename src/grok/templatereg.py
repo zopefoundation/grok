@@ -2,6 +2,7 @@ import os
 
 from zope import interface, component
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+from zope.security.checker import NamesChecker, defineChecker
 
 import grok
 from grok import util
@@ -84,3 +85,7 @@ class TemplateRegistry(object):
                                      adapts=(context, IDefaultBrowserLayer),
                                      provides=interface.Interface,
                                      name=name)
+
+            # protect view, public by default
+            checker = NamesChecker(['__call__'])
+            defineChecker(TemplateView, checker)

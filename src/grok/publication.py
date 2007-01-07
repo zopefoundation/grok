@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Zope Corporation and Contributors.
+# Copyright (c) 2007 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -15,6 +15,7 @@
 """
 
 from zope.security.proxy import removeSecurityProxy
+from zope.security.checker import selectChecker
 
 from zope.app.publication.http import BaseHTTPPublication
 from zope.app.publication.browser import BrowserPublication
@@ -32,6 +33,13 @@ class ZopePublicationSansProxy(object):
         result = super(ZopePublicationSansProxy, self).traverseName(
             request, ob, name)
         return removeSecurityProxy(result)
+
+    def callObject(self, request, ob):
+        checker = selectChecker(ob)
+        if checker is not None:
+            #import pdb; pdb.set_trace()
+            checker.check(ob, '__call__')
+        return super(ZopePublicationSansProxy, self).callObject(request, ob)
 
 
 class GrokBrowserPublication(ZopePublicationSansProxy, BrowserPublication):

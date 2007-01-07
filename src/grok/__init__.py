@@ -35,7 +35,8 @@ from grok.components import PageTemplate, Container, Traverser
 from grok.components import Site, GlobalUtility, LocalUtility
 from grok.components import EditForm, DisplayForm, AddForm
 from grok.directive import (context, name, template, templatedir, provides,
-                            global_utility, local_utility)
+                            global_utility, local_utility, define_permission,
+                            require)
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import SubscribeDecorator as subscribe
 from grok.error import GrokError, GrokImportError

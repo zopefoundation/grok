@@ -212,3 +212,6 @@ global_utility = GlobalUtilityDirective('grok.global_utility',
                                         ModuleDirectiveContext())
 local_utility = LocalUtilityDirective('grok.local_utility',
                                       ClassDirectiveContext())
+define_permission = TextDirective('grok.define_permission',
+                                  ModuleDirectiveContext())
+require = TextDirective('grok.require', ClassDirectiveContext())
