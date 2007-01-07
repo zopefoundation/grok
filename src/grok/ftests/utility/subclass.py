@@ -44,6 +44,30 @@ Those do not influence the base class:
   Traceback (most recent call last):
     ...
   ComponentLookupError: (<InterfaceClass grok.ftests.utility.subclass.IPainting>, '')
+
+This works various levels of inheritance deep:
+
+  >>> very_hollow = VeryHollowCave()
+  >>> getRootFolder()['very_hollow'] = very_hollow
+
+  >>> setSite(very_hollow)
+  >>> fireplace = component.getUtility(IFireplace)
+  >>> painting = component.getUtility(IPainting)
+  >>> great_painting = component.getUtility(IPainting, 'great')
+  >>> bad_painting = component.getUtility(IPainting, 'bad')
+
+And with inheritance hierarchies where a base class is inherited multiple
+times through different routes:
+
+  >>> scary = ScaryCave()
+  >>> getRootFolder()['scary'] = scary
+
+  >>> setSite(scary)
+  >>> fireplace = component.getUtility(IFireplace)
+  >>> painting = component.getUtility(IPainting)
+  >>> great_painting = component.getUtility(IPainting, 'great')
+  >>> bad_painting = component.getUtility(IPainting, 'bad')
+
 """
 import grok
 from zope import interface
@@ -71,3 +95,12 @@ class BigCave(Cave):
 
 class HollowCave(Cave):
     grok.local_utility(Painting)
+
+class VeryHollowCave(HollowCave):
+    grok.local_utility(Painting, name='great')
+    grok.local_utility(Painting, name='bad')
+
+# this cave subclasses from Cave twice
+class ScaryCave(VeryHollowCave, Cave):
+    pass
+

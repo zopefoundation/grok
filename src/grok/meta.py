@@ -285,23 +285,26 @@ class SiteGrokker(grok.ClassGrokker):
 
                 util.check_implements_one_from_list(provides, info.factory)
                 info.provides = provides[0]
-        
-        subscriber = LocalUtilityRegistrationSubscriber(infos)
+
+        # store infos on site class
+        factory.__grok_utilities_to_install__ = infos
+        subscriber = LocalUtilityRegistrationSubscriber()
         component.provideHandler(subscriber,
                                  adapts=(factory, grok.IObjectAddedEvent))
 
 class LocalUtilityRegistrationSubscriber(object):
-    def __init__(self, infos):
-        self.infos = infos
-
+    """A subscriber that fires to set up local utilities.
+    
+    This class is deliberately stateless. This means that there
+    can be no instance variables.
+    """
     def __call__(self, site, event):
-        processed = util.class_annotation(site,
-                                          'grok.' + self.__class__.__name__, [])
-        if site.__class__ in processed:
-            import pdb; pdb.set_trace()
+        installed = getattr(site, '__grok_utilities_installed__', False)
+        if installed:
             return
-
-        for info in self.infos:
+    
+        for info in util.class_annotation(site.__class__,
+                                          'grok.utilities_to_install', []):
             utility = info.factory()
             site_manager = site.getSiteManager()
             
@@ -326,10 +329,10 @@ class LocalUtilityRegistrationSubscriber(object):
             site_manager.registerUtility(utility, provided=info.provides,
                                          name=info.name)
 
-        processed = processed[:]
-        processed.append(site.__class__)
-        setattr(site, '__grok_' + self.__class__.__name__ + '__', processed)
-
+        # we are done. If this subscriber gets fired again, we therefore
+        # do not register utilities anymore
+        site.__grok_utilities_installed__ = True
+        
 class DefinePermissionGrokker(grok.ModuleGrokker):
 
     def register(self, context, module_info, templates):
