@@ -61,7 +61,7 @@ def class_annotation_list(obj, name, default):
         return default
 
     result = []
-    for base in obj.mro():
+    for base in reversed(obj.mro()):
         list = class_annotation(base, name, [])
         if list not in result:
             result.append(list)

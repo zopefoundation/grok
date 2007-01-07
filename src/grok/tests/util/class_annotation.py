@@ -1,13 +1,13 @@
 """
   >>> util.class_annotation_list(B, 'grok.foo', None)
-  [7, 5]
+  [5, 7]
   >>> util.class_annotation_list(B2, 'grok.foo', None)
   [5]
   >>> util.class_annotation_list(C, 'grok.foo', None)
-  [8, 7, 5]
+  [5, 7, 8]
   >>> util.class_annotation_list(C2, 'grok.foo', None)
-  [9, 5, 7]
-  
+  [5, 7, 9]
+
 """
 import grok
 from grok import util
