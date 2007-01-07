@@ -25,7 +25,7 @@
 
   <!-- this overrides Zope 3's publication factories because they have
        the same name; we also need to change the priority because of
-       the ZCML descriminator -->
+       the ZCML discriminator -->
   <publisher
       name="XMLRPC"
       factory=".publication.GrokXMLRPCFactory"
