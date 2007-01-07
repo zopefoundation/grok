@@ -259,7 +259,7 @@ class SiteGrokker(grok.ClassGrokker):
     continue_scanning = True
 
     def register(self, context, name, factory, module_info, templates):
-        infos = util.class_annotation(factory, 'grok.local_utility', None)
+        infos = util.class_annotation_list(factory, 'grok.local_utility', None)
         if infos is None:
             return
 
@@ -295,12 +295,18 @@ class LocalUtilityRegistrationSubscriber(object):
         self.infos = infos
 
     def __call__(self, site, event):
+        processed = util.class_annotation(site,
+                                          'grok.' + self.__class__.__name__, [])
+        if site.__class__ in processed:
+            import pdb; pdb.set_trace()
+            return
+
         for info in self.infos:
             utility = info.factory()
             site_manager = site.getSiteManager()
             
             # store utility
-            if info.hide:
+            if info.hidden:
                 container = site_manager['default']
             else:
                 container = site
@@ -319,6 +325,10 @@ class LocalUtilityRegistrationSubscriber(object):
             # register utility
             site_manager.registerUtility(utility, provided=info.provides,
                                          name=info.name)
+
+        processed = processed[:]
+        processed.append(site.__class__)
+        setattr(site, '__grok_' + self.__class__.__name__ + '__', processed)
 
 class DefinePermissionGrokker(grok.ModuleGrokker):
 

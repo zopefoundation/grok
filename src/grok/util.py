@@ -52,6 +52,23 @@ def caller_module():
 def class_annotation(obj, name, default):
     return getattr(obj, '__%s__' % name.replace('.', '_'), default)
 
+def class_annotation_list(obj, name, default):
+    """This will process annotations that are lists correctly in the face of
+    inheritance.
+    """
+    if class_annotation(obj, name, default) is default:
+        return default
+
+    result = []
+    for base in obj.mro():
+        list = class_annotation(base, name, [])
+        if list not in result:
+            result.append(list)
+
+    result_flattened = []
+    for entry in result:
+        result_flattened.extend(entry)
+    return result_flattened
 
 def defined_locally(obj, dotted_name):
     obj_module = getattr(obj, '__grok_module__', None)
