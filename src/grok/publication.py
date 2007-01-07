@@ -37,7 +37,6 @@ class ZopePublicationSansProxy(object):
     def callObject(self, request, ob):
         checker = selectChecker(ob)
         if checker is not None:
-            #import pdb; pdb.set_trace()
             checker.check(ob, '__call__')
         return super(ZopePublicationSansProxy, self).callObject(request, ob)
 

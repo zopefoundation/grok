@@ -17,6 +17,7 @@
 import re
 import types
 import sys
+import inspect
 
 from zope import component
 from zope import interface
@@ -110,3 +111,12 @@ def determine_class_context(class_, module_context):
     context = class_annotation(class_, 'grok.context', module_context)
     check_context(class_, context)
     return context
+
+
+def methods_from_class(class_):
+    # XXX Problem with zope.interface here that makes us special-case
+    # __provides__.
+    candidates = [getattr(class_, name) for name in dir(class_)
+                  if name != '__provides__' ]
+    methods = [c for c in candidates if inspect.ismethod(c)]
+    return methods

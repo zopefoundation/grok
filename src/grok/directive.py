@@ -16,7 +16,7 @@
 
 import sys
 import inspect
-from zope import interface
+from zope import interface, component
 from zope.interface.interfaces import IInterface
 
 import grok
@@ -83,7 +83,7 @@ class Directive(object):
         self.check_directive_context(frame)
 
         value = self.value_factory(*args, **kw)
-        self.store(frame, value)
+        return self.store(frame, value)
 
     def check_arguments(self, *args, **kw):
         raise NotImplementedError
@@ -121,9 +121,13 @@ class OnceDirective(Directive):
                                      self.directive_context.description))
         frame.f_locals[self.local_name] = value
 
-class SingleValueOnceDirective(OnceDirective):
-    def check_arguments(self, value):
-        raise NotImplementedError
+class MultipleTimesDirective(Directive):
+    def store(self, frame, value):
+        values = frame.f_locals.get(self.local_name, [])
+        values.append(value)
+        frame.f_locals[self.local_name] = values
+
+class SingleValue(object):
 
     # Even though the value_factory is called with (*args, **kw), we're safe
     # since check_arguments would have bailed out with a TypeError if the number
@@ -131,15 +135,9 @@ class SingleValueOnceDirective(OnceDirective):
     def value_factory(self, value):
         return value
 
-class MultipleTimesDirective(Directive):
-    def store(self, frame, value):
-        values = frame.f_locals.get(self.local_name, [])
-        values.append(value)
-        frame.f_locals[self.local_name] = values
-
-class TextDirective(SingleValueOnceDirective):
+class BaseTextDirective(object):
     """
-    Directive that only accepts unicode/ASCII values.
+    Base directive that only accepts unicode/ASCII values.
     """
 
     def check_arguments(self, value):
@@ -147,7 +145,18 @@ class TextDirective(SingleValueOnceDirective):
             raise GrokImportError("You can only pass unicode or ASCII to "
                                   "%s." % self.name)
 
-class InterfaceOrClassDirective(SingleValueOnceDirective):
+class SingleTextDirective(BaseTextDirective, SingleValue, OnceDirective):
+    """
+    Directive that accepts a single unicode/ASCII value, only once.
+    """
+
+class MultipleTextDirective(BaseTextDirective, SingleValue,
+                            MultipleTimesDirective):
+    """
+    Directive that accepts a single unicode/ASCII value, multiple times.
+    """
+
+class InterfaceOrClassDirective(SingleValue, OnceDirective):
     """
     Directive that only accepts classes or interface values.
     """
@@ -157,7 +166,7 @@ class InterfaceOrClassDirective(SingleValueOnceDirective):
             raise GrokImportError("You can only pass classes or interfaces to "
                                   "%s." % self.name)
 
-class InterfaceDirective(SingleValueOnceDirective):
+class InterfaceDirective(SingleValue, OnceDirective):
     """
     Directive that only accepts interface values.
     """
@@ -210,17 +219,33 @@ class LocalUtilityInfo(object):
         self.hide = hide
         self.name_in_container = name_in_container
 
+class RequireDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
+
+    def store(self, frame, value):
+        super(RequireDirective, self).store(frame, value)
+        values = frame.f_locals.get(self.local_name, [])
+
+        # grok.require can be used both as a class-level directive and
+        # as a decorator for methods.  Therefore we return a decorator
+        # here, which may be used for methods, or simply ignored when
+        # used as a directive.
+        def decorator(func):
+            permission = values.pop()
+            func.__grok_require__ = permission
+            return func
+        return decorator
+
 # Define grok directives
-name = TextDirective('grok.name', ClassDirectiveContext())
-template = TextDirective('grok.template', ClassDirectiveContext())
+name = SingleTextDirective('grok.name', ClassDirectiveContext())
+template = SingleTextDirective('grok.template', ClassDirectiveContext())
 context = InterfaceOrClassDirective('grok.context',
                                     ClassOrModuleDirectiveContext())
-templatedir = TextDirective('grok.templatedir', ModuleDirectiveContext())
+templatedir = SingleTextDirective('grok.templatedir', ModuleDirectiveContext())
 provides = InterfaceDirective('grok.provides', ClassDirectiveContext())
 global_utility = GlobalUtilityDirective('grok.global_utility',
                                         ModuleDirectiveContext())
 local_utility = LocalUtilityDirective('grok.local_utility',
                                       ClassDirectiveContext())
-define_permission = TextDirective('grok.define_permission',
-                                  ModuleDirectiveContext())
-require = TextDirective('grok.require', ClassDirectiveContext())
+define_permission = MultipleTextDirective('grok.define_permission',
+                                          ModuleDirectiveContext())
+require = RequireDirective('grok.require', ClassDirectiveContext())
