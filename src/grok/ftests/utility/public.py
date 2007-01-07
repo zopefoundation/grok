@@ -43,4 +43,3 @@ class Cave(grok.Container, grok.Site):
 
 class Cave2(grok.Container, grok.Site):
     grok.local_utility(Fireplace, public=False, name_in_container='fireplace')
-

@@ -10,6 +10,7 @@ from zope.security.checker import NamesChecker, defineChecker
 from zope.security.permission import Permission
 from zope.security.interfaces import IPermission
 
+from zope.app.container.interfaces import IContainer
 from zope.app.publisher.xmlrpc import MethodPublisher
 from zope.app.container.interfaces import INameChooser
 
@@ -308,6 +309,11 @@ class SiteGrokker(grok.ClassGrokker):
             return
 
         for info in infos:
+            if info.public and not IContainer.implementedBy(factory):
+                raise GrokError(
+                    "Cannot set public to True with grok.local_utility as "
+                    "the site (%r) is not a container." %
+                    factory, factory)
             if info.provides is None:
                 provides = []
                 if util.check_subclass(info.factory, grok.LocalUtility):
