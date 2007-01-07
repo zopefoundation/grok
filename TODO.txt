@@ -5,12 +5,6 @@ TODO
 Meta
 ====
 
-- setup homepage (grok.zope.org or zope.org/grok, wiki or rest) (faassen)
-
-- tutorial (faassen)
-
-- reference (theuni)
-
 - Check demo applications for issues with patterns (grok wiki, ldap address
   book)
 
@@ -31,8 +25,6 @@ Core
 - local registrations (philikon)
 
 - make it easier to write tests (wosc, faassen)
-
-- grok.App (philikon)
 
 - error reporting during grokking (provide file/line-number information
   on our extrinsically generated errors) (philikon)
@@ -67,8 +59,6 @@ Need to discuss
 - fall back to a static resource that is defined in a package on a higher
   level if no static resource directory is defined locally in a package?
 
-- grok buildout integration
-
 - grok.grokkable (to allow grokking of imported things)
 
 - skins
@@ -87,17 +77,8 @@ Need to discuss
 
 - making new widgets (faassen, philikon)
 
-- local persistent utilities (e.g. catalog) (faassen, wosc)
-
-- catalog (faassen, wosc)
-
-- Admin UI (faassen, jw)
-
 - IMPORTANT: different strategies: grok.definefoo() versus n =
   grok.Foo(), watch out for consistency/symmetry/...
-
-- have a custom security policy that is easier to understand than the
-  default Zope 3 policy
 
 - use ZCML's conflict resolution machinery
 
