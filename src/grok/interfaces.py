@@ -93,7 +93,7 @@ class IGrokDirectives(interface.Interface):
         """
 
     def local_utility(factory, provides=None, name=u'',
-                      setup=None, hidden=True, name_in_container=None):
+                      setup=None, public=False, name_in_container=None):
         """Register a local utility.
 
         factory - the factory that creates the local utility
@@ -101,8 +101,9 @@ class IGrokDirectives(interface.Interface):
         name - the name of the utility
         setup - a callable that receives the utility as its single argument,
                 it is called after the utility has been created and stored
-        hidden - if True, the utility will be stored below ++etc++site
-                 if False, the utility will be stored directly in the site
+        public - if False, the utility will be stored below ++etc++site
+                 if True, the utility will be stored directly in the site.
+                 The site should in this case be a container.
         name_in_container - the name to use for storing the utility
         """
 

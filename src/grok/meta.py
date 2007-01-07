@@ -353,7 +353,7 @@ class LocalUtilityRegistrationSubscriber(object):
             site_manager = site.getSiteManager()
             
             # store utility
-            if info.hidden:
+            if not info.public:
                 container = site_manager['default']
             else:
                 container = site
