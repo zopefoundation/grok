@@ -315,7 +315,6 @@ class SiteGrokker(grok.ClassGrokker):
                     "the site (%r) is not a container." %
                     factory, factory)
             if info.provides is None:
-                provides = []
                 if util.check_subclass(info.factory, grok.LocalUtility):
                     baseInterfaces = interface.implementedBy(grok.LocalUtility)
                     utilityInterfaces = interface.implementedBy(info.factory)
@@ -336,8 +335,21 @@ class SiteGrokker(grok.ClassGrokker):
                 util.check_implements_one_from_list(provides, info.factory)
                 info.provides = provides[0]
 
+        # Make sure that local utilities from subclasses override
+        # utilities from base classes if the registration (provided
+        # interface, name) is identical.
+        overridden_infos = []
+        used = set()
+        for info in reversed(infos):
+            key = (info.provides, info.name)
+            if key in used:
+                continue
+            used.add(key)
+            overridden_infos.append(info)
+        overridden_infos.reverse()
+
         # store infos on site class
-        factory.__grok_utilities_to_install__ = infos
+        factory.__grok_utilities_to_install__ = overridden_infos
         component.provideHandler(localUtilityRegistrationSubscriber,
                                  adapts=(factory, grok.IObjectAddedEvent))
 
@@ -355,15 +367,14 @@ def localUtilityRegistrationSubscriber(site, event):
 
         # store utility
         if not info.public:
-            container = site_manager['default']
+            container = site_manager
         else:
             container = site
 
         name_in_container = info.name_in_container 
         if name_in_container is None:
             name_in_container = INameChooser(container).chooseName(
-                info.factory.__class__.__name__,
-                utility)
+                info.factory.__name__, utility)
         container[name_in_container] = utility
 
         # execute setup callback

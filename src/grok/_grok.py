@@ -52,6 +52,10 @@ def bootstrap():
     
 def addSiteHandler(site, event):
     sitemanager = LocalSiteManager(site)
+    # LocalSiteManager creates the 'default' folder in its __init__.
+    # It's not needed anymore in new versions of Zope 3, therefore we
+    # remove it
+    del sitemanager['default']
     site.setSiteManager(sitemanager)
 
 # add a cleanup hook so that grok will bootstrap itself again whenever

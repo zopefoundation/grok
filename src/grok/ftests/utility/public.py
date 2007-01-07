@@ -23,7 +23,7 @@ name_in_container can also be used for objects stored under the site manager
    >>> cave2 = Cave2()
    >>> getRootFolder()['cave2'] = cave2
    >>> setSite(cave2)
-   >>> (cave2.getSiteManager()['default']['fireplace'] is
+   >>> (cave2.getSiteManager()['fireplace'] is
    ...  component.getUtility(IFireplace))
    True
 
