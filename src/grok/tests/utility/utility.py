@@ -40,7 +40,6 @@ use with 'grok.provides':
   True
 """
 import grok
-
 from zope import interface
 
 class IClub(interface.Interface):

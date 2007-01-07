@@ -32,12 +32,6 @@ grok.local_utility:
   >>> isinstance(spiky, SpikyClub)
   True
 
-  >>> sharp = component.getUtility(IClub, name='sharp')
-  >>> IClub.providedBy(sharp)
-  True
-  >>> isinstance(sharp, SharpClub)
-  True
-
   >>> mammoth = component.getUtility(IMammoth)
   >>> IMammoth.providedBy(mammoth)
   True
@@ -79,11 +73,6 @@ Since it is a local utility, it is not available outside its site:
   Traceback (most recent call last):
     ...
   ComponentLookupError: (<InterfaceClass grok.ftests.utility.local.IClub>, 'spiky')
-
-  >>> component.getUtility(IClub, name='sharp')
-  Traceback (most recent call last):
-    ...
-  ComponentLookupError: (<InterfaceClass grok.ftests.utility.local.IClub>, 'sharp')
 
   >>> component.getUtility(IMammoth)
   Traceback (most recent call last):
@@ -130,10 +119,6 @@ class Club(object):
 class SpikyClub(object):
     grok.implements(IClub, ISpiky)
 
-class SharpClub(object):
-    grok.implements(IClub, ISpiky)
-    grok.provides(IClub)
-
 class Mammoth(grok.LocalUtility):
     grok.implements(IMammoth, IClub)
 
@@ -155,7 +140,6 @@ class Cave(grok.Model, grok.Site):
     grok.local_utility(Fireplace)
     grok.local_utility(Club)
     grok.local_utility(SpikyClub, provides=IClub, name='spiky')
-    grok.local_utility(SharpClub, name='sharp')
     grok.local_utility(Mammoth, provides=IMammoth)
     grok.local_utility(SabretoothTiger, name='tiger')
     grok.local_utility(CavePainting, name='blackandwhite', provides=IPainting)
