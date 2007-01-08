@@ -41,7 +41,7 @@ Running the tests
 Grok's tests are easily run by executing the test runner that's
 installed in the ``bin`` directory::
 
-    $ bin/tests
+    $ bin/test
 
 For functional tests we've set up a special test instance just for
 running the test from, which includes the minimum needed ZCML (so the
