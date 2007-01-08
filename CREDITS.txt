@@ -18,7 +18,10 @@ CREDITS
 Thank you
 ---------
 
-* gocept for hosting the first grok sprint
+* gocept for hosting the first grok sprint in Halle, Germany. Special
+  thanks to Felicia Faassen Wong, Christian Zagrodnick and Magda
+  Motyka for the delicious food.
 
-* Felicia Faassen Wong, Christian Zagrodnick and Magda Motyka for the
-  delicious food at the first grok sprint
+* Philipp von Weitershausen for hosting the second grok sprint in
+  Dresden, Germany. Special thanks to Heinrich von Jagwitz for the
+  delicious food.
