@@ -56,6 +56,8 @@ Note: renaming grokstart to something else.
 Creating the tutorial project
 -----------------------------
 
+XXX Warning! Science-fiction ahead! This will likely change.
+
 In order to start writing code with Grok we first need to set up a
 Python project that will contain the code. It's not hard to do by
 hand, but it's a bit of typing, so your buildout has a tool installed
@@ -64,21 +66,17 @@ Let's run it from the `grokstart` buildout directory::
 
   $ bin/pyprogen groktut
 
-A new directo
 
-
-A modern Python project
-typically is a directory that contains a `setup.py` to install the
-project using distutils or setuptools and `src` directory that
-contains a Python package (a directory with a file `__init__.py` in
-it. The project directory can also contain things like a `README.txt`,
-`INSTALL.txt` and so on.
+A modern Python project typically is a directory that contains a
+`setup.py` to install the project using distutils or setuptools and
+`src` directory that contains a Python package (a directory with a
+file `__init__.py` in it. The project directory can also contain
+things like a `README.txt`, `INSTALL.txt` and so on.
 
 Grok comes with a tool to easily create such projects, called
 pyprogen.  pyprogen takes care of creating the right directories and a
 minimal `setup.py`.
 
-
-It also adds the project to the buildout.cfg so
-that it is automatically included in the installation and a testrunner
-is generated.
+It also adds the project to the buildout.cfg so that it is
+automatically included in the installation and a testrunner is
+generated.
