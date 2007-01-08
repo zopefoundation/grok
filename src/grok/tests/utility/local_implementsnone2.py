@@ -3,7 +3,8 @@
   Traceback (most recent call last):
     ...
   GrokError: Cannot determine which interface to use for utility registration of
-  <class 'grok.tests.utility.local_implementsnone2.Fireplace'>. It implements
+  <class 'grok.tests.utility.local_implementsnone2.Fireplace'> in site
+  <class 'grok.tests.utility.local_implementsnone2.Cave'>. It implements
   an interface that is a specialization of an interface implemented
   by grok.LocalUtility. Specify the interface by either using grok.provides on
   the utility or passing 'provides' to grok.local_utility.

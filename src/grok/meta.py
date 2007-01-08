@@ -322,17 +322,34 @@ class SiteGrokker(grok.ClassGrokker):
                     if len(provides) == 0 and len(list(utilityInterfaces)) > 0:
                         raise GrokError(
                             "Cannot determine which interface to use "
-                            "for utility registration of %r. "
+                            "for utility registration of %r in site %r. "
                             "It implements an interface that is a specialization "
                             "of an interface implemented by grok.LocalUtility. "
                             "Specify the interface by either using grok.provides "
                             "on the utility or passing 'provides' to "
-                            "grok.local_utility." % info.factory, info.factory)
+                            "grok.local_utility." % (info.factory, factory),
+                            info.factory)
                 else:
                     provides = list(interface.implementedBy(info.factory))
 
                 util.check_implements_one_from_list(provides, info.factory)
                 info.provides = provides[0]
+    
+        # raise an error in case of any duplicate registrations
+        # on the class level (subclassing overrides, see below)
+        used = set()
+        class_infos = util.class_annotation(factory, 'grok.local_utility',
+                                            [])
+        for info in class_infos:
+            key = (info.provides, info.name)
+            if key in used:
+                raise GrokError(
+                    "Conflicting local utility registration %r in "
+                    "site %r. Local utilities are registered multiple "
+                    "times for interface %r and name %r." %
+                    (info.factory, factory, info.provides, info.name),
+                    factory)
+            used.add(key)
 
         # Make sure that local utilities from subclasses override
         # utilities from base classes if the registration (provided
