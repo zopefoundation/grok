@@ -84,6 +84,13 @@ class IGrokDirectives(interface.Interface):
         """Explicitly specify with which interface a component will be looked up.
         """
 
+    def baseclass():
+        """Mark this class as a base class.
+
+        This means it won't be grokked, though if it's a possible context,
+        it can still serve as a context.
+        """
+        
     def global_utility(factory, provides=None, name=u''):
         """Register a global utility.
 

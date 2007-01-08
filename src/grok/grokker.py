@@ -74,6 +74,13 @@ class GrokkerRegistry(object):
             
             components = scanned_results.get(grokker.component_class, [])
             for name, component in components:
+                # this is a base class as it ends with Base, skip
+                if type(component) is type:
+                    if name.endswith('Base'):
+                        continue
+                    elif util.class_annotation_nobase(component,
+                                                      'grok.baseclass', False):
+                        continue
                 grokker.register(context,
                                  name, component,
                                  module_info, templates)

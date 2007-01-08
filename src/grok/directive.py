@@ -127,6 +127,15 @@ class OnceDirective(Directive):
         frame.f_locals[self.local_name] = value
 
 
+class MarkerDirective(OnceDirective):
+    """A directive without argument that places a marker.
+    """
+    def value_factory(self):
+        return True
+
+    def check_arguments(self):
+        pass
+
 class MultipleTimesDirective(Directive):
     def store(self, frame, value):
         values = frame.f_locals.get(self.local_name, [])
@@ -260,6 +269,7 @@ context = InterfaceOrClassDirective('grok.context',
                                     ClassOrModuleDirectiveContext())
 templatedir = SingleTextDirective('grok.templatedir', ModuleDirectiveContext())
 provides = InterfaceDirective('grok.provides', ClassDirectiveContext())
+baseclass = MarkerDirective('grok.baseclass', ClassDirectiveContext())
 global_utility = GlobalUtilityDirective('grok.global_utility',
                                         ModuleDirectiveContext())
 local_utility = LocalUtilityDirective('grok.local_utility',

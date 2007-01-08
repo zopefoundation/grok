@@ -53,6 +53,13 @@ def caller_module():
 def class_annotation(obj, name, default):
     return getattr(obj, '__%s__' % name.replace('.', '_'), default)
 
+def class_annotation_nobase(obj, name, default):
+    """This will only look in the given class obj for the annotation.
+
+    It will not look in the inheritance chain.
+    """
+    return obj.__dict__.get('__%s__' % name.replace('.', '_'), default)
+    
 def class_annotation_list(obj, name, default):
     """This will process annotations that are lists correctly in the face of
     inheritance.
