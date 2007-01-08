@@ -43,14 +43,16 @@ class ZopeTestTransport(xmlrpclib.Transport):
 
         host, extra_headers, x509 = self.get_host_info(host)
         if extra_headers:
-            request += "Authorization: %s\n" % (dict(extra_headers)["Authorization"],)
+            request += "Authorization: %s\n" \
+                       % (dict(extra_headers)["Authorization"],)
 
         request += "\n" + request_body
         response = HTTPCaller()(request, handle_errors=self.handleErrors)
 
         errcode = response.getStatus()
         errmsg = response.getStatusString()
-        # This is not the same way that the normal transport deals with the headers.
+        # This is not the same way that the normal transport deals
+        # with the headers.
         headers = response.getHeaders()
 
         if errcode != 200:

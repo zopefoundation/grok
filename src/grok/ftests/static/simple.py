@@ -7,11 +7,13 @@ contents will be available as static resources under a URL:
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
-  >>> browser.open('http://localhost/@@/grok.ftests.static.simple_fixture/file.txt')
+  >>> browser.open('http://localhost/@@/grok.ftests.static.simple_fixture/'
+  ...              'file.txt')
   >>> print browser.contents
   some text
 
-We use a special name 'static' in page templates to allow easy linking to resources:
+We use a special name 'static' in page templates to allow easy linking
+to resources:
 
   >>> root = getRootFolder()
   >>> from grok.ftests.static.simple_fixture.ellie import Mammoth

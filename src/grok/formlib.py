@@ -1,4 +1,5 @@
-import os, types
+import os
+import types
 from zope import interface
 from zope.interface.interfaces import IInterface
 from zope.formlib import form

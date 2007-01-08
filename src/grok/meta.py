@@ -19,7 +19,6 @@ from grok import util, components, formlib
 from grok.error import GrokError
 
 
-
 class ModelGrokker(grok.ClassGrokker):
     component_class = grok.Model
 

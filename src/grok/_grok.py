@@ -49,7 +49,7 @@ def bootstrap():
 
     # now grok the grokkers
     grokker.grokkerRegistry.grok(scan.module_info_from_module(meta))
-    
+
 def addSiteHandler(site, event):
     sitemanager = LocalSiteManager(site)
     # LocalSiteManager creates the 'default' folder in its __init__.
@@ -84,9 +84,10 @@ def grok_tree(module_info):
 
     for sub_module_info in module_info.getSubModuleInfos():
         grok_tree(sub_module_info)
-        
+
 # decorators
 class SubscribeDecorator:
+
     def __init__(self, *args):
         self.subscribed = args
 

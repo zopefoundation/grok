@@ -78,7 +78,7 @@ class InstanceGrokker(GrokkerBase):
 
     def match(self, obj):
         return isinstance(obj, self.component_class)
-   
+
     def register(self, context, name, instance, module_info, templates):
         raise NotImplementedError
 
@@ -188,6 +188,7 @@ class View(BrowserPage):
 
 
 class GrokViewAbsoluteURL(AbsoluteURL):
+
     def _getContextName(self, context):
         return getattr(context, '__view_name__', None)
     # XXX breadcrumbs method on AbsoluteURL breaks as it does not use

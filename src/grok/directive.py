@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Zope Corporation and Contributors.
+# Copyright (c) 2006-2007 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -30,6 +30,7 @@ def frame_is_module(frame):
 def frame_is_class(frame):
     return '__module__' in frame.f_locals    
 
+
 class IDirectiveContext(interface.Interface):
     description = interface.Attribute("The correct place in which the "
                                       "directive can be used.")
@@ -56,6 +57,7 @@ class ModuleDirectiveContext(object):
     def matches(self, frame):
         return frame_is_module(frame)
     
+
 class ClassOrModuleDirectiveContext(object):
     interface.implements(IDirectiveContext)
     
@@ -63,6 +65,7 @@ class ClassOrModuleDirectiveContext(object):
 
     def matches(self, frame):
         return frame_is_module(frame) or frame_is_class(frame)
+
 
 class Directive(object):
     """
@@ -88,10 +91,11 @@ class Directive(object):
     def check_arguments(self, *args, **kw):
         raise NotImplementedError
 
-    # to get a correct error message, we construct a function that has the same
-    # signature as check_arguments(), but without "self".
+    # to get a correct error message, we construct a function that has
+    # the same signature as check_arguments(), but without "self".
     def check_argument_signature(self, *arguments, **kw):
-        args, varargs, varkw, defaults = inspect.getargspec(self.check_arguments)
+        args, varargs, varkw, defaults = inspect.getargspec(
+            self.check_arguments)
         argspec = inspect.formatargspec(args[1:], varargs, varkw, defaults)
         exec("def signature_checker" + argspec + ": pass")
         try:
@@ -113,6 +117,7 @@ class Directive(object):
     def store(self, frame, value):
         raise NotImplementedError
 
+
 class OnceDirective(Directive):
     def store(self, frame, value):
         if self.local_name in frame.f_locals:
@@ -121,19 +126,23 @@ class OnceDirective(Directive):
                                      self.directive_context.description))
         frame.f_locals[self.local_name] = value
 
+
 class MultipleTimesDirective(Directive):
     def store(self, frame, value):
         values = frame.f_locals.get(self.local_name, [])
         values.append(value)
         frame.f_locals[self.local_name] = values
 
+
 class SingleValue(object):
 
-    # Even though the value_factory is called with (*args, **kw), we're safe
-    # since check_arguments would have bailed out with a TypeError if the number
-    # arguments we were called with was not what we expect here.
+    # Even though the value_factory is called with (*args, **kw),
+    # we're safe since check_arguments would have bailed out with a
+    # TypeError if the number arguments we were called with was not
+    # what we expect here.
     def value_factory(self, value):
         return value
+
 
 class BaseTextDirective(object):
     """
@@ -145,16 +154,19 @@ class BaseTextDirective(object):
             raise GrokImportError("You can only pass unicode or ASCII to "
                                   "%s." % self.name)
 
+
 class SingleTextDirective(BaseTextDirective, SingleValue, OnceDirective):
     """
     Directive that accepts a single unicode/ASCII value, only once.
     """
+
 
 class MultipleTextDirective(BaseTextDirective, SingleValue,
                             MultipleTimesDirective):
     """
     Directive that accepts a single unicode/ASCII value, multiple times.
     """
+
 
 class InterfaceOrClassDirective(SingleValue, OnceDirective):
     """
@@ -166,6 +178,7 @@ class InterfaceOrClassDirective(SingleValue, OnceDirective):
             raise GrokImportError("You can only pass classes or interfaces to "
                                   "%s." % self.name)
 
+
 class InterfaceDirective(SingleValue, OnceDirective):
     """
     Directive that only accepts interface values.
@@ -176,6 +189,7 @@ class InterfaceDirective(SingleValue, OnceDirective):
             raise GrokImportError("You can only pass interfaces to "
                                   "%s." % self.name)
 
+
 class GlobalUtilityDirective(MultipleTimesDirective):
     def check_arguments(self, factory, provides=None, name=u''):
         if provides is not None and not IInterface.providedBy(provides):
@@ -184,6 +198,7 @@ class GlobalUtilityDirective(MultipleTimesDirective):
 
     def value_factory(self, *args, **kw):
         return GlobalUtilityInfo(*args, **kw)
+
 
 class GlobalUtilityInfo(object):
     def __init__(self, factory, provides=None, name=u''):
@@ -197,6 +212,7 @@ class GlobalUtilityInfo(object):
             name = util.class_annotation(factory, 'grok.name', u'')
         self.name = name
 
+
 class LocalUtilityDirective(MultipleTimesDirective):
     def check_arguments(self, factory, provides=None, name=u'',
                         setup=None, public=False, name_in_container=None):
@@ -206,6 +222,7 @@ class LocalUtilityDirective(MultipleTimesDirective):
 
     def value_factory(self, *args, **kw):
         return LocalUtilityInfo(*args, **kw)
+
 
 class LocalUtilityInfo(object):
     def __init__(self, factory, provides=None, name=u'',
@@ -218,6 +235,7 @@ class LocalUtilityInfo(object):
         self.setup = setup
         self.public = public
         self.name_in_container = name_in_container
+
 
 class RequireDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
 
