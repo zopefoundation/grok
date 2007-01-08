@@ -17,23 +17,21 @@ Core
 
 - testing strategy for the tutorial (faassen)
 
-- traversal - not megrok.routes (philikon)
-
-- local registrations (philikon)
-
 - make it easier to write tests (wosc, faassen)
 
 - error reporting during grokking (provide file/line-number information
   on our extrinsically generated errors) (philikon)
 
-- FooBase convention + grok.baseclass to not grok certain classes
+- What will happen if we make a utility a old style class and use the
+  MRO stuff. Since we don't support non-persistent local utilities yet this
+  may be a rare case.
 
-- maybe: transform register_foo() functions that take lists into functions
-  that operate on a single entity and provide a decorator (@iterate) to
-  call the function for each item (theuni)
+- What about local utilities that don't subclass persistent? Perhaps we 
+  can look for IPersistent and give an error if the utility doesn't
+  state it is.
 
-- grok.utility() needs to work on module level so we can register imported
-  objects as global utilities.
+- Change error messages: whenever we report about a callable, add
+  () to the name. Core Python expections do this.
 
 Schema/formlib support
 ----------------------
@@ -47,6 +45,8 @@ Schema/formlib support
 - delete action on list form
 
 - make formlib macros available in some form?
+
+- what about subclassing a model that has a 'fields'?
 
 Need to discuss
 ---------------
@@ -62,8 +62,6 @@ Need to discuss
 
 - form redirect
 
-- grok.resourcedir (multiple? per package? ...?)
-
 - authentication (pau integration) (faassen)
 
 - sessions (get the session information for something, similar to
@@ -77,7 +75,7 @@ Need to discuss
 - IMPORTANT: different strategies: grok.definefoo() versus n =
   grok.Foo(), watch out for consistency/symmetry/...
 
-- use ZCML's conflict resolution machinery
+- use ZCML's conflict resolution machinery; actions for Grok.
 
 - do not accept automatic template directory guessing convention for
   __init__.py, bail out with grok error instead?
