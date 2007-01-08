@@ -46,6 +46,11 @@ from zope.app.component.site import SiteManagerContainer
 from grok import util, interfaces
 
 
+# These base grokkers exist in grok.components because they are meant
+# to be subclassed by code that extends grok.  Thus they are like
+# grok.Model, grok.View, etc. in that they should not be grokked
+# themselves but subclasses of them.
+
 class GrokkerBase(object):
     """A common base class for all grokkers.
     """
