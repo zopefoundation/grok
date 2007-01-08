@@ -28,8 +28,8 @@ Running the demo applications
 
 Start the instance:
 
-   $ cd parts/instance
-   $ bin/zopectl fg
+    $ cd parts/instance
+    $ bin/zopectl fg
 
 If you now connect to port 8080 and log in with username 'grok',
 password 'grok', you should be able to add the grok-based applications
@@ -38,13 +38,11 @@ password 'grok', you should be able to add the grok-based applications
 Running the tests
 -----------------
 
-Due to a bug in Zope, we need to run the tests this way, from a
-special instance directory:
+Grok's tests are easily run by executing the test runner that's
+installed in the ``bin`` directory::
 
-    $ cd parts/testinstance
-    $ ../../bin/test
+    $ bin/tests
 
-otherwise you will get an error about not finding
-'ftesting.zcml'. We've set up a special test instance just for running
-the test from, which includes the minimum needed ZCML (so the tests
-run faster).
+For functional tests we've set up a special test instance just for
+running the test from, which includes the minimum needed ZCML (so the
+tests run a tidbit faster).
