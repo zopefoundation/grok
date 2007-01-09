@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Zope Corporation and Contributors.
+# Copyright (c) 2006-2007 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -81,8 +81,8 @@ class IGrokDirectives(interface.Interface):
         ``templatedir``."""
 
     def provides(interface):
-        """Explicitly specify with which interface a component will be looked up.
-        """
+        """Explicitly specify with which interface a component will be
+        looked up."""
 
     def baseclass():
         """Mark this class as a base class.
@@ -113,6 +113,18 @@ class IGrokDirectives(interface.Interface):
                  The site should in this case be a container.
         name_in_container - the name to use for storing the utility
         """
+
+    def define_permission(permission):
+        """Defines a new permission with the id ``permission``."""
+
+    def require(permission):
+        """Protect a view class or an XMLRPC method with ``permision``.
+
+        ``permission`` already be define, e.g. using
+        grok.define_permission.
+
+        grok.require can be used as a class-level directive or as a
+        method decorator."""
 
 class IGrokDecorators(interface.Interface):
 
@@ -203,5 +215,3 @@ class IGrokView(interface.Interface):
         If both object and name arguments are supplied, construct
         URL to obj/name.
         """
-
-
