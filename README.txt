@@ -18,3 +18,12 @@ he hunts mammoths with.  He will also use this club to smash anything
 he doesn't like.
 
 "ME GROK SMASH ZCML!"
+
+Getting grok
+============
+
+Currently, grok is only available from the subversion repository::
+
+  svn co svn://svn.zope.org/repos/main/grok/trunk grok
+
+Then follow the instructions of ``INSTALL.txt``.
