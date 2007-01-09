@@ -120,7 +120,7 @@ class IGrokDirectives(interface.Interface):
     def require(permission):
         """Protect a view class or an XMLRPC method with ``permision``.
 
-        ``permission`` already be define, e.g. using
+        ``permission`` must already be defined, e.g. using
         grok.define_permission.
 
         grok.require can be used as a class-level directive or as a
