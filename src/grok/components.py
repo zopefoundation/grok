@@ -203,7 +203,18 @@ class XMLRPC(object):
     pass
 
 
-class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
+class GrokPageTemplate(object):
+
+    def __repr__(self):
+        return '<%s template in %s>' % (self.__grok_name__,
+                                        self.__grok_location__)
+
+    def _annotateGrokInfo(self, name, location):
+        self.__grok_name__ = name
+        self.__grok_location__ = location
+
+
+class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
     expand = 0
 
     def __init__(self, template):
@@ -219,16 +230,9 @@ class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
         # PageTemplate cannot be subclassed
         self.__grok_module__ = util.caller_module()
 
-    def __repr__(self):
-        return '<%s template in %s>' % (self.__grok_name__,
-                                        self.__grok_location__)
 
-    def _annotateGrokInfo(self, name, location):
-        self.__grok_name__ = name
-        self.__grok_location__ = location
-
-
-class PageTemplateFile(TrustedAppPT, pagetemplatefile.PageTemplateFile):
+class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
+                       pagetemplatefile.PageTemplateFile):
 
     def __init__(self, filename, _prefix=None):
         _prefix = self.get_path_from_prefix(_prefix)
@@ -239,14 +243,6 @@ class PageTemplateFile(TrustedAppPT, pagetemplatefile.PageTemplateFile):
         # XXX unfortunately using caller_module means that
         # PageTemplateFile cannot be subclassed
         self.__grok_module__ = util.caller_module()
-
-    def __repr__(self):
-        return '<%s template in %s>' % (self.__grok_name__,
-                                        self.__grok_location__)
-
-    def _annotateGrokInfo(self, name, location):
-        self.__grok_name__ = name
-        self.__grok_location__ = location
 
 
 class DirectoryResource(directoryresource.DirectoryResource):
