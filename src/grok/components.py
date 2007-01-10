@@ -137,7 +137,11 @@ class View(BrowserPage):
                 interface.Interface, name=self.module_info.package_dotted_name)
 
     def __call__(self):
-        self.before()
+        self.update()
+        if self.request.response.getStatus() in (302, 303):
+            # Somewhere in update(), a redirect was triggered.  Don't
+            # continue rendering the template or doing anything else.
+            return
 
         template = getattr(self, 'template', None)
         if not template:
@@ -183,7 +187,7 @@ class View(BrowserPage):
     def redirect(self, url):
         return self.request.response.redirect(url)
 
-    def before(self):
+    def update(self):
         pass
 
 

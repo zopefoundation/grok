@@ -46,7 +46,7 @@ class DancingHall(grok.View):
 
 class Grilled(grok.View):
 
-    def before(self):
+    def update(self):
         self.spices = "Pepper and salt"
 
 painting = grok.PageTemplate("""\

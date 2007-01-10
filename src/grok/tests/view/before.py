@@ -1,5 +1,5 @@
 """
-Before a view is rendered, the before() method is executed. It can be
+Before a view is rendered, the update() method is executed. It can be
 used e. g. to execute side effects or set up data for use in the
 template.
 
@@ -32,7 +32,7 @@ class Mammoth(grok.Model):
     pass
 
 class CavePainting(grok.View):
-    def before(self):
+    def update(self):
         self.color = "red"
 
 
