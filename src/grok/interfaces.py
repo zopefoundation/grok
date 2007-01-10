@@ -184,6 +184,11 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
         """Create a Grok PageTemplate object from ``template`` source
         text.  This can be used for inline PageTemplates."""
 
+    def PageTemplateFile(filename):
+        """Create a Grok PageTemplate object from a file specified by
+        ``filename``.  It will be treated like an inline template
+        created with ``PageTemplate``."""
+
     def Fields(*args, **kw):
         """Return a list of formlib fields based on interfaces and/or schema
         fields."""
