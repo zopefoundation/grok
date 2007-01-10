@@ -28,8 +28,7 @@ class TemplateRegistry(object):
 
     def findFilesystem(self, module_info):
         template_dir_name = module_info.getAnnotation(
-            'grok.templatedir',
-            module_info.name + '_templates')
+            'grok.templatedir', module_info.name + '_templates')
 
         template_dir = module_info.getResourcePath(template_dir_name)
 
@@ -46,13 +45,8 @@ class TemplateRegistry(object):
                                 module_info.getModule())
 
             template_name = template_file[:-3] # cut off .pt
+            template = grok.PageTemplateFile(template_file, template_dir)
             template_path = os.path.join(template_dir, template_file)
-
-            f = open(template_path, 'rb')
-            contents = f.read()
-            f.close()
-
-            template = grok.PageTemplate(contents)
             template._annotateGrokInfo(template_name, template_path)
 
             inline_template = self.get(template_name)

@@ -26,7 +26,7 @@ from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import (IBrowserPublisher,
                                                IBrowserRequest)
-from zope.pagetemplate import pagetemplate
+from zope.pagetemplate import pagetemplate, pagetemplatefile
 from zope.formlib import form
 from zope.formlib.namedtemplate import INamedTemplate
 from zope.traversing.browser.interfaces import IAbsoluteURL
@@ -217,6 +217,27 @@ class PageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
         # inline templates
         # XXX unfortunately using caller_module means that
         # PageTemplate cannot be subclassed
+        self.__grok_module__ = util.caller_module()
+
+    def __repr__(self):
+        return '<%s template in %s>' % (self.__grok_name__,
+                                        self.__grok_location__)
+
+    def _annotateGrokInfo(self, name, location):
+        self.__grok_name__ = name
+        self.__grok_location__ = location
+
+
+class PageTemplateFile(TrustedAppPT, pagetemplatefile.PageTemplateFile):
+
+    def __init__(self, filename, _prefix=None):
+        _prefix = self.get_path_from_prefix(_prefix)
+        super(PageTemplateFile, self).__init__(filename, _prefix)
+        
+        # __grok_module__ is needed to make defined_locally() return True for
+        # inline templates
+        # XXX unfortunately using caller_module means that
+        # PageTemplateFile cannot be subclassed
         self.__grok_module__ = util.caller_module()
 
     def __repr__(self):
