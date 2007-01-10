@@ -91,8 +91,6 @@ Need to discuss
 - should grok.context and grok.Model be order-dependent?
   (so their meaning becomes "below here, this is the context")
 
-- page template reloads without having to restart
-
 - Do we want to initialize model attributes for any schema that the model
   implements (in addition to the initialization that is taking place for the
   model-level fields)?
