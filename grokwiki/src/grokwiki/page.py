@@ -36,7 +36,7 @@ class WikiPage(grok.Model):
 
 class Index(grok.View):
 
-    def before(self):
+    def update(self):
         wiki_url = self.url(self.context.__parent__)
         self.rendered_text, replacements = (
             LINK_PATTERN.subn(r'<a href="%s/\1">\1</a>' % wiki_url, 
@@ -44,7 +44,7 @@ class Index(grok.View):
 
 class Edit(grok.View):
 
-    def before(self):
+    def update(self):
         text = self.request.form.get('wikidata')
         if not text:
             return # Just render the template
