@@ -7,7 +7,7 @@ Grok uses the Component Architecture and builds on Zope 3 concepts
 like content objects (models), views, and adapters.  Its simplicity
 lies in using **convention over configuration** and **sensible
 defaults** when wiring components together.  That means neither a
-configuration language like ZCML nor a lot of repitition are needed to
+configuration language like ZCML nor a lot of repetition are needed to
 create a web application with grok.
 
 Who is grok?
