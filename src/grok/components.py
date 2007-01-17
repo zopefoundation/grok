@@ -287,7 +287,7 @@ class Traverser(object):
 
     def publishTraverse(self, request, name):
         subob = self.traverse(name)
-        if subob:
+        if subob is not None:
             return subob
 
         # XXX special logic here to deal with views and containers.

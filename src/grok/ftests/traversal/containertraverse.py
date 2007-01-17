@@ -51,6 +51,12 @@ The fall-back behavior should work for items that aren't traversed:
   </body>
   </html>
 
+Also try (an empty) container as a subitem a container:
+
+  >>> herd['subherd'] = Herd()
+  >>> browser.open("http://localhost/herd/subherd")
+  >>> print browser.contents
+  A herd
 """
 import grok
 
@@ -61,6 +67,13 @@ class Herd(grok.Container):
             return Special()
         return None
     
+class HerdIndex(grok.View):
+    grok.context(Herd)
+    grok.name('index')
+
+    def render(self):
+        return 'A herd'
+
 class Mammoth(grok.Model):
 
     def __init__(self, name):
