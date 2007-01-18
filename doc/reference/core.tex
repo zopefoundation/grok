@@ -21,9 +21,10 @@ The \module{grok} module defines a few functions to interact with grok itself.
         \item Scan the module for known components: models, adapters,
               utilities, views, traversers, templates and subscribers.
 
-        \item Check whether a directory with file system templates exists
-        (``<modulename>_templates''). If it exists, load the file system
-        templates into the template registry for this module.
+        \item Check whether a directory with file system templates
+              exists (\file{<modulename>_templates}).  If it exists,
+              load the file system templates into the template
+              registry for this module.
 
         \item Determine the module context. 
 
@@ -38,8 +39,8 @@ The \module{grok} module defines a few functions to interact with grok itself.
     \begin{enumerate}
         \item Grok the package as a module.
 
-        \item Check for a static resource directory (``static'') and register
-              it if it exists.
+        \item Check for a static resource directory (\file{static})
+          and register it if it exists.
 
         \item Recursively grok all sub-modules and sub-packages.
 

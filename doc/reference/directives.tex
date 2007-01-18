@@ -31,9 +31,9 @@ JavaScript-, CSS- and other files in your application.
 XXX insert directive description here (first: define the name, second: describe
 the default behaviour if the directive isn't given)
 
-A resource directory is created when a package contains a directory with the
-name ``\file{static}''.  All files from this directory become accessible from a
-browser under the URL
+A resource directory is created when a package contains a directory
+with the name \file{static}.  All files from this directory become
+accessible from a browser under the URL
 \file{http://<servername>/++resource++<packagename>/<filename>}.
 
 \begin{bf}Example:\end{bf} The package \module{a.b.c} is grokked and contains a
@@ -41,9 +41,10 @@ directory \file{static} which contains the file \file{example.css}. The
 stylesheet will be available via
 \file{http://<servername>/++resource++a.b.c/example.css}.
 
-\begin{notice}A package can never have both a ``static'' directory and a Python module
-with the name ``static.py'' at the same time. grok will remind you of this
-conflict when grokking a package by displaying an error message.
+\begin{notice}A package can never have both a \file{static} directory
+  and a Python module with the name \file{static.py} at the same
+  time. grok will remind you of this conflict when grokking a package
+  by displaying an error message.
 
 \end{notice}
 
