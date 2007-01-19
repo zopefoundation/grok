@@ -28,6 +28,7 @@ class IGrokBaseClasses(interface.Interface):
     Site = interface.Attribute("Mixin class for sites.")
     Adapter = interface.Attribute("Base class for adapters.")
     MultiAdapter = interface.Attribute("Base class for multi-adapters.")
+    Annotation = interface.Attribute("Base class for persistent annotations.")
     GlobalUtility = interface.Attribute("Base class for global utilities.")
     LocalUtility = interface.Attribute("Base class for local utilities.")
     View = interface.Attribute("Base class for browser views.")

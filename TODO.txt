@@ -13,8 +13,6 @@ Core
 
 - choice fields / sources (theuni)
 
-- annotations (faassen)
-
 - testing strategy for the tutorial (faassen)
 
 - make it easier to write tests (wosc, faassen)

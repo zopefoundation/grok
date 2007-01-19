@@ -32,6 +32,7 @@ from zope.formlib.namedtemplate import INamedTemplate
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.browser.absoluteurl import AbsoluteURL
 from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
+from zope.annotation.interfaces import IAttributeAnnotatable
 
 from zope.app.pagetemplate.engine import TrustedAppPT
 from zope.app.publisher.browser import getDefaultViewName
@@ -99,7 +100,7 @@ class Model(Contained, persistent.Persistent):
     # XXX Inheritance order is important here. If we reverse this,
     # then containers can't be models anymore because no unambigous MRO
     # can be established.
-    pass
+    interface.implements(IAttributeAnnotatable)
 
 
 class Container(BTreeContainer):
@@ -125,6 +126,10 @@ class LocalUtility(Model):
 
 
 class MultiAdapter(object):
+    pass
+
+
+class Annotation(persistent.Persistent):
     pass
 
 

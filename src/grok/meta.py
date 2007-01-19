@@ -9,10 +9,12 @@ from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.security.checker import NamesChecker, defineChecker
 from zope.security.permission import Permission
 from zope.security.interfaces import IPermission
+from zope.annotation.interfaces import IAnnotations
 
-from zope.app.container.interfaces import IContainer
 from zope.app.publisher.xmlrpc import MethodPublisher
+from zope.app.container.interfaces import IContainer
 from zope.app.container.interfaces import INameChooser
+from zope.app.container.contained import contained
 
 import grok
 from grok import util, components, formlib
@@ -44,7 +46,7 @@ class AdapterGrokker(grok.ClassGrokker):
         component.provideAdapter(factory, adapts=(adapter_context,),
                                  provides=provides,
                                  name=name)
-            
+
 class MultiAdapterGrokker(grok.ClassGrokker):
     component_class = grok.MultiAdapter
     
@@ -414,3 +416,39 @@ class DefinePermissionGrokker(grok.ModuleGrokker):
         for permission in permissions:
             # TODO permission title and description
             component.provideUtility(Permission(permission), name=permission)
+
+class AnnotationGrokker(grok.ClassGrokker):
+    component_class = grok.Annotation
+ 
+    def register(self, context, name, factory, module_info, templates):
+        adapter_context = util.determine_class_context(factory, context)
+        provides = util.class_annotation(factory, 'grok.provides', None)
+        if provides is None:
+            base_interfaces = interface.implementedBy(grok.Annotation)
+            factory_interfaces = interface.implementedBy(factory)
+            real_interfaces = list(factory_interfaces - base_interfaces)
+            util.check_implements_one_from_list(real_interfaces, factory)
+            provides = real_interfaces[0]
+
+        key = util.class_annotation(factory, 'grok.name', None)
+        if key is None:
+            key = factory.__module__ + '.' + factory.__name__
+
+        @component.adapter(adapter_context)
+        @interface.implementer(provides)
+        def getAnnotation(context):
+            annotations = IAnnotations(context)
+            try:
+                result = annotations[key]
+            except KeyError:
+                result = factory()
+                annotations[key] = result
+
+            # Containment has to be set up late to allow containment
+            # proxies to be applied, if needed. This does not trigger
+            # an event and is idempotent if containment is set up
+            # already.
+            contained_result = contained(result, context, key)
+            return contained_result
+
+        component.provideAdapter(getAnnotation)

@@ -32,7 +32,7 @@ from zope.app.container.contained import (
 from grok.components import ClassGrokker, InstanceGrokker, ModuleGrokker
 from grok.components import Model, Adapter, MultiAdapter, View, XMLRPC
 from grok.components import PageTemplate, PageTemplateFile, Container, Traverser
-from grok.components import Site, GlobalUtility, LocalUtility
+from grok.components import Site, GlobalUtility, LocalUtility, Annotation
 from grok.components import EditForm, DisplayForm, AddForm
 from grok.directive import (context, name, template, templatedir, provides,
                             baseclass, global_utility, local_utility,
