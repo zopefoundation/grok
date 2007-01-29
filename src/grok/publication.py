@@ -13,17 +13,33 @@
 ##############################################################################
 """Grok publication objects
 """
+import transaction
+import ZODB.Connection
 
 from zope.security.proxy import removeSecurityProxy
 from zope.security.checker import selectChecker
+from zope.publisher.interfaces import Redirect
 
 from zope.app.publication.http import BaseHTTPPublication
 from zope.app.publication.browser import BrowserPublication
 from zope.app.publication.requestpublicationfactories import \
      BrowserFactory, XMLRPCFactory
 
+from grok._grok import check_reload, reload_grokked_modules
 
 class ZopePublicationSansProxy(object):
+
+    def openedConnection(self, conn):
+        if check_reload():
+            reload_grokked_modules()
+
+            # Reset ZODB's pickle caches so that persistent objects
+            # use the new classes.
+            # XXX doesn't work?!?
+            ZODB.Connection.resetCaches()
+            transaction.commit()
+            conn._resetCache()
+            transaction.begin()
 
     def getApplication(self, request):
         result = super(ZopePublicationSansProxy, self).getApplication(request)

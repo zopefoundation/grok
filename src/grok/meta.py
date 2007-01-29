@@ -2,11 +2,12 @@ import os
 
 import zope.component.interface
 from zope import interface, component
+from zope.component.globalregistry import globalSiteManager
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
-from zope.security.checker import NamesChecker, defineChecker
+from zope.security.checker import NamesChecker, defineChecker, undefineChecker
 from zope.security.permission import Permission
 from zope.security.interfaces import IPermission
 from zope.annotation.interfaces import IAnnotations
@@ -37,6 +38,9 @@ class LocalUtilityGrokker(ModelGrokker):
 class AdapterGrokker(grok.ClassGrokker):
     component_class = grok.Adapter
 
+    def __init__(self):
+        self.adapters = []
+
     def register(self, context, name, factory, module_info, templates):
         adapter_context = util.determine_class_context(factory, context)
         provides = util.class_annotation(factory, 'grok.provides', None)
@@ -46,10 +50,19 @@ class AdapterGrokker(grok.ClassGrokker):
         component.provideAdapter(factory, adapts=(adapter_context,),
                                  provides=provides,
                                  name=name)
+        self.adapters.append((factory, (adapter_context,), provides, name))
+
+    def ungrok(self):
+        for factory, adapts, provides, name in self.adapters:
+            globalSiteManager.unregisterAdapter(factory, adapts, provides, name)
+        self.adapters[:] = []
 
 class MultiAdapterGrokker(grok.ClassGrokker):
     component_class = grok.MultiAdapter
-    
+
+    def __init__(self):
+        self.adapters = []
+
     def register(self, context, name, factory, module_info, templates):
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
@@ -57,16 +70,34 @@ class MultiAdapterGrokker(grok.ClassGrokker):
         util.check_adapts(factory)
         name = util.class_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, provides=provides, name=name)
+        self.adapters.append((factory, provides, name))
+
+    def ungrok(self):
+        for factory, provides, name in self.adapters:
+            globalSiteManager.unregisterAdapter(factory, provided=provided,
+                                                name=name)
+        self.adapters[:] = []
 
 class GlobalUtilityGrokker(grok.ClassGrokker):
     component_class = grok.GlobalUtility
+
+    def __init__(self):
+        self.utilities = []
 
     def register(self, context, name, factory, module_info, templates):
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
             util.check_implements_one(factory)
         name = util.class_annotation(factory, 'grok.name', '')
-        component.provideUtility(factory(), provides=provides, name=name)
+        utility = factory()
+        component.provideUtility(utility, provides=provided, name=name)
+        self.utilities.append((utility, provides, name))
+
+    def ungrok(self):
+        for utility, provides, name in self.utilities:
+            globalSiteManager.unregisterUtility(utility, provided=provides,
+                                                name=name)
+        self.utilities[:] = []
 
 class XMLRPCGrokker(grok.ClassGrokker):
     component_class = grok.XMLRPC
@@ -113,6 +144,9 @@ class XMLRPCGrokker(grok.ClassGrokker):
 
 class ViewGrokker(grok.ClassGrokker):
     component_class = grok.View
+
+    def __init__(self):
+        self.adapters = []
 
     def register(self, context, name, factory, module_info, templates):
         view_context = util.determine_class_context(factory, context)
@@ -188,6 +222,8 @@ class ViewGrokker(grok.ClassGrokker):
                                  adapts=(view_context, IDefaultBrowserLayer),
                                  provides=interface.Interface,
                                  name=view_name)
+        self.adapters.append((factory, (view_context, IDefaultBrowserLayer),
+                             interface.Interface, view_name))
 
         # protect view, public by default
         permissions = util.class_annotation(factory, 'grok.require', [])
@@ -218,6 +254,12 @@ class ViewGrokker(grok.ClassGrokker):
                                 'method %r in view %r. It may only be used '
                                 'for XML-RPC methods.'
                                 % (method.__name__, factory), factory)
+
+    def ungrok(self):
+        for factory, adapts, provides, name in self.adapters:
+            globalSiteManager.unregisterAdapter(factory, adapts, provides, name)
+            undefineChecker(factory)
+        self.adapters[:] = []
 
 class TraverserGrokker(grok.ClassGrokker):
     component_class = grok.Traverser

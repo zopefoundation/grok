@@ -71,6 +71,9 @@ class ClassGrokker(GrokkerBase):
     def register(self, context, name, factory, module_info, templates):
         raise NotImplementedError
 
+    def ungrok(self):
+        raise NotImplementedError
+
 
 class InstanceGrokker(GrokkerBase):
     """Grokker for particular instances in a module.
@@ -83,6 +86,9 @@ class InstanceGrokker(GrokkerBase):
     def register(self, context, name, instance, module_info, templates):
         raise NotImplementedError
 
+    def ungrok(self):
+        raise NotImplementedError
+
 
 class ModuleGrokker(GrokkerBase):
     """Grokker that gets executed once for a module.
@@ -93,6 +99,9 @@ class ModuleGrokker(GrokkerBase):
         return False
 
     def register(self, context, module_info, templates):
+        raise NotImplementedError
+
+    def ungrok(self):
         raise NotImplementedError
 
 

@@ -87,6 +87,13 @@ class GrokkerRegistry(object):
 
         templates.registerUnassociated(context, module_info)
 
+    def ungrok(self):
+        for grokker in self._grokkers:
+            try:
+                grokker.ungrok()
+            except NotImplementedError:
+                pass
+
 
 # deep meta mode here - we define grokkers for grok.ClassGrokker,
 # grok.InstanceGrokker, and grokker.ModuleGrokker.
