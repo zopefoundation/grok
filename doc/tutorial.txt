@@ -2,81 +2,126 @@ Grok tutorial
 =============
 
 Welcome to the Grok tutorial! Grok is an extension to Zope 3 that
-makes it easier and quicker to develop web applications for Zope 3,
-*without* losing the power and flexibility of Zope 3 itself. Grok
+makes it much quicker and easier to develop web applications with Zope
+3, *without* losing the power and flexibility of Zope 3 itself. Grok
 builds on existing Zope 3 technology like the component architecture
-but exposes them in a different way to the developer.
+but exposes it in a different way to the developer.
 
-In this tutorial, we will be writing a simple wiki. We'll lead you all
-the way from the start, setting up Grok on your computer, to a simple
-but complete wiki implementation. All you're expected to know is the
-Python programming language and a basic understanding of web
-programming.
+In this tutorial we will be writing a simple todo list application. We
+will lead you all the way from the start, setting up Grok on your
+computer, to a simple but complete todo list implementation. All
+you're expected to know is the Python programming language and a basic
+understanding of web programming.
 
-Setting up Grok
----------------
+Setting up grokproject
+----------------------
 
-In order to set up Grok so you can start development, you need a
-computer that is connected to the internet and the grokstart_
-download. Unpack grokstart_ somewhere. It will result in a directory
-called 'grokstart'. Then inside that directory, run the following with
-a Python 2.4 interpreter::
+Setting up grok on a Unix-like (Linux, Mac OS X) environment is
+easy. 
 
-  $ python bootstrap.py
- 
-This will bootstrap the "buildout" system, which then can be used to
-install grok. Still in the same directory, run the following command:
+Let's go through the prerequisites first. You need a computer
+connected to the internet, as Grok installs itself over the
+network. You also need Python 2.4 installed.
 
-  $ bin/buildout
+Because Grok uses a source distribution of Zope 3, you may need to
+install your operating system's Python "dev" package. You also need a
+working C compiler (typically `gcc`) installed, as we compile bits of
+Zope 3 during setup. Finally, you also need `easy_install` installed
+so it becomes easy to install eggs.
 
-Now you have to wait a while as the system downloads grok, Zope 3, and
-any other dependencies from the internet and installs them.
+.. sidebar:: Installing `easy_install`
 
-Grok, along with Zope 3 is now ready to go. A Zope 3 instance has been
-installed in the 'parts/instance' directory. Of course it doesn't
-contain any Grok applications yet - we're to write one in this
-tutorial.
+  If you don't already have `easy_install` available, you can find the
+  script to set it up here::
 
-What you've just used is a technology called Buildout. Buildout is not
-Zope 3 specific. It is a generic system that builds heavily on
-existing Python technology like setuptools and eggs. Buildout goes
-beyond distribution of libraries and applications; it allows the
-installation of servers, C libraries and much more.
+    http://peak.telecommunity.com/DevCenter/EasyInstall#installing-easy-install
 
-Note: it may be that you have an older version of setuptools installed
-on your system. bootstrap.py will complain in this case. You can
-upgrade to the most recent version of setuptools by running the
-following (with permissions to write to your Python installation, so
-possibly you need to use `sudo` or become root):
+  You need to download `ez_setup.py`_. Then, you run it like this to
+  install `easy_install` into your system Python::
 
-  $ easy_install -U setuptools
+    $ sudo python2.4 ez_setup.py
 
-Note: renaming grokstart to something else.
+  This will make `easy_install` available to you.
 
-Creating the tutorial project
------------------------------
+  **Note**: Sometimes you have `easy_install` installed but you need a
+  newer version of the underlying `setuptools` to make Grok work. You
+  can automatically upgrade `setuptools` this by doing::
 
-XXX Warning! Science-fiction ahead! This will likely change.
+    $ sudo easy_install -U setuptools
 
-In order to start writing code with Grok we first need to set up a
-Python project that will contain the code. It's not hard to do by
-hand, but it's a bit of typing, so your buildout has a tool installed
-called `pyprogen` which helps with the generation of a new project.
-Let's run it from the `grokstart` buildout directory::
+Once you are done with the prerequisites, you can install
+`grokproject` itself::
 
-  $ bin/pyprogen groktut
+  $ sudo easy_install grokproject
 
+We're ready to create our first grok project now!
 
-A modern Python project typically is a directory that contains a
-`setup.py` to install the project using distutils or setuptools and
-`src` directory that contains a Python package (a directory with a
-file `__init__.py` in it. The project directory can also contain
-things like a `README.txt`, `INSTALL.txt` and so on.
+Creating a grok project
+-----------------------
 
-Grok comes with a tool to easily create such projects, called
-pyprogen.  pyprogen takes care of creating the right directories and a
-minimal `setup.py`.
+Let's create our first Grok project, the todo list::
 
-It also adds the project to the buildout.cfg so that it is
-automatically included in the installation and a testrunner is
-generated.
+  $ grokproject TodoList
+
+First, grokproject will tell you what it will be creating::
+
+  Selected and implied templates:
+    grokproject#grokproject  A grok project
+
+  Variables:
+    egg:      TodoList
+    package:  todolist
+    project:  TodoList
+
+The "Selected and implied templates" line is something reported by
+Paste, which is the Python project generation software grokproject is
+using. Next, it reports three names. First, it reports the name this
+project will have if in the project's `setup.py`:
+
+    egg:      TodoList
+
+Next, it specifies the name of the Python package that you will be
+developing with. The package will be placed under the project's `src`
+directory::
+
+    package:  todolist
+
+Finally, it gives the name of the project directory that it will
+create::
+
+    project:  TodoList
+
+Now it asks you a number of questions. First it asks for the name of the
+initial module of the package. We'll call our module `app.py`::
+
+  Enter module (Name of a demo Python module placed into the package): app.py
+
+Next, Grok asks use for an initial user and password for the Zope
+server. We'll use `grok` for both::
+
+  Enter user (Name of an initial administrator user): grok
+  Enter passwd (Password for the initial administrator user): grok
+
+Now you have to wait a while as grokproject downloads Grok, Zope 3 and
+sets up the project environment for you.
+
+Grok, along with Zope 3 is now ready to go. You can go into the
+`TodoList` project directory now::
+
+  $ cd TodoList
+
+As you can see grokproject created the `setup.py` file for you, and a
+`src` directory. In it is a Python package directory called `todolist`
+with an `app.py`.
+
+A Zope 3 instance has been installed in the 'parts/instance'
+directory. You can start it (into the foreground) by typing the
+following::
+
+  $ parts/instance/bin/zopectl fg
+
+This will make Zope 3 available on port 8080, and you can log in with
+username `grok` and password `grok`. Of course it doesn't contain any
+Grok applications yet - we're going write one in this tutorial. So,
+you can shut down Zope 3 easily enough by typing `ctrl-c`.
+
