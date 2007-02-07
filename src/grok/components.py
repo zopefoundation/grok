@@ -26,6 +26,7 @@ from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import (IBrowserPublisher,
                                                IBrowserRequest)
+from zope.publisher.publish import mapply
 from zope.pagetemplate import pagetemplate, pagetemplatefile
 from zope.formlib import form
 from zope.formlib.namedtemplate import INamedTemplate
@@ -146,7 +147,7 @@ class View(BrowserPage):
                 interface.Interface, name=self.module_info.package_dotted_name)
 
     def __call__(self):
-        self.update()
+        mapply(self.update, (), self.request)
         if self.request.response.getStatus() in (302, 303):
             # Somewhere in update(), a redirect was triggered.  Don't
             # continue rendering the template or doing anything else.
@@ -154,7 +155,7 @@ class View(BrowserPage):
 
         template = getattr(self, 'template', None)
         if not template:
-            return self.render()
+            return mapply(self.render, (), self.request)
 
         namespace = template.pt_getContext()
         namespace['request'] = self.request
