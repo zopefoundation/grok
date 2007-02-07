@@ -35,7 +35,7 @@ def test_suite():
     for name in ['adapter', 'error', 'view', 'scan', 'event', 'security',
                  'zcml', 'static', 'utility', 'xmlrpc', 'container',
                  'traversal', 'form', 'site', 'grokker', 'directive', 'util',
-                 'baseclass', 'annotation']:
+                 'baseclass', 'annotation', 'application']:
         suite.addTest(suiteFromPackage(name))
     return suite
 

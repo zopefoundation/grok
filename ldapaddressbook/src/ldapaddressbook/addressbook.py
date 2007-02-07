@@ -30,7 +30,7 @@ LDAP_SEARCH_BASE = "ou=Addresses,dc=example,dc=com"
 
 
 
-class AddressBook(grok.Model):
+class AddressBook(grok.Application):
 
     def traverse(self, name):
         contact = Contact(name)

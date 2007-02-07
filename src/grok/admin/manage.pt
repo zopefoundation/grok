@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>grok administration interface</title>
+  </head>
+
+  <body>
+    <h1>Installed applications</h1>
+
+    <ul>
+      <li tal:repeat="app context/values">
+        <a tal:attributes="href string:${context/@@absolute_url}/${app/__name__}">
+          <span tal:replace="app/__name__"/>
+          (<span tal:replace="app/__class__/__name__"/>)
+        </a>
+      </li>
+    </ul>
+
+    <form tal:attributes="action string:${context/@@absolute_url}/add">
+      <fieldset>
+        <legend>Add application</legend>
+
+        <p>
+          <label>Application: 
+            <select height="1" name="application"> 
+              <option tal:repeat="app view/applications" 
+                tal:attributes="value app" 
+                tal:content="app"
+                />
+            </select> 
+          </label>
+        </p>
+
+        <p><label>Name: <input type="text" name="name"/></label></p>
+
+        <p><input type="submit" value="Add"/></p>
+
+      </fieldset>
+    </form>
+  </body>
+</html>

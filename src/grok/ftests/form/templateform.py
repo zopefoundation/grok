@@ -45,7 +45,7 @@ class Mammoth(grok.Model):
 
 class Edit(grok.EditForm):
     pass
-    
+
 class Edit2(grok.EditForm):
     pass
 

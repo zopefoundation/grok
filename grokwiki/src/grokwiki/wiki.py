@@ -17,7 +17,7 @@
 import grok
 import grokwiki.page
 
-class Wiki(grok.Container):
+class Wiki(grok.Application):
     """This is our wiki application wich contains all wiki pages."""
 
 class Index(grok.View):

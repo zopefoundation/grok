@@ -42,4 +42,6 @@
       priority="11"
       />
 
+  <include package=".admin"/>
+
 </configure>

@@ -111,6 +111,10 @@ class Site(SiteManagerContainer):
     pass
 
 
+class Application(Site, Container):
+    """A top-level application object."""
+
+
 class Adapter(object):
 
     def __init__(self, context):
