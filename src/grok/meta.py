@@ -430,8 +430,14 @@ class DefinePermissionGrokker(grok.ModuleGrokker):
     def register(self, context, module_info, templates):
         permissions = module_info.getAnnotation('grok.define_permission', [])
         for permission in permissions:
+            # IPermission.title says that permission ids (and titles,
+            # descriptions) *must* be unicode objects.  Good news is
+            # that the directive handler already made sure we either
+            # got pure ASCII or unicode here:
+            permission = unicode(permission)
             # TODO permission title and description
-            component.provideUtility(Permission(permission), name=permission)
+            component.provideUtility(Permission(permission, title=permission),
+                                     name=permission)
 
 
 class AnnotationGrokker(grok.ClassGrokker):
