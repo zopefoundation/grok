@@ -1,25 +1,25 @@
 import zope.component
 import grok.interfaces
+from zope.app.folder.interfaces import IRootFolder
 
-from zope.app import zapi
+grok.context(IRootFolder)
+grok.define_permission('grok.ManageApplications')
 
+class Index(grok.View):
+    grok.name('index.html') # the root folder isn't a grok.Model
+    grok.require('grok.ManageApplications')
 
-class Admin(object):
-
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-
-    @property
-    def applications(self):
+    def update(self):
         apps = zope.component.getAllUtilitiesRegisteredFor(
             grok.interfaces.IApplication)
-        return ["%s.%s" % (x.__module__, x.__name__)
-                for x in apps]
+        self.applications = ("%s.%s" % (x.__module__, x.__name__)
+                             for x in apps)
 
-    def add(self, application, name):
+class Add(grok.View):
+    grok.require('grok.ManageApplications')
+
+    def render(self, application, name):
         app = zope.component.getUtility(grok.interfaces.IApplication,
                                         name=application)
         self.context[name] = app()
-        self.request.response.redirect(zapi.absoluteURL(self.context,
-                                                        self.request))
+        self.redirect(self.url(self.context))

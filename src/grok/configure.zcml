@@ -1,5 +1,6 @@
 <configure    
-  xmlns="http://namespaces.zope.org/zope">
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:grok="http://namespaces.zope.org/grok">
 
   <!-- we register special IAbsoluteURL views on grok views so that
        can have them inspect __view_name__ instead of __name__.  
@@ -42,6 +43,6 @@
       priority="11"
       />
 
-  <include package=".admin"/>
+  <grok:grok package=".admin" />
 
 </configure>
