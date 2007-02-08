@@ -37,7 +37,7 @@ is_not_ascii = re.compile(eval(r'u"[\u0080-\uffff]"')).search
 def isclass(obj):
     """We cannot use ``inspect.isclass`` because it will return True
     for interfaces"""
-    return type(obj) in (types.ClassType, type)
+    return isinstance(obj, (types.ClassType, type))
 
 
 def check_subclass(obj, class_):
