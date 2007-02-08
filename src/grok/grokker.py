@@ -7,18 +7,24 @@ class GrokkerRegistry(object):
         self.clear()
 
     def clear(self):
-        self._grokkers = []
+        self._grokkers = {}
         # register the meta grokkers manually as we can't grok those
         self.registerGrokker(ClassGrokkerGrokker())
         self.registerGrokker(InstanceGrokkerGrokker())
         self.registerGrokker(ModuleGrokkerGrokker())
-        
+
     def registerGrokker(self, grokker):
-        self._grokkers.append(grokker)
+        # we're using a dictionary to make sure each type of grokker
+        # is registered only once (e.g. during meta-grok-time, and not again
+        # during grok-time).
+        key = grokker.__class__
+        if key in self._grokkers:
+            return
+        self._grokkers[key] = grokker
 
     def _getGrokkersInOrder(self):
         # sort grokkers by priority
-        grokkers = sorted(self._grokkers, 
+        grokkers = sorted(self._grokkers.values(),
                           key=lambda grokker: grokker.priority)
         # we want to handle high priority first
         grokkers.reverse()
@@ -26,7 +32,7 @@ class GrokkerRegistry(object):
 
     def scan(self, module_info):
         components = {}
-        for grokker in self._grokkers:
+        for grokker in self._grokkers.values():
             if isinstance(grokker, grok.ModuleGrokker):
                 continue
             components[grokker.component_class] = []
@@ -34,9 +40,9 @@ class GrokkerRegistry(object):
         grokkers = self._getGrokkersInOrder()
         module = module_info.getModule()
         for name in dir(module):
-            obj = getattr(module, name)
             if name.startswith('__grok_'):
                 continue
+            obj = getattr(module, name)
             if not util.defined_locally(obj, module_info.dotted_name):
                 continue
             # XXX find way to get rid of this inner loop by doing hash table
@@ -59,9 +65,9 @@ class GrokkerRegistry(object):
                               scanned_results.get(grok.LocalUtility, []) +
                               scanned_results.get(grok.Container, []))]
         context = util.determine_module_context(module_info, possible_contexts)
-        
+
         templates = templatereg.TemplateRegistry()
-   
+
         # run through all grokkers registering found components in order
         for grokker in self._getGrokkersInOrder():
             # if we run into a ModuleGrokker, just do simple registration.
@@ -71,8 +77,9 @@ class GrokkerRegistry(object):
             if isinstance(grokker, grok.ModuleGrokker):
                 grokker.register(context, module_info, templates)
                 continue
-            
+
             components = scanned_results.get(grokker.component_class, [])
+
             for name, component in components:
                 # this is a base class as it ends with Base, skip
                 if type(component) is type:
@@ -100,7 +107,7 @@ class GrokkerRegistry(object):
 class MetaGrokker(grok.ClassGrokker):
     def register(self, context, name, factory, module_info, templates):
         grokkerRegistry.registerGrokker(factory())
-    
+
 class ClassGrokkerGrokker(MetaGrokker):
     component_class = grok.ClassGrokker
 
@@ -109,7 +116,7 @@ class InstanceGrokkerGrokker(MetaGrokker):
 
 class ModuleGrokkerGrokker(MetaGrokker):
     component_class = grok.ModuleGrokker
-    
+
 # the global grokker registry
 grokkerRegistry = GrokkerRegistry()
 
