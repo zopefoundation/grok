@@ -34,6 +34,10 @@ class WikiPage(grok.Model):
         self.text = text
 
 
+class Layout(grok.View):
+    pass
+
+
 class Index(grok.View):
 
     def update(self):
