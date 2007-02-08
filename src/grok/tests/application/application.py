@@ -13,8 +13,6 @@ available as a utility::
 
 Applications are both containers and sites::
 
-    >>> issubclass(calendar_app, grok.Container)
-    True
     >>> issubclass(calendar_app, grok.Site)
     True
 

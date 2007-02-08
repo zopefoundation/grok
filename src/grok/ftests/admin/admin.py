@@ -34,7 +34,7 @@
 """
 import grok
 
-class MammothManager(grok.Application):
+class MammothManager(grok.Application, grok.Container):
     pass
 
 class Index(grok.View):

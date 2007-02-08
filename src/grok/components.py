@@ -112,7 +112,7 @@ class Site(SiteManagerContainer):
     pass
 
 
-class Application(Site, Container):
+class Application(Site):
     """A top-level application object."""
 
 
@@ -247,7 +247,7 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
     def __init__(self, filename, _prefix=None):
         _prefix = self.get_path_from_prefix(_prefix)
         super(PageTemplateFile, self).__init__(filename, _prefix)
-        
+
         # __grok_module__ is needed to make defined_locally() return True for
         # inline templates
         # XXX unfortunately using caller_module means that
