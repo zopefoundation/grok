@@ -43,7 +43,6 @@ class GrokkerRegistry(object):
             # lookup?
             for grokker in grokkers:
                 if grokker.match(obj):
-                    from grok.meta import XMLRPCGrokker
                     components[grokker.component_class].append((name, obj))
                     if not grokker.continue_scanning:
                         break
