@@ -22,3 +22,6 @@ grok.templatedir('templatedirectoryname')
 
 class Mammoth(grok.Model):
     pass
+
+class Food(grok.View):
+    pass

@@ -5,7 +5,7 @@ Templates with ambiguous context cannot be grokked:
   Traceback (most recent call last):
     ...
   GrokError: Multiple possible contexts for
-  <club template in grok.tests.view.ambiguouscontext>, please use grok.context.
+  <class 'grok.tests.view.ambiguouscontext.Club'>, please use grok.context.
 
 """
 
@@ -17,6 +17,5 @@ class Cave(grok.Model):
 class Mammoth(grok.Model):
     pass
 
-club = grok.PageTemplate("""\
-<html><body><h1>GROK CLUB MAMMOTH!</h1></body></html>
-""")
+class Club(grok.View):
+    pass

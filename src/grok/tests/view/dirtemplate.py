@@ -31,3 +31,6 @@ class Mammoth(grok.Model):
 
 class CavePainting(grok.View):
     pass
+
+class Food(grok.View):
+    pass

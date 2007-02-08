@@ -80,6 +80,9 @@ class SpecialIndex(grok.View):
 
 grok.context(Mammoth)
 
+class Index(grok.View):
+    pass
+
 index = grok.PageTemplate("""\
 <html>
 <body>

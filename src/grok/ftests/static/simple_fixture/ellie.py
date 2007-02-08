@@ -3,6 +3,9 @@ import grok
 class Mammoth(grok.Model):
     pass
 
+class Index(grok.View):
+    pass
+
 index = grok.PageTemplate("""\
 <html>
 <body>

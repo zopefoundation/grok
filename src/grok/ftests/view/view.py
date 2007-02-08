@@ -21,6 +21,9 @@ import grok
 class Mammoth(grok.Model):
     pass
 
+class Painting(grok.View):
+    pass
+
 painting = grok.PageTemplate("""\
 <html>
 <body>

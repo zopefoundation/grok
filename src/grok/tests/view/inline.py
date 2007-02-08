@@ -26,13 +26,6 @@ Note that the CavePainting instance is bound to the ``view`` name in
 the template.  This shows that the association of inline PageTemplate
 and the view class is successful.
 
-Templates that are not associated with a view class will still be
-registered on the model:
-
-  >>> view = component.getMultiAdapter((manfred, request), name='club')
-  >>> print view()
-  <html><body><h1>GROK CLUB MAMMOTH!</h1></body></html>
-
 Finding a template does not depend on the view name, but on the class
 name:
 
@@ -61,10 +54,6 @@ cavepainting = grok.PageTemplate("""\
 </ul>
 </body>
 </html>
-""")
-
-club = grok.PageTemplate("""\
-<html><body><h1>GROK CLUB MAMMOTH!</h1></body></html>
 """)
 
 class Hunt(grok.View):

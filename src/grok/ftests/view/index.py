@@ -4,6 +4,8 @@
   >>> grok.grok('grok.ftests.view.index')
   >>> getRootFolder()["manfred"] = Mammoth()
 
+The default view name for a model is 'index':
+
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
@@ -22,6 +24,9 @@ import grok
 
 class Mammoth(grok.Model):
     teeth = u"Blue"
+
+class Index(grok.View):
+    pass
 
 index = grok.PageTemplate("""\
 <html>

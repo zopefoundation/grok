@@ -22,9 +22,9 @@ The views in this test implement self.url():
   >>> browser.open("http://localhost/herd/manfred/another")
   >>> print browser.contents
   http://localhost/herd/manfred/another
-  >>> browser.open("http://localhost/herd/manfred/yet_another")
+  >>> browser.open("http://localhost/herd/manfred/yetanother")
   >>> print browser.contents
-  http://localhost/herd/manfred/yet_another
+  http://localhost/herd/manfred/yetanother
   
 We get the views manually so we can do a greater variety of url() calls:
 
@@ -35,13 +35,13 @@ We get the views manually so we can do a greater variety of url() calls:
   >>> index_view.url()
   'http://127.0.0.1/herd/manfred/index'
   >>> another_view = component.getMultiAdapter((manfred, request),
-  ... name='another')
+  ...                                              name='another')
   >>> another_view.url()
   'http://127.0.0.1/herd/manfred/another'
   >>> yet_another_view = component.getMultiAdapter((manfred, request),
-  ... name='yet_another')
+  ...                                              name='yetanother')
   >>> yet_another_view.url()
-  'http://127.0.0.1/herd/manfred/yet_another'
+  'http://127.0.0.1/herd/manfred/yetanother'
 
 Now let's get a URL for a specific object:
 
@@ -121,4 +121,7 @@ class Another(grok.View):
     def render(self):
         return self.url()
 
-yet_another = grok.PageTemplate('<p tal:replace="view/url" />')
+class YetAnother(grok.View):
+    pass
+
+yetanother = grok.PageTemplate('<p tal:replace="view/url" />')

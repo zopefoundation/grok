@@ -3,8 +3,8 @@ Apart from using the ``traverse`` method on a model, you can
 also create a separate traverser component:
 
   >>> import grok
-  >>> from grok.ftests.traversal.modeltraverse import Herd
-  >>> grok.grok('grok.ftests.traversal.modeltraverse')
+  >>> from grok.ftests.traversal.traverser import Herd
+  >>> grok.grok('grok.ftests.traversal.traverser')
   >>> getRootFolder()["herd"] = Herd()
 
   >>> from zope.testbrowser.testing import Browser
@@ -44,6 +44,10 @@ class Mammoth(grok.Model):
         self.name = name
 
 grok.context(Mammoth)
+
+class Index(grok.View):
+    pass
+
 index = grok.PageTemplate("""\
 <html>
 <body>

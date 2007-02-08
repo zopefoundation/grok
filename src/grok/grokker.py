@@ -1,5 +1,6 @@
 import grok
 from grok import util, templatereg
+from grok.error import GrokError
 
 class GrokkerRegistry(object):
     def __init__(self):
@@ -85,7 +86,13 @@ class GrokkerRegistry(object):
                                  name, component,
                                  module_info, templates)
 
-        templates.registerUnassociated(context, module_info)
+        unassociated = list(templates.listUnassociated())
+        if unassociated:
+            raise GrokError("Found the following unassociated template(s) when "
+                            "grokking %r: %s.  Define view classes inheriting "
+                            "from grok.View to enable the template(s)."
+                            % (module_info.dotted_name,
+                               ', '.join(unassociated)), module_info)
 
 
 # deep meta mode here - we define grokkers for grok.ClassGrokker,

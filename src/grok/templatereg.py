@@ -1,11 +1,5 @@
 import os
-
-from zope import interface, component
-from zope.publisher.interfaces.browser import IDefaultBrowserLayer
-from zope.security.checker import NamesChecker, defineChecker
-
 import grok
-from grok import util
 from grok.error import GrokError
 
 
@@ -61,25 +55,4 @@ class TemplateRegistry(object):
     def listUnassociated(self):
         for name, entry in self._reg.iteritems():
             if not entry['associated']:
-                yield name, entry['template']
-
-    def registerUnassociated(self, context, module_info):
-        for name, unassociated in self.listUnassociated():
-            util.check_context(unassociated, context)
-
-            module_info_ = module_info
-            class TemplateView(grok.View):
-                template = unassociated
-                module_info = module_info_
-
-            self.markAssociated(name)
-
-            TemplateView.__view_name__ = name
-            component.provideAdapter(TemplateView,
-                                     adapts=(context, IDefaultBrowserLayer),
-                                     provides=interface.Interface,
-                                     name=name)
-
-            # protect view, public by default
-            checker = NamesChecker(['__call__'])
-            defineChecker(TemplateView, checker)
+                yield name

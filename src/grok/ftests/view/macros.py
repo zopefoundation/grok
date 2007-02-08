@@ -49,6 +49,9 @@ class Grilled(grok.View):
     def update(self):
         self.spices = "Pepper and salt"
 
+class Painting(grok.View):
+    pass
+
 painting = grok.PageTemplate("""\
 <html metal:use-macro="context/@@layout/main">
 <div metal:fill-slot="slot">
@@ -56,6 +59,9 @@ GROK SLOT!
 </div>
 </html>
 """)
+
+class Layout(grok.View):
+    pass
 
 layout = grok.PageTemplate("""\
 <html metal:define-macro="main">
@@ -66,14 +72,23 @@ layout = grok.PageTemplate("""\
 </body>
 </html>""")
 
+class Dancing(grok.View):
+    pass
+
 dancing = grok.PageTemplate("""\
 <html metal:use-macro="context/@@dancinghall/something">
 </html>
 """)
 
+class GrillDish(grok.View):
+    pass
+
 grilldish = grok.PageTemplate("""
 <html metal:use-macro="context/@@grilled/spices">
 </html>""")
+
+class Grilled(grok.View):
+    pass
 
 grilled = grok.PageTemplate("""\
 <html metal:define-macro="spices">
