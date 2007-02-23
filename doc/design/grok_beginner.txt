@@ -2,6 +2,14 @@
 Grok: Making Zope 3 Easier
 ==========================
 
+**NOTE:** This document was written *before* grok was implemented.  It
+has been part of the design phase during which it served well to
+discuss and preserve grok's goals.  The actual implementation of grok
+differs from the concrete code examples given here.  This is NOT a
+grok tutorial nor should it be seen as any part of grok's current
+documentation!
+
+
 Publishing web pages
 ====================
 
