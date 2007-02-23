@@ -1,6 +1,6 @@
 import grok
 
-grok.resources('calc')  # this is actually the default (from module name, calc.py)
+grok.templatedir('calc_templates')  # this is actually the default (from module name, calc.py)
 
 class Calculator(grok.Model):
     pass
@@ -8,42 +8,34 @@ class Calculator(grok.Model):
 class Sum(grok.View):
     """Simple view for a model"""
     grok.context(Calculator)  # this is actually the default (from module)
-    grok.template('sum.html')  # this is actually the default (from class name)
+    grok.template('sum')  # this is actually the default (from class name)
     grok.name('sum')  # this is actually the default (from class name)
-    grok.require('zope.Public')  # this is actually the default   #XXX protect???
+    grok.require('zope.Public')  # this is actually the default
 
     def calculateSum(self):
         """you can pull this in the template through view/calculateSum"""
-    
-    @grok.before
-    def precalculatedSum(self):
+
+    def update(self):    
         """executed before the template is rendered"""
         self.sum = self.calculateSum()
+        self.sendEmail()
 
-    @grok.before
     def sendEmail(self):
         """send an email here"""
 
-    @grok.before
-    def afterSendingAnEmail(self):
-        """this is also executed before the template is rendered, but
-        since it's defined after sendEmail, it's also executed after
-        sendEmail."""
-
 class PDFSum(grok.View):
 
-    @grok.before
-    def dosomething(self):
+    def update(self):
         pass
 
     def render(self):
         return pdfdata
 
-
 sum = grok.PageTemplate("""\
 <p tal:content="view/calculateSum">...</p>
 <p tal:content="view/precalculatedSum">...</p>
 """)
+
 
 from zope import schema
 
