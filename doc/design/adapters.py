@@ -7,8 +7,8 @@ class SingleAdapter(grok.Adapter):
     grok.context(Calculator)
     grok.adapts(Calculator)  # generally allowed, but not in this case, because there's already grok.context
     grok.implements(ISomething)  # if this is not specified, app breaks
+    grok.provides(ISomething)  # if adapter implements more than one interface
     grok.name('')  # this is actually the default
-    grok.register()  # this is actually the default
 
     def something(self):
         """self.context is automatically provided"""
