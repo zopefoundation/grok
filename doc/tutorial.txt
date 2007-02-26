@@ -5,13 +5,13 @@ Welcome to the Grok tutorial! Grok is an extension to Zope 3 that
 makes it much quicker and easier to develop web applications with Zope
 3, *without* losing the power and flexibility of Zope 3 itself. Grok
 builds on existing Zope 3 technology like the component architecture
-but exposes it in a different way to the developer.
+but exposes it in a different way to the developer; a way which we
+believe makes developing with Zope 3 easier and more fun.
 
-In this tutorial we will be writing a simple todo list application. We
-will lead you all the way from the start, setting up Grok on your
-computer, to a simple but complete todo list implementation. All
-you're expected to know is the Python programming language and a basic
-understanding of web programming.
+In this tutorial we will show you the various things you can do with
+Grok. We'll start out simple, and will slowly go to more complex usage
+patterns. All you're expected to know is the Python programming
+language and a basic understanding of web programming.
 
 Setting up grokproject
 ----------------------
@@ -59,45 +59,49 @@ We're ready to create our first grok project now!
 Creating a grok project
 -----------------------
 
-Let's create our first Grok project, the todo list::
+Let's create a first Grok project. We will place our sample code in
+here, so we'll call it Sample::
 
-  $ grokproject TodoList
+  $ grokproject Sample
 
-First, grokproject will tell you what it will be creating::
+grokproject will tell you what it will be creating::
 
   Selected and implied templates:
     grokproject#grokproject  A grok project
 
   Variables:
-    egg:      TodoList
-    package:  todolist
-    project:  TodoList
+    egg:      Sample
+    package:  sample
+    project:  Sample
 
 The "Selected and implied templates" line is something reported by
-Paste, which is the Python project generation software grokproject is
-using. Next, it reports three names. First, it reports the name this
-project will have if in the project's `setup.py`:
+Paste, which is the Python project generation software which
+grokproject is using. After this, it reports three names. 
 
-    egg:      TodoList
+First, it reports the name this project will have if in the project's
+`setup.py`:
+
+    egg:      Sample
 
 Next, it specifies the name of the Python package that you will be
 developing with. The package will be placed under the project's `src`
 directory::
 
-    package:  todolist
+    package:  sample
 
 Finally, it gives the name of the project directory that it will
 create::
 
-    project:  TodoList
+    project:  Sample
 
-Now it asks you a number of questions. First it asks for the name of the
-initial module of the package. We'll call our module `app.py`::
-
+You will be asked a number of questions now. First you need to supply
+the name of the initial module that your package will contain. We'll
+call our module `app.py`::
+ 
   Enter module (Name of a demo Python module placed into the package): app.py
 
-Next, Grok asks use for an initial user and password for the Zope
-server. We'll use `grok` for both::
+After this Grok asks you for an initial username and password for the
+Zope server. We'll use `grok` for both::
 
   Enter user (Name of an initial administrator user): grok
   Enter passwd (Password for the initial administrator user): grok
@@ -105,14 +109,14 @@ server. We'll use `grok` for both::
 Now you have to wait a while as grokproject downloads Grok, Zope 3 and
 sets up the project environment for you.
 
-Grok, along with Zope 3 is now ready to go. You can go into the
-`TodoList` project directory now::
+After all that, Grok, along with Zope 3 itself, is ready to go. 
 
-  $ cd TodoList
+Starting up Zope
+----------------
 
-As you can see grokproject created the `setup.py` file for you, and a
-`src` directory. In it is a Python package directory called `todolist`
-with an `app.py`.
+You can go into the `Sample` project directory now::
+
+  $ cd Sample
 
 A Zope 3 instance has been installed in the 'parts/instance'
 directory. You can start it (into the foreground) by typing the
@@ -121,7 +125,76 @@ following::
   $ parts/instance/bin/zopectl fg
 
 This will make Zope 3 available on port 8080, and you can log in with
-username `grok` and password `grok`. Of course it doesn't contain any
-Grok applications yet - we're going write one in this tutorial. So,
-you can shut down Zope 3 easily enough by typing `ctrl-c`.
+username `grok` and password `grok`. It will show a Grok user
+interface allowing you to install new Grok applications. Our sample
+application (sample.app.Sample) will be available for adding.
 
+Installing it won't have much of an effect yet; if you do so and
+select it, you will get a "This page is not available yet" message.
+
+You can shut down Zope 3 at any time by typing `ctrl-c`. Shut it down
+now. We will be shutting down and starting up Zope 3 often in this
+tutorial.
+
+An empty Grok project
+---------------------
+
+Let's take a closer look at what's been created in the Sample project
+directory.
+
+One of the things grokproject created was a `setup.py` file. This file
+contains information about your project. This information is used by
+Python distutils and setuptools. You can use the `setup.py` file to
+upload your project to the Python Cheeseshop. We will discuss this in
+more detail later in this tutorial. (XXX)
+
+We have already seen the `parts` directory. This directory contains
+all software installed by grokproject that is not a simple Python
+library. The only part interesting to us right now is the `instance`
+directory, which contains the `zopectl` script to start up Zope which
+we used before.
+
+The actual code of the project will all be inside the `src`
+directory. In it is a Python package directory called `sample` with a
+file called `app.py`. Let's look at this file::
+
+  import grok
+  
+  class Sample(grok.Application, grok.Model):
+      pass
+
+Not very much yet, but enough to make an installable Grok
+application. We'll go into the details of what this means later.
+
+Besides this, there is an empty `__init__.py` file to make this
+directory a Python package, and a `configure.zcml` file. Unlike in
+typical Zope 3 applications, this will only ever contain a single line
+that registers this application with Zope 3 (so you can ignore it)::
+
+  <grok package="." xmlns="http://namespaces.zope.org/grok" />
+
+What about the other files and subdirectories in our Sample project
+directory?  Grokproject sets up the project using a system called
+`zc.buildout`. The `eggs`, `develop-eggs` and `bin` directories are
+all set up and maintained by zc.buildout. See its documentation for
+more information about how to use it. The configuration of the project
+and its dependency is in `buildout.cfg`. For now you can avoid these
+details however.
+
+.. _`zc.buildout`: http://cheeseshop.python.org/pypi/zc.buildout
+
+Putting a web page online
+-------------------------
+
+Let's publish a simple static web page first. Grok is not really meant
+for publishing a large number of static web pages, but we can
+certainly do it.
+
+As you might've seen above, our Sample application doesn't have a
+front page yet. Let's create one.
+
+Putting your project into SVN
+-----------------------------
+
+Uploading your project to the Python Cheeseshop
+-----------------------------------------------
