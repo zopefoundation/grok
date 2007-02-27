@@ -11,7 +11,24 @@ believe makes developing with Zope 3 easier and more fun.
 In this tutorial we will show you the various things you can do with
 Grok. We'll start out simple, and will slowly go to more complex usage
 patterns. All you're expected to know is the Python programming
-language and a basic understanding of web programming.
+language and an understanding of web programming. It also helps to be
+familiar with Zope Page Templates, though most of the examples should
+be fairly obvious even if you do not.
+
+.. sidebar:: Getting started with Zope Page Templates
+
+  You can find introductions and more information about Zope Page
+  Templates (ZPT, sometimes also called TAL) in various places:
+
+    http://plone.org/documentation/tutorial/zpt
+
+    http://wiki.zope.org/ZPT/FrontPage
+
+  Note that some of the information in these introductions may refer
+  to concepts not available in Grok or Zope 3, in particular variables
+  like ``here`` or ``template``. The basic principles will work with
+  Zope 3 (and Grok) however; try reading ``context`` or ``view``
+  instead.
 
 Setting up grokproject
 ----------------------
@@ -25,32 +42,34 @@ network. You also need Python 2.4 installed.
 
 Because Grok uses a source distribution of Zope 3, you may need to
 install your operating system's Python "dev" package. You also need a
-working C compiler (typically `gcc`) installed, as we compile bits of
-Zope 3 during setup. Finally, you also need `easy_install` installed
+working C compiler (typically ``gcc``) installed, as we compile bits of
+Zope 3 during setup. Finally, you also need ``easy_install`` installed
 so it becomes easy to install eggs.
 
-.. sidebar:: Installing `easy_install`
+.. sidebar:: Installing ``easy_install``
 
-  If you don't already have `easy_install` available, you can find the
-  script to set it up here::
+  If you don't already have ``easy_install`` available, you can find the
+  script to set it up here:
 
     http://peak.telecommunity.com/DevCenter/EasyInstall#installing-easy-install
 
   You need to download `ez_setup.py`_. Then, you run it like this to
-  install `easy_install` into your system Python::
+  install ``easy_install`` into your system Python::
 
     $ sudo python2.4 ez_setup.py
 
-  This will make `easy_install` available to you.
+  .. _`ez_setup.py`: http://peak.telecommunity.com/dist/ez_setup.py
 
-  **Note**: Sometimes you have `easy_install` installed but you need a
-  newer version of the underlying `setuptools` to make Grok work. You
-  can automatically upgrade `setuptools` this by doing::
+  This will make ``easy_install`` available to you.
+
+  **Note**: Sometimes you have ``easy_install`` installed but you need
+  a newer version of the underlying setuptools infrastructure to make
+  Grok work. You can automatically upgrade setuptools this by doing::
 
     $ sudo easy_install -U setuptools
 
 Once you are done with the prerequisites, you can install
-`grokproject` itself::
+grokproject itself::
 
   $ sudo easy_install grokproject
 
@@ -79,12 +98,12 @@ Paste, which is the Python project generation software which
 grokproject is using. After this, it reports three names. 
 
 First, it reports the name this project will have if in the project's
-`setup.py`:
+``setup.py``:
 
     egg:      Sample
 
 Next, it specifies the name of the Python package that you will be
-developing with. The package will be placed under the project's `src`
+developing with. The package will be placed under the project's ``src``
 directory::
 
     package:  sample
@@ -96,12 +115,12 @@ create::
 
 You will be asked a number of questions now. First you need to supply
 the name of the initial module that your package will contain. We'll
-call our module `app.py`::
+call our module ``app.py``::
  
   Enter module (Name of a demo Python module placed into the package): app.py
 
 After this Grok asks you for an initial username and password for the
-Zope server. We'll use `grok` for both::
+Zope server. We'll use ``grok`` for both::
 
   Enter user (Name of an initial administrator user): grok
   Enter passwd (Password for the initial administrator user): grok
@@ -114,7 +133,7 @@ After all that, Grok, along with Zope 3 itself, is ready to go.
 Starting up Zope
 ----------------
 
-You can go into the `Sample` project directory now::
+You can go into the ``Sample`` project directory now::
 
   $ cd Sample
 
@@ -125,14 +144,21 @@ following::
   $ parts/instance/bin/zopectl fg
 
 This will make Zope 3 available on port 8080, and you can log in with
-username `grok` and password `grok`. It will show a Grok user
-interface allowing you to install new Grok applications. Our sample
-application (sample.app.Sample) will be available for adding.
+username ``grok`` and password ``grok``. Assuming you've started up
+Zope on your localhost, you can go to it here:
 
-Installing it won't have much of an effect yet; if you do so and
-select it, you will get a "This page is not available yet" message.
+  http://localhost:8080
 
-You can shut down Zope 3 at any time by typing `ctrl-c`. Shut it down
+This first pops up a login dialog (username: grok and password:
+grok). It will then show a simple Grok admin interface. This allows
+you to install new Grok applications. Our sample application
+(sample.app.Sample) will be available for adding.
+
+Installing our sample application won't have much of an effect yet; if
+you do so and select it, you will get a "This page is not available
+yet" message.
+
+You can shut down Zope 3 at any time by typing ``ctrl-c``. Shut it down
 now. We will be shutting down and starting up Zope 3 often in this
 tutorial.
 
@@ -142,21 +168,33 @@ An empty Grok project
 Let's take a closer look at what's been created in the Sample project
 directory.
 
-One of the things grokproject created was a `setup.py` file. This file
+One of the things grokproject created was a ``setup.py`` file. This file
 contains information about your project. This information is used by
-Python distutils and setuptools. You can use the `setup.py` file to
+Python distutils and setuptools. You can use the ``setup.py`` file to
 upload your project to the Python Cheeseshop. We will discuss this in
 more detail later in this tutorial. (XXX)
 
-We have already seen the `parts` directory. This directory contains
+We have already seen the ``parts`` directory. This directory contains
 all software installed by grokproject that is not a simple Python
-library. The only part interesting to us right now is the `instance`
-directory, which contains the `zopectl` script to start up Zope which
+library. The only part interesting to us right now is the ``instance``
+directory, which contains the ``zopectl`` script to start up Zope which
 we used before.
 
-The actual code of the project will all be inside the `src`
-directory. In it is a Python package directory called `sample` with a
-file called `app.py`. Let's look at this file::
+.. sidebar:: What about the other directories and files in our project?
+
+  What about the other files and subdirectories in our ``Sample`` project
+  directory? Grokproject sets up the project using a system called
+  `zc.buildout`_. The ``eggs``, ``develop-eggs`` and ``bin``
+  directories are all set up and maintained by zc.buildout. See its
+  documentation for more information about how to use it. The
+  configuration of the project and its dependency is in
+  ``buildout.cfg``. For now, you can avoid these details however.
+
+  .. _`zc.buildout`: http://cheeseshop.python.org/pypi/zc.buildout
+
+The actual code of the project will all be inside the ``src``
+directory. In it is a Python package directory called ``sample`` with a
+file called ``app.py``. Let's look at this file::
 
   import grok
   
@@ -166,35 +204,402 @@ file called `app.py`. Let's look at this file::
 Not very much yet, but enough to make an installable Grok
 application. We'll go into the details of what this means later.
 
-Besides this, there is an empty `__init__.py` file to make this
-directory a Python package, and a `configure.zcml` file. Unlike in
-typical Zope 3 applications, this will only ever contain a single line
-that registers this application with Zope 3 (so you can ignore it)::
+Besides this, there is an empty ``__init__.py`` file to make this
+directory a Python package.
+
+What's left is a ``configure.zcml`` file. Unlike in typical Zope 3
+applications, this will only ever contain a single line that registers
+this application with Zope 3 (so you can ignore it)::
 
   <grok package="." xmlns="http://namespaces.zope.org/grok" />
 
-What about the other files and subdirectories in our Sample project
-directory?  Grokproject sets up the project using a system called
-`zc.buildout`. The `eggs`, `develop-eggs` and `bin` directories are
-all set up and maintained by zc.buildout. See its documentation for
-more information about how to use it. The configuration of the project
-and its dependency is in `buildout.cfg`. For now you can avoid these
-details however.
+Publishing a simple web page
+----------------------------
 
-.. _`zc.buildout`: http://cheeseshop.python.org/pypi/zc.buildout
+Let's publish a simple static web page. Grok is geared towards web
+applications and therefore not really meant for publishing a large
+number of static (pregenerated) web pages. For that you're better off
+to use a specialized system such as Apache. But, to start a developing
+a web application we need to be able to put some simple HTML on the
+web, first.
 
-Putting a web page online
--------------------------
+As you might've seen previously, our ``Sample`` application doesn't have
+a front page yet. Let's create one. 
 
-Let's publish a simple static web page first. Grok is not really meant
-for publishing a large number of static web pages, but we can
-certainly do it.
+To do this, you need to create a new directory in ``src/sample/`` called
+``app_templates``. This directory will contain the HTML used for
+anything defined in the ``app`` module. Grok knows to associate the
+directory to the module by its name (``<module_name>_templates``).
 
-As you might've seen above, our Sample application doesn't have a
-front page yet. Let's create one.
+In this directory we will place the ``index`` template for our ``Sample``
+application object. To do this, create a file in the ``app_templates``
+directory called ``index.pt``.
+
+The ``.pt`` extension indicates that this file is a Zope Page Template
+(ZPT). This allows us to make the page dynamic later on.
+
+Put the following (very simplistic) HTML in the file ``index.pt``::
+
+  <html>
+  <body>
+  <p>Hello world!</p>
+  </body>
+  </html>
+
+We're done with the template for now. Now we need to tell Grok to
+actually use this template. To do this, modify ``src/sample/app.py`` so
+that it reads like this::
+
+  import grok
+
+  class Sample(grok.Application, grok.Model):
+      pass
+
+  class Index(grok.View):
+      pass
+
+As you can see, all we did was add a class called ``Index`` that
+subclasses from ``grok.View``. This indicates to Grok that we want a
+view named ``index`` for the application. A *view* is a way to view
+some content; in this case installations of our ``Sample``
+application. 
+
+The empty class definition above is enough for Grok to go look in the
+``app_templates`` directory for ``index.pt``.
+
+Let's try this out. Restart Zope (``ctrl-C`` and then
+``parts/instance/bin/zopectl fg`` from your Sample project
+directory). Go to the Grok admin page:
+
+  http://localhost:8080
+
+and add a Sample application. Give it the name ``test``.
+
+You can now go to the installed application if you click on its link. This
+will bring you to the following URL:
+
+  http://localhost:8080/test
+
+You should see a simple web page with the following text on it::
+
+  Hello world!
+
+A second view
+-------------
+
+Since our view is named `index` we've done something slightly special:
+it's the default view of our application object. We can also still
+access it explicitly by naming the view:
+
+  http://localhost:8080/test/index
+
+If you view that URL in your browser, you should see the same result
+as before.
+
+Often, your application needs more than one view. A document for
+instance may have an ``index`` view that displays it, but another
+``edit`` view to change its contents.
+
+To create a second view, create another template called ``bye.pt`` in
+``app_templates``. Make it have the following content::
+
+  <html>
+  <body>
+  <p>Bye world!</p>
+  </body>
+  </html>
+
+We need to tell Grok that this template is available as a view. Modify
+``app.py`` to read like this::
+
+  import grok
+
+  class Sample(grok.Application, grok.Model):
+      pass
+
+  class Index(grok.View):
+      pass
+
+  class Bye(grok.View):
+      pass
+
+Restart Zope. You can now go to a new web page called ``bye``:
+
+  http://localhost:8080/test/bye
+
+When you load this web page in a browser, you should see the following
+text::
+
+  Bye world!
+
+Making our page dynamic
+-----------------------
+
+Static web pages are not very helpful if we want to make a dynamic web
+application. Let's make a page that shows the result of a very simple
+calculation: ``1 + 1``. 
+
+We will use a Zope Page Templates (ZPT) directive to do this
+calculation inside ``index.pt`` template. Change the ``index.pt`` to
+read like this::
+
+  <html>
+  <body>
+  <p tal:content="python: 1 + 1">this is replaced</p>
+  </body>
+  </html>
+
+We've used the ``tal:content`` page template directive to replace the
+content between the ``<p>`` and ``</p>`` tags with something else, in
+this case the result of the Python expression ``1 + 1``.
+
+Since restarting Zope is not necessary for changes that are limited to
+the page templates, you can just reload the web page:
+
+  http://localhost:8080/test
+
+You should see the following result::
+
+  2
+
+Looking at the source of the web page shows us this::
+
+  <html>
+  <body>
+  <p>2</p>
+  </body>
+  </html>
+
+As you can see, the content of the ``<p>`` tag was indeed replaced
+with the result of the expression ``1 + 1``.
+
+Static resources for our web page
+---------------------------------
+
+In real-world web pages, we almost never publish a web page that just
+contains bare-bones HTML. We also want to refer to other resources,
+such as images, CSS files or Javascript files. As an example, let's
+add some style to our web page.
+
+To do this, create a new directory called ``static`` in the ``sample``
+package (so, ``src/sample/static``). In it, place a file called
+``style.css`` and put in the following content::
+
+  body {
+    background-color: #FF0000;
+  }
+
+In order to use it, we also need to refer to it from our
+``index.pt``. Change the content of ``index.pt`` to read like this::
+
+  <html>
+  <head>
+  <link rel="stylesheet" type="text/css" 
+        tal:attributes="href static/style.css" />
+  </head>
+  <body>
+  <p>Hello world!</p>
+  </body>
+  </html>
+
+Now restart Zope and reload the page:
+
+  http://localhost:8080/test
+
+The web page should now show up with a red background.
+
+You will have noticed we used the ``tal:attributes`` directive in our
+``index.pt`` now. This uses Zope Page Templates to dynamically
+generate the link to our file ``style.css``.
+
+Let's take a look at the source code of the generated web page::
+
+  <html>
+  <link rel="stylesheet" type="text/css"
+        href="http://localhost:8080/test/@@/sample/style.css" />
+  <body>
+  <p>Hello world!</p>
+  </body>
+  </html>
+
+As you can see, the ``tal:attributes`` directive is gone and has been
+replaced with the following URL to the actual stylesheet:
+
+  http://localhost:8080/test/@@/sample/style.css
+
+We will not go into the details of the structure of the URL here, but
+we will note that because it's generated this way, the link to
+``style.css`` will continue to work no matter where you install your
+application (i.e. in a virtual hosting setup).
+
+Pulling in images or javascript is very similar. Just place your image
+files and `.js` files in the ``static`` directory, and create the URL
+to them using ``static/<filename>`` in your page.
+
+Using view methods
+------------------
+
+Just using a ZPT directive by itself, even when you use `python:` to
+embed snippets of Python, is limited. The idea of good application
+design is to use ZPT for fairly simple templating purposes, and to do
+anything a bit more complicated in Python code. Using ZPT with Python
+code is easy: you just add methods to your view class and use them
+from your template.
+
+Let's see how this is done by making a web page that displays the
+current date and time. We will use our Python interpreter to find out
+what works::
+
+  $ python
+  Python 2.4.4
+  Type "help", "copyright", "credits" or "license" for more information.
+  >>> 
+
+We will need Python's ``datetime`` class, so let's import it::
+
+  >>> from datetime import datetime
+
+Note that this statement brings us beyond the capabilities of simple
+ZPT use; it is not allowed to import arbitrary Python modules from
+within a ZPT template; only Python *expressions* (with a result) are
+allowed, not *statements* such as ``from .. import ..``.
+
+Let's get the current date and time::
+
+  >>> now = datetime.now()
+
+This gives us a date time object; something like this::
+
+  >>> now
+  datetime.datetime(2007, 2, 27, 17, 14, 40, 958809)
+
+Not very nice to display on a web page, so let's turn it into a
+prettier string using the formatting capabilities of the ``datetime``
+object::
+
+  >>> now.strftime('%Y-%m-%d %H:%M')
+  '2007-02-27 17:14'
+
+That looks better.
+
+So far nothing new; just Python. We will integrate this code into our
+Grok project now. Go to ``app.py`` and change it to read like this::
+
+  import grok
+  from datetime import datetime
+
+  class Sample(grok.Application, grok.Model):
+      pass
+
+  class Index(grok.View):    
+      def current_datetime(self):
+          now = datetime.now()
+          return now.strftime('%Y-%m-%d %H:%M')
+
+.. sidebar:: Unassociated templates
+
+  If you have followed the tutorial so far, you will have an extra
+  template called ``bye.pt`` in your ``app_templates`` directory.
+  Since in the above code sample we have no more class using it, the
+  ``bye.pt`` template will have become *unassociated**. When you try
+  to restart Zope, grok will be unable to read your application, and
+  Zope will crash with an error message like this::
+
+    GrokError: Found the following unassociated template(s) when
+    grokking 'sample.app': bye.  Define view classes inheriting from
+    grok.View to enable the template(s).
+
+  To resolve this error, simply remove ``bye.pt`` from your
+  ``app_templates`` directory.
+
+We've simply added a method to our view that returns a string
+representing the current date and time. Now to get this string in our
+page template. Change ``index.pt`` to read like this::
+
+  <html>
+  <body>
+  <p tal:content="python:view.current_datetime()"></p>
+  </body>
+  </html>
+
+Restart Zope. This is needed as we changed the content of a Python
+file (``app.py``). Now reload our index page to see whether it worked:
+
+  http://localhost:8080/test
+
+You should see a web page with a date and time like this on your
+screen now::
+
+  2007-02-27 17:21
+
+What happened here? When viewing a page, the view class (in this case
+``Index`` is instantiated by Zope. The name ``view`` in the template
+is always made available and is associated with this instance. We then
+simply call the method on it in our template.
+
+There is another way to write the template that is slightly shorter
+and may be easier to read in some cases, using a ZPT path expression::
+
+  <html>
+  <body>
+  <p tal:content="view/current_datetime"></p>
+  </body>
+  </html>
+
+Running this has the same result as before.
+
+Generating HTML from Python
+---------------------------
+
+While usually you will be using templates to generate HTML, sometimes
+you want to generate complicated HTML in Python and then include it in
+an existing web page. For reasons of security against cross-site
+scripting attacks, TAL will automatically escape any HTML into `&gt;`
+and `&lt;`. With the ``structure`` directive, you can tell TAL
+explicitly to not escape HTML this way, so it is passed literally into
+the template. Let's see how this is done. Change ``app.pt`` to read like
+this::
+
+  import grok
+
+  class Sample(grok.Application, grok.Model):
+      pass
+
+  class Index(grok.View):
+      def some_html(self):
+          return "<b>ME GROK BOLD</b>"
+
+and then change ``index.pt`` to read like the following::
+
+  <html>
+  <body>
+  <p tal:content="structure python:view.some_html()"></p>
+  </body>
+  </html>
+
+Let's take another look at our web page:
+
+  http://localhost:8080/test
+
+You should see the following text (in bold):
+
+  **ME GROK BOLD**
+
+This means the HTML we generated from the ``some_html`` method was
+indeed successfully integrated in our web page.  Without the the
+``structure`` directive, you would've seen the following instead::
+ 
+  <b>ME GROK BOLD</b>
+
+Doing some calculation before viewing a page
+--------------------------------------------
 
 Putting your project into SVN
 -----------------------------
 
+TDB
+
 Uploading your project to the Python Cheeseshop
 -----------------------------------------------
+
+TDB
