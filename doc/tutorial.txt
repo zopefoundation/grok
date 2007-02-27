@@ -78,10 +78,15 @@ We're ready to create our first grok project now!
 Creating a grok project
 -----------------------
 
-Let's create a first Grok project. We will place our sample code in
-here, so we'll call it Sample::
+Let's create a first Grok project. A Grok project is a working
+environment for a developer using Grok; in essence, a directory with a
+lot of files and subdirectories in it. Let's create a Grok project
+called Sample::
 
   $ grokproject Sample
+
+This tells grokproject to create a new subdirectory called ``Sample``
+and set up the project in there.
 
 grokproject will tell you what it will be creating::
 
@@ -98,7 +103,7 @@ Paste, which is the Python project generation software which
 grokproject is using. After this, it reports three names. 
 
 First, it reports the name this project will have if in the project's
-``setup.py``:
+``setup.py``::
 
     egg:      Sample
 
@@ -109,7 +114,7 @@ directory::
     package:  sample
 
 Finally, it gives the name of the project directory that it will
-create::
+create (under the current directory)::
 
     project:  Sample
 
