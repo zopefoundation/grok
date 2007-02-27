@@ -597,6 +597,29 @@ indeed successfully integrated in our web page.  Without the the
 Completely Python-driven views
 ------------------------------
 
+.. sidebar:: Setting the content-type
+
+  When generating the complete content of a page yourself, it's often
+  useful to change the content-type of the page to something else than
+  ``text/plain``. Let's change our code to return simple XML and set
+  the content type to ``text/xml``::
+
+    import grok
+
+      class Sample(grok.Application, grok.Model):
+          pass
+
+      class Index(grok.View):
+          def render(self):
+              self.request.response.setHeader('Content-Type',
+                                              'text/xml; charset=UTF-8')
+              return "<doc>Some XML</doc>"
+
+  In Zope 3, any instance of a view has a ``request`` object
+  associated with it. This request object also has a reference to the
+  response object, which we manipulate here to set the response
+  header.
+
 Sometimes it is inconvenient to have to use a template at all. Perhaps
 we are not returning a HTML page at all, for instance. In this case,
 we can use the special ``render`` method on a view.
@@ -635,28 +658,6 @@ You should see this even when you view the source of the page. When
 looking at the content type of this page, you will see that it is
 ``text/plain``.
 
-Setting the content-type
-------------------------
-
-When generating the complete content of a page yourself, it's often
-useful to change the content-type of the page to something else than
-``text/plain``. Let's change our code to return simple XML and set the
-content type to ``text/xml``::
-
-   import grok
-
-   class Sample(grok.Application, grok.Model):
-       pass
-
-   class Index(grok.View):
-       def render(self):
-           self.request.response.setHeader('Content-Type',
-                                           'text/xml; charset=UTF-8')
-           return "<doc>Some XML</doc>"
-
-In Zope 3, any instance of a view has a ``request`` object associated
-with it. This request object also has a reference to the response
-object, which we manipulate here to set the response header.
 
 Doing some calculation before viewing a page
 --------------------------------------------
