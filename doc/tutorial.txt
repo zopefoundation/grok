@@ -332,6 +332,9 @@ text::
 
   Bye world!
 
+The rule for each view is that your template should have the same name
+as the class, but lowercased and with the ``.pt`` postfix.
+
 Making our page dynamic
 -----------------------
 
@@ -591,8 +594,76 @@ indeed successfully integrated in our web page.  Without the the
  
   <b>ME GROK BOLD</b>
 
+Completely Python-driven views
+------------------------------
+
+Sometimes it is inconvenient to have to use a template at all. Perhaps
+we are not returning a HTML page at all, for instance. In this case,
+we can use the special ``render`` method on a view.
+
+Modify ``app.py`` so it reads like this::
+
+   import grok
+
+   class Sample(grok.Application, grok.Model):
+       pass
+
+   class Index(grok.View):
+       def render(self):
+           return "ME GROK NO TEMPLATE"
+
+If you were to start up Zope with an ``index.pt`` template still
+inside ``app_templates`` you would get an error::
+
+    GrokError: Multiple possible ways to render view <class
+    'sample.app.Index'>. It has both a 'render' method as well as an
+    associated template.
+
+In the face of ambiguity Grok, like Python, refuses to guess. To
+resolve this error, remove ``index.pt`` from the ``app_templates``
+directory.
+
+Now take another look at our test application:
+
+  http://localhost:8080/test
+
+You should see the following::
+
+  ME GROK NO TEMPLATE
+
+You should see this even when you view the source of the page. When
+looking at the content type of this page, you will see that it is
+``text/plain``.
+
+Setting the content-type
+------------------------
+
+When generating the complete content of a page yourself, it's often
+useful to change the content-type of the page to something else than
+``text/plain``. Let's change our code to return simple XML and set the
+content type to ``text/xml``::
+
+   import grok
+
+   class Sample(grok.Application, grok.Model):
+       pass
+
+   class Index(grok.View):
+       def render(self):
+           self.request.response.setHeader('Content-Type',
+                                           'text/xml; charset=UTF-8')
+           return "<doc>Some XML</doc>"
+
+In Zope 3, any instance of a view has a ``request`` object associated
+with it. This request object also has a reference to the response
+object, which we manipulate here to set the response header.
+
 Doing some calculation before viewing a page
 --------------------------------------------
+
+Instead of doing the calculation in a method call from the view, it's
+often useful to calculate just before the web page's template is
+calculated.
 
 Putting your project into SVN
 -----------------------------
