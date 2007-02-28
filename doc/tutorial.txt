@@ -663,13 +663,427 @@ You should see this even when you view the source of the page. When
 looking at the content type of this page, you will see that it is
 ``text/plain``.
 
-
 Doing some calculation before viewing a page
 --------------------------------------------
 
-Instead of doing the calculation in a method call from the view, it's
-often useful to calculate just before the web page's template is
-calculated.
+Instead of calculating some values in a method call from the template,
+it is often more useful to calculate just before the web page's
+template is calculated. This way you are sure that a value is only
+calculated once per view, even if you use it multiple times.
+
+You can do this by defining an ``update`` method on the view class. Modify
+``app.py`` to read like this::
+
+  import grok
+
+  class Sample(grok.Application, grok.Model):
+      pass
+
+  class Index(grok.View):
+      def update(self):
+          self.alpha = 2 ** 8
+
+This sets a name ``alpha`` on the view just before the template is
+being displayed, so we can use it from the template. You can set as
+many names on ``self`` as you like.
+
+Now we need a template ``index.pt`` that uses ``alpha``::
+
+  <html>
+  <body>
+  <p tal:content="view/alpha"></p>
+  </body>
+  </html>
+
+Restart Zope and then let's take another look at our application:
+
+  http://localhost:8080/test
+
+You should see 256, which is indeed 2 raised to the power 8.
+
+Reading URL parameters
+----------------------
+
+When developing a web application, you don't just want to output data,
+but also want to use input. One of the simplest ways for a web
+application to receive input is by retrieving information as a URL
+parameter. Let's devise a web application that can do sums for us. In
+this application, if you enter the following URL into that
+application:
+
+  http://localhost:8080/test?value1=3&value2=5
+
+you should see the sum (8) as the result on the page. 
+
+Modify ``app.py`` to read like this::
+
+  import grok
+
+  class Sample(grok.Application, grok.Model):
+      pass
+
+  class Index(grok.View):
+      def update(self, value1, value2):
+          self.sum = int(value1) + int(value2)
+
+We need an ``index.pt`` that uses ``sum``::
+
+  <html>
+  <body>
+  <p tal:content="view/sum"></p>
+  </body>
+  </html>
+
+Restart Zope. Now going to the folllowing URL should display 8:
+
+  http://localhost:8080/test?value1=3&value2=5
+
+Other sums work too, of course:
+
+  http://localhost:8080/test?value1=50&value2=50
+
+What if we don't supply the needed parameters (``value1`` and
+``value2``) to the request? We get an error:
+
+  http://localhost:8080/test
+
+You can look at the window where you started up Zope to see the error
+traceback. This is the relevant complaint::
+
+  TypeError: Missing argument to update(): value1
+
+We can modify our code so it works even without input for either parameter::
+
+  import grok
+
+  class Sample(grok.Application, grok.Model):
+      pass
+
+  class Index(grok.View):
+      def update(self, value1=0, value2=0):
+          self.sum = int(value1) + int(value2)
+
+Restart Zope, and see it can now deal with missing parameters (they
+default to ``0``).
+
+Simple forms
+------------
+
+Entering the parameters through URLs is not very pretty. Typical
+web applications have forms. Let's change ``index.pt`` to be a web
+form::
+
+  <html>
+  <body>
+  <form tal:attributes="action view/url" method="GET">
+    Value 1: <input type="text" name="value1" value="" /><br />
+    Value 2: <input type="text" name="value2" value="" /><br />
+    <input type="submit" value="Sum!" />
+  </form>
+  <p>The sum is: <span tal:replace="view/sum">sum</span></p>
+  </body>
+  </html>
+
+One thing to note here is that we dynamically generate the form's
+``action``. We make the form submit to itself, basically. Grok views
+have a special method called ``url`` that you can use to retrieve the
+URL of the view itself (and other URLs which we'll go into later).
+
+Leave the ``app.py`` as in the previous section, for now. You can now
+go to the web page::
+
+  http://localhost:8080/test
+
+You can submit the form with some values, and see the result displayed
+below.
+
+We still have a few bugs to deal with however. For one, if we don't fill
+in any parameters and submit the form, we get an error like this::
+
+  File "../app.py", line 8, in update
+    self.sum = int(value1) + int(value2)
+  ValueError: invalid literal for int(): 
+
+This is because the parameters were empty strings, which cannot be
+converted to integers. Another thing that is not really pretty is that
+it displays a sum (0) even if we did not enter any data. Let's change
+``app.py`` to take both cases into account::
+
+  import grok
+
+  class Sample(grok.Application, grok.Model):
+      pass
+
+  class Index(grok.View):
+      def update(self, value1=None, value2=None):
+          try:
+              value1 = int(value1)
+              value2 = int(value2)
+          except (TypeError, ValueError):
+              self.sum = "No sum yet"
+              return
+          self.sum = value1 + value2
+
+We catch any TypeError and ValueError here so that wrong or missing
+data does not result in a failure. Instead we display the text "No sum
+yet". If we don't get any error, the conversion to integer was fine,
+and we can display the sum.
+
+Restart Zope and go to the form again to try it out:
+
+  http://localhost:8080/test
+
+A view for a model
+------------------
+
+So far, we have only seen views that do the work all by themselves.
+In typical applications this is not the case however - views display
+information that is stored elsewhere. In Grok applications, views work
+for content object; subclasses of ``grok.Model`` or
+``grok.Container``.
+
+Our ``Sample`` class is a ``grok.Model``, so let's use this to
+demonstrate the basic principle. Let's modify ``app.py`` so that
+``Sample`` actually makes some data available::
+
+  import grok
+
+  class Sample(grok.Application, grok.Model):
+      def information(self):
+          return "This is important information!"
+
+  class Index(grok.View):
+      pass
+
+In this case, the information (``"This is important information!"``)
+is just hardcoded, but you can imagine information is retrieved from
+somewhere else, such as a relational database or the filesystem.
+
+We now want to display this information in our template ``index.pt``::
+
+  <html>
+  <body>
+  <p tal:content="python:context.information()">replaced</p>
+  </body>
+  </html>
+
+Restart Zope. When you view the page:
+
+  http://localhost:8080/test
+
+You should now see the following::
+
+  This is important information!
+
+Previously we have seen that you can access methods and attributes on
+the view using the special ``view`` name in a template. Similarly, the
+name ``context`` is also available in each template. ``context``
+allows us to access information on the context object the view is
+displaying. In this case this is an instance of ``Sample``, our
+application object.
+
+Separating the model from the view that displays it is an important
+concept in structuring applications. The view, along with the
+template, is responsible for displaying the information and its user
+interface. The model represents the actual information the application
+is about, such as documents, blog entries or wiki pages.
+
+Because grok structures applications this way, the way the model is
+displayed can be changed without modifying the model itself.
+
+Let's do that by making the view do something to the information. Change 
+``app.py`` again::
+
+  import grok
+
+  class Sample(grok.Application, grok.Model):
+      def information(self):
+          return "This is important information!"
+    
+  class Index(grok.View):
+      def reversed_information(self):
+          return ''.join(reversed(self.context.information()))
+
+You can see that it is possible to access the context object (an
+instance of ``Sample``) from within the view class, by accessing the
+``context`` attribute.
+
+What we do here is reverse the string returned from the
+``information()`` method. You can try it on the Python prompt::
+
+  >>> ''.join(reversed('foo'))
+  'oof'
+
+Now let's modify the ``index.pt`` template so that it uses the
+``reversed_information`` method::
+
+  <html>
+  <body>
+  <p>The information: 
+    <span tal:replace="python:context.information()">info</span>
+  </p>
+  <p>The information, reversed: 
+    <span tal:replace="python:view.reversed_information()">info</span>
+  </p>
+  </body>
+  </html>
+
+Restart Zope. When you view the page:
+
+  http://localhost:8080/test
+
+You should now see the following:
+
+  The information: This is important information!
+
+  The information, reversed: !noitamrofni tnatropmi si sihT 
+
+Storing data
+------------
+
+So far we have only displayed either hardcoded data, or calculations
+based on end-user input. What if we actually want to *store* some
+information, such as something the user entered? The easiest way to do
+this with Zope is to use the Zope Object Database (ZODB).
+
+The ZODB is a database of Python objects. You can store any Python
+object in it, though you do need to follow a few simple rules (the
+"rules of persistence", which we will go into later). Our ``Sample``
+application object is stored in the object database, so we can store
+some information on it.
+
+Let's create an application that stores a bit of text for us. We will
+use one view to view the text (``index``) and another to edit it
+(``edit``).
+
+Modify ``app.py`` to read like this::
+
+  import grok
+
+  class Sample(grok.Application, grok.Model):
+      text = 'default text'
+
+  class Index(grok.View):
+      pass
+
+  class Edit(grok.View):
+      def update(self, text=None):
+          if text is None:
+             return
+          self.context.text = text
+
+The ``Sample`` class gained a class attribute with some default text.
+In the ``update`` method of the ``Edit`` view you can see we actually
+set the ``text`` attribute on the context, if at least a ``text``
+value was supplied by a form. This will set the ``text`` attribute on
+the instance of the ``Sample`` object in the object database, and thus
+will override the default ``text`` class attribute.
+
+Change the ``index.pt`` template to read like this::
+
+  <html>
+  <body>
+  <p>The text: <span tal:replace="python:context.text">text</span></p>
+  </body>
+  </html>
+
+This is a very simple template that just displays the ``text``
+attribute of the ``context`` object (our ``Sample`` instance).
+
+Create an ``edit.pt`` template with the following content::
+
+  <html>
+  <body>
+  <form tal:attributes="action view/url" method="POST">
+  Text to store: <input type="text" name="text" value="" /><br />
+  <input type="submit" value="Store" />
+  </form>
+  </body>
+  </html>
+
+This template display a form asking for a bit of text. It submits to
+itself.
+
+Restart Zope. Let's first view the index page:
+
+  http://localhost:8080/test
+
+You should see ``default text``.
+
+Now let's modify the text by doing to the edit page of the application:
+
+  http://localhost:8080/test/edit
+
+Type in some text and press the "Store" button. Since it submits to
+itself, we will see the form again, so go to the index page manually:
+
+  http://localhost:8080/test
+ 
+You should now see the text you just entered on the page. This means
+that your text was successfully stored in the object database!
+
+You can even restart Zope and go back to the index page, and your text
+should still be there.
+
+Redirection and default form values
+-----------------------------------
+
+Let's make our application a bit easier to use. First, let's change
+``index.pt`` so it includes a link to the edit page. To do this, we
+will use the ``url`` method on the view::
+
+  <html>
+  <body>
+  <p>The text: <span tal:replace="python:context.text">text</span></p>
+  <p><a tal:attributes="href python:view.url('edit')">Edit this page</a></p>
+  </body>
+  </html>
+
+Giving ``url`` a single string argument will generate a URL to the
+view named that way on the same object (``test``), so in this case
+``test/edit``.
+
+TBD
+ 
+The rules of persistence
+------------------------
+
+These are the "rules of persistence":
+
+* You should subclass classes that want to store data from
+  ``persistent.Persistent`` so that it's easy to store them in the
+  ZODB. The simplest way to do this with Grok is to subclass from
+  ``grok.Model`` or ``grok.Container``.
+
+* Instances that you want to store should be connected to other
+  persistent classes that are already stored. The simplest way to do
+  this with Grok is to attach them somehow to the ``grok.Application``
+  object, directly or indirectly. This can be done by setting them as
+  an attribute, or by putting them in a container (if you made your
+  application subclass ``grok.Container``).
+
+* To make sure that the ZODB knows you changed a mutable attribute
+  (such as a simple Python list or dictionary) in your instance, set
+  the special ``_p_changed`` attribute on that instance to
+  ``True``. This is only necessary if that attribute is not
+  ``Persistent`` itself. It is also not necessary when you create or
+  overwrite an attribute directly using `=`.
+
+If you construct your application's content out of ``grok.Model`` and
+``grok.Container`` subclasses you mostly follow the rules
+already. Just remember to set ``_p_changed`` in your methods if you
+find yourself modifying a Python list (with ``append``, for instance)
+or dictionary (by storing a value in it).
+
+Here is an example::
+
+  TDB
+
+
+Constructing urls with ``view.url()``
+-------------------------------------
+
+TDB
 
 Putting your project into SVN
 -----------------------------
