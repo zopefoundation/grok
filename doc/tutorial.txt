@@ -442,17 +442,16 @@ application (i.e. in a virtual hosting setup).
 
 Pulling in images or javascript is very similar. Just place your image
 files and `.js` files in the ``static`` directory, and create the URL
-to them using ``static/<filename>`` in your page.
+to them using ``static/<filename>`` in your page template.
 
 Using view methods
 ------------------
 
-Just using a ZPT directive by itself, even when you use `python:` to
-embed snippets of Python, is limited. The idea of good application
-design is to use ZPT for fairly simple templating purposes, and to do
-anything a bit more complicated in Python code. Using ZPT with Python
-code is easy: you just add methods to your view class and use them
-from your template.
+ZPT is deliberately limited in what it allows you to do with Python.
+It is good application design practice to use ZPT for fairly simple
+templating purposes only, and to do anything a bit more complicated in
+Python code. Using ZPT with arbitrary Python code is easy: you just
+add methods to your view class and use them from your template.
 
 Let's see how this is done by making a web page that displays the
 current date and time. We will use our Python interpreter to find out
@@ -769,9 +768,9 @@ default to ``0``).
 Simple forms
 ------------
 
-Entering the parameters through URLs is not very pretty. Typical
-web applications have forms. Let's change ``index.pt`` to be a web
-form::
+Entering the parameters through URLs is not very pretty. Let's use a
+form for this instead. Change ``index.pt`` to contain a form, like
+this::
 
   <html>
   <body>
@@ -1043,8 +1042,30 @@ Giving ``url`` a single string argument will generate a URL to the
 view named that way on the same object (``test``), so in this case
 ``test/edit``.
 
-TBD
- 
+Now let's change the edit form so that it redirects back to the
+``index`` page after you press the submit button::
+
+  import grok
+
+  class Sample(grok.Application, grok.Model):
+      text = 'default text'
+
+  class Index(grok.View):
+      pass
+
+  class Edit(grok.View):
+      def update(self, text=None):
+          if text is None:
+              return
+          self.context.text = text
+          self.redirect(self.url('index'))
+
+The last line is the new one. We use the ``url`` method on the view to
+construct a URL to the ``index`` page. Since we're in the template, we
+can simply call ``url`` on ``self``. Then, we pass this to another
+special method available on all ``grok.View`` subclasses,
+``redirect``. We tell the system to redirect to the ``index`` page.
+
 The rules of persistence
 ------------------------
 
@@ -1079,6 +1100,24 @@ Here is an example::
 
   TDB
 
+Containers
+----------
+
+Let's now turn our application into a container, and place some
+objects into it. Let's turn our application into a container. For now,
+think of a container as a Python dictionary, but one that knows about
+the rules of persistence.
+
+Changing the application object into a container will have some larger
+repercussions: we need to throw away our original ``test`` application
+object in the database and create a new one.
+
+TDB
+
+Events
+------
+
+TDB
 
 Constructing urls with ``view.url()``
 -------------------------------------
