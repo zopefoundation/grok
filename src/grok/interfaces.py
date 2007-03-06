@@ -14,6 +14,7 @@
 """Grok interfaces
 """
 from zope import interface
+from zope.publisher.interfaces.browser import IBrowserPage
 
 class IGrokBaseClasses(interface.Interface):
     ClassGrokker = interface.Attribute("Base class to define a class "
@@ -209,9 +210,21 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
         """
 
 
-class IGrokView(interface.Interface):
+class IGrokView(IBrowserPage):
     """Grok views all provide this interface.
     """
+
+    context = interface.Attribute('context', "Object that the view presents.")
+
+    request = interface.Attribute('request', "Request that the view was looked"
+                                  "up with.")
+
+    response = interface.Attribute('response', "Response object that is "
+                                   "associated with the current request.")
+
+    static = interface.Attribute('static', "Directory resource containing "
+                                 "the static files of the view's package.")
+
     def redirect(url):
        """Redirect to given URL"""
 
@@ -229,11 +242,29 @@ class IGrokView(interface.Interface):
         URL to obj/name.
         """
 
+    def update(**kw):
+        """This method is meant to be implemented by grok.View
+        subclasses.  It will be called *before* the view's associated
+        template is rendered and can be used to pre-compute values
+        for the template.
+
+        update() can take arbitrary keyword parameters which will be
+        filled in from the request (in that case they *must* be
+        present in the request)."""
+
+    def render(**kw):
+        """A view can either be rendered by an associated template, or
+        it can implement this method to render itself from Python.
+        This is useful if the view's output isn't XML/HTML but
+        something computed in Python (plain text, PDF, etc.)
+
+        render() can take arbitrary keyword parameters which will be
+        filled in from the request (in that case they *must* be
+        present in the request)."""
 
 class IApplication(interface.Interface):
     """Marker-interface for grok application factories.
 
     Used to register applications as utilities to look them up and
     provide a list of grokked applications.
-
     """

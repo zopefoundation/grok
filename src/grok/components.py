@@ -143,8 +143,15 @@ class View(BrowserPage):
 
     def __init__(self, context, request):
         super(View, self).__init__(context, request)
-        self.directory_resource = component.queryAdapter(self.request,
-                interface.Interface, name=self.module_info.package_dotted_name)
+        self.static = component.queryAdapter(
+            self.request,
+            interface.Interface,
+            name=self.module_info.package_dotted_name
+            )
+
+    @property
+    def response(self):
+        return self.request.response
 
     def __call__(self):
         mapply(self.update, (), self.request)
@@ -162,7 +169,7 @@ class View(BrowserPage):
         namespace['view'] = self
         namespace['context'] = self.context
         # XXX need to check whether we really want to put None here if missing
-        namespace['static'] = self.directory_resource
+        namespace['static'] = self.static
         return template.pt_render(namespace)
 
     def __getitem__(self, key):
