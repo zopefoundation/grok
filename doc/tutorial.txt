@@ -621,8 +621,8 @@ Completely Python-driven views
 
       class Index(grok.View):
           def render(self):
-              self.request.response.setHeader('Content-Type',
-                                              'text/xml; charset=UTF-8')
+              self.response.setHeader('Content-Type',
+                                      'text/xml; charset=UTF-8')
               return "<doc>Some XML</doc>"
 
   In Zope 3, any instance of a view has a ``request`` object
