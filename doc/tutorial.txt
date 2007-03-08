@@ -203,8 +203,9 @@ we used before.
   .. _`zc.buildout`: http://cheeseshop.python.org/pypi/zc.buildout
 
 The actual code of the project will all be inside the ``src``
-directory. In it is a Python package directory called ``sample`` with a
-file called ``app.py``. Let's look at this file::
+directory. In it is a Python package directory called ``sample`` with
+the ``app.py`` file that grokproject said it would create. Let's look
+at this file::
 
   import grok
   
@@ -219,7 +220,7 @@ directory a Python package.
 
 What's left is a ``configure.zcml`` file. Unlike in typical Zope 3
 applications, this will only ever contain a single line that registers
-this application with Zope 3 (so you can ignore it)::
+this application with Zope 3 which means we can completely ignore it::
 
   <grok package="." xmlns="http://namespaces.zope.org/grok" />
 
