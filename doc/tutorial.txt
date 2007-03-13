@@ -625,10 +625,7 @@ Completely Python-driven views
                                       'text/xml; charset=UTF-8')
               return "<doc>Some XML</doc>"
 
-  In Zope 3, any instance of a view has a ``request`` object
-  associated with it. This request object also has a reference to the
-  response object, which we manipulate here to set the response
-  header.
+  Views in Grok have a ``response`` object assigned to it.
 
 Sometimes it is inconvenient to have to use a template at all. Perhaps
 we are not returning a HTML page at all, for instance. In this case,
