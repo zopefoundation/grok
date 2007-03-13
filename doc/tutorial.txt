@@ -1030,8 +1030,8 @@ that your text was successfully stored in the object database!
 You can even restart Zope and go back to the index page, and your text
 should still be there.
 
-Redirection and default form values
------------------------------------
+Redirection
+-----------
 
 Let's make our application a bit easier to use. First, let's change
 ``index.pt`` so it includes a link to the edit page. To do this, we
@@ -1072,6 +1072,30 @@ can simply call ``url`` on ``self``. Then, we pass this to another
 special method available on all ``grok.View`` subclasses,
 ``redirect``. We tell the system to redirect to the ``index`` page.
 
+Form value
+----------
+
+Let's change our application so it displays what we last entered in
+the edit form as well, not just in on the index page. 
+
+To make this work, change edit.pt so it reads like this::
+
+  <html>
+  <body>
+  <form tal:attributes="action view/url" method="POST">
+  Text to store: <input type="text" name="text" tal:attributes="value python:context.text" value="" /><br />
+  <input type="submit" value="Store" />
+  </form>
+  </body>
+  </html>
+
+The only change is that we have used ``tal:attributes`` to include the
+value of the ``text`` attribute of the context object in the form.
+
+While we explain here on how to do this manually here, there is also
+an automatic way to do this, with many more features. For much more on
+this, see section XXX on EditForms.
+
 The rules of persistence
 ------------------------
 
@@ -1094,7 +1118,7 @@ These are the "rules of persistence":
   the special ``_p_changed`` attribute on that instance to
   ``True``. This is only necessary if that attribute is not
   ``Persistent`` itself. It is also not necessary when you create or
-  overwrite an attribute directly using `=`.
+  overwrite an attribute directly using ``=``.
 
 If you construct your application's content out of ``grok.Model`` and
 ``grok.Container`` subclasses you mostly follow the rules
@@ -1102,9 +1126,29 @@ already. Just remember to set ``_p_changed`` in your methods if you
 find yourself modifying a Python list (with ``append``, for instance)
 or dictionary (by storing a value in it).
 
-Here is an example::
+The code in the section `Storing data`_ is a simple example. As you can
+see there, we have to do nothing special to obey the rules of
+persistence in this case.
 
-  TDB
+If we use a mutable object instead, we do need to take special action. Let's
+change our example code to use a mutable object::
+
+  import grok
+
+  class Sample(grok.Application, grok.Model):
+      text = 'default text'
+
+  class Index(grok.View):
+      pass
+
+  class Edit(grok.View):
+      def update(self, text=None):
+          if text is None:
+              return
+          self.context.texts.append(text)
+          self.redirect(self.url('index'))
+
+XXX
 
 Containers
 ----------
