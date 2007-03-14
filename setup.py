@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='grok',
-    version='0.9dev',
+    version='0.9',
     author='Grok Team',
     author_email='grok-dev@zope.org',
     url='https://launchpad.net/grok',
