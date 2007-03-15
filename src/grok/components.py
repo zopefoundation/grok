@@ -105,7 +105,7 @@ class Model(Contained, persistent.Persistent):
 
 
 class Container(BTreeContainer):
-    pass
+    interface.implements(IAttributeAnnotatable)
 
 
 class Site(SiteManagerContainer):
