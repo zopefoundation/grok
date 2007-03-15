@@ -18,8 +18,8 @@
       Form status summary
     </div>
 
-    <ul class="errors" tal:condition="view/form/errors">
-      <li tal:repeat="error view/form/error_views">
+    <ul class="errors" tal:condition="view/errors">
+      <li tal:repeat="error view/error_views">
          <span tal:replace="structure error">Error Type</span>
       </li>
     </ul>
@@ -27,7 +27,7 @@
 
   <table class="form-fields">
     <tbody>
-      <tal:block repeat="widget view/form/widgets">
+      <tal:block repeat="widget view/widgets">
         <tr>
           <td class="label" tal:define="hint widget/hint">
             <label tal:condition="python:hint"
@@ -57,8 +57,8 @@
   </table>
 
   <div id="actionsView">
-    <span class="actionButtons" tal:condition="view/form/availableActions">
-      <input tal:repeat="action view/form/actions"
+    <span class="actionButtons" tal:condition="view/availableActions">
+      <input tal:repeat="action view/actions"
              tal:replace="structure action/render"
              />
     </span>

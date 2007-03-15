@@ -11,24 +11,24 @@ A grok.Model may implement a schema that inherits from another one:
 Without AutoFields, just a simple edit form:
 
   >>> view = component.getMultiAdapter((manfred, request), name='edit')
-  >>> len(view.form.form_fields)
+  >>> len(view.form_fields)
   3
-  >>> [w.__name__ for w in view.form.form_fields]
+  >>> [w.__name__ for w in view.form_fields]
   ['name', 'size', 'speciality']
 
 With AutoFields:
 
   >>> view = component.getMultiAdapter((manfred, request), name='edit2')
-  >>> len(view.form.form_fields)
+  >>> len(view.form_fields)
   3
-  >>> [w.__name__ for w in view.form.form_fields]
+  >>> [w.__name__ for w in view.form_fields]
   ['name', 'size', 'speciality']
 
   >>> antimanfred = YetAnotherMammoth()
   >>> view = component.getMultiAdapter((antimanfred, request), name='edit3')
-  >>> len(view.form.form_fields)
+  >>> len(view.form_fields)
   3
-  >>> [w.__name__ for w in view.form.form_fields]
+  >>> [w.__name__ for w in view.form_fields]
   ['name', 'size', 'speciality']
 """
 import grok

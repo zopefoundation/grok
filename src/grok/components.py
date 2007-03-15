@@ -14,6 +14,7 @@
 """Grok components
 """
 
+import os
 import persistent
 import urllib
 
@@ -29,7 +30,6 @@ from zope.publisher.interfaces.browser import (IBrowserPublisher,
 from zope.publisher.publish import mapply
 from zope.pagetemplate import pagetemplate, pagetemplatefile
 from zope.formlib import form
-from zope.formlib.namedtemplate import INamedTemplate
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.browser.absoluteurl import AbsoluteURL
 from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
@@ -161,16 +161,18 @@ class View(BrowserPage):
             return
 
         template = getattr(self, 'template', None)
-        if not template:
-            return mapply(self.render, (), self.request)
+        if template is not None:
+            return self._render_template()
+        return mapply(self.render, (), self.request)
 
-        namespace = template.pt_getContext()
+    def _render_template(self):
+        namespace = self.template.pt_getContext()
         namespace['request'] = self.request
         namespace['view'] = self
         namespace['context'] = self.context
         # XXX need to check whether we really want to put None here if missing
         namespace['static'] = self.static
-        return template.pt_render(namespace)
+        return self.template.pt_render(namespace)
 
     def __getitem__(self, key):
         # XXX give nice error message if template is None
@@ -206,7 +208,6 @@ class View(BrowserPage):
 
     def update(self):
         pass
-
 
 class GrokViewAbsoluteURL(AbsoluteURL):
 
@@ -347,50 +348,43 @@ class ContainerTraverser(Traverser):
         # try to get the item from the container
         return self.context.get(name)
 
+default_form_template = PageTemplateFile(os.path.join(
+    'templates', 'default_edit_form.pt'))
+default_form_template.__grok_name__ = 'default_edit_form'
+default_display_template = PageTemplateFile(os.path.join(
+    'templates', 'default_display_form.pt'))
+default_display_template.__grok_name__ = 'default_display_form'
 
-class Form(View):
+class GrokForm(object):
+    """Mix-in to console zope.formlib's forms with grok.View and to
+    add some more useful methods."""
 
-    def __init__(self, context, request):
-        super(Form, self).__init__(context, request)
-        self.form = self.__real_form__(context, request)
-        # we need this pointer to the actual grok-level form in our
-        # custom Action
-        self.form.grok_form = self
+    def render(self):
+        # if the form has been updated, it will already have a result
+        if self.form_result is None:
+            if self.form_reset:
+                # we reset, in case data has changed in a way that
+                # causes the widgets to have different data
+                self.resetForm()
+                self.form_reset = False
+            self.form_result = self._render_template()
 
-    def __call__(self):
-        form = self.form
-
-        form.update()
-
-        # this code is extracted and modified from form.render
-
-        # if the form has been updated, it may already have a result
-        if form.form_result is None:
-            # we reset, in case data has changed in a way that
-            # causes the widgets to have different data
-            if form.form_reset:
-                form.resetForm()
-                form.form_reset = False
-            # recalculate result
-            form.form_result = super(Form, self).__call__()
-
-        return form.form_result
+        return self.form_result
 
     def apply_changes(self, obj, **data):
-        if form.applyChanges(obj, self.form.form_fields, data,
-                             getattr(self.form, 'adapters', {})):
+        if form.applyChanges(obj, self.form_fields, data, self.adapters):
             event.notify(ObjectModifiedEvent(obj))
             return True
         return False
 
-class EditForm(Form):
-    label = ''
-    status = ''
+class Form(GrokForm, form.FormBase, View):
 
-class AddForm(Form):
-    label = ''
-    status = ''
+    template = default_form_template
 
-class DisplayForm(Form):
-    label = ''
-    status = ''
+class EditForm(GrokForm, form.EditFormBase, View):
+
+    template = default_form_template
+
+class DisplayForm(GrokForm, form.DisplayFormBase, View):
+
+    template = default_display_template

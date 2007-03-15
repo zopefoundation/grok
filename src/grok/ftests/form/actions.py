@@ -1,8 +1,8 @@
 """
-Using the @grok.action decorator, different actions can be defined on a
-grok.EditForm. When @grok.action is used, the default behaviour (the 'Apply'
-action) is not available anymore, but it can triggered manually by calling
-self.apply_changes(object, data).
+Using the @grok.action decorator, different actions can be defined on
+a grok.Form. When @grok.action is used, the default behaviour (the
+'Apply' action) is not available anymore, but it can triggered
+manually by calling self.apply_changes(object, data).
 
   >>> import grok
   >>> from grok.ftests.form.actions import Mammoth
@@ -39,6 +39,12 @@ Save again without any changes:
   ...Manfred the Second...
   ...Really big and hairy...
   ...
+
+  >>> browser.open("http://localhost/manfred/meet")
+  >>> browser.getControl(name="form.other").value = "Ellie"
+  >>> browser.getControl("Meet").click()
+  >>> print browser.contents
+  Manfred the Second meets Ellie
 """
 import grok
 from zope import schema
@@ -60,3 +66,12 @@ class Edit(grok.EditForm):
     def handle_hairy(self, **data):
         self.apply_changes(self.context, **data)
         self.context.size += " and hairy"
+
+class Meet(grok.Form):
+    form_fields = grok.Fields(
+        other = schema.TextLine(title=u'Mammoth to meet with')
+        )
+
+    @grok.action('Meet')
+    def meet(self, other):
+        return self.context.name + ' meets ' + other

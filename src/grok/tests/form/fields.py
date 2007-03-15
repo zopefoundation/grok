@@ -8,9 +8,9 @@ should be avaible in the definition order.
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()
   >>> view = component.getMultiAdapter((Mammoth(), request), name='edit')
-  >>> len(view.form.form_fields)
+  >>> len(view.form_fields)
   4
-  >>> [w.__name__ for w in view.form.form_fields]
+  >>> [w.__name__ for w in view.form_fields]
   ['a', 'b', 'g', 'd']
 
 """

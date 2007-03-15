@@ -12,7 +12,7 @@ We only expect a single field to be present in the form, as we omitted 'size':
   >>> view = component.getMultiAdapter((Mammoth(), request), name='edit')
   >>> len(view.form_fields)
   1
-  >>> [w.__name__ for w in view.form.form_fields]
+  >>> [w.__name__ for w in view.form_fields]
   ['name']
 
 """

@@ -125,16 +125,12 @@ class ViewGrokker(grok.ClassGrokker):
         view_context = util.determine_class_context(factory, context)
 
         factory.module_info = module_info
-
-        # some extra work to take care of if this view is a form
-        if util.check_subclass(factory, components.EditForm):
-            formlib.setup_editform(factory, view_context)
-        elif util.check_subclass(factory, components.DisplayForm):
-            formlib.setup_displayform(factory, view_context)
-        elif util.check_subclass(factory, components.AddForm):
-            formlib.setup_addform(factory, view_context)
-
         factory_name = factory.__name__.lower()
+
+        if util.check_subclass(factory, components.GrokForm):
+            # setup form_fields from context class if we've encountered a form
+            if getattr(factory, 'form_fields', None) is None:
+                factory.form_fields = formlib.get_auto_fields(view_context)
 
         # find templates
         template_name = util.class_annotation(factory, 'grok.template',
@@ -150,42 +146,23 @@ class ViewGrokker(grok.ClassGrokker):
                                 % (factory, template_name, factory_name),
                                 factory)
 
-        # we never accept a 'render' method for forms
-        if util.check_subclass(factory, components.Form):
-            if getattr(factory, 'render', None):
-                raise GrokError(
-                    "It is not allowed to specify a custom 'render' "
-                    "method for form %r. Forms either use the default "
-                    "template or a custom-supplied one." % factory,
-                    factory)
-
         if template:
-            if getattr(factory, 'render', None):
+            if (getattr(factory, 'render', None) and not
+                util.check_subclass(factory, components.GrokForm)):
                 # we do not accept render and template both for a view
+                # (unless it's a form, they happen to have render.
                 raise GrokError(
                     "Multiple possible ways to render view %r. "
                     "It has both a 'render' method as well as "
-                    "an associated template." % factory,
-                    factory)
+                    "an associated template." % factory, factory)
 
             templates.markAssociated(template_name)
             factory.template = template
         else:
             if not getattr(factory, 'render', None):
-                if util.check_subclass(factory, components.EditForm):
-                    # we have a edit form without template
-                    factory.template = formlib.defaultEditTemplate
-                elif util.check_subclass(factory, components.DisplayForm):
-                    # we have a display form without template
-                    factory.template = formlib.defaultDisplayTemplate
-                elif util.check_subclass(factory, components.AddForm):
-                    # we have an add form without template
-                    factory.template = formlib.defaultEditTemplate
-                else:
-                    # we do not accept a view without any way to render it
-                    raise GrokError("View %r has no associated template or "
-                                    "'render' method." % factory,
-                                    factory)
+                # we do not accept a view without any way to render it
+                raise GrokError("View %r has no associated template or "
+                                "'render' method." % factory, factory)
 
         view_name = util.class_annotation(factory, 'grok.name',
                                           factory_name)

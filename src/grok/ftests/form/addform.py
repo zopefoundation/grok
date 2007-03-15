@@ -1,5 +1,5 @@
 """
-A grok.AddForm is a special grok.View that renders an add form.
+We can use grok.Form to render an add form for objects:
 
   >>> import grok
   >>> from grok.ftests.form.addform import Zoo, Mammoth
@@ -46,7 +46,7 @@ class Index(grok.View):
         return 'Hi, my name is %s, and I\'m "%s"' % (self.context.name,
                                                      self.context.size)
 
-class AddMammoth(grok.AddForm):
+class AddMammoth(grok.Form):
     grok.context(Zoo)
 
     form_fields = grok.AutoFields(Mammoth)

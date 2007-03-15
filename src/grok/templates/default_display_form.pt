@@ -11,7 +11,7 @@
       </tr>
     </thead>
     <tbody>
-      <tal:block repeat="widget view/form/widgets">
+      <tal:block repeat="widget view/widgets">
         <tr tal:define="odd repeat/widget/odd"
           tal:attributes="class python: odd and 'odd' or 'even'">
           <td class="fieldname">
@@ -26,7 +26,7 @@
     <tfoot>
       <tr class="controls">
         <td colspan="2" class="align-right">
-          <input tal:repeat="action view/form/actions" 
+          <input tal:repeat="action view/actions" 
             tal:replace="structure action/render" />
         </td>
       </tr>

@@ -1,10 +1,8 @@
-import os
 import types
 from zope import interface
 from zope.interface.interfaces import IInterface
 from zope.formlib import form
 from zope.schema.interfaces import IField
-from grok import components
 
 class action(form.action):
     """We override the action decorator we pass in our custom Action.
@@ -17,7 +15,7 @@ class action(form.action):
 class Action(form.Action):
     def success(self, data):
         if self.success_handler is not None:
-            return self.success_handler(self.form.grok_form, **data)
+            return self.success_handler(self.form, **data)
 
 def Fields(*args, **kw):
     fields = []
@@ -28,47 +26,6 @@ def Fields(*args, **kw):
             del kw[key]
     fields.sort(key=lambda field: field.order)
     return form.Fields(*(args + tuple(fields)), **kw)
-    
-def setup_editform(factory, context):
-    """Construct the real edit form, taking needed information from factory.
-    """
-    actions_ = getattr(factory, 'actions', None)
-    if actions_ is None:
-        # set up the default edit action
-        actions_ = form.Actions(form.EditForm.handle_edit_action)
-
-    class RealEditForm(form.EditForm):
-        form_fields = get_form_fields(factory, context)
-        actions = actions_
-    # we do not use the class annotation infrastructure as we use
-    # this information during *runtime* not groktime.
-    factory.__real_form__ = RealEditForm
-
-def setup_displayform(factory, context):
-    """Construct the real display form, taking needed information from factory.
-    """
-    # get actions; by default no actions at all
-    actions_ = getattr(factory, 'actions', form.Actions())
-
-    class RealDisplayForm(form.DisplayForm):
-        form_fields = get_form_fields(factory, context)
-        actions = actions_
-    # we do not use the class annotation infrastructure as we use
-    # this information during *runtime* not groktime.
-    factory.__real_form__ = RealDisplayForm
-
-def setup_addform(factory, context):
-    """Construct the real add form, taking needed information from factory.
-    """
-    # get actions; by default no actions at all
-    actions_ = getattr(factory, 'actions', form.Actions())
-
-    class RealAddForm(form.AddForm):
-        form_fields = get_form_fields(factory, context)
-        actions = actions_
-    # we do not use the class annotation infrastructure as we use
-    # this information during *runtime* not groktime.
-    factory.__real_form__ = RealAddForm
 
 def get_context_schema_fields(context):
     """Get the schema fields for a context object.
@@ -90,19 +47,6 @@ def get_context_schema_fields(context):
             fields.append(field)
     fields.sort(key=lambda field: field.order)
     return fields
-
-def get_form_fields(factory, context):
-    """Get the form fields for a factory.
-
-    factory - the factory (view) we're determining the form fields for
-    context - the context that the factory creates a view for
-    """
-    # first check whether the factory already defines form fields,
-    # in which case we're done as those always override everything
-    fields = getattr(factory, 'form_fields', None)
-    if fields is not None:
-        return fields
-    return get_auto_fields(context)
 
 def get_auto_fields(context):
     """Get the form fields for context.
@@ -144,16 +88,3 @@ def interface_seen(seen, iface):
         if seen_iface.extends(iface):
             return True
     return False
-
-def load_template(name):
-    filename = os.path.join(os.path.dirname(__file__), 'templates', name)
-    f = open(filename, 'r')
-    result = f.read()
-    f.close()
-    return result
-
-defaultEditTemplate = components.PageTemplate(load_template(
-    'default_edit_form.pt'))
-
-defaultDisplayTemplate = components.PageTemplate(load_template(
-    'default_display_form.pt'))

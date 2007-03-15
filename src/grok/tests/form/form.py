@@ -29,18 +29,18 @@ A grok.EditForm is a special grok.View that renders an edit form.
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()
   >>> view = component.getMultiAdapter((manfred, request), name='edit')
-  >>> len(view.form.form_fields)
+  >>> len(view.form_fields)
   2
-  >>> [w.__name__ for w in view.form.form_fields]
+  >>> [w.__name__ for w in view.form_fields]
   ['name', 'size']
 
 It is important to keep the order of the fields:
 
   >>> view = component.getMultiAdapter(
   ...    (DifferentMammoth(), request), name='editdifferent')
-  >>> len(view.form.form_fields)
+  >>> len(view.form_fields)
   2
-  >>> [w.__name__ for w in view.form.form_fields]
+  >>> [w.__name__ for w in view.form_fields]
   ['size', 'name']
 
 """
