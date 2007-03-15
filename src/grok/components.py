@@ -349,6 +349,7 @@ class ContainerTraverser(Traverser):
 
 
 class Form(View):
+
     def __init__(self, context, request):
         super(Form, self).__init__(context, request)
         self.form = self.__real_form__(context, request)
@@ -375,24 +376,20 @@ class Form(View):
 
         return form.form_result
 
+    def apply_changes(self, obj, **data):
+        if form.applyChanges(obj, self.form.form_fields, data,
+                             getattr(self.form, 'adapters', {})):
+            event.notify(ObjectModifiedEvent(obj))
+            return True
+        return False
 
 class EditForm(Form):
     label = ''
     status = ''
 
-    def applyChanges(self, **data):
-        if form.applyChanges(self.context, self.form.form_fields, data,
-                             self.form.adapters):
-            event.notify(ObjectModifiedEvent(self.context))
-            self.status = "Updated"
-        else:
-            self.status = "No changes"
-
-
 class AddForm(Form):
     label = ''
     status = ''
-
 
 class DisplayForm(Form):
     label = ''

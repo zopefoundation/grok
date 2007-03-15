@@ -9,12 +9,20 @@ A grok.AddForm is a special grok.View that renders an add form.
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
+
   >>> browser.open("http://localhost/zoo/@@addmammoth")
   >>> browser.getControl(name="form.name").value = "Manfred the Mammoth"
   >>> browser.getControl(name="form.size").value = "Really big"
   >>> browser.getControl("Add entry").click()
   >>> print browser.contents
   Hi, my name is Manfred the Mammoth, and I\'m "Really big"
+
+  >>> browser.open("http://localhost/zoo/@@addmammothapplychanges")
+  >>> browser.getControl(name="form.name").value = "Ellie the Mammoth"
+  >>> browser.getControl(name="form.size").value = "Really small"
+  >>> browser.getControl("Add entry").click()
+  >>> print browser.contents
+  Hi, my name is Ellie the Mammoth, and I\'m "Really small"
 
 """
 import grok
@@ -28,7 +36,7 @@ class Mammoth(grok.Model):
         name = schema.TextLine(title=u"Name")
         size = schema.TextLine(title=u"Size")
 
-    def __init__(self, name, size):
+    def __init__(self, name='', size=''):
         self.name = name
         self.size = size
 
@@ -45,6 +53,15 @@ class AddMammoth(grok.AddForm):
 
     @grok.action('Add entry')
     def add(self, **data):
-        self.context['manfred'] = Mammoth(data['name'], data['size'])
-        self.redirect(self.url(self.context['manfred']))
+        # pass data into Mammoth constructor
+        self.context['manfred'] = manfred = Mammoth(**data)
+        self.redirect(self.url(manfred))
 
+class AddMammothApplyChanges(AddMammoth):
+
+    @grok.action('Add entry')
+    def add(self, **data):
+        # instantiate Mammoth and then use self.apply_changes()
+        self.context['ellie'] = ellie = Mammoth()
+        self.apply_changes(ellie, **data)
+        self.redirect(self.url(ellie))
