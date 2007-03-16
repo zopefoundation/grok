@@ -529,24 +529,15 @@ scripting attacks, TAL will automatically escape any HTML into `&gt;`
 and `&lt;`. With the ``structure`` directive, you can tell TAL
 explicitly to not escape HTML this way, so it is passed literally into
 the template. Let's see how this is done. Change ``app.pt`` to read like
-this::
+this:
 
-  import grok
+.. include:: groktut/generating_html_from_python/src/sample/app.py
+  :literal:
 
-  class Sample(grok.Application, grok.Container):
-      pass
+and then change ``index.pt`` to read like the following:
 
-  class Index(grok.View):
-      def some_html(self):
-          return "<b>ME GROK BOLD</b>"
-
-and then change ``index.pt`` to read like the following::
-
-  <html>
-  <body>
-  <p tal:content="structure python:view.some_html()"></p>
-  </body>
-  </html>
+.. include:: groktut/generating_html_from_python/src/sample/app_templates/index.pt
+  :literal:
 
 Let's take another look at our web page:
 
