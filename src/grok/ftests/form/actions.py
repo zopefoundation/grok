@@ -2,7 +2,7 @@
 Using the @grok.action decorator, different actions can be defined on
 a grok.Form. When @grok.action is used, the default behaviour (the
 'Apply' action) is not available anymore, but it can triggered
-manually by calling self.apply_changes(object, data).
+manually by calling self.applyChanges(object, data).
 
   >>> import grok
   >>> from grok.ftests.form.actions import Mammoth
@@ -57,14 +57,14 @@ class Mammoth(grok.Model):
 class Edit(grok.EditForm):
     @grok.action("Apply")
     def handle_apply(self, **data):
-        if self.apply_changes(self.context, **data):
+        if self.applyChanges(self.context, **data):
             self.status = 'Modified!'
         else:
             self.status = 'No changes!'
 
     @grok.action("Hairy")
     def handle_hairy(self, **data):
-        self.apply_changes(self.context, **data)
+        self.applyChanges(self.context, **data)
         self.context.size += " and hairy"
 
 class Meet(grok.Form):

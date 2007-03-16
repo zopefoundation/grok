@@ -405,9 +405,9 @@ class GrokForm(object):
             return
 
         self.update_form()
-        return self.render() 
+        return self.render()
 
-    def apply_changes(self, obj, **data):
+    def applyChanges(self, obj, **data):
         if form.applyChanges(obj, self.form_fields, data, self.adapters):
             event.notify(ObjectModifiedEvent(obj))
             return True

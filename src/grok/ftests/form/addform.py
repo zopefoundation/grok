@@ -61,7 +61,7 @@ class AddMammothApplyChanges(AddMammoth):
 
     @grok.action('Add entry')
     def add(self, **data):
-        # instantiate Mammoth and then use self.apply_changes()
+        # instantiate Mammoth and then use self.applyChanges()
         self.context['ellie'] = ellie = Mammoth()
-        self.apply_changes(ellie, **data)
+        self.applyChanges(ellie, **data)
         self.redirect(self.url(ellie))
