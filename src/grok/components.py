@@ -417,6 +417,9 @@ class Form(GrokForm, form.FormBase, View):
 
     template = default_form_template
 
+class AddForm(Form):
+    pass
+
 class EditForm(GrokForm, form.EditFormBase, View):
 
     template = default_form_template

@@ -46,7 +46,7 @@ class Index(grok.View):
         return 'Hi, my name is %s, and I\'m "%s"' % (self.context.name,
                                                      self.context.size)
 
-class AddMammoth(grok.Form):
+class AddMammoth(grok.AddForm):
     grok.context(Zoo)
 
     form_fields = grok.AutoFields(Mammoth)
