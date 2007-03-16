@@ -248,25 +248,17 @@ directory called ``index.pt``.
 The ``.pt`` extension indicates that this file is a Zope Page Template
 (ZPT). This allows us to make the page dynamic later on.
 
-Put the following (very simplistic) HTML in the file ``index.pt``::
+Put the following (very simplistic) HTML in the file ``index.pt``:
 
-  <html>
-  <body>
-  <p>Hello world!</p>
-  </body>
-  </html>
+.. include:: groktut/publishing_a_simple_web_page/src/sample/app_templates/index.pt
+  :literal:
 
 We're done with the template for now. Now we need to tell Grok to
 actually use this template. To do this, modify ``src/sample/app.py`` so
-that it reads like this::
+that it reads like this:
 
-  import grok
-
-  class Sample(grok.Application, grok.Container):
-      pass
-
-  class Index(grok.View):
-      pass
+.. include:: groktut/publishing_a_simple_web_page/src/sample/app.py
+  :literal:
 
 As you can see, all we did was add a class called ``Index`` that
 subclasses from ``grok.View``. This indicates to Grok that we want a
