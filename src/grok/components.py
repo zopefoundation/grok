@@ -365,12 +365,16 @@ class GrokForm(object):
         happens."""
 
     def update_form(self):
-        """Update the form, meaning, process form input using widgets."""
+        """Update the form, i.e. process form input using widgets.
+
+        On zope.formlib forms, this is what the update() method is.
+        In grok views, the update() method has a different meaning.
+        That's why this method is called update_form() in grok forms."""
         super(GrokForm, self).update()
 
     def render(self):
-        """Render the form, either using the form templates or
-        whatever the actions returned in form_result."""
+        """Render the form, either using the form template or whatever
+        the actions returned in form_result."""
         # if the form has been updated, it will already have a result
         if self.form_result is None:
             if self.form_reset:
