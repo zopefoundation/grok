@@ -426,7 +426,7 @@ Using view methods
 
   If you have followed the tutorial so far, you will have an extra
   template called ``bye.pt`` in your ``app_templates`` directory.
-  Since in the above code sample we have no more class using it, the
+  Since in the given ``app.py``e we have no more class using it, the
   ``bye.pt`` template will have become *unassociated**. When you try
   to restart Zope, grok will be unable to read your application, and
   Zope will crash with an error message like this::
@@ -481,28 +481,17 @@ object::
 That looks better.
 
 So far nothing new; just Python. We will integrate this code into our
-Grok project now. Go to ``app.py`` and change it to read like this::
+Grok project now. Go to ``app.py`` and change it to read like this:
 
-  import grok
-  from datetime import datetime
-
-  class Sample(grok.Application, grok.Container):
-      pass
-
-  class Index(grok.View):    
-      def current_datetime(self):
-          now = datetime.now()
-          return now.strftime('%Y-%m-%d %H:%M')
+.. include:: groktut/using_view_methods/src/sample/app.py
+  :literal:
 
 We've simply added a method to our view that returns a string
 representing the current date and time. Now to get this string in our
-page template. Change ``index.pt`` to read like this::
+page template. Change ``index.pt`` to read like this:
 
-  <html>
-  <body>
-  <p tal:content="python:view.current_datetime()"></p>
-  </body>
-  </html>
+.. include:: groktut/using_view_methods/src/sample/app_templates/index.pt
+  :literal:
 
 Restart Zope. This is needed as we changed the content of a Python
 file (``app.py``). Now reload our index page to see whether it worked:

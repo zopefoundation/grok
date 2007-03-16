@@ -1,0 +1,5 @@
+<html>
+<body>
+<p tal:content="python:view.current_datetime()">Hello world!</p>
+</body>
+</html>
