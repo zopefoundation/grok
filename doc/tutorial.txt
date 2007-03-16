@@ -303,27 +303,16 @@ instance may have an ``index`` view that displays it, but another
 ``edit`` view to change its contents.
 
 To create a second view, create another template called ``bye.pt`` in
-``app_templates``. Make it have the following content::
+``app_templates``. Make it have the following content:
 
-  <html>
-  <body>
-  <p>Bye world!</p>
-  </body>
-  </html>
+.. include:: groktut/a_second_view/src/sample/app_templates/bye.pt
+  :literal:
 
 We need to tell Grok that this template is available as a view. Modify
-``app.py`` to read like this::
+``app.py`` to read like this:
 
-  import grok
-
-  class Sample(grok.Application, grok.Container):
-      pass
-
-  class Index(grok.View):
-      pass
-
-  class Bye(grok.View):
-      pass
+.. include:: groktut/a_second_view/src/sample/app.py
+  :literal:
 
 Restart Zope. You can now go to a new web page called ``bye``:
 
