@@ -374,24 +374,16 @@ add some style to our web page.
 
 To do this, create a new directory called ``static`` in the ``sample``
 package (so, ``src/sample/static``). In it, place a file called
-``style.css`` and put in the following content::
+``style.css`` and put in the following content:
 
-  body {
-    background-color: #FF0000;
-  }
+.. include:: groktut/static_resources_for_our_web_page/src/sample/static/style.css
+  :literal:
 
 In order to use it, we also need to refer to it from our
-``index.pt``. Change the content of ``index.pt`` to read like this::
+``index.pt``. Change the content of ``index.pt`` to read like this:
 
-  <html>
-  <head>
-  <link rel="stylesheet" type="text/css" 
-        tal:attributes="href static/style.css" />
-  </head>
-  <body>
-  <p>Hello world!</p>
-  </body>
-  </html>
+.. include:: groktut/static_resources_for_our_web_page/src/sample/app_templates/index.pt
+  :literal:
 
 Now restart Zope and reload the page:
 
