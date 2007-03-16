@@ -205,12 +205,10 @@ we used before.
 The actual code of the project will all be inside the ``src``
 directory. In it is a Python package directory called ``sample`` with
 the ``app.py`` file that grokproject said it would create. Let's look
-at this file::
+at this file:
 
-  import grok
-  
-  class Sample(grok.Application, grok.Container):
-      pass
+.. include:: groktut/an_empty_grok_project/src/sample/app.py
+   :literal:
 
 Not very much yet, but enough to make an installable Grok
 application. We'll go into the details of what this means later.
@@ -220,9 +218,10 @@ directory a Python package.
 
 What's left is a ``configure.zcml`` file. Unlike in typical Zope 3
 applications, this will only ever contain a single line that registers
-this application with Zope 3 which means we can completely ignore it::
+this application with Zope 3 which means we can completely ignore it:
 
-  <grok package="." xmlns="http://namespaces.zope.org/grok" />
+.. include:: groktut/an_empty_grok_project/src/sample/configure.zcml
+   :literal:
 
 Publishing a simple web page
 ----------------------------
