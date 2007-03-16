@@ -21,7 +21,13 @@ Custom edit template:
   >>> view = component.getMultiAdapter((Mammoth(), request), name='edit2')
   >>> print view()
   <p>Test edit</p>
-  
+
+Custom edit template with an explicit template
+
+  >>> view = component.getMultiAdapter((Mammoth(), request), name='edit3')
+  >>> print view()
+  <p>Test edit</p>
+
 Default display template:
 
   >>> view = component.getMultiAdapter((Mammoth(), request), name='display')
@@ -33,7 +39,13 @@ Custom display template:
   >>> view = component.getMultiAdapter((Mammoth(), request), name='display2')
   >>> print view()
   <p>Test display</p>
-  
+
+Custom display template with an explicit template:
+
+  >>> view = component.getMultiAdapter((Mammoth(), request), name='display3')
+  >>> print view()
+  <p>Test display</p>
+
 """
 import grok
 from zope import schema
@@ -51,6 +63,9 @@ class Edit2(grok.EditForm):
 
 edit2 = grok.PageTemplate('<p>Test edit</p>')
 
+class Edit3(grok.EditForm):
+    grok.template('edit2')
+
 class Display(grok.DisplayForm):
     pass
 
@@ -58,3 +73,6 @@ class Display2(grok.DisplayForm):
     pass
 
 display2 = grok.PageTemplate('<p>Test display</p>')
+
+class Display3(grok.DisplayForm):
+    grok.template('display2')
