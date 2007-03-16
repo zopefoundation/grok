@@ -580,16 +580,10 @@ Sometimes it is inconvenient to have to use a template at all. Perhaps
 we are not returning a HTML page at all, for instance. In this case,
 we can use the special ``render`` method on a view.
 
-Modify ``app.py`` so it reads like this::
+Modify ``app.py`` so it reads like this:
 
-   import grok
-
-   class Sample(grok.Application, grok.Container):
-       pass
-
-   class Index(grok.View):
-       def render(self):
-           return "ME GROK NO TEMPLATE"
+.. include:: groktut/completely_python_driven_views/src/sample/app.py
+  :literal:
 
 If you were to start up Zope with an ``index.pt`` template still
 inside ``app_templates`` you would get an error::
