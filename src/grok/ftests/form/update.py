@@ -32,6 +32,18 @@ Because of the redirect, no changes happened to the edited object:
   >>> print browser.contents
   Ellie, the Mammoth reports: The form's update() was called and my name was Manfred.
 
+A form's update() method may also take arbitrary parameters that will
+be filled with values from the request (such as form values):
+
+  >>> browser.open("http://localhost/manfred/editupdatewitharguments")
+  >>> browser.getControl(name="report").value = "Request argument dispatch to update() works."
+  >>> browser.getControl(name="form.name").value = "Mallie"
+  >>> browser.getControl("Apply").click()
+
+  >>> browser.open("http://localhost/manfred")
+  >>> print browser.contents
+  Mallie, the Mammoth reports: Request argument dispatch to update() works.
+
 """
 import grok
 from zope import schema
@@ -58,3 +70,21 @@ class EditRedirect(grok.EditForm):
         # redirect upon form submit so that no changes are ever saved
         if 'form.name' in self.request:
             self.redirect(self.url('index'))
+
+class EditUpdateWithArguments(grok.EditForm):
+
+    def update(self, report=None):
+        if report is not None:
+            self.context.report = report
+
+editupdatewitharguments = grok.PageTemplate("""
+<html>
+<body>
+<form action="" tal:attributes="action request/URL">
+  <input type="text" name="report" />
+  <div tal:repeat="widget view/widgets" tal:content="structure widget" />
+  <div tal:repeat="action view/actions" tal:content="structure action/render" />
+</form>
+</body>
+</html>
+""")

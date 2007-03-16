@@ -392,7 +392,7 @@ class GrokForm(object):
     render.base_method = True
 
     def __call__(self):
-        self.update()
+        mapply(self.update, (), self.request)
         if self.request.response.getStatus() in (302, 303):
             # A redirect was triggered somewhere in update().  Don't
             # continue rendering the template or doing anything else.
