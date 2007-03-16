@@ -353,6 +353,11 @@ class IGrokForm(IGrokView):
         The errors are returned as an iterable.
         """
 
+    def applyChanges(obj, **data):
+        """Apply form data to an object.  Return True if the object
+        had to be modified, False otherwise.
+        """
+
 
 class IApplication(interface.Interface):
     """Marker-interface for grok application factories.
