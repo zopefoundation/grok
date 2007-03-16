@@ -357,7 +357,13 @@ default_display_template.__grok_name__ = 'default_display_form'
 
 class GrokForm(object):
     """Mix-in to console zope.formlib's forms with grok.View and to
-    add some more useful methods."""
+    add some more useful methods.
+
+    The consolation needs to happen because zope.formlib's Forms have
+    update/render methods which have different meanings than
+    grok.View's update/render methods.  We deal with this issue by
+    'renaming' zope.formlib's update() to update_form() and by
+    disallowing subclasses to have custom render() methods."""
 
     def update(self):
         """Subclasses can override this method just like on regular
