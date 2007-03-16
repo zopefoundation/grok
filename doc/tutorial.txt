@@ -1,20 +1,6 @@
 Grok tutorial
 =============
 
-Welcome to the Grok tutorial! Grok is an extension to Zope 3 that
-makes it much quicker and easier to develop web applications with Zope
-3, *without* losing the power and flexibility of Zope 3 itself. Grok
-builds on existing Zope 3 technology like the component architecture
-but exposes it in a different way to the developer; a way which we
-believe makes developing with Zope 3 easier and more fun.
-
-In this tutorial we will show you the various things you can do with
-Grok. We'll start out simple, and will slowly go to more complex usage
-patterns. All you're expected to know is the Python programming
-language and an understanding of web programming. It also helps to be
-familiar with Zope Page Templates, though most of the examples should
-be fairly obvious even if you do not.
-
 .. sidebar:: Getting started with Zope Page Templates
 
   You can find introductions and more information about Zope Page
@@ -30,28 +16,29 @@ be fairly obvious even if you do not.
   Zope 3 (and Grok) however; try reading ``context`` or ``view``
   instead.
 
+Welcome to the Grok tutorial! Grok is an extension to Zope 3 that
+makes it much quicker and easier to develop web applications with Zope
+3, *without* losing the power and flexibility of Zope 3 itself. Grok
+builds on existing Zope 3 technology like the component architecture
+but exposes it in a different way to the developer; a way which we
+believe makes developing with Zope 3 easier and more fun.
+
+In this tutorial we will show you the various things you can do with
+Grok. We'll start out simple, and will slowly go to more complex usage
+patterns. All you're expected to know is the Python programming
+language and an understanding of web programming. It also helps to be
+familiar with Zope Page Templates, though most of the examples should
+be fairly obvious even if you do not.
+
 Setting up grokproject
 ----------------------
-
-Setting up grok on a Unix-like (Linux, Mac OS X) environment is
-easy. 
-
-Let's go through the prerequisites first. You need a computer
-connected to the internet, as Grok installs itself over the
-network. You also need Python 2.4 installed.
-
-Because Grok uses a source distribution of Zope 3, you may need to
-install your operating system's Python "dev" package. You also need a
-working C compiler (typically ``gcc``) installed, as we compile bits of
-Zope 3 during setup. Finally, you also need ``easy_install`` installed
-so it becomes easy to install eggs.
 
 .. sidebar:: Installing ``easy_install``
 
   If you don't already have ``easy_install`` available, you can find the
-  script to set it up here:
+  script to set it up on the `PEAK EasyInstall page`_.
 
-    http://peak.telecommunity.com/DevCenter/EasyInstall#installing-easy-install
+  .. _`PEAK EasyInstall page`: http://peak.telecommunity.com/DevCenter/EasyInstall#installing-easy-install
 
   You need to download `ez_setup.py`_. Then, you run it like this to
   install ``easy_install`` into your system Python::
@@ -67,6 +54,19 @@ so it becomes easy to install eggs.
   Grok work. You can automatically upgrade setuptools this by doing::
 
     $ sudo easy_install -U setuptools
+
+Setting up grok on a Unix-like (Linux, Mac OS X) environment is
+easy. 
+
+Let's go through the prerequisites first. You need a computer
+connected to the internet, as Grok installs itself over the
+network. You also need Python 2.4 installed.
+
+Because Grok uses a source distribution of Zope 3, you may need to
+install your operating system's Python "dev" package. You also need a
+working C compiler (typically ``gcc``) installed, as we compile bits of
+Zope 3 during setup. Finally, you also need ``easy_install`` installed
+so it becomes easy to install eggs.
 
 Once you are done with the prerequisites, you can install
 grokproject itself::
@@ -175,6 +175,18 @@ tutorial.
 An empty Grok project
 ---------------------
 
+.. sidebar:: What about the other directories and files in our project?
+
+  What about the other files and subdirectories in our ``Sample`` project
+  directory? Grokproject sets up the project using a system called
+  `zc.buildout`_. The ``eggs``, ``develop-eggs`` and ``bin``
+  directories are all set up and maintained by zc.buildout. See its
+  documentation for more information about how to use it. The
+  configuration of the project and its dependency is in
+  ``buildout.cfg``. For now, you can avoid these details however.
+
+  .. _`zc.buildout`: http://cheeseshop.python.org/pypi/zc.buildout
+
 Let's take a closer look at what's been created in the Sample project
 directory.
 
@@ -189,18 +201,6 @@ all software installed by grokproject that is not a simple Python
 library. The only part interesting to us right now is the ``instance``
 directory, which contains the ``zopectl`` script to start up Zope which
 we used before.
-
-.. sidebar:: What about the other directories and files in our project?
-
-  What about the other files and subdirectories in our ``Sample`` project
-  directory? Grokproject sets up the project using a system called
-  `zc.buildout`_. The ``eggs``, ``develop-eggs`` and ``bin``
-  directories are all set up and maintained by zc.buildout. See its
-  documentation for more information about how to use it. The
-  configuration of the project and its dependency is in
-  ``buildout.cfg``. For now, you can avoid these details however.
-
-  .. _`zc.buildout`: http://cheeseshop.python.org/pypi/zc.buildout
 
 The actual code of the project will all be inside the ``src``
 directory. In it is a Python package directory called ``sample`` with
@@ -453,6 +453,22 @@ to them using ``static/<filename>`` in your page template.
 Using view methods
 ------------------
 
+.. sidebar:: Unassociated templates
+
+  If you have followed the tutorial so far, you will have an extra
+  template called ``bye.pt`` in your ``app_templates`` directory.
+  Since in the above code sample we have no more class using it, the
+  ``bye.pt`` template will have become *unassociated**. When you try
+  to restart Zope, grok will be unable to read your application, and
+  Zope will crash with an error message like this::
+
+    GrokError: Found the following unassociated template(s) when
+    grokking 'sample.app': bye.  Define view classes inheriting from
+    grok.View to enable the template(s).
+
+  To resolve this error, simply remove ``bye.pt`` from your
+  ``app_templates`` directory.
+
 ZPT is deliberately limited in what it allows you to do with Python.
 It is good application design practice to use ZPT for fairly simple
 templating purposes only, and to do anything a bit more complicated in
@@ -508,22 +524,6 @@ Grok project now. Go to ``app.py`` and change it to read like this::
       def current_datetime(self):
           now = datetime.now()
           return now.strftime('%Y-%m-%d %H:%M')
-
-.. sidebar:: Unassociated templates
-
-  If you have followed the tutorial so far, you will have an extra
-  template called ``bye.pt`` in your ``app_templates`` directory.
-  Since in the above code sample we have no more class using it, the
-  ``bye.pt`` template will have become *unassociated**. When you try
-  to restart Zope, grok will be unable to read your application, and
-  Zope will crash with an error message like this::
-
-    GrokError: Found the following unassociated template(s) when
-    grokking 'sample.app': bye.  Define view classes inheriting from
-    grok.View to enable the template(s).
-
-  To resolve this error, simply remove ``bye.pt`` from your
-  ``app_templates`` directory.
 
 We've simply added a method to our view that returns a string
 representing the current date and time. Now to get this string in our
