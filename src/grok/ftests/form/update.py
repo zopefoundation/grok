@@ -17,6 +17,21 @@ form processing has happened:
   >>> browser.open("http://localhost/manfred")
   >>> print browser.contents
   Ellie, the Mammoth reports: The form's update() was called and my name was Manfred.
+
+A form's update() method can issue a redirect.  In that case, the form
+won't proceed to do any form processing nor rendering:
+
+  >>> browser.open("http://localhost/manfred/editredirect")
+  >>> browser.getControl(name="form.name").value = "Mallie"
+  >>> browser.getControl("Apply").click()
+  >>> print browser.url
+  http://localhost/manfred/index
+
+Because of the redirect, no changes happened to the edited object:
+
+  >>> print browser.contents
+  Ellie, the Mammoth reports: The form's update() was called and my name was Manfred.
+
 """
 import grok
 from zope import schema
@@ -36,3 +51,10 @@ class Edit(grok.EditForm):
     def update(self):
         self.context.report = ("The form's update() was called and my name "
                                "was %s." % self.context.name)
+
+class EditRedirect(grok.EditForm):
+
+    def update(self):
+        # redirect upon form submit so that no changes are ever saved
+        if 'form.name' in self.request:
+            self.redirect(self.url('index'))

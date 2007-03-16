@@ -156,7 +156,7 @@ class View(BrowserPage):
     def __call__(self):
         mapply(self.update, (), self.request)
         if self.request.response.getStatus() in (302, 303):
-            # Somewhere in update(), a redirect was triggered.  Don't
+            # A redirect was triggered somewhere in update().  Don't
             # continue rendering the template or doing anything else.
             return
 
@@ -393,6 +393,11 @@ class GrokForm(object):
 
     def __call__(self):
         self.update()
+        if self.request.response.getStatus() in (302, 303):
+            # A redirect was triggered somewhere in update().  Don't
+            # continue rendering the template or doing anything else.
+            return
+
         self.update_form()
         return self.render() 
 
