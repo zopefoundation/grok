@@ -209,7 +209,7 @@ at this file::
 
   import grok
   
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       pass
 
 Not very much yet, but enough to make an installable Grok
@@ -263,7 +263,7 @@ that it reads like this::
 
   import grok
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       pass
 
   class Index(grok.View):
@@ -325,7 +325,7 @@ We need to tell Grok that this template is available as a view. Modify
 
   import grok
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       pass
 
   class Index(grok.View):
@@ -501,7 +501,7 @@ Grok project now. Go to ``app.py`` and change it to read like this::
   import grok
   from datetime import datetime
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       pass
 
   class Index(grok.View):    
@@ -575,7 +575,7 @@ this::
 
   import grok
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       pass
 
   class Index(grok.View):
@@ -616,7 +616,7 @@ Completely Python-driven views
 
     import grok
 
-      class Sample(grok.Application, grok.Model):
+      class Sample(grok.Application, grok.Container):
           pass
 
       class Index(grok.View):
@@ -635,7 +635,7 @@ Modify ``app.py`` so it reads like this::
 
    import grok
 
-   class Sample(grok.Application, grok.Model):
+   class Sample(grok.Application, grok.Container):
        pass
 
    class Index(grok.View):
@@ -678,7 +678,7 @@ You can do this by defining an ``update`` method on the view class. Modify
 
   import grok
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       pass
 
   class Index(grok.View):
@@ -721,7 +721,7 @@ Modify ``app.py`` to read like this::
 
   import grok
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       pass
 
   class Index(grok.View):
@@ -758,7 +758,7 @@ We can modify our code so it works even without input for either parameter::
 
   import grok
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       pass
 
   class Index(grok.View):
@@ -813,7 +813,7 @@ it displays a sum (0) even if we did not enter any data. Let's change
 
   import grok
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       pass
 
   class Index(grok.View):
@@ -841,16 +841,17 @@ A view for a model
 So far, we have only seen views that do the work all by themselves.
 In typical applications this is not the case however - views display
 information that is stored elsewhere. In Grok applications, views work
-for content object; subclasses of ``grok.Model`` or
-``grok.Container``.
+for content objects; subclasses of ``grok.Model`` or
+``grok.Container``. A ``grok.Container`` is a special kind of
+``grok.Model``, more about this later.
 
-Our ``Sample`` class is a ``grok.Model``, so let's use this to
+Our ``Sample`` class is a ``grok.Container``, so let's use this to
 demonstrate the basic principle. Let's modify ``app.py`` so that
 ``Sample`` actually makes some data available::
 
   import grok
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       def information(self):
           return "This is important information!"
 
@@ -898,7 +899,7 @@ Let's do that by making the view do something to the information. Change
 
   import grok
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       def information(self):
           return "This is important information!"
     
@@ -962,7 +963,7 @@ Modify ``app.py`` to read like this::
 
   import grok
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       text = 'default text'
 
   class Index(grok.View):
@@ -1050,7 +1051,7 @@ Now let's change the edit form so that it redirects back to the
 
   import grok
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       text = 'default text'
 
   class Index(grok.View):
@@ -1132,7 +1133,7 @@ change our example code to use a mutable object::
 
   import grok
 
-  class Sample(grok.Application, grok.Model):
+  class Sample(grok.Application, grok.Container):
       text = 'default text'
 
   class Index(grok.View):
