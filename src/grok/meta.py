@@ -132,6 +132,13 @@ class ViewGrokker(grok.ClassGrokker):
             if getattr(factory, 'form_fields', None) is None:
                 factory.form_fields = formlib.get_auto_fields(view_context)
 
+            if not getattr(factory.render, 'base_method', False):
+                raise GrokError(
+                    "It is not allowed to specify a custom 'render' "
+                    "method for form %r. Forms either use the default "
+                    "template or a custom-supplied one." % factory,
+                    factory)
+
         # find templates
         template_name = util.class_annotation(factory, 'grok.template',
                                               factory_name)

@@ -359,7 +359,18 @@ class GrokForm(object):
     """Mix-in to console zope.formlib's forms with grok.View and to
     add some more useful methods."""
 
+    def update(self):
+        """Subclasses can override this method just like on regular
+        grok.Views. It will be called before any form processing
+        happens."""
+
+    def update_form(self):
+        """Update the form, meaning, process form input using widgets."""
+        super(GrokForm, self).update()
+
     def render(self):
+        """Render the form, either using the form templates or
+        whatever the actions returned in form_result."""
         # if the form has been updated, it will already have a result
         if self.form_result is None:
             if self.form_reset:
@@ -370,6 +381,16 @@ class GrokForm(object):
             self.form_result = self._render_template()
 
         return self.form_result
+
+    # Mark the render() method as a method from the base class. That
+    # way we can detect whether somebody overrides render() in a
+    # subclass (which we don't allow).
+    render.base_method = True
+
+    def __call__(self):
+        self.update()
+        self.update_form()
+        return self.render() 
 
     def apply_changes(self, obj, **data):
         if form.applyChanges(obj, self.form_fields, data, self.adapters):
