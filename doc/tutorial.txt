@@ -561,20 +561,13 @@ Completely Python-driven views
   When generating the complete content of a page yourself, it's often
   useful to change the content-type of the page to something else than
   ``text/plain``. Let's change our code to return simple XML and set
-  the content type to ``text/xml``::
+  the content type to ``text/xml``:
 
-    import grok
+  .. include:: groktut/setting_the_content_type/src/sample/app.py
+    :literal:
 
-      class Sample(grok.Application, grok.Container):
-          pass
-
-      class Index(grok.View):
-          def render(self):
-              self.response.setHeader('Content-Type',
-                                      'text/xml; charset=UTF-8')
-              return "<doc>Some XML</doc>"
-
-  Views in Grok have a ``response`` object assigned to it.
+  All views in Grok have a ``response`` property that you can use to
+  manipulate response headers.
 
 Sometimes it is inconvenient to have to use a template at all. Perhaps
 we are not returning a HTML page at all, for instance. In this case,
