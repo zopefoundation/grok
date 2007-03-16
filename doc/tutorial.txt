@@ -335,13 +335,10 @@ calculation: ``1 + 1``.
 
 We will use a Zope Page Templates (ZPT) directive to do this
 calculation inside ``index.pt`` template. Change the ``index.pt`` to
-read like this::
+read like this:
 
-  <html>
-  <body>
-  <p tal:content="python: 1 + 1">this is replaced</p>
-  </body>
-  </html>
+.. include:: groktut/making_our_page_dynamic/src/sample/app_templates/index.pt
+  :literal:
 
 We've used the ``tal:content`` page template directive to replace the
 content between the ``<p>`` and ``</p>`` tags with something else, in
