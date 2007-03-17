@@ -683,6 +683,13 @@ default to ``0``).
 Simple forms
 ------------
 
+.. sidebar:: Automatic forms
+
+  Creating forms and converting and validating user input by hand, as
+  shown in this section, can be rather cumbersome. With Grok, you can
+  use Zope 3's *schema* and *formlib* systems to automate this and
+  more. This will be discussed in a later section. XXX
+
 Entering the parameters through URLs is not very pretty. Let's use a
 form for this instead. Change ``index.pt`` to contain a form, like
 this:
@@ -713,26 +720,14 @@ in any parameters and submit the form, we get an error like this::
 This is because the parameters were empty strings, which cannot be
 converted to integers. Another thing that is not really pretty is that
 it displays a sum (0) even if we did not enter any data. Let's change
-``app.py`` to take both cases into account::
+``app.py`` to take both cases into account:
 
-  import grok
-
-  class Sample(grok.Application, grok.Container):
-      pass
-
-  class Index(grok.View):
-      def update(self, value1=None, value2=None):
-          try:
-              value1 = int(value1)
-              value2 = int(value2)
-          except (TypeError, ValueError):
-              self.sum = "No sum yet"
-              return
-          self.sum = value1 + value2
+.. include:: groktut/simple_forms2/src/sample/app.py
+  :literal:
 
 We catch any TypeError and ValueError here so that wrong or missing
-data does not result in a failure. Instead we display the text "No sum
-yet". If we don't get any error, the conversion to integer was fine,
+data does not result in a failure. Instead we display the text "No
+sum". If we don't get any error, the conversion to integer was fine,
 and we can display the sum.
 
 Restart Zope and go to the form again to try it out:
