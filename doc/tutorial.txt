@@ -892,36 +892,20 @@ Redirection
 
 Let's make our application a bit easier to use. First, let's change
 ``index.pt`` so it includes a link to the edit page. To do this, we
-will use the ``url`` method on the view::
+will use the ``url`` method on the view:
 
-  <html>
-  <body>
-  <p>The text: <span tal:replace="python:context.text">text</span></p>
-  <p><a tal:attributes="href python:view.url('edit')">Edit this page</a></p>
-  </body>
-  </html>
+.. include:: groktut/redirection/src/sample/app_templates/index.pt
+  :literal:
 
 Giving ``url`` a single string argument will generate a URL to the
 view named that way on the same object (``test``), so in this case
 ``test/edit``.
 
 Now let's change the edit form so that it redirects back to the
-``index`` page after you press the submit button::
+``index`` page after you press the submit button:
 
-  import grok
-
-  class Sample(grok.Application, grok.Container):
-      text = 'default text'
-
-  class Index(grok.View):
-      pass
-
-  class Edit(grok.View):
-      def update(self, text=None):
-          if text is None:
-              return
-          self.context.text = text
-          self.redirect(self.url('index'))
+.. include:: groktut/redirection/src/sample/app.py
+  :literal:
 
 The last line is the new one. We use the ``url`` method on the view to
 construct a URL to the ``index`` page. Since we're in the template, we
