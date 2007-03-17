@@ -741,33 +741,25 @@ So far, we have only seen views that do the work all by themselves.
 In typical applications this is not the case however - views display
 information that is stored elsewhere. In Grok applications, views work
 for content objects; subclasses of ``grok.Model`` or
-``grok.Container``. A ``grok.Container`` is a special kind of
-``grok.Model``, more about this later.
+``grok.Container``. For the purposes of this discussion, we can treat
+a ``grok.Container`` as another kind of ``grok.Model`` (more about
+what makes ``grok.Container`` special later XXX).
 
-Our ``Sample`` class is a ``grok.Container``, so let's use this to
-demonstrate the basic principle. Let's modify ``app.py`` so that
-``Sample`` actually makes some data available::
+Our ``Sample`` class is a ``grok.Container``, so let's use ``Sample``
+to demonstrate the basic principle. Let's modify ``app.py`` so that
+``Sample`` actually makes some data available:
 
-  import grok
-
-  class Sample(grok.Application, grok.Container):
-      def information(self):
-          return "This is important information!"
-
-  class Index(grok.View):
-      pass
+.. include:: groktut/a_view_for_a_model/src/sample/app.py
+  :literal:
 
 In this case, the information (``"This is important information!"``)
 is just hardcoded, but you can imagine information is retrieved from
 somewhere else, such as a relational database or the filesystem.
 
-We now want to display this information in our template ``index.pt``::
+We now want to display this information in our template ``index.pt``:
 
-  <html>
-  <body>
-  <p tal:content="python:context.information()">replaced</p>
-  </body>
-  </html>
+.. include:: groktut/a_view_for_a_model/src/sample/app_templates/index.pt
+  :literal:
 
 Restart Zope. When you view the page:
 
