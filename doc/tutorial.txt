@@ -685,18 +685,10 @@ Simple forms
 
 Entering the parameters through URLs is not very pretty. Let's use a
 form for this instead. Change ``index.pt`` to contain a form, like
-this::
+this:
 
-  <html>
-  <body>
-  <form tal:attributes="action view/url" method="GET">
-    Value 1: <input type="text" name="value1" value="" /><br />
-    Value 2: <input type="text" name="value2" value="" /><br />
-    <input type="submit" value="Sum!" />
-  </form>
-  <p>The sum is: <span tal:replace="view/sum">sum</span></p>
-  </body>
-  </html>
+.. include:: groktut/simple_forms/src/sample/app_templates/index.pt
+  :literal:
 
 One thing to note here is that we dynamically generate the form's
 ``action``. We make the form submit to itself, basically. Grok views
