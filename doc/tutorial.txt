@@ -838,21 +838,10 @@ Let's create an application that stores a bit of text for us. We will
 use one view to view the text (``index``) and another to edit it
 (``edit``).
 
-Modify ``app.py`` to read like this::
+Modify ``app.py`` to read like this:
 
-  import grok
-
-  class Sample(grok.Application, grok.Container):
-      text = 'default text'
-
-  class Index(grok.View):
-      pass
-
-  class Edit(grok.View):
-      def update(self, text=None):
-          if text is None:
-             return
-          self.context.text = text
+.. include:: groktut/storing_data/src/sample/app.py
+  :literal:
 
 The ``Sample`` class gained a class attribute with some default text.
 In the ``update`` method of the ``Edit`` view you can see we actually
@@ -861,27 +850,18 @@ value was supplied by a form. This will set the ``text`` attribute on
 the instance of the ``Sample`` object in the object database, and thus
 will override the default ``text`` class attribute.
 
-Change the ``index.pt`` template to read like this::
+Change the ``index.pt`` template to read like this:
 
-  <html>
-  <body>
-  <p>The text: <span tal:replace="python:context.text">text</span></p>
-  </body>
-  </html>
+.. include:: groktut/storing_data/src/sample/app_templates/index.pt
+  :literal:
 
 This is a very simple template that just displays the ``text``
 attribute of the ``context`` object (our ``Sample`` instance).
 
-Create an ``edit.pt`` template with the following content::
+Create an ``edit.pt`` template with the following content:
 
-  <html>
-  <body>
-  <form tal:attributes="action view/url" method="POST">
-  Text to store: <input type="text" name="text" value="" /><br />
-  <input type="submit" value="Store" />
-  </form>
-  </body>
-  </html>
+.. include:: groktut/storing_data/src/sample/app_templates/edit.pt
+  :literal:
 
 This template display a form asking for a bit of text. It submits to
 itself.
