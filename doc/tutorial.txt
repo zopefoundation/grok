@@ -913,29 +913,19 @@ can simply call ``url`` on ``self``. Then, we pass this to another
 special method available on all ``grok.View`` subclasses,
 ``redirect``. We tell the system to redirect to the ``index`` page.
 
-Form value
-----------
+Showing the value in the form
+-----------------------------
 
-Let's change our application so it displays what we last entered in
-the edit form as well, not just in on the index page. 
+Let's change our application so it displays what we stored the edit
+form as well, not just on the index page.
 
-To make this work, change edit.pt so it reads like this::
+To make this work, change edit.pt so it reads like this:
 
-  <html>
-  <body>
-  <form tal:attributes="action view/url" method="POST">
-  Text to store: <input type="text" name="text" tal:attributes="value python:context.text" value="" /><br />
-  <input type="submit" value="Store" />
-  </form>
-  </body>
-  </html>
+.. include:: groktut/showing_the_value_in_the_form/src/sample/app_templates/edit.pt
+  :literal:
 
 The only change is that we have used ``tal:attributes`` to include the
 value of the ``text`` attribute of the context object in the form.
-
-While we explain here on how to do this manually here, there is also
-an automatic way to do this, with many more features. For much more on
-this, see section XXX on EditForms.
 
 The rules of persistence
 ------------------------
