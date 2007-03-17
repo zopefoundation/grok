@@ -610,28 +610,19 @@ template is calculated. This way you are sure that a value is only
 calculated once per view, even if you use it multiple times.
 
 You can do this by defining an ``update`` method on the view class. Modify
-``app.py`` to read like this::
+``app.py`` to read like this:
 
-  import grok
-
-  class Sample(grok.Application, grok.Container):
-      pass
-
-  class Index(grok.View):
-      def update(self):
-          self.alpha = 2 ** 8
+.. include:: groktut/doing_some_calculation_before_viewing_a_page/src/sample/app.py
+  :literal:
 
 This sets a name ``alpha`` on the view just before the template is
 being displayed, so we can use it from the template. You can set as
 many names on ``self`` as you like.
 
-Now we need a template ``index.pt`` that uses ``alpha``::
+Now we need a template ``index.pt`` that uses ``alpha``:
 
-  <html>
-  <body>
-  <p tal:content="view/alpha"></p>
-  </body>
-  </html>
+.. include:: groktut/doing_some_calculation_before_viewing_a_page/src/sample/app_templates/index.pt
+  :literal:
 
 Restart Zope and then let's take another look at our application:
 
