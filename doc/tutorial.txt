@@ -644,24 +644,15 @@ application:
 
 you should see the sum (8) as the result on the page. 
 
-Modify ``app.py`` to read like this::
+Modify ``app.py`` to read like this:
 
-  import grok
+.. include:: groktut/reading_url_parameters/src/sample/app.py
+  :literal:
 
-  class Sample(grok.Application, grok.Container):
-      pass
+We need an ``index.pt`` that uses ``sum``:
 
-  class Index(grok.View):
-      def update(self, value1, value2):
-          self.sum = int(value1) + int(value2)
-
-We need an ``index.pt`` that uses ``sum``::
-
-  <html>
-  <body>
-  <p tal:content="view/sum"></p>
-  </body>
-  </html>
+.. include:: groktut/reading_url_parameters/src/sample/app_templates/index.pt
+  :literal:
 
 Restart Zope. Now going to the folllowing URL should display 8:
 
