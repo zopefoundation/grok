@@ -780,27 +780,23 @@ Separating the model from the view that displays it is an important
 concept in structuring applications. The view, along with the
 template, is responsible for displaying the information and its user
 interface. The model represents the actual information the application
-is about, such as documents, blog entries or wiki pages.
+is about, such as documents, blog entries or wiki pages. The model
+should not know anything about the way it is displayed.
 
-Because grok structures applications this way, the way the model is
-displayed can be changed without modifying the model itself.
+This way of structuring your applications allows you to change the way
+your content is displayed without modifying the content itself, just
+the way it is viewed.
 
 Let's do that by making the view do something to the information. Change 
-``app.py`` again::
+``app.py`` again:
 
-  import grok
-
-  class Sample(grok.Application, grok.Container):
-      def information(self):
-          return "This is important information!"
-    
-  class Index(grok.View):
-      def reversed_information(self):
-          return ''.join(reversed(self.context.information()))
+.. include:: groktut/a_view_for_a_model2/src/sample/app.py
+  :literal:
 
 You can see that it is possible to access the context object (an
 instance of ``Sample``) from within the view class, by accessing the
-``context`` attribute.
+``context`` attribute. This gets the same object as when we used the
+``context`` name in our template before.
 
 What we do here is reverse the string returned from the
 ``information()`` method. You can try it on the Python prompt::
@@ -809,18 +805,10 @@ What we do here is reverse the string returned from the
   'oof'
 
 Now let's modify the ``index.pt`` template so that it uses the
-``reversed_information`` method::
+``reversed_information`` method:
 
-  <html>
-  <body>
-  <p>The information: 
-    <span tal:replace="python:context.information()">info</span>
-  </p>
-  <p>The information, reversed: 
-    <span tal:replace="python:view.reversed_information()">info</span>
-  </p>
-  </body>
-  </html>
+.. include:: groktut/a_view_for_a_model2/src/sample/app_templates/index.pt
+  :literal:
 
 Restart Zope. When you view the page:
 
