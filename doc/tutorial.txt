@@ -672,16 +672,10 @@ traceback. This is the relevant complaint::
 
   TypeError: Missing argument to update(): value1
 
-We can modify our code so it works even without input for either parameter::
+We can modify our code so it works even without input for either parameter:
 
-  import grok
-
-  class Sample(grok.Application, grok.Container):
-      pass
-
-  class Index(grok.View):
-      def update(self, value1=0, value2=0):
-          self.sum = int(value1) + int(value2)
+.. include:: groktut/reading_url_parameters2/src/sample/app.py
+  :literal:
 
 Restart Zope, and see it can now deal with missing parameters (they
 default to ``0``).
