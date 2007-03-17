@@ -1,5 +1,5 @@
 <html>
 <body>
-<p tal:content="python:view.alpha">Hello world!</p>
+<p tal:content="python:view.alpha">result</p>
 </body>
 </html>
