@@ -1,6 +1,8 @@
 Grok tutorial
 =============
 
+.. contents::
+
 .. sidebar:: Getting started with Zope Page Templates
 
   You can find introductions and more information about Zope Page
