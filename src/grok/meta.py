@@ -211,6 +211,48 @@ class ViewGrokker(grok.ClassGrokker):
                                 % (method.__name__, factory), factory)
 
 
+class JSONGrokker(grok.ClassGrokker):
+    component_class = grok.JSON
+
+    def register(self, context, name, factory, module_info, templates):
+        view_context = util.determine_class_context(factory, context)
+        # XXX We should really not make __FOO__ methods available to
+        # the outside -- need to discuss how to restrict such things.
+        methods = util.methods_from_class(factory)
+
+        # Determine the default permission for the XMLRPC methods.
+        # There can only be 0 or 1 of those.
+        permissions = util.class_annotation(factory, 'grok.require', [])
+        if not permissions:
+            default_permission = None
+        elif len(permissions) == 1:
+            default_permission = permissions[0]
+        else:
+            raise GrokError('grok.require was called multiple times in '
+                            '%r. It may only be called once on class level.'
+                            % factory, factory)
+
+        for method in methods:
+            method_view = type(
+                factory.__name__, (factory,),
+                {'__call__': method}
+                )
+            component.provideAdapter(
+                method_view, (view_context, IDefaultBrowserLayer),
+                interface.Interface,
+                name=method.__name__)
+
+            # Protect method_view with either the permission that was
+            # set on the method, the default permission from the class
+            # level or zope.Public.
+            permission = getattr(method, '__grok_require__', default_permission)
+            if permission is None or permission == 'zope.Public':
+                checker = NamesChecker(['__call__'])
+            else:
+                checker = NamesChecker(['__call__'], permission)
+            defineChecker(method_view, checker)
+
+
 class TraverserGrokker(grok.ClassGrokker):
     component_class = grok.Traverser
 

@@ -220,6 +220,8 @@ class GrokViewAbsoluteURL(AbsoluteURL):
 class XMLRPC(object):
     pass
 
+class JSON(BrowserPage):
+    pass
 
 class GrokPageTemplate(object):
 
