@@ -235,7 +235,7 @@ class JSONGrokker(grok.ClassGrokker):
         for method in methods:
             method_view = type(
                 factory.__name__, (factory,),
-                {'__call__': method}
+                {'__view_name__': method.__name__}
                 )
             component.provideAdapter(
                 method_view, (view_context, IDefaultBrowserLayer),
