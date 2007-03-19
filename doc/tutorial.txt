@@ -161,18 +161,15 @@ Zope on your localhost, you can go to it here:
 
   http://localhost:8080
 
-This first pops up a login dialog (username: grok and password:
-grok). It will then show a simple Grok admin interface. This allows
-you to install new Grok applications. Our sample application
-(sample.app.Sample) will be available for adding.
+This first pops up a login dialog (username: ``grok`` and password:
+``grok``). It will then show a simple Grok admin interface. This
+allows you to install new Grok applications. Our sample application
+(``sample.app.Sample``) will be available for adding.  After adding
+it, we can click on the link and see Grok's welcome message.
 
-Installing our sample application won't have much of an effect yet; if
-you do so and select it, you will get a "This page is not available
-yet" message.
-
-You can shut down Zope 3 at any time by typing ``ctrl-c``. Shut it down
-now. We will be shutting down and starting up Zope 3 often in this
-tutorial.
+You can shut down Zope 3 at any time by hitting ``CTRL-c``. Shut it
+down now. We will be shutting down and starting up Zope 3 often in
+this tutorial.
 
 An empty Grok project
 ---------------------
@@ -235,45 +232,30 @@ to use a specialized system such as Apache. But, to start a developing
 a web application we need to be able to put some simple HTML on the
 web, first.
 
-As you might've seen previously, our ``Sample`` application doesn't have
-a front page yet. Let's create one. 
+As you might've seen previously, our ``Sample`` application has a
+stock front page.  Let's change that.
 
-To do this, you need to create a new directory in ``src/sample/`` called
-``app_templates``. This directory will contain the HTML used for
-anything defined in the ``app`` module. Grok knows to associate the
-directory to the module by its name (``<module_name>_templates``).
+To do this, go to the ``app_templates`` directory in ``src/sample/``.
+This directory contains the HTML used for anything defined in the
+``app`` module. Grok knows to associate the directory to the module by
+its name (``<module_name>_templates``).
 
-In this directory we will place the ``index`` template for our ``Sample``
-application object. To do this, create a file in the ``app_templates``
-directory called ``index.pt``.
+In this directory we will edit the ``index`` template for our
+``Sample`` application object. To do this, open the ``index.pt`` file
+in a text editor. The ``.pt`` extension indicates that this file is a
+Zope Page Template (ZPT). This allows us to make the page dynamic
+later on.
 
-The ``.pt`` extension indicates that this file is a Zope Page Template
-(ZPT). This allows us to make the page dynamic later on.
-
-Put the following (very simplistic) HTML in the file ``index.pt``:
+Change the ``index.pt`` file to contain the following (very
+simplistic) HTML:
 
 .. include:: groktut/publishing_a_simple_web_page/src/sample/app_templates/index.pt
   :literal:
 
-We're done with the template for now. Now we need to tell Grok to
-actually use this template. To do this, modify ``src/sample/app.py`` so
-that it reads like this:
-
-.. include:: groktut/publishing_a_simple_web_page/src/sample/app.py
-  :literal:
-
-As you can see, all we did was add a class called ``Index`` that
-subclasses from ``grok.View``. This indicates to Grok that we want a
-view named ``index`` for the application. A *view* is a way to view
-some content; in this case installations of our ``Sample``
-application. 
-
-The empty class definition above is enough for Grok to go look in the
-``app_templates`` directory for ``index.pt``.
-
-Let's try this out. Restart Zope (``ctrl-C`` and then
+Let's try this out. Restart Zope (``CTRL-c`` and then
 ``parts/instance/bin/zopectl fg`` from your Sample project
-directory). Go to the Grok admin page:
+directory). If you haven't yet created a sample application object, go
+to the Grok admin page:
 
   http://localhost:8080
 
@@ -302,21 +284,30 @@ as before.
 
 Often, your application needs more than one view. A document for
 instance may have an ``index`` view that displays it, but another
-``edit`` view to change its contents.
-
-To create a second view, create another template called ``bye.pt`` in
-``app_templates``. Make it have the following content:
+``edit`` view to change its contents.  To create a second view, create
+another template called ``bye.pt`` in ``app_templates``. Make it have
+the following content:
 
 .. include:: groktut/a_second_view/src/sample/app_templates/bye.pt
   :literal:
 
-We need to tell Grok that this template is available as a view. Modify
-``app.py`` to read like this:
+Now we need to tell Grok to actually use this template. To do this,
+modify ``src/sample/app.py`` so that it reads like this:
 
 .. include:: groktut/a_second_view/src/sample/app.py
   :literal:
 
-Restart Zope. You can now go to a new web page called ``bye``:
+As you can see, all we did was add a class called ``Bye`` that
+subclasses from ``grok.View``. This indicates to Grok that we want a
+view named ``bye`` for the application, just like the ``Index`` class
+that was already created for us indicates that we want a view named
+``index``. A *view* is a way to view some content, in this case
+installations of our ``Sample`` application.
+
+The empty class definition above is enough for Grok to go look in the
+``app_templates`` directory for ``bye.pt``.
+
+Restart Zope again. You can now go to a new web page called ``bye``:
 
   http://localhost:8080/test/bye
 
