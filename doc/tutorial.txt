@@ -297,7 +297,6 @@ there is no need to restart Zope to see the effect. This is not true
 for changes on the Python level, for instance when you add a
 template. We show an example of this next.
 
-
 A second view
 -------------
 
@@ -329,7 +328,7 @@ As you can see, all we did was add a class called ``Bye`` that
 subclasses from ``grok.View``. This indicates to Grok that we want a
 view named ``bye`` for the application, just like the ``Index`` class
 that was already created for us indicates that we want a view named
-``index``. A *view* is a way to view some content, in this case
+``index``. A *view* is a way to view some model, in this case
 installations of our ``Sample`` application. Note that the view name
 in the URL is always going to be lowercase, while the class name
 normally starts with an uppercase letter.
@@ -763,10 +762,10 @@ A view for a model
 So far, we have only seen views that do the work all by themselves.
 In typical applications this is not the case however - views display
 information that is stored elsewhere. In Grok applications, views work
-for content objects; subclasses of ``grok.Model`` or
-``grok.Container``. For the purposes of this discussion, we can treat
-a ``grok.Container`` as another kind of ``grok.Model`` (more about
-what makes ``grok.Container`` special later XXX).
+for models: subclasses of ``grok.Model`` or ``grok.Container``. For
+the purposes of this discussion, we can treat a ``grok.Container`` as
+another kind of ``grok.Model`` (more about what makes
+``grok.Container`` special later XXX).
 
 Our ``Sample`` class is a ``grok.Container``, so let's use ``Sample``
 to demonstrate the basic principle. Let's modify ``app.py`` so that
@@ -802,12 +801,13 @@ application object.
 Separating the model from the view that displays it is an important
 concept in structuring applications. The view, along with the
 template, is responsible for displaying the information and its user
-interface. The model represents the actual information the application
-is about, such as documents, blog entries or wiki pages. The model
-should not know anything about the way it is displayed.
+interface. The model represents the actual information (or content)
+the application is about, such as documents, blog entries or wiki
+pages. The model should not know anything about the way it is
+displayed.
 
 This way of structuring your applications allows you to change the way
-your content is displayed without modifying the content itself, just
+your model is displayed without modifying the model itself, just
 the way it is viewed.
 
 Let's do that by making the view do something to the information. Change 
@@ -980,29 +980,127 @@ already. Just remember to set ``_p_changed`` in your methods if you
 find yourself modifying a Python list (with ``append``, for instance)
 or dictionary (by storing a value in it).
 
-The code in the section `Storing data`_ is a simple example. As you can
-see there, we have to do nothing special to obey the rules of
-persistence in this case.
+The code in the section `Storing data`_ is a simple example. We in
+fact have to do nothing special at all to obey the rules of
+persistence in that case.
 
-If we use a mutable object instead, we do need to take special action. Let's
-change our example code to use a mutable object::
+If we use a mutable object such as a list or dictionary to store data
+instead, we do need to take special action. Let's change our example
+code (based on the last section) to use a mutable object (a list):
 
-  import grok
+.. include:: groktut/the_rules_of_persistence/src/sample/app.py
+  :literal:
 
-  class Sample(grok.Application, grok.Container):
-      text = 'default text'
+We have now changed the ``Sample`` class to do something new: it has
+an ``__init__`` method. Whenever you create the ``Sample`` application
+object now, it will be created with an attribute called ``list``,
+which will contain an empty Python list. 
 
-  class Index(grok.View):
-      pass
+We also make sure that the ``__init__`` method of the superclass still
+gets executed, by using the regular Python ``super`` idiom. If we
+didn't do that, our container would not be fully initialized.
 
-  class Edit(grok.View):
-      def update(self, text=None):
-          if text is None:
-              return
-          self.context.texts.append(text)
-          self.redirect(self.url('index'))
+You will also notice a small change to the ``update`` method of the
+``Edit`` class. Instead of just storing the text as an attribute of
+our ``Sample`` model, we add each text we enter to the new
+``list`` attribute on. 
 
-XXX
+Note that this code has a subtle bug in it, which is why we've added
+the comment. We will see what bug this is in a little bit. First,
+though, let's change our templates.
+
+We change ``index.pt`` so that it displays the list:
+
+.. include:: groktut/the_rules_of_persistence/src/sample/app_templates/index.pt
+  :literal:
+
+We've also changed the text of the link to the ``edit`` page to reflect
+the new adding behavior of our application.
+
+We need to undo the change to the ``edit.pt`` template that we
+made in the last section, as each time we edit a text we now *add* a
+new text, instead of changing the original. There is therefore no text
+to show in as the input value anymore:
+
+.. include:: groktut/the_rules_of_persistence/src/sample/app_templates/edit.pt
+  :literal:
+
+.. sidebar:: evolution
+
+  What to do when you change an object's storage structure while your
+  application is already in production? In a later section, we will
+  introduce Zope 3's object evolution mechanism that allows you to
+  update objects in an existing object database. XXX
+
+Let's restart our Zope application. If you have followed the tutorial
+from the last section, you will now see an error when you look at the
+front page of the application::
+
+  A system error occurred. 
+
+Look at the output Zope gave when we tried to load our page::
+
+  AttributeError: 'Sample' object has no attribute 'list'
+
+But we just changed our object to have an attribute ``list``, right?
+Yes we did, but only for *new* instances of the Sample object. What we
+are looking at is the sample object from before, still stored in the
+object database. It has no such attribute. This isn't a bug by the way
+(for our actual bug, see later in this section): it is just a database
+problem.
+
+What to do now? The simplest action to take during development is to
+simply remove our previously installed application, and create a new
+one that *does* have this attribute. Go to the Grok admin screen:
+
+  http://localhost:8080
+
+Click the application object (``test``) and delete it. Now install it
+again, as ``test``. Now go to its edit screen and add a text:
+
+  http://localhost:8080/test/edit
+
+Click on ``add a text`` and add another text. You will see the new
+texts appear on the ``index`` page.
+
+Everything is just fine now, right? In fact, not so! Now we will get
+to our bug. Restart Zope and look at the index page again:
+
+  http://localhost:8080/test
+
+None of the texts we added were saved! What happened? We broke the
+third rule of persistence as described above: we modified a mutable
+attribute and did not notify the database that we made this
+change. This means that the object database was not aware of our
+change to the object in memory, and thus never saved it to disk.
+
+We can easily amend this by adding one line to the code:
+
+.. include:: groktut/the_rules_of_persistence2/src/sample/app.py
+  :literal:
+
+We've now told Zope that the context object has changed (because we
+modified a mutable sub-object), by adding the line::
+
+  self.context._p_changed = True
+
+If you now add some texts and then restart Zope, you will notice the
+data is still there: it has successfully been stored in the object
+database.
+
+The code shown so far is a bit ugly in the sense that typically we
+would want to manage our state in the model code (the ``Sample``
+object in this case), and not in the view. Let's make one final
+change to show what that would look like:
+
+.. include:: groktut/the_rules_of_persistence3/src/sample/app.py
+  :literal:
+
+As you can see, we have created a method ``addText`` to the model that
+takes care of amending the list and informing the ZODB about it. This
+way, any view code can safely use the API of ``Sample`` without having
+to worry about the rules of persistence itself, as that is the model's
+responsibility.
 
 Containers
 ----------
