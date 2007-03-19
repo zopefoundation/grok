@@ -216,11 +216,9 @@ class JSONGrokker(grok.ClassGrokker):
 
     def register(self, context, name, factory, module_info, templates):
         view_context = util.determine_class_context(factory, context)
-        # XXX We should really not make __FOO__ methods available to
-        # the outside -- need to discuss how to restrict such things.
         methods = util.methods_from_class(factory)
 
-        # Determine the default permission for the XMLRPC methods.
+        # Determine the default permission for the JSON methods.
         # There can only be 0 or 1 of those.
         permissions = util.class_annotation(factory, 'grok.require', [])
         if not permissions:
@@ -233,6 +231,8 @@ class JSONGrokker(grok.ClassGrokker):
                             % factory, factory)
 
         for method in methods:
+            # Create a new class with a __view_name__ attribute so the
+            # JSON class knows what method to call.
             method_view = type(
                 factory.__name__, (factory,),
                 {'__view_name__': method.__name__}

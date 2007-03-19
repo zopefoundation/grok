@@ -222,7 +222,8 @@ class XMLRPC(object):
     pass
 
 class JSON(BrowserPage):
-    def __call__(self, *args):
+
+    def __call__(self):
         view_name = self.__view_name__
         method = getattr(self, view_name)
         method_result = mapply(method, (), self.request)
