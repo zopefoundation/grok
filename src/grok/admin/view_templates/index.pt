@@ -3,11 +3,18 @@
     <title>grok administration interface</title>
   </head>
 
-  <body>
-    <h1>Installed applications</h1>
+  <body tal:define="apps context/values">
+    <h1>Grok Applications</h1>
+
+    <form tal:attributes="action string:${context/@@absolute_url}/delete"
+          tal:condition="apps|nothing">
+      <fieldset>
+        <legend>Installed applications</legend>
 
     <ul>
-      <li tal:repeat="app context/values">
+      <li tal:repeat="app apps">
+        <input type="checkbox" tal:attributes="value app/__name__;
+                                               name string:items" />
         <a tal:attributes="href string:${context/@@absolute_url}/${app/__name__}">
           <span tal:replace="app/__name__"/>
           (<span tal:replace="app/__class__/__name__"/>)
@@ -15,6 +22,9 @@
       </li>
     </ul>
 
+        <p><input type="submit" value="Delete Selected"/></p>
+        </fieldset>
+    </form>
     <form tal:attributes="action string:${context/@@absolute_url}/add">
       <fieldset>
         <legend>Add application</legend>

@@ -23,3 +23,15 @@ class Add(grok.View):
                                         name=application)
         self.context[name] = app()
         self.redirect(self.url(self.context))
+
+class Delete(grok.View):
+    grok.require('grok.ManageApplications')
+
+    def render(self, items):
+        if not type(items) == type([]):
+            items = [items]
+        print items
+        for name in items:
+            del self.context[name]
+        self.redirect(self.url(self.context))
+
