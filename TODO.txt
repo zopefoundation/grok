@@ -31,12 +31,12 @@ Core
 - Change error messages: whenever we report about a callable, add
   () to the name. Core Python expections do this.
 
+- JSON support similar to XMLRPC.
+
 Schema/formlib support
 ----------------------
 
 - support nested class 'fields' directly on a view (do we really want this?)
-
-- add form
 
 - list form for grok.Container (w/ zc.table?)
 
@@ -49,7 +49,18 @@ Schema/formlib support
 Need to discuss
 ---------------
 
-- TALES path expressions to generate URLs?
+- Do we want to ship Grok with a javascript library dependency such as
+  MochiKit, to enable out of-the-box AJAX?
+
+- Make it even easier to set up the catalog (intids should be set up
+  automatically if not already present. Perhaps Index grokkers?).
+
+- Testing support. Test grokkers?
+
+- Error pages: make it easy to register application-specific error
+  pages for exceptions.
+
+- Easier queries: integrate hurry.query in some way?
 
 - fall back to a static resource that is defined in a package on a higher
   level if no static resource directory is defined locally in a package?
