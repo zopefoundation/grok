@@ -1055,7 +1055,7 @@ one that *does* have this attribute. Go to the Grok admin screen:
 
   http://localhost:8080
 
-Click the application object (``test``) and delete it. Now install it
+Select the application object (``test``) and delete it. Now install it
 again, as ``test``. Now go to its edit screen and add a text:
 
   http://localhost:8080/test/edit
