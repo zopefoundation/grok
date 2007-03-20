@@ -13,10 +13,15 @@ CREDITS
 
 * Christian Zagrodnick
 
+* Darryl Cousins
+
 * ME GROK
 
 Thank you
 ---------
+
+* The Zope 3 developers, who provided the mountain for Grok to stand
+  on.
 
 * gocept for hosting the first grok sprint in Halle, Germany. Special
   thanks to Felicia Faassen Wong, Christian Zagrodnick and Magda
