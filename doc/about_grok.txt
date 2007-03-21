@@ -5,48 +5,86 @@ Grok: Experience, Expertise, Extensibility
 ------------------------------------------
 
 Grok is a web application framework for Python developers. It is aimed
-at both beginners and very experienced web developers. 
+at both beginners and very experienced web developers. Grok has an
+emphasis on agile development. Grok is easy *and* powerful.
 
-Now you will have likely heard about many different web frameworks for
-Python. We will explain why you should consider Grok.
+You will likely have heard about many different web frameworks for
+Python as well as other languages. Why you should you consider Grok?
 
-Grok is agile. Grok is fun. Grok offers a very wide range of
-features. Grok is extensible. Grok is grounded in a deep experience
-with web development.
+* Grok offers a *lot* of building blocks for your web application.
 
-How does Grok do all that? By standing on a giant's shoulder. That
-giant is Zope 3.
+* Grok is informed by a *lot* of hard-earned wisdom.
 
-Grok, through Zope 3, offers a *lot* of building blocks for your web
-application.
+Grok accomplishes this by being based on Zope 3, an advanced
+object-oriented web framework. While Grok is based on Zope 3, and
+benefits a lot from it, you do not need to know Zope at all in order
+to get productive with Grok.
 
-Grok, through Zope 3, is informed by a *lot* of hard-earned wisdom.
+Grok is agile
+.............
 
-Grok is based on Zope 3. Zope 3 is a powerful and flexible web
-application framework for Python. It features a large amount of API
-documentation. Zope 3 aims for reliability. It has a very large
-automatic test coverage (many thousands of tests). It has a large set
-of core features, and sports an enormous range of plug-in components.
+Grok doesn't require you to edit cryptic configuration files. Instead
+you just program in Python and create HTML templates. Beyond this,
+Grok also offers a wide range of built-in features at your fingertips,
+from automated form generation to an object database. This way, Grok
+gives you both power and quick satisfaction during development.
 
-Zope 3 has been under continuous development since 2001. Zope 3's
-design in turn is based on experience with the Zope 2 platform, which
-has been under continuous development (starting Bobo, Principia and
-then Zope 1) since 1997. The Zope community is supported by an
-independent foundation, the Zope Foundation.
+Grok has an extensive tutorial_ that helps you to get started. And
+thanks to grokproject_, you'll be able to create your first web app
+with Grok in no time.
+
+.. _tutorial: /tutorial.html
+
+.. _grokproject: http://cheeseshop.python.org/pypi/grokproject
+
+Grok offers a very wide range of features
+.........................................
+
+Through Zope 3, Grok offers a very wide range of building blocks for
+your web application. What's more, Zope 3 components are typically
+rock-solid due to extensive unit-testing and well-specified API
+documentation.
+
+Grok is grounded in a deep experience with web development
+..........................................................
+
+Grok, through Zope 3, is informed by hard-earned wisdom. Zope 3 is a
+powerful and flexible web application framework for Python that has
+been under continuous development since 2001.  Zope 3's design in turn
+is based on experience with the Zope 2 platform, which has been under
+continuous development (starting with Bobo, Principia and then Zope 1)
+since 1997. The Zope community is supported by an independent
+foundation, the Zope Foundation. 
+
+The Zope community has been around for a while. We've built a lot and
+learned a lot. We are in this for the long run.
+
+Grok for the future
+...................
 
 Successful web applications aren't built for a day - such an
 application will need to be maintained, extended, evolved, over a
 period of many years. Zope developers really know this. Grok, through
-Zope 3, offers a basic architecture that enables your application to
-grow over time.
+Zope 3, offers an architecture that enables your application to grow
+over time.
+
 
 Grok: Zope 3 for cavemen
 ------------------------
 
-Zope 3, unfortunately, also has some problems: its power also raises
-the entry barrier for developers to get up to speed with it. Even
-after you've learned it, its emphasis on explicit configuration and
-specification of interfaces can slow down development.
+Grok stands on a giant's shoulder. That giant is Zope 3.
+
+Zope 3 is an advanced object oriented web framework. Zope 3 features a
+large amount of API documentation and aims for reliability. It has a
+very large automatic test coverage (many thousands of tests). It has a
+large set of core features, and sports an enormous range of plug-in
+components.
+
+The Grok developers think Zope 3 is great. Zope 3, unfortunately, also
+has some problems: its power raises the entry barrier for developers
+to get up to speed with it. Even after you've learned it, Zope 3's
+emphasis on explicit configuration and specification of interfaces can
+slow down development.
 
 Grok aims to remedy these problems. Grok aims to make Zope 3 easier to
 learn, and more agile to work with, while retaining the power of Zope
