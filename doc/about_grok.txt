@@ -27,7 +27,8 @@ Grok doesn't require you to edit cryptic configuration files. Instead
 you just program in Python and create HTML templates. Beyond this,
 Grok also offers a wide range of built-in features at your fingertips,
 from automated form generation to an object database. This way, Grok
-gives you both power and quick satisfaction during development.
+gives you both power and quick satisfaction during development. Grok
+is *fun*.
 
 Grok has an extensive tutorial_ that helps you to get started. And
 thanks to grokproject_, you'll be able to create your first web app
