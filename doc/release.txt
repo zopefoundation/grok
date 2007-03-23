@@ -1,0 +1,27 @@
+Continuous releases from SVN
+----------------------------
+
+A note from Philipp to the mailing list, put here so we don't forget this
+useful information:
+
+I've now enabled grok and grokproject to register themselves as
+revision number-based releases from SVN. That means the version number
+is now composed the following way:
+
+  ${next_stable_release_version}dev-r{svn_revision_number}
+
+The advantage of that is that we can now receive automatic updates
+whenever we reregister a newer "version" of grok (based on a higher
+revision number).
+
+I've also uploaded eggs and tarballs so that people who don't have
+subversion can still install grok and grokproject (useful for Windows
+folks). That means if you easy_install grok right now, it will install
+it from the uploaded egg (you won't get the subversion HEAD
+anymore). If you still want to get it straight from subversion,
+easy_install grok==dev.
+
+After changes to grok itself, you can register and upload a new
+"release" to the Cheeseshop with
+
+  python setup.py register sdist bdist_egg upload
