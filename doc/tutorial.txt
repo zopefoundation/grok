@@ -1074,6 +1074,30 @@ attribute and did not notify the database that we made this
 change. This means that the object database was not aware of our
 change to the object in memory, and thus never saved it to disk.
 
+.. sidebar: The ZODB only stores instance data
+
+  Note that the ZODB only stores ("persists") instance data. This
+  means that any data you have directly associated with a class, as
+  opposed to the instance, won't be persisted. Normally you only
+  associate immutable data with the class, so this is not a problem::
+ 
+    class Foo(object):
+        mydata = 'some text'
+
+  That data will be there when the module is imported, and since it 
+  will never be changed, there isn't a problem. Now let's check what
+  happens with mutable data::
+
+    class Foo(object):
+        mydata = []
+
+  Appending an item to mydata (through ``self.mydata.append('bar')``,
+  for instance) have an effect, but only until you restart Zope. Then
+  your changes will be lost.
+
+  It is good Python design practice not to use mutable class-data, so
+  this property of the ZODB shouldn't cramp your style.
+ 
 We can easily amend this by adding one line to the code:
 
 .. include:: groktut/the_rules_of_persistence2/src/sample/app.py
@@ -1102,36 +1126,199 @@ way, any view code can safely use the API of ``Sample`` without having
 to worry about the rules of persistence itself, as that is the model's
 responsibility.
 
-Containers
+Explicitly associating a view with a model
+------------------------------------------
+
+How does Grok know that a view belongs to a model? In the previous
+examples, Grok has made this association automatically. Grok could do
+this because there was only a single model defined in the module
+(``Sample``). In this case, Grok is clever enough to automatically
+associate all views defined elsewhere in the same module to the only
+model. Behind the scenes Grok made the model the *context* of the
+views.
+
+Everything that Grok does implicitly you can also tell Grok to do
+explicitly. This will come in handy later, as you may sometimes need
+(or want) to tell Grok what to do, overriding its default behavior. To
+associate a view with a model automatically, you use the
+``grok.context`` class annotation.
+
+What is a class annotation? A class annotation is a declarative way
+to tell grok something about a Python class. Let's look at an example.
+We will change ``app.py`` in the example from `A second view` to demonstrate
+the use of ``grok.context``:
+
+.. include:: groktut/explicitly_associating_a_view_with_a_model/src/sample/app.py
+  :literal:
+
+This code behaves in exactly the same way as the previous example in
+`A second view`, but has the relationship between the model and the
+view made explicit, using the ``grok.context`` class annotation.
+
+``grok.context`` is just one class annotation out of many. We will see
+another one (``grok.name``) in the next section.
+
+A second model
+--------------
+
+.. sidebar:: How to combine models into a single application?
+
+  Curious now about how to combine models into a single application?
+  Can't wait? Look at the section `Containers` coming up next, or
+  `Traversal` later on.
+
+We will now extend our application with a second model. Since we
+haven't explained yet how to combine models together into a single
+application, we will just create a second application next to our
+first one. Normally we probably wouldn't want to define two
+applications in the same module, but we are trying to illustrate a few
+points, so please bear with us. Change ``app.py`` so it looks like
+this:
+
+.. include:: groktut/a_second_model/src/sample/app.py
+  :literal:
+
+You can see we now defined a second application class, ``Another``.
+It subclasses from ``grok.Application`` to make it an installable
+application.  
+
+It also subclasses from ``grok.Model``. There is a difference between
+``grok.Model`` and ``grok.Container``, but for the purpose of the
+discussion we can ignore it for now. We just figured we should use
+``grok.Model`` for some variety, though we could have indeed
+subclassed from ``grok.Container`` instead.
+
+We also define two templates, one called ``sampleindex.pt``:
+
+.. include:: groktut/a_second_model/src/sample/app_templates/sampleindex.pt
+  :literal:
+
+And one called ``anotherindex.pt``:
+
+.. include:: groktut/a_second_model/src/sample/app_templates/anotherindex.pt
+  :literal:
+
+We have named the templates the name as the lowercased class names as
+the views, so that they get associated with them.
+
+You will have noticed we have used ``grok.context`` to associate the
+views with models. We actually *have* to do this here, as Grok refuses
+to guess in the face of ambiguity. Without the use of
+``grok.context``, we would have seen an error like this when we start
+up Zope::
+
+  GrokError: Multiple possible contexts for <class
+  'sample.app.AnotherIndex'>, please use grok.context.
+
+So, we use ``grok.context`` to explicitly associate ``SampleIndex``
+with the ``Sample`` application, and again to associate
+``AnotherIndex`` with the ``Another`` application.
+
+We have another problem: the intent is for these views to be ``index``
+views. This cannot be deduced automatically from the name of the view
+classes however, and left to its own devices, Grok would have called
+the views ``sampleindex`` and ``anotherindex``. 
+
+Luckily we have another class annotation that can help us here:
+``grok.name``. We can use it on both view classes
+(``grok.name('index')``) to explicitly explain to Grok what we want.
+
+You can now try to restart Zope and create both applications. They
+should display the correct index pages when you look at them.
+
+We can see that the introduction of a second model has complicated our
+code a bit, though you will hopefully agree with us that it is still
+quite readable. We could have avoided the whole problem by simply
+placing ``Another`` and its views in another module such as
+``another.py``.  Its associated templates would then need to be placed
+in a directory ``another_templates``. Often you will find it possible
+to structure your application so you can use Grok's default
+conventions.
+
+Containers 
 ----------
 
-Let's now turn our application into a container, and place some
-objects into it. Let's turn our application into a container. For now,
-think of a container as a Python dictionary, but one that knows about
-the rules of persistence.
+A container is a special kind of model object that can contain other
+objects. Our ``Sample`` application is already a container, as it
+subclasses ``grok.Container``. What we will do in this section is
+build an application that actually puts something into that container.
 
-Changing the application object into a container will have some larger
-repercussions: we need to throw away our original ``test`` application
-object in the database and create a new one.
+Grok applications ar typically composed of containers and
+models. Containers are objects that can contain models. This includes
+other containers, as a container is just a special kind of model.
 
-TDB
+From the perspective of Python, you can think of containers as
+dictionaries.  They allow item access (``container['key']``) to get at
+its contents. They also define methods such as ``keys()`` and
+``values()``. Containers do a lot more than Python dictionaries
+though: they are persistent, and when you modify them, you don't have
+to use `_p_changed` anywhere to notice you changed them. They also
+send out special events that you can listen to when items are placed
+in them or removed from them. For more on that, see the section on
+events (XXX).
 
-Events
-------
+Our application object will have a single index page that displays the
+list of items in the container. You can click an item in the list to
+view that item. Below the list, it will display a form that allows you
+to create new items.
 
-TDB
+Here is the ``app.py`` of our new application:
 
-Constructing urls with ``view.url()``
--------------------------------------
+.. include:: groktut/containers/src/sample/app.py
+  :literal:
 
-TDB
+As you can see, ``Sample`` is unchanged. We have also created our
+first non-application object, ``Entry``. It is just a
+``grok.Model``. It needs to be created with an argument ``text`` and
+this text is stored in it. We intend to place instances of ``Entry``
+in our ``Sample`` container.
 
-Putting your project into SVN
------------------------------
+Next are the views. We have an ``index`` page for the ``Sample``
+container. When its ``update()`` is triggered with two values,
+``name`` and ``text``, it will create a new ``Entry`` instance with
+the given text, and place it under the container under the name
+``name``. We use the dictionary-like interface of our ``Sample``
+container to put our new ``Entry`` in the container.
 
-TDB
+Here is the associated template for ``SampleIndex``, ``sampleindex.pt``:
 
-Uploading your project to the Python Cheeseshop
------------------------------------------------
+.. include:: groktut/containers/src/sample/app_templates/sampleindex.pt
+  :literal:
 
-TDB
+The first section in the template (``<h2>Existing entries</h2>``)
+displays a list of the items in the container. We again use
+dictionary-like access using ``keys()`` to get a list of all the names
+of the items in the container. We create a link to these items using
+``view.url()``.
+
+The next section (``<h2>Add a new entry</h2>``) displays a simple form
+that submits to the index page itself. It has two fields, ``name`` and
+``text``, which we already have seen handled by ``update()``.
+
+Finally, we have an ``index`` page for ``Entry``. It just has a template
+to display the ``text`` attribute:
+
+.. include:: groktut/containers/src/sample/app_templates/entryindex.pt
+  :literal:
+
+Restart Zope and try this application.  Call your application
+``test``. Pay special attention to the URLs.
+
+First, we have the index page of our application:
+
+  http://localhost:8080/test
+
+When we create an entry called ``hello`` in the form, and then click on it
+in the list, you see an URL that looks like this:
+
+  http://localhost:8080/test/hello
+
+We are now looking at the index page of the instance of ``Entry``
+called ``hello``.
+
+What kind of extensions to this application can we think of? We could
+create an ``edit`` form that allows you to edit the text of
+entries. We could modify our application so that you can not just add
+instances of ``Entry``, but also other containers. If you made those
+modifications, you would be on your way to building your own content
+management system with Grok.

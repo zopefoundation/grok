@@ -86,6 +86,11 @@ redirection).
  
   * Containers
 
+Some notes:
+
+* What if a container already contains an item with the same name? We will
+  get an error. How to handle this error elegantly?
+
 Forms
 -----
 
