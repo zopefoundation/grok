@@ -1,6 +1,6 @@
 import grok
 
-class testproj(grok.Application, grok.Container):
+class Sample(grok.Application, grok.Container):
     pass
 
 class Index(grok.View):
