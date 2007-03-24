@@ -111,7 +111,8 @@ application with indexing and search, using the catalog.
 
 By now the application should also be advanced enough to explain
 overriding traversal, for instance to enable simple 'tag' based
-browsing mechanism based on search.
+browsing mechanism based on search. We need to show a pattern where
+non-persistent objects are created in traversal.
 
 This will also lead into a brief introduction of utility lookup and
 sites.
