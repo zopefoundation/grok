@@ -10,9 +10,7 @@
   >>> print browser.contents
   <html>
   ...
-  <h1>Installed applications</h1>
-  ...
-  <legend>Add application</legend>
+  ...<legend>Add application</legend>
   ...
   >>> browser.getControl('Application').displayValue = ['grok.ftests.admin.admin.MammothManager']
   >>> browser.getControl('Name').value = 'my-mammoth-manager'
@@ -20,12 +18,13 @@
   >>> print browser.contents
   <html>
   ...
-  <li>
-    <a href="http://localhost/my-mammoth-manager">
-    my-mammoth-manager
-    (MammothManager)
-    </a>
-  </li>
+      <li>
+        <input type="checkbox" name="items" value="my-mammoth-manager" />
+        <a href="http://localhost/my-mammoth-manager">
+          my-mammoth-manager
+          (MammothManager)
+        </a>
+      </li>
   ...
   >>> browser.getLink('my-mammoth-manager').click()
   >>> print browser.contents
