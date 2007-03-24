@@ -18,17 +18,33 @@
   >>> print browser.contents
   <html>
   ...
-      <li>
+      <label>
         <input type="checkbox" name="items" value="my-mammoth-manager" />
         <a href="http://localhost/my-mammoth-manager">
           my-mammoth-manager
           (MammothManager)
         </a>
-      </li>
+      </label>
   ...
   >>> browser.getLink('my-mammoth-manager').click()
   >>> print browser.contents
   Let's manage some mammoths!
+
+We are able to delete installed applications.
+
+  >>> browser.open("http://localhost/")
+  >>> print browser.contents
+  <html>
+  ...
+  ...<legend>Installed applications</legend>
+  ...
+  >>> browser.getControl('my-mammoth-manager (MammothManager)').selected = True
+  >>> browser.getControl('Delete Selected').click()
+  >>> print browser.contents
+  <html>
+  ...
+  ...<legend>Add application</legend>
+  ...
 
 """
 import grok
