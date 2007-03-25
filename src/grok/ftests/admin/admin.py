@@ -18,13 +18,13 @@
   >>> print browser.contents
   <html>
   ...
-      <label>
+      <li>
         <input type="checkbox" name="items" value="my-mammoth-manager" />
         <a href="http://localhost/my-mammoth-manager">
           my-mammoth-manager
           (MammothManager)
         </a>
-      </label>
+      </li>
   ...
   >>> browser.getLink('my-mammoth-manager').click()
   >>> print browser.contents
@@ -38,7 +38,8 @@ We are able to delete installed applications.
   ...
   ...<legend>Installed applications</legend>
   ...
-  >>> browser.getControl('my-mammoth-manager (MammothManager)').selected = True
+  >>> ctrl = browser.getControl(name='items')
+  >>> ctrl.getControl(value='my-mammoth-manager').selected = True
   >>> browser.getControl('Delete Selected').click()
   >>> print browser.contents
   <html>

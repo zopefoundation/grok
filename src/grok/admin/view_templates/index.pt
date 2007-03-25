@@ -13,14 +13,12 @@
 
     <ul>
       <li tal:repeat="app apps">
-      <label>
         <input type="checkbox" tal:attributes="value app/__name__;
                                                name string:items" />
         <a tal:attributes="href string:${context/@@absolute_url}/${app/__name__}">
           <span tal:replace="app/__name__"/>
           (<span tal:replace="app/__class__/__name__"/>)
         </a>
-        </label>
       </li>
     </ul>
 
