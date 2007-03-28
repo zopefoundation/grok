@@ -16,6 +16,7 @@ Grok testing facilities
 """
 import re
 from zope.testing import doctest
+from zope.app.testing.functional import defineLayer
 from grok import util, components, grokker, scan
 
 class DocTestGrokker(components.ModuleGrokker):
@@ -71,3 +72,5 @@ def grok_tree(registry, module_info, ignore):
 
     for sub_module_info in module_info.getSubModuleInfos():
         grok_tree(registry, sub_module_info, ignore)
+
+defineLayer('GrokFunctionalLayer', 'ftesting.zcml')

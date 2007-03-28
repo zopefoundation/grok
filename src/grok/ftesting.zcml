@@ -1,0 +1,52 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   i18n_domain="grok"
+   package="grok"
+   >
+
+  <include package="zope.i18n" file="meta.zcml" />
+  <include package="zope.security" file="meta.zcml" />
+  <include package="zope.app" file="meta.zcml" />
+  <include package="zope.app.securitypolicy" file="meta.zcml" />
+  <include package="grok" file="meta.zcml" />
+
+  <include package="zope.annotation" />
+  <include package="zope.copypastemove" />
+  <include package="zope.formlib" />
+  <include package="zope.i18n.locales" />
+  <include package="zope.publisher" />
+  <include package="zope.traversing" />
+  <include package="zope.traversing.browser" />
+  <include package="zope.app" />
+  <include package="zope.app.authentication" />
+  <include package="zope.app.catalog" />
+  <include package="zope.app.intid" />
+  <include package="zope.app.keyreference" />
+  <include package="grok" />
+
+  <include package="zope.app.securitypolicy" />
+  <securityPolicy
+      component="zope.app.securitypolicy.zopepolicy.ZopeSecurityPolicy"
+      />
+
+  <unauthenticatedPrincipal
+      id="zope.anybody"
+      title="Unauthenticated User"
+      />
+  <grant
+      permission="zope.View"
+      principal="zope.anybody"
+      />
+
+  <principal
+      id="zope.mgr"
+      title="Manager"
+      login="mgr"
+      password="mgrpw"
+      />
+
+  <role id="zope.Manager" title="Site Manager" />
+  <grantAll role="zope.Manager" />
+  <grant role="zope.Manager" principal="zope.mgr" />
+
+</configure>
