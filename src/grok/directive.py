@@ -262,6 +262,15 @@ class RequireDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
             return func
         return decorator
 
+class DocTestDirective(OnceDirective):
+    # XXX pad out the exact args we take, from DocTestSuite (minus
+    # package, plus layer)
+    def check_arguments(self, **options):
+        pass
+
+    def value_factory(self, **options):
+        return options
+
 # Define grok directives
 name = SingleTextDirective('grok.name', ClassDirectiveContext())
 template = SingleTextDirective('grok.template', ClassDirectiveContext())
@@ -277,3 +286,4 @@ local_utility = LocalUtilityDirective('grok.local_utility',
 define_permission = MultipleTextDirective('grok.define_permission',
                                           ModuleDirectiveContext())
 require = RequireDirective('grok.require', ClassDirectiveContext())
+doctest = DocTestDirective('grok.doctest', ModuleDirectiveContext())
