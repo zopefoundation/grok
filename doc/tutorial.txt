@@ -2,6 +2,10 @@
 Grok tutorial
 =============
 
+Also available as PDF_.
+
+.. _PDF: tutorial.pdf
+
 .. contents::
 
 Welcome to the Grok tutorial!
