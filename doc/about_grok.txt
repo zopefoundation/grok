@@ -1,12 +1,13 @@
+======================================
 Grok: now even cavemen can use Zope 3
 ======================================
-
-Grok: Experience, Expertise, Extensibility
-------------------------------------------
 
 Grok is a web application framework for Python developers. It is aimed
 at both beginners and very experienced web developers. Grok has an
 emphasis on agile development. Grok is easy *and* powerful.
+
+Grok: Experience, Expertise, Extensibility
+------------------------------------------
 
 You will likely have heard about many different web frameworks for
 Python as well as other languages. Why you should you consider Grok?
