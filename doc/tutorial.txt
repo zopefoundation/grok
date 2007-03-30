@@ -2,9 +2,9 @@
 Grok tutorial
 =============
 
-Also available as PDF_.
+.. raw:: html
 
-.. _PDF: tutorial.pdf
+   Also available as <a href="./tutorial.pdf">PDF</a>.
 
 .. contents::
 
