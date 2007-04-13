@@ -267,6 +267,8 @@ name = SingleTextDirective('grok.name', ClassDirectiveContext())
 template = SingleTextDirective('grok.template', ClassDirectiveContext())
 context = InterfaceOrClassDirective('grok.context',
                                     ClassOrModuleDirectiveContext())
+layer = InterfaceDirective('grok.layer',
+                           ClassOrModuleDirectiveContext())
 templatedir = SingleTextDirective('grok.templatedir', ModuleDirectiveContext())
 provides = InterfaceDirective('grok.provides', ClassDirectiveContext())
 baseclass = MarkerDirective('grok.baseclass', ClassDirectiveContext())

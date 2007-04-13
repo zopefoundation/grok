@@ -171,12 +171,16 @@ class ViewGrokker(grok.ClassGrokker):
                 raise GrokError("View %r has no associated template or "
                                 "'render' method." % factory, factory)
 
+        view_layer = util.class_annotation(factory, 'grok.layer',
+                                           None) or module_info.getAnnotation('grok.layer',
+                                               None) or IDefaultBrowserLayer
+
         view_name = util.class_annotation(factory, 'grok.name',
                                           factory_name)
         # __view_name__ is needed to support IAbsoluteURL on views
         factory.__view_name__ = view_name
         component.provideAdapter(factory,
-                                 adapts=(view_context, IDefaultBrowserLayer),
+                                 adapts=(view_context, view_layer),
                                  provides=interface.Interface,
                                  name=view_name)
 
