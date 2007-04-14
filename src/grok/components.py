@@ -317,7 +317,7 @@ class Traverser(object):
 
         if IReadContainer.providedBy(self.context):
             item = self.context.get(name)
-            if item:
+            if item is not None:
                 return item
 
         raise NotFound(self.context, name, request)

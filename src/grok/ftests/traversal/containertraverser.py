@@ -51,6 +51,14 @@ The fall-back behavior should work for items that aren't traversed:
   </body>
   </html>
 
+Also try traversing (an empty and therefore False in a Boolean sense) container
+as a subitem of a container:
+
+  >>> herd['subherd'] = Herd()
+  >>> browser.open("http://localhost/herd/subherd/special")
+  >>> print browser.contents
+  special view
+
 """
 import grok
 
