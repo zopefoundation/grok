@@ -199,18 +199,24 @@ class InterfaceDirective(SingleValue, OnceDirective):
                                   "%s." % self.name)
 
 
-
 class DefineSkinDirective(MultipleTimesDirective):
     def check_arguments(self, name, iface):
-        pass
+        if not name:
+            raise GrokImportError("First argument cannot be an empty string"
+                                  "of %s." % self.name)
+        if not IInterface.providedBy(iface):
+            raise GrokImportError("You can only pass an interface as the "
+                                  "second argument of %s." % self.name)
 
     def value_factory(self, *args, **kw):
         return DefineSkinInfo(*args, **kw)
+
         
 class DefineSkinInfo(object):
     def __init__(self, name, iface):
         self.name = name
         self.iface = iface
+
         
 class GlobalUtilityDirective(MultipleTimesDirective):
     def check_arguments(self, factory, provides=None, name=u''):
@@ -295,9 +301,4 @@ require = RequireDirective('grok.require', ClassDirectiveContext())
 
 defineskin = DefineSkinDirective('grok.defineskin',
                                  ModuleDirectiveContext())
-
-
-# from zope.component.interface import provideInterface
-# def defineskin(name, iface):
-#     provideInterface(name, iface, IBrowserSkinType)
 
