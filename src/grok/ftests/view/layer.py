@@ -14,7 +14,7 @@
   <h1>Hello, world!</h1>
   </body>
   </html>
-
+  
   >>> browser.open("http://localhost/++skin++Rotterdam/manfred/@@cavedrawings")
   Traceback (most recent call last):
   ...
@@ -22,15 +22,23 @@
   >>> browser.open("http://localhost/++skin++Rotterdam/manfred/@@moredrawings")
   >>> print browser.contents
   Pretty
+  >>> browser.open("http://localhost/++skin++MySkin/manfred/@@evenmoredrawings")
+  >>> print browser.contents
+  Awesome
 
 """
 import grok
 from zope.app.basicskin import IBasicSkin
 from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.app.rotterdam import rotterdam
+from zope import interface
 
 grok.layer(IBasicSkin)
 
+class MySkinLayer(grok.Layer):
+    pass
+
+grok.defineskin('MySkin', MySkinLayer)
 
 class Mammoth(grok.Model):
     pass
@@ -51,3 +59,9 @@ class MoreDrawings(grok.View):
 
     def render(self):
         return "Pretty"
+
+class EvenMoreDrawings(grok.View):
+    grok.layer(MySkinLayer)
+
+    def render(self):
+        return "Awesome"

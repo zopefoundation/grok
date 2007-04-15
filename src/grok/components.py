@@ -108,6 +108,10 @@ class Container(BTreeContainer):
     interface.implements(IAttributeAnnotatable)
 
 
+class Layer(interface.Interface):
+    pass
+
+
 class Site(SiteManagerContainer):
     pass
 

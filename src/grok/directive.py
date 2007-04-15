@@ -199,6 +199,19 @@ class InterfaceDirective(SingleValue, OnceDirective):
                                   "%s." % self.name)
 
 
+
+class DefineSkinDirective(MultipleTimesDirective):
+    def check_arguments(self, name, iface):
+        pass
+
+    def value_factory(self, *args, **kw):
+        return DefineSkinInfo(*args, **kw)
+        
+class DefineSkinInfo(object):
+    def __init__(self, name, iface):
+        self.name = name
+        self.iface = iface
+        
 class GlobalUtilityDirective(MultipleTimesDirective):
     def check_arguments(self, factory, provides=None, name=u''):
         if provides is not None and not IInterface.providedBy(provides):
@@ -279,3 +292,12 @@ local_utility = LocalUtilityDirective('grok.local_utility',
 define_permission = MultipleTextDirective('grok.define_permission',
                                           ModuleDirectiveContext())
 require = RequireDirective('grok.require', ClassDirectiveContext())
+
+defineskin = DefineSkinDirective('grok.defineskin',
+                                 ModuleDirectiveContext())
+
+
+# from zope.component.interface import provideInterface
+# def defineskin(name, iface):
+#     provideInterface(name, iface, IBrowserSkinType)
+

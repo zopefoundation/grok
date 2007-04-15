@@ -118,6 +118,15 @@ class XMLRPCGrokker(grok.ClassGrokker):
             defineChecker(method_view, checker)
 
 
+class LayerGrokker(grok.ClassGrokker):
+    component_class = grok.Layer
+    
+    def register(self, context, name, factory, module_info, templates):
+        import pdb; pdb.set_trace()
+        view_skin = util.class_annotation(factory, 'grok.skin', None)
+
+
+        
 class ViewGrokker(grok.ClassGrokker):
     component_class = grok.View
 
@@ -287,6 +296,15 @@ class StaticResourcesGrokker(grok.ModuleGrokker):
             resource_factory, (IDefaultBrowserLayer,),
             interface.Interface, name=module_info.dotted_name)
 
+from zope.publisher.interfaces.browser import IBrowserSkinType
+class DefineSkinDirectiveGrokker(grok.ModuleGrokker):
+
+    def register(self, context, module_info, templates):
+        infos = module_info.getAnnotation('grok.defineskin',[])
+        if infos:
+            for skin in infos:
+                zope.component.interface.provideInterface(skin.name, skin.iface,
+                                                          IBrowserSkinType)
 
 class GlobalUtilityDirectiveGrokker(grok.ModuleGrokker):
 

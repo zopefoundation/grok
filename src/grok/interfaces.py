@@ -41,7 +41,7 @@ class IGrokBaseClasses(interface.Interface):
     AddForm = interface.Attribute("Base class for add forms.")
     EditForm = interface.Attribute("Base class for edit forms.")
     DisplayForm = interface.Attribute("Base class for display forms.")
-
+    Layer = interface.Attribute("Base interface for skin layers.")
 
 class IGrokErrors(interface.Interface):
 
@@ -72,6 +72,16 @@ class IGrokDirectives(interface.Interface):
 
     def name(name):
         """Declare the name of a view or adapter/multi-adapter.
+
+        This directive can only be used on class level."""
+
+    def layer(layer):
+        """Declare the layer the view is applied.
+
+        This directive can only be used on class level."""
+
+    def skin(skin):
+        """Declare this layer as a named skin.
 
         This directive can only be used on class level."""
 
@@ -120,6 +130,8 @@ class IGrokDirectives(interface.Interface):
                  The site should in this case be a container.
         name_in_container - the name to use for storing the utility
         """
+    def defineskin(name, iface):
+        """Register skin name for layer."""
 
     def define_permission(permission):
         """Defines a new permission with the id ``permission``."""
