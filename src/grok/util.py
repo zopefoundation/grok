@@ -22,6 +22,9 @@ import inspect
 from zope import component
 from zope import interface
 
+from zope.security.checker import NamesChecker, defineChecker
+from zope.security.interfaces import IPermission
+
 from grok.error import GrokError, GrokImportError
 
 def not_unicode_or_ascii(value):
@@ -144,3 +147,47 @@ def methods_from_class(class_):
                   if name != '__provides__' ]
     methods = [c for c in candidates if inspect.ismethod(c)]
     return methods
+
+def make_checker(factory, view_factory, permission):
+    """Make a checker for a view_factory associated with factory.
+
+    These could be one and the same for normal views, or different
+    in case we make method-based views such as for JSON and XMLRPC.
+    """
+    if permission is not None:
+        check_permission(factory, permission)
+    if permission is None or permission == 'zope.Public':
+        checker = NamesChecker(['__call__'])
+    else:
+        checker = NamesChecker(['__call__'], permission)
+    defineChecker(view_factory, checker)
+
+def check_permission(factory, permission):
+    """Check whether a permission is defined.
+
+    If not, raise error for factory.
+    """
+    if component.queryUtility(IPermission,
+                              name=permission) is None:
+       raise GrokError('Undefined permission %r in %r. Use '
+                       'grok.define_permission first.'
+                       % (permission, factory), factory)
+
+def get_default_permission(factory):
+    """Determine the default permission for a view.
+    
+    There can be only 0 or 1 default permission.
+    """
+    permissions = class_annotation(factory, 'grok.require', [])
+    if not permissions:
+        return None
+    if len(permissions) > 1:
+        raise GrokError('grok.require was called multiple times in '
+                        '%r. It may only be set once for a class.'
+                        % factory, factory)
+
+    result = permissions[0]
+    check_permission(factory, result)
+    return result
+
+

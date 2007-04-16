@@ -6,7 +6,6 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
-from zope.security.checker import NamesChecker, defineChecker
 from zope.security.permission import Permission
 from zope.security.interfaces import IPermission
 from zope.annotation.interfaces import IAnnotations
@@ -83,18 +82,8 @@ class XMLRPCGrokker(grok.ClassGrokker):
         # the outside -- need to discuss how to restrict such things.
         methods = util.methods_from_class(factory)
 
-        # Determine the default permission for the XMLRPC methods.
-        # There can only be 0 or 1 of those.
-        permissions = util.class_annotation(factory, 'grok.require', [])
-        if not permissions:
-            default_permission = None
-        elif len(permissions) == 1:
-            default_permission = permissions[0]
-        else:
-            raise GrokError('grok.require was called multiple times in '
-                            '%r. It may only be called once on class level.'
-                            % factory, factory)
-
+        default_permission = util.get_default_permission(factory)
+        
         for method in methods:
             # Make sure that the class inherits MethodPublisher, so that the
             # views have a location
@@ -110,14 +99,10 @@ class XMLRPCGrokker(grok.ClassGrokker):
             # Protect method_view with either the permission that was
             # set on the method, the default permission from the class
             # level or zope.Public.
-            permission = getattr(method, '__grok_require__', default_permission)
-            if permission is None or permission == 'zope.Public':
-                checker = NamesChecker(['__call__'])
-            else:
-                checker = NamesChecker(['__call__'], permission)
-            defineChecker(method_view, checker)
-
-
+            permission = getattr(method, '__grok_require__',
+                                 default_permission)
+            util.make_checker(factory, method_view, permission)
+    
 class ViewGrokker(grok.ClassGrokker):
     component_class = grok.View
 
@@ -181,25 +166,9 @@ class ViewGrokker(grok.ClassGrokker):
                                  name=view_name)
 
         # protect view, public by default
-        permissions = util.class_annotation(factory, 'grok.require', [])
-        if not permissions:
-            checker = NamesChecker(['__call__'])
-        elif len(permissions) > 1:
-            raise GrokError('grok.require was called multiple times in view '
-                            '%r. It may only be called once.' % factory,
-                            factory)
-        elif permissions[0] == 'zope.Public':
-            checker = NamesChecker(['__call__'])
-        else:
-            perm = permissions[0]
-            if component.queryUtility(IPermission, name=perm) is None:
-                raise GrokError('Undefined permission %r in view %r. Use '
-                                'grok.define_permission first.'
-                                % (perm, factory), factory)
-            checker = NamesChecker(['__call__'], permissions[0])
-
-        defineChecker(factory, checker)
-
+        default_permission = util.get_default_permission(factory)
+        util.make_checker(factory, factory, default_permission)
+    
         # safety belt: make sure that the programmer didn't use
         # @grok.require on any of the view's methods.
         methods = util.methods_from_class(factory)
@@ -210,6 +179,35 @@ class ViewGrokker(grok.ClassGrokker):
                                 'for XML-RPC methods.'
                                 % (method.__name__, factory), factory)
 
+
+class JSONGrokker(grok.ClassGrokker):
+    component_class = grok.JSON
+
+    def register(self, context, name, factory, module_info, templates):
+        view_context = util.determine_class_context(factory, context)
+        methods = util.methods_from_class(factory)
+
+        default_permission = util.get_default_permission(factory)
+        
+        for method in methods:
+            # Create a new class with a __view_name__ attribute so the
+            # JSON class knows what method to call.
+            method_view = type(
+                factory.__name__, (factory,),
+                {'__view_name__': method.__name__}
+                )
+            component.provideAdapter(
+                method_view, (view_context, IDefaultBrowserLayer),
+                interface.Interface,
+                name=method.__name__)
+
+            # Protect method_view with either the permission that was
+            # set on the method, the default permission from the class
+            # level or zope.Public.
+
+            permission = getattr(method, '__grok_require__',
+                                 default_permission)
+            util.make_checker(factory, method_view, permission)
 
 class TraverserGrokker(grok.ClassGrokker):
     component_class = grok.Traverser

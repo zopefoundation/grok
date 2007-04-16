@@ -17,6 +17,7 @@
 import os
 import persistent
 import urllib
+import simplejson
 
 from zope import component
 from zope import interface
@@ -220,6 +221,13 @@ class GrokViewAbsoluteURL(AbsoluteURL):
 class XMLRPC(object):
     pass
 
+class JSON(BrowserPage):
+
+    def __call__(self):
+        view_name = self.__view_name__
+        method = getattr(self, view_name)
+        method_result = mapply(method, (), self.request)
+        return simplejson.dumps(method_result)
 
 class GrokPageTemplate(object):
 
