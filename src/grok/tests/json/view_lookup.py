@@ -15,6 +15,12 @@ The 'run' method/view returns json data, but it looks just like python.
   >>> view()
   '{"me": "grok"}'
 
+Let's try calling another method::
+
+  >>> view = getMultiAdapter((mammoth, request), name='another')
+  >>> view()
+  '{"another": "grok"}'
+  
 """
 import grok
 
@@ -26,3 +32,7 @@ class MammothView(grok.JSON):
 
     def run(self):
         return { 'me': 'grok' }
+
+    def another(self):
+        return { 'another': 'grok'}
+    
