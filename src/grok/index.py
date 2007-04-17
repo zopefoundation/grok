@@ -12,6 +12,8 @@ from grok.interfaces import IIndexDefinition
 
 class IndexDefinition(object):
     implements(IIndexDefinition)
+
+    index_class = None
     
     def __init__(self, *args, **kw):
         frame = sys._getframe(1)
@@ -22,14 +24,12 @@ class IndexDefinition(object):
         self._kw = kw
 
     def setup(self, catalog, name, context):
-        raise NotImplementedError
+        call = IMethod.providedBy(context[name])
+        catalog[name] = self.index_class(name, context, call,
+                                         *self._args, **self._kw)
 
 class Field(IndexDefinition):
-    def setup(self, catalog, name, context):
-        call = IMethod.providedBy(context[name])
-        catalog[name] = FieldIndex(name, context, *self._args, **self._kw)
+    index_class = FieldIndex
 
 class Text(IndexDefinition):
-    def setup(self, catalog, name, context):
-        call = IMethod.providedBy(context[name]) 
-        catalog[name] = TextIndex(name, context, call, *self._args, **self._kw)
+    index_class = TextIndex
