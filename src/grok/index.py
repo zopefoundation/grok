@@ -1,7 +1,7 @@
 import sys
 
 from zope.interface import implements
-from zope.interface.interfaces import IMethod
+from zope.interface.interfaces import IMethod, IInterface
 
 from zope.app.catalog.field import FieldIndex
 from zope.app.catalog.text import TextIndex
@@ -24,8 +24,14 @@ class IndexDefinition(object):
         self._kw = kw
 
     def setup(self, catalog, name, context):
-        call = IMethod.providedBy(context[name])
-        catalog[name] = self.index_class(name, context, call,
+        if IInterface.providedBy(context):
+            call = IMethod.providedBy(context[name])
+        else:
+            call = callable(getattr(context, name, None))
+            context = None # no interface lookup
+        catalog[name] = self.index_class(field_name=name,
+                                         interface=context,
+                                         field_callable=call,
                                          *self._args, **self._kw)
 
 class Field(IndexDefinition):
