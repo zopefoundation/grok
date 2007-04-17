@@ -4,7 +4,8 @@ import zope.component.interface
 from zope import interface, component
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
-                                               IBrowserPublisher)
+                                               IBrowserPublisher,
+                                               IBrowserSkinType)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.security.checker import NamesChecker, defineChecker
 from zope.security.permission import Permission
@@ -120,13 +121,8 @@ class XMLRPCGrokker(grok.ClassGrokker):
 
 class LayerGrokker(grok.ClassGrokker):
     component_class = grok.Layer
-    
-    def register(self, context, name, factory, module_info, templates):
-        import pdb; pdb.set_trace()
-        view_skin = util.class_annotation(factory, 'grok.skin', None)
 
 
-        
 class ViewGrokker(grok.ClassGrokker):
     component_class = grok.View
 
@@ -296,15 +292,16 @@ class StaticResourcesGrokker(grok.ModuleGrokker):
             resource_factory, (IDefaultBrowserLayer,),
             interface.Interface, name=module_info.dotted_name)
 
-from zope.publisher.interfaces.browser import IBrowserSkinType
-class DefineSkinDirectiveGrokker(grok.ModuleGrokker):
+
+class RegisterSkinDirectiveGrokker(grok.ModuleGrokker):
 
     def register(self, context, module_info, templates):
-        infos = module_info.getAnnotation('grok.defineskin',[])
+        infos = module_info.getAnnotation('grok.register_skin',[])
         if infos:
             for skin in infos:
                 zope.component.interface.provideInterface(skin.name, skin.iface,
                                                           IBrowserSkinType)
+
 
 class GlobalUtilityDirectiveGrokker(grok.ModuleGrokker):
 

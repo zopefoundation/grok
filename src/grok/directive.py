@@ -199,7 +199,7 @@ class InterfaceDirective(SingleValue, OnceDirective):
                                   "%s." % self.name)
 
 
-class DefineSkinDirective(MultipleTimesDirective):
+class RegisterSkinDirective(MultipleTimesDirective):
     def check_arguments(self, name, iface):
         if not name:
             raise GrokImportError("First argument cannot be an empty string"
@@ -209,10 +209,10 @@ class DefineSkinDirective(MultipleTimesDirective):
                                   "second argument of %s." % self.name)
 
     def value_factory(self, *args, **kw):
-        return DefineSkinInfo(*args, **kw)
+        return RegisterSkinInfo(*args, **kw)
 
         
-class DefineSkinInfo(object):
+class RegisterSkinInfo(object):
     def __init__(self, name, iface):
         self.name = name
         self.iface = iface
@@ -299,6 +299,6 @@ define_permission = MultipleTextDirective('grok.define_permission',
                                           ModuleDirectiveContext())
 require = RequireDirective('grok.require', ClassDirectiveContext())
 
-defineskin = DefineSkinDirective('grok.defineskin',
+register_skin = RegisterSkinDirective('grok.register_skin',
                                  ModuleDirectiveContext())
 

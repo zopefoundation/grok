@@ -76,9 +76,10 @@ class IGrokDirectives(interface.Interface):
         This directive can only be used on class level."""
 
     def layer(layer):
-        """Declare the layer the view is applied.
+        """Declare the layer for the view.
 
-        This directive can only be used on class level."""
+        This directive acts as a contraint on the 'request' of
+        grok.View. This directive can only be used on class level."""
 
     def skin(skin):
         """Declare this layer as a named skin.
@@ -130,7 +131,7 @@ class IGrokDirectives(interface.Interface):
                  The site should in this case be a container.
         name_in_container - the name to use for storing the utility
         """
-    def defineskin(name, iface):
+    def register_skin(name, iface):
         """Register skin name for layer."""
 
     def define_permission(permission):

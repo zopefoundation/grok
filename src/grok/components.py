@@ -108,7 +108,7 @@ class Container(BTreeContainer):
     interface.implements(IAttributeAnnotatable)
 
 
-class Layer(interface.Interface):
+class Layer(IBrowserRequest):
     pass
 
 

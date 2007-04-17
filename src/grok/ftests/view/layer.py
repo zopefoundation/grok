@@ -38,7 +38,7 @@ grok.layer(IBasicSkin)
 class MySkinLayer(grok.Layer):
     pass
 
-grok.defineskin('MySkin', MySkinLayer)
+grok.register_skin('MySkin', MySkinLayer)
 
 class Mammoth(grok.Model):
     pass
