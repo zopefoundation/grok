@@ -10,41 +10,11 @@ from zope.app.testing.functional import (HTTPCaller, getRootFolder,
 ftesting_zcml = os.path.join(os.path.dirname(grok.__file__), 'ftesting.zcml')
 GrokFunctionalLayer = ZCMLLayer(ftesting_zcml, 'grok', 'GrokFunctionalLayer')
 
-# XXX bastardized from zope.app.testing.functional.FunctionalDocFileSuite :-(
-def FunctionalDocTestSuite(*paths, **kw):
-    globs = kw.setdefault('globs', {})
-    globs['http'] = HTTPCaller()
-    globs['getRootFolder'] = getRootFolder
-    globs['sync'] = sync
+def setUp(test):
+    FunctionalTestSetup().setUp()
 
-    #kw['package'] = doctest._normalize_module(kw.get('package'))
-
-    kwsetUp = kw.get('setUp')
-    def setUp(test):
-        FunctionalTestSetup().setUp()
-
-        if kwsetUp is not None:
-            kwsetUp(test)
-    kw['setUp'] = setUp
-
-    kwtearDown = kw.get('tearDown')
-    def tearDown(test):
-        if kwtearDown is not None:
-            kwtearDown(test)
-        FunctionalTestSetup().tearDown()
-    kw['tearDown'] = tearDown
-
-    if 'optionflags' not in kw:
-        old = doctest.set_unittest_reportflags(0)
-        doctest.set_unittest_reportflags(old)
-        kw['optionflags'] = (old
-                             | doctest.ELLIPSIS
-                             | doctest.REPORT_NDIFF
-                             | doctest.NORMALIZE_WHITESPACE)
-
-    suite = doctest.DocTestSuite(*paths, **kw)
-    suite.layer = GrokFunctionalLayer
-    return suite
+def tearDown(test):
+    FunctionalTestSetup().tearDown()
 
 def suiteFromPackage(name):
     files = resource_listdir(__name__, name)
@@ -56,7 +26,16 @@ def suiteFromPackage(name):
             continue
 
         dottedname = 'grok.ftests.%s.%s' % (name, filename[:-3])
-        test = FunctionalDocTestSuite(dottedname)
+        test = doctest.DocTestSuite(
+            dottedname, setUp=setUp, tearDown=tearDown,
+            extraglobs=dict(http=HTTPCaller(),
+                            getRootFolder=getRootFolder,
+                            sync=sync),
+            optionflags=(doctest.ELLIPSIS+
+                         doctest.NORMALIZE_WHITESPACE+
+                         doctest.REPORT_NDIFF)
+            )
+        test.layer = GrokFunctionalLayer
 
         suite.addTest(test)
     return suite
