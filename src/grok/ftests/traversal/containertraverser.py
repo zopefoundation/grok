@@ -71,7 +71,7 @@ class Traverser(grok.Traverser):
         if name == 'special':
             return Special()
         return None
-    
+
 class Mammoth(grok.Model):
     def __init__(self, name):
         self.name = name

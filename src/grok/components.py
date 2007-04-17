@@ -320,17 +320,18 @@ class Traverser(object):
         if subob is not None:
             return subob
 
-        # XXX special logic here to deal with views and containers.
-        # would be preferrable if we could fall back on normal Zope
-        # traversal behavior
-        view = component.queryMultiAdapter((self.context, request), name=name)
-        if view:
-            return view
-
+        # XXX Special logic here to deal with containers.  It would be
+        # good if we wouldn't have to do this here. One solution is to
+        # rip this out and make you subclass ContainerTraverser if you
+        # wanted to override the traversal behaviour of containers.
         if IReadContainer.providedBy(self.context):
             item = self.context.get(name)
             if item is not None:
                 return item
+
+        view = component.queryMultiAdapter((self.context, request), name=name)
+        if view is not None:
+            return view
 
         raise NotFound(self.context, name, request)
 
