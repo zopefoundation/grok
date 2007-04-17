@@ -496,6 +496,12 @@ class IndexesGrokker(grok.InstanceGrokker):
     component_class = components.IndexesClass
 
     def register(self, context, name, factory, module_info, templates):
+        application = util.class_annotation(factory, 'grok.application', None)
+        if application is None:
+            raise GrokError("No application specified for grok.Indexes "
+                            "subclass in module %r. "
+                            "Use grok.application() to specify." % module_info.getModule(),
+                            factory)
         indexes = util.class_annotation(factory, 'grok.indexes', None)
         if indexes is None:
             return
@@ -503,7 +509,7 @@ class IndexesGrokker(grok.InstanceGrokker):
         catalog_name = util.class_annotation(factory, 'grok.name', u'')
         zope.component.provideHandler(
             IndexesSetupSubscriber(catalog_name, indexes, context),
-            adapts=(grok.interfaces.IApplication,
+            adapts=(application,
                     grok.IObjectAddedEvent))
         
 class IndexesSetupSubscriber(object):

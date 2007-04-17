@@ -8,7 +8,7 @@ The context of the indexes applies to a class in this case.
 
 Let's set up a site in which we manage a couple of objects::
 
-  >>> from grok.ftests.catalog.indexes import Herd, Mammoth
+  >>> from grok.ftests.catalog.indexes_class import Herd, Mammoth
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   >>> from zope.app.component.hooks import setSite
@@ -41,7 +41,7 @@ Let's query the text index, which incidentally also indexes a method::
   >>> sortedResults(catalog, message='bye')
   ['Beta']
   
-Nuke the catalog and initds in the end, so as not to confuse
+Nuke the catalog and intids in the end, so as not to confuse
 other tests::
 
   >>> sm = herd.getSiteManager()
@@ -59,6 +59,9 @@ Unfortunately ftests don't have good isolation from each other yet.
 import grok
 from grok import index
 
+class Herd(grok.Container, grok.Application):
+    pass
+
 class Mammoth(grok.Model):
     def __init__(self, name, age, message):
         self.name = name
@@ -70,10 +73,9 @@ class Mammoth(grok.Model):
 
 class MammothIndexes(grok.Indexes):
     grok.context(Mammoth)
-
+    grok.application(Herd)
+    
     name = index.Field()
     age = index.Field()
     message = index.Text()
 
-class Herd(grok.Container, grok.Application):
-    pass

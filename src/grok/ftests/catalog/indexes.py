@@ -7,7 +7,7 @@ special indexes declaration.
 
 Let's set up a site in which we manage a couple of objects::
 
-  >>> from grok.ftests.catalog.indexes import Herd, Mammoth
+  >>> from grok.ftests.catalog.indexes import Herd, Herd2, Mammoth
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   >>> from zope.app.component.hooks import setSite
@@ -21,7 +21,7 @@ Now we add some indexable objects to the site::
 We are able to query the catalog::
 
   >>> from zope.app.catalog.interfaces import ICatalog
-  >>> from zope.component import getUtility
+  >>> from zope.component import getUtility, queryUtility
   >>> catalog = getUtility(ICatalog)
   >>> for obj in catalog.searchResults(name=('Beta', 'Beta')):
   ...   print obj.name
@@ -39,8 +39,18 @@ Let's query the text index, which incidentally also indexes a method::
   ['Alpha']
   >>> sortedResults(catalog, message='bye')
   ['Beta']
+
+Note that another application that we did not register the
+indexes for won't have a catalog available::
+
+  >>> herd2 = Herd2()
+  >>> getRootFolder()['herd2'] = herd2
+  >>> setSite(herd2)
+  >>> queryUtility(ICatalog, default=None) is None
+  True
+  >>> setSite(herd)
   
-Nuke the catalog and initds in the end, so as not to confuse
+Nuke the catalog and intids in the end, so as not to confuse
 other tests::
 
   >>> sm = herd.getSiteManager()
@@ -62,6 +72,12 @@ from zope import schema
 import grok
 from grok import index
 
+class Herd(grok.Container, grok.Application):
+    pass
+
+class Herd2(grok.Container, grok.Application):
+    pass
+
 class IMammoth(Interface):
     name = schema.TextLine(title=u'Name')
     age = schema.Int(title=u'Age')
@@ -69,6 +85,7 @@ class IMammoth(Interface):
         """Message the mammoth has for the world."""
 
 class MammothIndexes(grok.Indexes):
+    grok.application(Herd)
     grok.context(IMammoth)
 
     name = index.Field()
@@ -86,5 +103,3 @@ class Mammoth(grok.Model):
     def message(self):
         return self._message
     
-class Herd(grok.Container, grok.Application):
-    pass

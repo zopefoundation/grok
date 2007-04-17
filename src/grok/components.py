@@ -452,15 +452,13 @@ class IndexesClass(object):
     def __init__(self, name, bases=(), attrs=None):
         if attrs is None:
             return
-        # make sure we take over __grok_context__
-        context = attrs.get('__grok_context__')
-        if context is not None:
-            self.__grok_context__ = context
-        # and __grok_name__
-        name = attrs.get('__grok_name__')
-        if name is not None:
-            self.__grok_name__ = name
-            
+        # make sure we take over a bunch of possible attributes
+        for name in ['__grok_context__', '__grok_name__',
+                     '__grok_application__']:
+            value = attrs.get(name)
+            if value is not None:
+                setattr(self, name, value)
+        # now read and store indexes
         indexes = {}
         for name, value in attrs.items():
             if not interfaces.IIndexDefinition.providedBy(value):

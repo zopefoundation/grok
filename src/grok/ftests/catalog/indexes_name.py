@@ -8,7 +8,7 @@ grok.name.
 
 Let's set up a site in which we manage a couple of objects::
 
-  >>> from grok.ftests.catalog.indexes import Herd, Mammoth
+  >>> from grok.ftests.catalog.indexes_name import Herd, Mammoth
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   >>> from zope.app.component.hooks import setSite
@@ -23,7 +23,7 @@ We have to look up the catalog by name now::
   >>> catalog
   <zope.app.catalog.catalog.Catalog object at ...>
 
-Nuke the catalog and initds in the end, so as not to confuse
+Nuke the catalog and intids in the end, so as not to confuse
 other tests::
 
   >>> sm = herd.getSiteManager()
@@ -41,6 +41,9 @@ Unfortunately ftests don't have good isolation from each other yet.
 import grok
 from grok import index
 
+class Herd(grok.Container, grok.Application):
+    pass
+
 class Mammoth(grok.Model):
     def __init__(self, name, age, message):
         self.name = name
@@ -53,10 +56,8 @@ class Mammoth(grok.Model):
 class MammothIndexes(grok.Indexes):
     grok.context(Mammoth)
     grok.name('foo_catalog')
+    grok.application(Herd)
     
     name = index.Field()
     age = index.Field()
     message = index.Text()
-
-class Herd(grok.Container, grok.Application):
-    pass
