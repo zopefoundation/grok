@@ -15,6 +15,11 @@ from zope.app.container.interfaces import IContainer
 from zope.app.container.interfaces import INameChooser
 from zope.app.container.contained import contained
 
+from zope.app.intid import IntIds
+from zope.app.intid.interfaces import IIntIds
+from zope.app.catalog.catalog import Catalog
+from zope.app.catalog.interfaces import ICatalog
+
 import grok
 from grok import util, components, formlib
 from grok.error import GrokError
@@ -377,34 +382,51 @@ def localUtilityRegistrationSubscriber(site, event):
 
     for info in util.class_annotation(site.__class__,
                                       'grok.utilities_to_install', []):
-        utility = info.factory()
-        site_manager = site.getSiteManager()
-
-        # store utility
-        if not info.public:
-            container = site_manager
-        else:
-            container = site
-
-        name_in_container = info.name_in_container 
-        if name_in_container is None:
-            name_in_container = INameChooser(container).chooseName(
-                info.factory.__name__, utility)
-        container[name_in_container] = utility
-
-        # execute setup callback
-        if info.setup is not None:
-            info.setup(utility)
-
-        # register utility
-        site_manager.registerUtility(utility, provided=info.provides,
-                                     name=info.name)
+        setupUtility(site, info.factory(), info.provides, name=info.name,
+                     name_in_container=info.name_in_container,
+                     public=info.public, setup=info.setup)
 
     # we are done. If this subscriber gets fired again, we therefore
     # do not register utilities anymore
     site.__grok_utilities_installed__ = True
 
 
+def setupUtility(site, utility, provides, name=u'',
+                 name_in_container=None, public=False, setup=None):
+    """Set up a utility in a site.
+
+    site - the site to set up the utility in
+    utility - the utility to set up
+    provides - the interface the utility should be registered with
+    name - the name the utility should be registered under, default
+      the empty string (no name)
+    name_in_container - if given it will be used to add the utility
+      object to its container. Otherwise a name will be made up
+    public - if False, the utility will be stored in the site manager. If
+      True, the utility will be storedin the site (it is assumed the
+      site is a container)
+    setup - if not None, it will be called with the utility as its first
+       argument. This function can then be used to further set up the
+       utility.
+    """
+    site_manager = site.getSiteManager()
+
+    if not public:
+        container = site_manager
+    else:
+        container = site
+
+    if name_in_container is None:
+        name_in_container = INameChooser(container).chooseName(
+            utility.__class__.__name__, utility)
+    container[name_in_container] = utility
+
+    if setup is not None:
+        setup(utility)
+        
+    site_manager.registerUtility(utility, provided=provides,
+                                 name=name)
+    
 class DefinePermissionGrokker(grok.ModuleGrokker):
 
     priority = 1500
@@ -470,3 +492,55 @@ class ApplicationGrokker(grok.ClassGrokker):
                                       provides=grok.interfaces.IApplication,
                                       name='%s.%s' % (module_info.dotted_name,
                                                       name))
+class IndexesGrokker(grok.InstanceGrokker):
+    component_class = components.IndexesClass
+
+    def register(self, context, name, factory, module_info, templates):
+        indexes = util.class_annotation(factory, 'grok.indexes', None)
+        if indexes is None:
+            return
+        context = util.determine_class_context(factory, context)
+        catalog_name = util.class_annotation(factory, 'grok.name', u'')
+        zope.component.provideHandler(
+            IndexesSetupSubscriber(catalog_name, indexes, context),
+            adapts=(grok.interfaces.IApplication,
+                    grok.IObjectAddedEvent))
+        
+class IndexesSetupSubscriber(object):
+    def __init__(self, catalog_name, indexes, context):
+        self.catalog_name = catalog_name
+        self.indexes = indexes
+        self.context = context
+        
+    def __call__(self, app, event):
+        # make sure we have an intids
+        self._createIntIds(app)
+        # get the catalog
+        catalog = self._createCatalog(app)
+        # now install indexes
+        for name, index in self.indexes.items():
+            index.setup(catalog, name, self.context)
+
+    def _createCatalog(self, app):
+        """Create the catalog if needed and return it.
+
+        If the catalog already exists, return that.
+        """
+        catalog = zope.component.queryUtility(
+            ICatalog, name=self.catalog_name, default=None)
+        if catalog is not None:
+            return catalog
+        catalog = Catalog()
+        setupUtility(app, catalog, ICatalog, name=self.catalog_name)
+        return catalog
+    
+    def _createIntIds(self, app):
+        """Create intids if needed, and return it.
+        """
+        intids = zope.component.queryUtility(
+            IIntIds, default=None)
+        if intids is not None:
+            return intids
+        intids = IntIds()
+        setupUtility(app, intids, IIntIds)
+        return intids

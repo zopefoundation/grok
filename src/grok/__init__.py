@@ -34,6 +34,7 @@ from grok.components import Model, Adapter, MultiAdapter, View, XMLRPC, JSON
 from grok.components import PageTemplate, PageTemplateFile, Container, Traverser
 from grok.components import Site, GlobalUtility, LocalUtility, Annotation
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
+from grok.components import Indexes
 from grok.directive import (context, name, template, templatedir, provides,
                             baseclass, global_utility, local_utility,
                             define_permission, require)

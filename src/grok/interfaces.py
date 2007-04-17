@@ -365,3 +365,16 @@ class IApplication(interface.Interface):
     Used to register applications as utilities to look them up and
     provide a list of grokked applications.
     """
+
+class IIndexDefinition(interface.Interface):
+    """Define an index for grok.Indexes.
+    """
+
+    def setup(catalog, name, context):
+        """Set up index called name in given catalog.
+
+        Use name for index name and attribute to index. Set up
+        index for interface or class context.
+        """
+    
+        
