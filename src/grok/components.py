@@ -456,6 +456,10 @@ class IndexesClass(object):
         context = attrs.get('__grok_context__')
         if context is not None:
             self.__grok_context__ = context
+        # and __grok_name__
+        name = attrs.get('__grok_name__')
+        if name is not None:
+            self.__grok_name__ = name
             
         indexes = {}
         for name, value in attrs.items():
