@@ -8,7 +8,7 @@ from zope.app.testing.functional import (HTTPCaller, getRootFolder,
                                          FunctionalTestSetup, sync, ZCMLLayer)
 
 ftesting_zcml = os.path.join(os.path.dirname(grok.__file__), 'ftesting.zcml')
-GrokFunctionalLayer = ZCMLLayer(ftesting_zcml, 'grok', 'GrokFunctionalLayer')
+GrokFunctionalLayer = ZCMLLayer(ftesting_zcml, __name__, 'GrokFunctionalLayer')
 
 def setUp(test):
     FunctionalTestSetup().setUp()
