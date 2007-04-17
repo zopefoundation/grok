@@ -1,8 +1,14 @@
 import unittest
+import grok
+import os.path
+
 from pkg_resources import resource_listdir
 from zope.testing import doctest
 from zope.app.testing.functional import (HTTPCaller, getRootFolder,
-                                         FunctionalTestSetup, sync, Functional)
+                                         FunctionalTestSetup, sync, ZCMLLayer)
+
+ftesting_zcml = os.path.join(os.path.dirname(grok.__file__), 'ftesting.zcml')
+GrokFunctionalLayer = ZCMLLayer(ftesting_zcml, 'grok', 'GrokFunctionalLayer')
 
 # XXX bastardized from zope.app.testing.functional.FunctionalDocFileSuite :-(
 def FunctionalDocTestSuite(*paths, **kw):
@@ -37,7 +43,7 @@ def FunctionalDocTestSuite(*paths, **kw):
                              | doctest.NORMALIZE_WHITESPACE)
 
     suite = doctest.DocTestSuite(*paths, **kw)
-    suite.layer = Functional
+    suite.layer = GrokFunctionalLayer
     return suite
 
 def suiteFromPackage(name):
