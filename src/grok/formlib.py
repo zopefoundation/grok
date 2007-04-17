@@ -1,5 +1,5 @@
 import types
-from zope import interface
+from zope import interface, event, lifecycleevent
 from zope.interface.interfaces import IInterface
 from zope.formlib import form
 from zope.schema.interfaces import IField
@@ -88,3 +88,60 @@ def interface_seen(seen, iface):
         if seen_iface.extends(iface):
             return True
     return False
+
+def apply_data(context, form_fields, data, adapters=None, update=False):
+    """Save form data (``data`` dict) on a ``context`` object.
+
+    This is a beefed up version of zope.formlib.form.applyChanges().
+    It allows you to specify whether values should be compared with
+    the attributes on already existing objects or not, using the
+    ``update`` parameter.
+
+    Unlike zope.formlib.form.applyChanges(), it will return a
+    dictionary of interfaces and their fields that were changed.  This
+    is necessary to appropriately send IObjectModifiedEvents.
+    """
+    if adapters is None:
+        adapters = {}
+
+    changes = {}
+
+    for form_field in form_fields:
+        field = form_field.field
+        # Adapt context, if necessary
+        interface = field.interface
+        adapter = adapters.get(interface)
+        if adapter is None:
+            if interface is None:
+                adapter = context
+            else:
+                adapter = interface(context)
+            adapters[interface] = adapter
+
+        name = form_field.__name__
+        newvalue = data.get(name, form_field) # using form_field as marker
+
+        if update:
+            if ((newvalue is not form_field) and
+                (field.get(adapter) != newvalue)):
+                field.set(adapter, newvalue)
+                changes.setdefault(interface, []).append(name)
+        else:
+            if newvalue is not form_field:
+                field.set(adapter, newvalue)
+                changes.setdefault(interface, []).append(name)
+
+    return changes
+
+def apply_data_event(context, form_fields, data, adapters=None, update=False):
+    """Like apply_data, but also sends an IObjectModifiedEvent.
+    """
+    changes = apply_data(context, form_fields, data, adapters, update)
+
+    if changes:
+        descriptions = []
+        for interface, names in changes.items():
+            descriptions.append(lifecycleevent.Attributes(interface, *names))
+        event.notify(lifecycleevent.ObjectModifiedEvent(context, *descriptions))
+
+    return changes

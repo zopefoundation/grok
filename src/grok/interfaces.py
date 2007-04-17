@@ -353,9 +353,14 @@ class IGrokForm(IGrokView):
         The errors are returned as an iterable.
         """
 
-    def applyChanges(obj, **data):
-        """Apply form data to an object.  Return True if the object
-        had to be modified, False otherwise.
+    def applyData(obj, **data):
+        """Save form data to an object.
+
+        This returns a dictionary with interfaces as keys and lists of
+        field names as values to indicate which fields in which
+        schemas had to be changed in order to save the data.  In case
+        the method works in update mode (e.g. on EditForms) and
+        doesn't have to update an object, the dictionary is empty.
         """
 
 
