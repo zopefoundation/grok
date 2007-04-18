@@ -42,4 +42,26 @@ We also support subdirectories for resources:
   >>> print browser.contents
   This is yet another file.
 
+Sanity check custom layers
+
+  >>> browser.open('http://localhost/ellie/@@cavedrawings')
+  >>> print browser.contents
+  stick figures
+
+  >>> browser.open('http://localhost/++skin++Mammoth/ellie/@@tarpit')
+  >>> print browser.contents
+  inky darkness all around
+
+Static layer is not available to custom layers unless they subclass IDefaultBrowserLayer
+
+  >>> browser.open('http://localhost/++skin++Mammoth/@@/grok.ftests.static.simple_fixture/subdir/otherfile.txt')
+  Traceback (most recent call last):
+  ...
+  NotFound: ...
+
+  >>> browser.open('http://localhost/++skin++Rotterdam/@@/grok.ftests.static.simple_fixture/subdir/otherfile.txt')
+  >>> print browser.contents
+  This is yet another file.
+  
 """
+
