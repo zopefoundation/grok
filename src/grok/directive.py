@@ -200,22 +200,19 @@ class InterfaceDirective(SingleValue, OnceDirective):
 
 
 class RegisterSkinDirective(MultipleTimesDirective):
-    def check_arguments(self, name, iface):
-        if not name:
-            raise GrokImportError("First argument cannot be an empty string"
-                                  "of %s." % self.name)
-        if not IInterface.providedBy(iface):
-            raise GrokImportError("You can only pass an interface as the "
-                                  "second argument of %s." % self.name)
+    def check_arguments(self, layer, name=None):
+        if not IInterface.providedBy(layer):
+            raise GrokImportError("You can only pass an Interface as "
+                                  "first argument of %s." % self.name)
 
     def value_factory(self, *args, **kw):
         return RegisterSkinInfo(*args, **kw)
 
         
 class RegisterSkinInfo(object):
-    def __init__(self, name, iface):
+    def __init__(self, layer, name=None):
+        self.layer = layer
         self.name = name
-        self.iface = iface
 
         
 class GlobalUtilityDirective(MultipleTimesDirective):

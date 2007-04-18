@@ -299,7 +299,10 @@ class RegisterSkinDirectiveGrokker(grok.ModuleGrokker):
         infos = module_info.getAnnotation('grok.register_skin',[])
         if infos:
             for skin in infos:
-                zope.component.interface.provideInterface(skin.name, skin.iface,
+                name = skin.name
+                if not skin.name:
+                    name = skin.layer.__name__
+                zope.component.interface.provideInterface(name, skin.layer,
                                                           IBrowserSkinType)
 
 

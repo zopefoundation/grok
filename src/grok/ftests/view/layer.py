@@ -35,10 +35,10 @@ from zope import interface
 
 grok.layer(IBasicSkin)
 
-class MySkinLayer(grok.Layer):
+class MySkin(grok.Layer):
     pass
 
-grok.register_skin('MySkin', MySkinLayer)
+grok.register_skin(MySkin)
 
 class Mammoth(grok.Model):
     pass
@@ -61,7 +61,7 @@ class MoreDrawings(grok.View):
         return "Pretty"
 
 class EvenMoreDrawings(grok.View):
-    grok.layer(MySkinLayer)
+    grok.layer(MySkin)
 
     def render(self):
         return "Awesome"
