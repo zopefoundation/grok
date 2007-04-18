@@ -21,10 +21,9 @@ object-oriented web framework. While Grok is based on Zope 3, and
 benefits a lot from it, you do not need to know Zope at all in order
 to get productive with Grok.
 
-`Read More`_
+`Read More <./about.html>`_
 
 .. _Zope 3: http://wiki.zope.org/zope3
-.. _read more: ./about.html
 
 
 Who is Grok?
@@ -67,14 +66,17 @@ What does Grok code look like?
     class HelloWorld(grok.Application, grok.Model):
         pass
 
-        index = grok.PageTemplate("""
+    class Index(grok.View):
+        pass
+
+    index = grok.PageTemplate("""
         <html><body>
             <p>ME GROK HELLO WORLD!</p>
         </body></html>
         """")
 
 * `Herd of Mammoths`_ is a very simple application that only goes a bit beyond "hello world".
-* `Grokstar`_ is a simple wiki application written with Grok.
+* `Grokstar`_ is a simple blog application written with Grok.
 * `Grok Wiki`_ is a simple wiki application written with Grok.
 
 .. _Herd of Mammoths: http://www.z3lab.org/sections/blogs/philipp-weitershausen/2007_01_09_you-thought-zope-3-wasn
