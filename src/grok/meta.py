@@ -533,7 +533,7 @@ class IndexesSetupSubscriber(object):
         If the catalog already exists, return that.
         """
         catalog = zope.component.queryUtility(
-            ICatalog, name=self.catalog_name, default=None)
+            ICatalog, name=self.catalog_name, context=site, default=None)
         if catalog is not None:
             return catalog
         catalog = Catalog()
@@ -544,7 +544,7 @@ class IndexesSetupSubscriber(object):
         """Create intids if needed, and return it.
         """
         intids = zope.component.queryUtility(
-            IIntIds, default=None)
+            IIntIds, context=site, default=None)
         if intids is not None:
             return intids
         intids = IntIds()
