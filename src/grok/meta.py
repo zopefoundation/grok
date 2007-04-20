@@ -20,6 +20,8 @@ from zope.app.intid.interfaces import IIntIds
 from zope.app.catalog.catalog import Catalog
 from zope.app.catalog.interfaces import ICatalog
 
+from zope.exceptions.interfaces import DuplicationError
+
 import grok
 from grok import util, components, formlib
 from grok.error import GrokError
@@ -508,15 +510,17 @@ class IndexesGrokker(grok.InstanceGrokker):
         context = util.determine_class_context(factory, context)
         catalog_name = util.class_annotation(factory, 'grok.name', u'')
         zope.component.provideHandler(
-            IndexesSetupSubscriber(catalog_name, indexes, context),
+            IndexesSetupSubscriber(catalog_name, indexes,
+                                   context, module_info),
             adapts=(site,
                     grok.IObjectAddedEvent))
         
 class IndexesSetupSubscriber(object):
-    def __init__(self, catalog_name, indexes, context):
+    def __init__(self, catalog_name, indexes, context, module_info):
         self.catalog_name = catalog_name
         self.indexes = indexes
         self.context = context
+        self.module_info = module_info
         
     def __call__(self, site, event):
         # make sure we have an intids
@@ -525,7 +529,15 @@ class IndexesSetupSubscriber(object):
         catalog = self._createCatalog(site)
         # now install indexes
         for name, index in self.indexes.items():
-            index.setup(catalog, name, self.context)
+            try:
+                index.setup(catalog, name, self.context)
+            except DuplicationError:
+                raise GrokError(
+                    "grok.Indexes in module %r causes "
+                    "creation of catalog index %r in catalog %r, "
+                    "but an index with that name is already present." %
+                    (self.module_info.getModule(), name, self.catalog_name),
+                    None)
 
     def _createCatalog(self, site):
         """Create the catalog if needed and return it.
