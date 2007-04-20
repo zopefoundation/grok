@@ -530,7 +530,7 @@ class IndexesSetupSubscriber(object):
         # now install indexes
         for name, index in self.indexes.items():
             try:
-                index.setup(catalog, name, self.context)
+                index.setup(catalog, name, self.context, self.module_info)
             except DuplicationError:
                 raise GrokError(
                     "grok.Indexes in module %r causes "

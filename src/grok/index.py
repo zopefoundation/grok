@@ -23,9 +23,16 @@ class IndexDefinition(object):
         self._args = args
         self._kw = kw
 
-    def setup(self, catalog, name, context):
+    def setup(self, catalog, name, context, module_info):
         if IInterface.providedBy(context):
-            call = IMethod.providedBy(context[name])
+            try:
+                method = context[name]
+            except KeyError:
+                raise GrokError("grok.Indexes in %r refers to an attribute or "
+                                "method %r on interface %r, but this does not "
+                                "exist." % (module_info.getModule(),
+                                            name, context), None)
+            call = IMethod.providedBy(method)
         else:
             call = callable(getattr(context, name, None))
             context = None # no interface lookup
