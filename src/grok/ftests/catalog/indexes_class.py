@@ -73,7 +73,7 @@ class Mammoth(grok.Model):
 
 class MammothIndexes(grok.Indexes):
     grok.context(Mammoth)
-    grok.application(Herd)
+    grok.site(Herd)
     
     name = index.Field()
     age = index.Field()

@@ -454,7 +454,7 @@ class IndexesClass(object):
             return
         # make sure we take over a bunch of possible attributes
         for name in ['__grok_context__', '__grok_name__',
-                     '__grok_application__']:
+                     '__grok_site__']:
             value = attrs.get(name)
             if value is not None:
                 setattr(self, name, value)

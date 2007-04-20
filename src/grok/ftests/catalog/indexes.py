@@ -85,7 +85,7 @@ class IMammoth(Interface):
         """Message the mammoth has for the world."""
 
 class MammothIndexes(grok.Indexes):
-    grok.application(Herd)
+    grok.site(Herd)
     grok.context(IMammoth)
 
     name = index.Field()

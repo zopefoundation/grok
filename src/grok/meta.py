@@ -496,11 +496,11 @@ class IndexesGrokker(grok.InstanceGrokker):
     component_class = components.IndexesClass
 
     def register(self, context, name, factory, module_info, templates):
-        application = util.class_annotation(factory, 'grok.application', None)
-        if application is None:
-            raise GrokError("No application specified for grok.Indexes "
+        site = util.class_annotation(factory, 'grok.site', None)
+        if site is None:
+            raise GrokError("No site specified for grok.Indexes "
                             "subclass in module %r. "
-                            "Use grok.application() to specify." % module_info.getModule(),
+                            "Use grok.site() to specify." % module_info.getModule(),
                             factory)
         indexes = util.class_annotation(factory, 'grok.indexes', None)
         if indexes is None:
@@ -509,7 +509,7 @@ class IndexesGrokker(grok.InstanceGrokker):
         catalog_name = util.class_annotation(factory, 'grok.name', u'')
         zope.component.provideHandler(
             IndexesSetupSubscriber(catalog_name, indexes, context),
-            adapts=(application,
+            adapts=(site,
                     grok.IObjectAddedEvent))
         
 class IndexesSetupSubscriber(object):
@@ -518,16 +518,16 @@ class IndexesSetupSubscriber(object):
         self.indexes = indexes
         self.context = context
         
-    def __call__(self, app, event):
+    def __call__(self, site, event):
         # make sure we have an intids
-        self._createIntIds(app)
+        self._createIntIds(site)
         # get the catalog
-        catalog = self._createCatalog(app)
+        catalog = self._createCatalog(site)
         # now install indexes
         for name, index in self.indexes.items():
             index.setup(catalog, name, self.context)
 
-    def _createCatalog(self, app):
+    def _createCatalog(self, site):
         """Create the catalog if needed and return it.
 
         If the catalog already exists, return that.
@@ -537,10 +537,10 @@ class IndexesSetupSubscriber(object):
         if catalog is not None:
             return catalog
         catalog = Catalog()
-        setupUtility(app, catalog, ICatalog, name=self.catalog_name)
+        setupUtility(site, catalog, ICatalog, name=self.catalog_name)
         return catalog
     
-    def _createIntIds(self, app):
+    def _createIntIds(self, site):
         """Create intids if needed, and return it.
         """
         intids = zope.component.queryUtility(
@@ -548,5 +548,5 @@ class IndexesSetupSubscriber(object):
         if intids is not None:
             return intids
         intids = IntIds()
-        setupUtility(app, intids, IIntIds)
+        setupUtility(site, intids, IIntIds)
         return intids
