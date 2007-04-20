@@ -277,3 +277,5 @@ local_utility = LocalUtilityDirective('grok.local_utility',
 define_permission = MultipleTextDirective('grok.define_permission',
                                           ModuleDirectiveContext())
 require = RequireDirective('grok.require', ClassDirectiveContext())
+site = InterfaceOrClassDirective('grok.site',
+                                 ClassDirectiveContext())

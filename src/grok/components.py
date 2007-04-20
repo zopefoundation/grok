@@ -119,7 +119,7 @@ class Site(SiteManagerContainer):
 
 class Application(Site):
     """A top-level application object."""
-
+    interface.implements(interfaces.IApplication)
 
 class Adapter(object):
 
@@ -485,3 +485,26 @@ class DisplayForm(GrokForm, form.DisplayFormBase, View):
     interface.implementsOnly(interfaces.IGrokForm)
 
     template = default_display_template
+
+class IndexesClass(object):
+    def __init__(self, name, bases=(), attrs=None):
+        if attrs is None:
+            return
+        # make sure we take over a bunch of possible attributes
+        for name in ['__grok_context__', '__grok_name__',
+                     '__grok_site__']:
+            value = attrs.get(name)
+            if value is not None:
+                setattr(self, name, value)
+        # now read and store indexes
+        indexes = {}
+        for name, value in attrs.items():
+            if not interfaces.IIndexDefinition.providedBy(value):
+                continue
+            indexes[name] = value
+        self.__grok_indexes__ = indexes
+        # __grok_module__ is needed to make defined_locally() return True for
+        # inline templates
+        self.__grok_module__ = util.caller_module()
+        
+Indexes = IndexesClass('Indexes')
