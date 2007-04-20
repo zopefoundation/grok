@@ -6,7 +6,7 @@ from zope.interface.interfaces import IMethod, IInterface
 from zope.app.catalog.field import FieldIndex
 from zope.app.catalog.text import TextIndex
 
-from grok.error import GrokError
+from grok.error import GrokError, GrokImportError
 from grok.directive import frame_is_class
 from grok.interfaces import IIndexDefinition
 
@@ -18,7 +18,8 @@ class IndexDefinition(object):
     def __init__(self, *args, **kw):
         frame = sys._getframe(1)
         if not frame_is_class(frame):
-            raise GrokError('Index definition can only be used on a class.')
+            raise GrokImportError(
+                "%r can only be instantiated on class level." % self.__class__)
         # store any extra parameters to pass to index later
         self._args = args
         self._kw = kw
