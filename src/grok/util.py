@@ -18,9 +18,12 @@ import re
 import types
 import sys
 import inspect
+import urllib
 
 from zope import component
 from zope import interface
+from zope.traversing.browser.interfaces import IAbsoluteURL
+from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
 
 from zope.security.checker import NamesChecker, defineChecker
 from zope.security.interfaces import IPermission
@@ -190,4 +193,13 @@ def get_default_permission(factory):
     check_permission(factory, result)
     return result
 
+def url(request, obj, name=None):
+    """Given a request and an object, give the URL.
 
+    Optionally pass a third argument name which gets added to the URL.
+    """    
+    url = component.getMultiAdapter((obj, request), IAbsoluteURL)()
+    if name is None:
+        return url
+    return url + '/' + urllib.quote(name.encode('utf-8'),
+                                    SAFE_URL_CHARACTERS)

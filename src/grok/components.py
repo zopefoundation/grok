@@ -200,13 +200,7 @@ class View(BrowserPage):
         elif name is not None and obj is None:
             # create URL to view on context
             obj = self.context
-        url = component.getMultiAdapter((obj, self.request), IAbsoluteURL)()
-        if name is None:
-            # URL to obj itself
-            return url
-        # URL to view on obj
-        return url + '/' + urllib.quote(name.encode('utf-8'),
-                                        SAFE_URL_CHARACTERS)
+        return util.url(self.request, obj, name)
 
     def redirect(self, url):
         return self.request.response.redirect(url)

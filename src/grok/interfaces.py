@@ -183,6 +183,10 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
     def grok(dotted_name):
         """Grok a module or package specified by ``dotted_name``."""
 
+    def url(request, obj, name=None):
+        """Generate the URL to an object with optional name attached.
+        """
+
     def notify(event):
         """Send ``event`` to event subscribers."""
 

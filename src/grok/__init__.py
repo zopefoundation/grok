@@ -42,6 +42,7 @@ from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import SubscribeDecorator as subscribe
 from grok.error import GrokError, GrokImportError
 from grok.formlib import action, AutoFields, Fields
+from grok.util import url
 
 # Our __init__ provides the grok API directly so using 'import grok' is enough.
 from grok.interfaces import IGrokAPI
