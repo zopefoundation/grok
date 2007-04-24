@@ -41,5 +41,11 @@ setup(
                       'zope.schema',
                       'zope.security',
                       'zope.testing',
-                      'zope.traversing'],
+                      'zope.traversing',
+
+                      # needed for ftests and typical deployments
+                      'zope.testbrowser',
+                      'zope.app.twisted',
+                      'zope.app.securitypolicy',
+                      'zope.app.zcmlfiles'],
 )
