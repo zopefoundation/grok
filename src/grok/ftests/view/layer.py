@@ -36,7 +36,7 @@ from zope import interface
 
 grok.layer(IBasicSkin)
 
-class MySkinLayer(grok.Layer):
+class MySkinLayer(grok.ILayer):
     pass
 
 class MySkin(grok.Skin):

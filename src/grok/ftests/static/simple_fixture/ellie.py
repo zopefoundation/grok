@@ -13,7 +13,7 @@ index = grok.PageTemplate("""\
 </body>
 </html>""")
 
-class MammothLayer(grok.Layer):
+class MammothLayer(grok.ILayer):
     pass
 
 class MammothSkin(grok.Skin):

@@ -111,8 +111,8 @@ class XMLRPCGrokker(grok.ClassGrokker):
                                  default_permission)
             util.make_checker(factory, method_view, permission)
     
-class LayerGrokker(grok.ClassGrokker):
-    component_class = grok.Layer
+class ILayerGrokker(grok.ClassGrokker):
+    component_class = grok.ILayer
 
 
 class ViewGrokker(grok.ClassGrokker):

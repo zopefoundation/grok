@@ -52,12 +52,13 @@ Sanity check custom layers
   >>> print browser.contents
   inky darkness all around
 
-Static layer is not available to custom layers unless they subclass IDefaultBrowserLayer
+
+grok.ILayer now inherits IDefaultBrowserLayer
 
   >>> browser.open('http://localhost/++skin++mammothskin/@@/grok.ftests.static.simple_fixture/subdir/otherfile.txt')
-  Traceback (most recent call last):
-  ...
-  NotFound: ...
+  >>> print browser.contents
+  This is yet another file.
+
 
   >>> browser.open('http://localhost/++skin++Rotterdam/@@/grok.ftests.static.simple_fixture/subdir/otherfile.txt')
   >>> print browser.contents

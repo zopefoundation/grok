@@ -31,6 +31,7 @@ from zope.lifecycleevent import ObjectModifiedEvent
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import (IBrowserPublisher,
+                                               IDefaultBrowserLayer,
                                                IBrowserRequest)
 from zope.publisher.publish import mapply
 from zope.pagetemplate import pagetemplate, pagetemplatefile
@@ -504,7 +505,7 @@ class IndexesClass(object):
 Indexes = IndexesClass('Indexes')
 
 
-class Layer(IBrowserRequest):
+class ILayer(IDefaultBrowserLayer):
     pass
 
 
