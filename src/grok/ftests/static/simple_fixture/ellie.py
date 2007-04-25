@@ -13,10 +13,12 @@ index = grok.PageTemplate("""\
 </body>
 </html>""")
 
-class MammothSkin(grok.Layer):
+class MammothLayer(grok.Layer):
     pass
 
-grok.register_skin(MammothSkin)
+class MammothSkin(grok.Skin):
+    grok.layer(MammothLayer)
+
 
 class CaveDrawings(grok.View):
 
@@ -24,7 +26,7 @@ class CaveDrawings(grok.View):
         return "stick figures"
 
 class TarPit(grok.View):
-    grok.layer(MammothSkin)
+    grok.layer(MammothLayer)
 
     def render(self):
         return "inky darkness all around"

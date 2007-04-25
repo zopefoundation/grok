@@ -17,11 +17,16 @@
 import os
 import persistent
 import urllib
+import datetime
+import warnings
+import pytz
+import simplejson
 
 from zope import component
 from zope import interface
 from zope import schema
 from zope import event
+from zope.interface.common import idatetime
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
@@ -45,7 +50,7 @@ from zope.app.container.contained import Contained
 from zope.app.container.interfaces import IReadContainer
 from zope.app.component.site import SiteManagerContainer
 
-from grok import util, interfaces
+from grok import util, interfaces, formlib
 
 
 # These base grokkers exist in grok.components because they are meant
@@ -108,17 +113,13 @@ class Container(BTreeContainer):
     interface.implements(IAttributeAnnotatable)
 
 
-class Layer(IBrowserRequest):
-    pass
-
-
 class Site(SiteManagerContainer):
     pass
 
 
 class Application(Site):
     """A top-level application object."""
-
+    interface.implements(interfaces.IApplication)
 
 class Adapter(object):
 
@@ -199,13 +200,7 @@ class View(BrowserPage):
         elif name is not None and obj is None:
             # create URL to view on context
             obj = self.context
-        url = component.getMultiAdapter((obj, self.request), IAbsoluteURL)()
-        if name is None:
-            # URL to obj itself
-            return url
-        # URL to view on obj
-        return url + '/' + urllib.quote(name.encode('utf-8'),
-                                        SAFE_URL_CHARACTERS)
+        return util.url(self.request, obj, name)
 
     def redirect(self, url):
         return self.request.response.redirect(url)
@@ -224,6 +219,13 @@ class GrokViewAbsoluteURL(AbsoluteURL):
 class XMLRPC(object):
     pass
 
+class JSON(BrowserPage):
+
+    def __call__(self):
+        view_name = self.__view_name__
+        method = getattr(self, view_name)
+        method_result = mapply(method, (), self.request)
+        return simplejson.dumps(method_result)
 
 class GrokPageTemplate(object):
 
@@ -312,17 +314,18 @@ class Traverser(object):
         if subob is not None:
             return subob
 
-        # XXX special logic here to deal with views and containers.
-        # would be preferrable if we could fall back on normal Zope
-        # traversal behavior
-        view = component.queryMultiAdapter((self.context, request), name=name)
-        if view:
-            return view
-
+        # XXX Special logic here to deal with containers.  It would be
+        # good if we wouldn't have to do this here. One solution is to
+        # rip this out and make you subclass ContainerTraverser if you
+        # wanted to override the traversal behaviour of containers.
         if IReadContainer.providedBy(self.context):
             item = self.context.get(name)
-            if item:
+            if item is not None:
                 return item
+
+        view = component.queryMultiAdapter((self.context, request), name=name)
+        if view is not None:
+            return view
 
         raise NotFound(self.context, name, request)
 
@@ -411,12 +414,6 @@ class GrokForm(object):
         self.update_form()
         return self.render()
 
-    def applyChanges(self, obj, **data):
-        if form.applyChanges(obj, self.form_fields, data, self.adapters):
-            event.notify(ObjectModifiedEvent(obj))
-            return True
-        return False
-
 class Form(GrokForm, form.FormBase, View):
     # We're only reusing the form implementation from zope.formlib, we
     # explicitly don't want to inherit the interface semantics (mostly
@@ -424,6 +421,17 @@ class Form(GrokForm, form.FormBase, View):
     interface.implementsOnly(interfaces.IGrokForm)
 
     template = default_form_template
+
+    def applyData(self, obj, **data):
+        return formlib.apply_data_event(obj, self.form_fields, data,
+                                        self.adapters)
+
+    # BBB -- to be removed in June 2007
+    def applyChanges(self, obj, **data):
+        warnings.warn("The 'applyChanges' method on forms is deprecated "
+                      "and will disappear by June 2007. Please use "
+                      "'applyData' instead.", DeprecationWarning, 2)
+        return bool(self.applyData(obj, **data))
 
 class AddForm(Form):
     pass
@@ -436,6 +444,34 @@ class EditForm(GrokForm, form.EditFormBase, View):
 
     template = default_form_template
 
+    def applyData(self, obj, **data):
+        return formlib.apply_data_event(obj, self.form_fields, data,
+                                        self.adapters, update=True)
+
+    # BBB -- to be removed in June 2007
+    def applyChanges(self, obj, **data):
+        warnings.warn("The 'applyChanges' method on forms is deprecated "
+                      "and will disappear by June 2007. Please use "
+                      "'applyData' instead.", DeprecationWarning, 2)
+        return bool(self.applyData(obj, **data))
+
+    @formlib.action("Apply")
+    def handle_edit_action(self, **data):
+        if self.applyData(self.context, **data):
+            formatter = self.request.locale.dates.getFormatter(
+                'dateTime', 'medium')
+
+            try:
+                time_zone = idatetime.ITZInfo(self.request)
+            except TypeError:
+                time_zone = pytz.UTC
+
+            self.status = "Updated on %s" % formatter.format(
+                datetime.datetime.now(time_zone)
+                )
+        else:
+            self.status = 'No changes'
+
 class DisplayForm(GrokForm, form.DisplayFormBase, View):
     # We're only reusing the form implementation from zope.formlib, we
     # explicitly don't want to inherit the interface semantics (mostly
@@ -443,3 +479,34 @@ class DisplayForm(GrokForm, form.DisplayFormBase, View):
     interface.implementsOnly(interfaces.IGrokForm)
 
     template = default_display_template
+
+class IndexesClass(object):
+    def __init__(self, name, bases=(), attrs=None):
+        if attrs is None:
+            return
+        # make sure we take over a bunch of possible attributes
+        for name in ['__grok_context__', '__grok_name__',
+                     '__grok_site__']:
+            value = attrs.get(name)
+            if value is not None:
+                setattr(self, name, value)
+        # now read and store indexes
+        indexes = {}
+        for name, value in attrs.items():
+            if not interfaces.IIndexDefinition.providedBy(value):
+                continue
+            indexes[name] = value
+        self.__grok_indexes__ = indexes
+        # __grok_module__ is needed to make defined_locally() return True for
+        # inline templates
+        self.__grok_module__ = util.caller_module()
+        
+Indexes = IndexesClass('Indexes')
+
+
+class Layer(IBrowserRequest):
+    pass
+
+
+class Skin(object):
+    pass

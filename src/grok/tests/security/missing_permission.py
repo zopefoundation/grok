@@ -4,7 +4,7 @@ example) before it can be used in grok.require().
 
   >>> grok.grok(__name__)
   Traceback (most recent call last):
-  GrokError: Undefined permission 'doesnt.exist' in view <class 'grok.tests.security.missing_permission.MissingPermission'>. Use grok.define_permission first.
+  GrokError: Undefined permission 'doesnt.exist' in <class 'grok.tests.security.missing_permission.MissingPermission'>. Use grok.define_permission first.
 
 """
 
@@ -17,3 +17,4 @@ class MissingPermission(grok.View):
 
     def render(self):
         pass
+

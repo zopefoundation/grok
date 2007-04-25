@@ -1,5 +1,5 @@
 """
-We can use grok.Form to render an add form for objects:
+We can use grok.AddForm to render an add form for objects:
 
   >>> import grok
   >>> from grok.ftests.form.addform import Zoo, Mammoth
@@ -17,7 +17,10 @@ We can use grok.Form to render an add form for objects:
   >>> print browser.contents
   Hi, my name is Manfred the Mammoth, and I\'m "Really big"
 
-  >>> browser.open("http://localhost/zoo/@@addmammothapplychanges")
+Instead of calling an object constructor with the form data, we can
+also use the ``applyData`` method to store the data on the object.
+
+  >>> browser.open("http://localhost/zoo/@@addmammothapplydata")
   >>> browser.getControl(name="form.name").value = "Ellie the Mammoth"
   >>> browser.getControl(name="form.size").value = "Really small"
   >>> browser.getControl("Add entry").click()
@@ -57,11 +60,11 @@ class AddMammoth(grok.AddForm):
         self.context['manfred'] = manfred = Mammoth(**data)
         self.redirect(self.url(manfred))
 
-class AddMammothApplyChanges(AddMammoth):
+class AddMammothApplyData(AddMammoth):
 
     @grok.action('Add entry')
     def add(self, **data):
-        # instantiate Mammoth and then use self.applyChanges()
+        # instantiate Mammoth and then use self.applyData()
         self.context['ellie'] = ellie = Mammoth()
-        self.applyChanges(ellie, **data)
+        self.applyData(ellie, **data)
         self.redirect(self.url(ellie))

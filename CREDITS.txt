@@ -1,21 +1,25 @@
 CREDITS
 =======
 
-* Martijn Faassen
+* Martijn Faassen (original developer)
 
-* Wolfgang Schnerring
+* Wolfgang Schnerring (original developer)
 
-* Christian Theune
+* Christian Theune (original developer)
 
-* Philipp von Weitershausen
+* Philipp von Weitershausen (original developer)
 
-* Jan-Wijbrand Kolman
+* Jan-Wijbrand Kolman (Grok Zwei sprint, meta grokker improvements)
 
-* Christian Zagrodnick
+* Darryl Cousins (website, admin interface)
 
-* Darryl Cousins
+* Kevin Teague (website)
 
-* ME GROK
+* Tim Terlegård (JSON support)
+
+* Christian Zagrodnick (early grok discussions)
+
+* ME GROK (team mascot)
 
 Thank you
 ---------

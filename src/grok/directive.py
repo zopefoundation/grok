@@ -198,22 +198,6 @@ class InterfaceDirective(SingleValue, OnceDirective):
             raise GrokImportError("You can only pass interfaces to "
                                   "%s." % self.name)
 
-
-class RegisterSkinDirective(MultipleTimesDirective):
-    def check_arguments(self, layer, name=None):
-        if not IInterface.providedBy(layer):
-            raise GrokImportError("You can only pass an Interface as "
-                                  "first argument of %s." % self.name)
-
-    def value_factory(self, *args, **kw):
-        return RegisterSkinInfo(*args, **kw)
-
-        
-class RegisterSkinInfo(object):
-    def __init__(self, layer, name=None):
-        self.layer = layer
-        self.name = name
-
         
 class GlobalUtilityDirective(MultipleTimesDirective):
     def check_arguments(self, factory, provides=None, name=u''):
@@ -283,8 +267,6 @@ name = SingleTextDirective('grok.name', ClassDirectiveContext())
 template = SingleTextDirective('grok.template', ClassDirectiveContext())
 context = InterfaceOrClassDirective('grok.context',
                                     ClassOrModuleDirectiveContext())
-layer = InterfaceDirective('grok.layer',
-                           ClassOrModuleDirectiveContext())
 templatedir = SingleTextDirective('grok.templatedir', ModuleDirectiveContext())
 provides = InterfaceDirective('grok.provides', ClassDirectiveContext())
 baseclass = MarkerDirective('grok.baseclass', ClassDirectiveContext())
@@ -296,6 +278,9 @@ define_permission = MultipleTextDirective('grok.define_permission',
                                           ModuleDirectiveContext())
 require = RequireDirective('grok.require', ClassDirectiveContext())
 
-register_skin = RegisterSkinDirective('grok.register_skin',
-                                 ModuleDirectiveContext())
+site = InterfaceOrClassDirective('grok.site',
+                                 ClassDirectiveContext())
+
+layer = InterfaceOrClassDirective('grok.layer',
+                           ClassOrModuleDirectiveContext())
 

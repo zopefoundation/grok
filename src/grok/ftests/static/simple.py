@@ -48,13 +48,13 @@ Sanity check custom layers
   >>> print browser.contents
   stick figures
 
-  >>> browser.open('http://localhost/++skin++MammothSkin/ellie/@@tarpit')
+  >>> browser.open('http://localhost/++skin++mammothskin/ellie/@@tarpit')
   >>> print browser.contents
   inky darkness all around
 
 Static layer is not available to custom layers unless they subclass IDefaultBrowserLayer
 
-  >>> browser.open('http://localhost/++skin++MammothSkin/@@/grok.ftests.static.simple_fixture/subdir/otherfile.txt')
+  >>> browser.open('http://localhost/++skin++mammothskin/@@/grok.ftests.static.simple_fixture/subdir/otherfile.txt')
   Traceback (most recent call last):
   ...
   NotFound: ...

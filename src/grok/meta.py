@@ -7,7 +7,6 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserPublisher,
                                                IBrowserSkinType)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
-from zope.security.checker import NamesChecker, defineChecker
 from zope.security.permission import Permission
 from zope.security.interfaces import IPermission
 from zope.annotation.interfaces import IAnnotations
@@ -16,6 +15,13 @@ from zope.app.publisher.xmlrpc import MethodPublisher
 from zope.app.container.interfaces import IContainer
 from zope.app.container.interfaces import INameChooser
 from zope.app.container.contained import contained
+
+from zope.app.intid import IntIds
+from zope.app.intid.interfaces import IIntIds
+from zope.app.catalog.catalog import Catalog
+from zope.app.catalog.interfaces import ICatalog
+
+from zope.exceptions.interfaces import DuplicationError
 
 import grok
 from grok import util, components, formlib
@@ -84,18 +90,8 @@ class XMLRPCGrokker(grok.ClassGrokker):
         # the outside -- need to discuss how to restrict such things.
         methods = util.methods_from_class(factory)
 
-        # Determine the default permission for the XMLRPC methods.
-        # There can only be 0 or 1 of those.
-        permissions = util.class_annotation(factory, 'grok.require', [])
-        if not permissions:
-            default_permission = None
-        elif len(permissions) == 1:
-            default_permission = permissions[0]
-        else:
-            raise GrokError('grok.require was called multiple times in '
-                            '%r. It may only be called once on class level.'
-                            % factory, factory)
-
+        default_permission = util.get_default_permission(factory)
+        
         for method in methods:
             # Make sure that the class inherits MethodPublisher, so that the
             # views have a location
@@ -111,14 +107,10 @@ class XMLRPCGrokker(grok.ClassGrokker):
             # Protect method_view with either the permission that was
             # set on the method, the default permission from the class
             # level or zope.Public.
-            permission = getattr(method, '__grok_require__', default_permission)
-            if permission is None or permission == 'zope.Public':
-                checker = NamesChecker(['__call__'])
-            else:
-                checker = NamesChecker(['__call__'], permission)
-            defineChecker(method_view, checker)
-
-
+            permission = getattr(method, '__grok_require__',
+                                 default_permission)
+            util.make_checker(factory, method_view, permission)
+    
 class LayerGrokker(grok.ClassGrokker):
     component_class = grok.Layer
 
@@ -190,25 +182,9 @@ class ViewGrokker(grok.ClassGrokker):
                                  name=view_name)
 
         # protect view, public by default
-        permissions = util.class_annotation(factory, 'grok.require', [])
-        if not permissions:
-            checker = NamesChecker(['__call__'])
-        elif len(permissions) > 1:
-            raise GrokError('grok.require was called multiple times in view '
-                            '%r. It may only be called once.' % factory,
-                            factory)
-        elif permissions[0] == 'zope.Public':
-            checker = NamesChecker(['__call__'])
-        else:
-            perm = permissions[0]
-            if component.queryUtility(IPermission, name=perm) is None:
-                raise GrokError('Undefined permission %r in view %r. Use '
-                                'grok.define_permission first.'
-                                % (perm, factory), factory)
-            checker = NamesChecker(['__call__'], permissions[0])
-
-        defineChecker(factory, checker)
-
+        default_permission = util.get_default_permission(factory)
+        util.make_checker(factory, factory, default_permission)
+    
         # safety belt: make sure that the programmer didn't use
         # @grok.require on any of the view's methods.
         methods = util.methods_from_class(factory)
@@ -219,6 +195,35 @@ class ViewGrokker(grok.ClassGrokker):
                                 'for XML-RPC methods.'
                                 % (method.__name__, factory), factory)
 
+
+class JSONGrokker(grok.ClassGrokker):
+    component_class = grok.JSON
+
+    def register(self, context, name, factory, module_info, templates):
+        view_context = util.determine_class_context(factory, context)
+        methods = util.methods_from_class(factory)
+
+        default_permission = util.get_default_permission(factory)
+        
+        for method in methods:
+            # Create a new class with a __view_name__ attribute so the
+            # JSON class knows what method to call.
+            method_view = type(
+                factory.__name__, (factory,),
+                {'__view_name__': method.__name__}
+                )
+            component.provideAdapter(
+                method_view, (view_context, IDefaultBrowserLayer),
+                interface.Interface,
+                name=method.__name__)
+
+            # Protect method_view with either the permission that was
+            # set on the method, the default permission from the class
+            # level or zope.Public.
+
+            permission = getattr(method, '__grok_require__',
+                                 default_permission)
+            util.make_checker(factory, method_view, permission)
 
 class TraverserGrokker(grok.ClassGrokker):
     component_class = grok.Traverser
@@ -401,34 +406,51 @@ def localUtilityRegistrationSubscriber(site, event):
 
     for info in util.class_annotation(site.__class__,
                                       'grok.utilities_to_install', []):
-        utility = info.factory()
-        site_manager = site.getSiteManager()
-
-        # store utility
-        if not info.public:
-            container = site_manager
-        else:
-            container = site
-
-        name_in_container = info.name_in_container 
-        if name_in_container is None:
-            name_in_container = INameChooser(container).chooseName(
-                info.factory.__name__, utility)
-        container[name_in_container] = utility
-
-        # execute setup callback
-        if info.setup is not None:
-            info.setup(utility)
-
-        # register utility
-        site_manager.registerUtility(utility, provided=info.provides,
-                                     name=info.name)
+        setupUtility(site, info.factory(), info.provides, name=info.name,
+                     name_in_container=info.name_in_container,
+                     public=info.public, setup=info.setup)
 
     # we are done. If this subscriber gets fired again, we therefore
     # do not register utilities anymore
     site.__grok_utilities_installed__ = True
 
 
+def setupUtility(site, utility, provides, name=u'',
+                 name_in_container=None, public=False, setup=None):
+    """Set up a utility in a site.
+
+    site - the site to set up the utility in
+    utility - the utility to set up
+    provides - the interface the utility should be registered with
+    name - the name the utility should be registered under, default
+      the empty string (no name)
+    name_in_container - if given it will be used to add the utility
+      object to its container. Otherwise a name will be made up
+    public - if False, the utility will be stored in the site manager. If
+      True, the utility will be storedin the site (it is assumed the
+      site is a container)
+    setup - if not None, it will be called with the utility as its first
+       argument. This function can then be used to further set up the
+       utility.
+    """
+    site_manager = site.getSiteManager()
+
+    if not public:
+        container = site_manager
+    else:
+        container = site
+
+    if name_in_container is None:
+        name_in_container = INameChooser(container).chooseName(
+            utility.__class__.__name__, utility)
+    container[name_in_container] = utility
+
+    if setup is not None:
+        setup(utility)
+        
+    site_manager.registerUtility(utility, provided=provides,
+                                 name=name)
+    
 class DefinePermissionGrokker(grok.ModuleGrokker):
 
     priority = 1500
@@ -494,3 +516,82 @@ class ApplicationGrokker(grok.ClassGrokker):
                                       provides=grok.interfaces.IApplication,
                                       name='%s.%s' % (module_info.dotted_name,
                                                       name))
+class IndexesGrokker(grok.InstanceGrokker):
+    component_class = components.IndexesClass
+
+    def register(self, context, name, factory, module_info, templates):
+        site = util.class_annotation(factory, 'grok.site', None)
+        if site is None:
+            raise GrokError("No site specified for grok.Indexes "
+                            "subclass in module %r. "
+                            "Use grok.site() to specify." % module_info.getModule(),
+                            factory)
+        indexes = util.class_annotation(factory, 'grok.indexes', None)
+        if indexes is None:
+            return
+        context = util.determine_class_context(factory, context)
+        catalog_name = util.class_annotation(factory, 'grok.name', u'')
+        zope.component.provideHandler(
+            IndexesSetupSubscriber(catalog_name, indexes,
+                                   context, module_info),
+            adapts=(site,
+                    grok.IObjectAddedEvent))
+        
+class IndexesSetupSubscriber(object):
+    def __init__(self, catalog_name, indexes, context, module_info):
+        self.catalog_name = catalog_name
+        self.indexes = indexes
+        self.context = context
+        self.module_info = module_info
+        
+    def __call__(self, site, event):
+        # make sure we have an intids
+        self._createIntIds(site)
+        # get the catalog
+        catalog = self._createCatalog(site)
+        # now install indexes
+        for name, index in self.indexes.items():
+            try:
+                index.setup(catalog, name, self.context, self.module_info)
+            except DuplicationError:
+                raise GrokError(
+                    "grok.Indexes in module %r causes "
+                    "creation of catalog index %r in catalog %r, "
+                    "but an index with that name is already present." %
+                    (self.module_info.getModule(), name, self.catalog_name),
+                    None)
+
+    def _createCatalog(self, site):
+        """Create the catalog if needed and return it.
+
+        If the catalog already exists, return that.
+        """
+        catalog = zope.component.queryUtility(
+            ICatalog, name=self.catalog_name, context=site, default=None)
+        if catalog is not None:
+            return catalog
+        catalog = Catalog()
+        setupUtility(site, catalog, ICatalog, name=self.catalog_name)
+        return catalog
+    
+    def _createIntIds(self, site):
+        """Create intids if needed, and return it.
+        """
+        intids = zope.component.queryUtility(
+            IIntIds, context=site, default=None)
+        if intids is not None:
+            return intids
+        intids = IntIds()
+        setupUtility(site, intids, IIntIds)
+        return intids
+
+
+class SkinGrokker(grok.ClassGrokker):
+    component_class = grok.Skin
+
+    def register(self, context, name, factory, module_info, templates):
+        layer = util.class_annotation(factory, 'grok.layer',
+                                    None) or module_info.getAnnotation('grok.layer',
+                                    None) or grok.IDefaultBrowserLayer
+        name = grok.util.class_annotation(factory, 'grok.name', factory.__name__.lower())
+        zope.component.interface.provideInterface(name, layer, IBrowserSkinType)

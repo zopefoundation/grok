@@ -196,6 +196,10 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
     def grok(dotted_name):
         """Grok a module or package specified by ``dotted_name``."""
 
+    def url(request, obj, name=None):
+        """Generate the URL to an object with optional name attached.
+        """
+
     def notify(event):
         """Send ``event`` to event subscribers."""
 
@@ -366,9 +370,14 @@ class IGrokForm(IGrokView):
         The errors are returned as an iterable.
         """
 
-    def applyChanges(obj, **data):
-        """Apply form data to an object.  Return True if the object
-        had to be modified, False otherwise.
+    def applyData(obj, **data):
+        """Save form data to an object.
+
+        This returns a dictionary with interfaces as keys and lists of
+        field names as values to indicate which fields in which
+        schemas had to be changed in order to save the data.  In case
+        the method works in update mode (e.g. on EditForms) and
+        doesn't have to update an object, the dictionary is empty.
         """
 
 
@@ -378,3 +387,16 @@ class IApplication(interface.Interface):
     Used to register applications as utilities to look them up and
     provide a list of grokked applications.
     """
+
+class IIndexDefinition(interface.Interface):
+    """Define an index for grok.Indexes.
+    """
+
+    def setup(catalog, name, context):
+        """Set up index called name in given catalog.
+
+        Use name for index name and attribute to index. Set up
+        index for interface or class context.
+        """
+    
+        

@@ -22,9 +22,10 @@
   >>> browser.open("http://localhost/++skin++Rotterdam/manfred/@@moredrawings")
   >>> print browser.contents
   Pretty
-  >>> browser.open("http://localhost/++skin++MySkin/manfred/@@evenmoredrawings")
-  >>> print browser.contents
-  Awesome
+
+  #>>> browser.open("http://localhost/++skin++MySkin/manfred/@@evenmoredrawings")
+  #>>> print browser.contents
+  #Awesome
 
 """
 import grok
@@ -35,10 +36,11 @@ from zope import interface
 
 grok.layer(IBasicSkin)
 
-class MySkin(grok.Layer):
+class MySkinLayer(grok.Layer):
     pass
 
-grok.register_skin(MySkin)
+class MySkin(grok.Skin):
+    grok.layer(MySkinLayer)
 
 class Mammoth(grok.Model):
     pass

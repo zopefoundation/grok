@@ -30,17 +30,20 @@ from zope.app.container.contained import (
     IContainerModifiedEvent, ContainerModifiedEvent)
 
 from grok.components import ClassGrokker, InstanceGrokker, ModuleGrokker
-from grok.components import Model, Adapter, MultiAdapter, View, XMLRPC, Layer
+from grok.components import Model, Adapter, MultiAdapter, View, XMLRPC, JSON, Layer
 from grok.components import PageTemplate, PageTemplateFile, Container, Traverser
 from grok.components import Site, GlobalUtility, LocalUtility, Annotation
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
+from grok.components import Indexes, Skin
 from grok.directive import (context, name, template, templatedir, provides,
                             baseclass, global_utility, local_utility,
-                            define_permission, require, layer, register_skin)
+                            define_permission, require, site, layer)
+
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import SubscribeDecorator as subscribe
 from grok.error import GrokError, GrokImportError
 from grok.formlib import action, AutoFields, Fields
+from grok.util import url
 
 # Our __init__ provides the grok API directly so using 'import grok' is enough.
 from grok.interfaces import IGrokAPI
