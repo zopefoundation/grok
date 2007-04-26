@@ -284,3 +284,5 @@ site = InterfaceOrClassDirective('grok.site',
 layer = InterfaceOrClassDirective('grok.layer',
                            ClassOrModuleDirectiveContext())
 
+viewletmanager = InterfaceOrClassDirective('grok.viewletmanager',
+                                           ClassDirectiveContext())

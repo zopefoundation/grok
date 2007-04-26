@@ -41,7 +41,11 @@ class IGrokBaseClasses(interface.Interface):
     AddForm = interface.Attribute("Base class for add forms.")
     EditForm = interface.Attribute("Base class for edit forms.")
     DisplayForm = interface.Attribute("Base class for display forms.")
-    Layer = interface.Attribute("Base interface for skin layers.")
+    Layer = interface.Attribute("Base interface for layer.")
+    Skin  = interface.Attribute("Base interface for skin.")
+    ViewletManager = interface.Attribute("Base interface for viewletmanager.")
+    Viewlet = interface.Attribute("Base interface for viewlet.")
+
 
 class IGrokErrors(interface.Interface):
 
@@ -80,11 +84,6 @@ class IGrokDirectives(interface.Interface):
 
         This directive acts as a contraint on the 'request' of
         grok.View. This directive can only be used on class level."""
-
-    def skin(skin):
-        """Declare this layer as a named skin.
-
-        This directive can only be used on class level."""
 
     def template(template):
         """Declare the template name for a view.
@@ -131,8 +130,6 @@ class IGrokDirectives(interface.Interface):
                  The site should in this case be a container.
         name_in_container - the name to use for storing the utility
         """
-    def register_skin(name, iface):
-        """Register skin name for layer."""
 
     def define_permission(permission):
         """Defines a new permission with the id ``permission``."""

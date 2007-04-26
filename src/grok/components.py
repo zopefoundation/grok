@@ -39,6 +39,8 @@ from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.browser.absoluteurl import AbsoluteURL
 from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
 from zope.annotation.interfaces import IAttributeAnnotatable
+from zope.viewlet.manager import ViewletManagerBase
+from zope.viewlet.viewlet import ViewletBase
 
 from zope.app.pagetemplate.engine import TrustedAppPT
 from zope.app.publisher.browser import getDefaultViewName
@@ -509,4 +511,12 @@ class Layer(IBrowserRequest):
 
 
 class Skin(object):
+    pass
+
+
+class ViewletManager(ViewletManagerBase):
+    template = None
+    
+        
+class Viewlet(ViewletBase):
     pass

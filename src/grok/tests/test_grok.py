@@ -2,10 +2,12 @@ import unittest
 from pkg_resources import resource_listdir
 from zope.testing import doctest, cleanup
 import zope.component.eventtesting
+import zope.viewlet.tests
 
 def setUpZope(test):
     zope.component.eventtesting.setUp(test)
-
+    zope.viewlet.tests.setUp(test) # setup 'provider' talnamespace
+    
 def cleanUpZope(test):
     cleanup.cleanUp()
 

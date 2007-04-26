@@ -19,7 +19,6 @@ class MammothLayer(grok.Layer):
 class MammothSkin(grok.Skin):
     grok.layer(MammothLayer)
 
-
 class CaveDrawings(grok.View):
 
     def render(self):
