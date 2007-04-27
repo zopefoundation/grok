@@ -617,7 +617,7 @@ class ViewletManagerGrokker(grok.ClassGrokker):
                                          view_layer, 
                                          view_context),
                                  provides=IViewletManager,
-                                 name=factory.__name__.lower())
+                                 name=name)
 
             
 class ViewletGrokker(grok.ClassGrokker):
