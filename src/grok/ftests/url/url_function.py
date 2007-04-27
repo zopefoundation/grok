@@ -7,7 +7,7 @@ absolute URL of objects.
   >>> import grok
   >>> grok.grok('grok.ftests.url.url_function')
   
-  >>> from grok.ftests.url.url import Herd, Mammoth
+  >>> from grok.ftests.url.url_function import Herd, Mammoth
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   >>> manfred = Mammoth()
@@ -65,6 +65,7 @@ It works properly in the face of non-ascii characters in URLs:
   True
 """
 import grok
+from grok import url
 
 class Herd(grok.Container, grok.Model):
     pass
