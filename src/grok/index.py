@@ -14,7 +14,7 @@ class IndexDefinition(object):
     implements(IIndexDefinition)
 
     index_class = None
-    
+
     def __init__(self, *args, **kw):
         frame = sys._getframe(1)
         if not frame_is_class(frame):
@@ -22,22 +22,28 @@ class IndexDefinition(object):
                 "%r can only be instantiated on class level." % self.__class__)
         # store any extra parameters to pass to index later
         self._args = args
+        self._attribute = kw.pop('attribute', None)
         self._kw = kw
 
     def setup(self, catalog, name, context, module_info):
+        if self._attribute is not None:
+            field_name = self._attribute
+        else:
+            field_name = name
+
         if IInterface.providedBy(context):
             try:
-                method = context[name]
+                method = context[field_name]
             except KeyError:
                 raise GrokError("grok.Indexes in %r refers to an attribute or "
                                 "method %r on interface %r, but this does not "
                                 "exist." % (module_info.getModule(),
-                                            name, context), None)
+                                            field_name, context), None)
             call = IMethod.providedBy(method)
         else:
-            call = callable(getattr(context, name, None))
+            call = callable(getattr(context, field_name, None))
             context = None # no interface lookup
-        catalog[name] = self.index_class(field_name=name,
+        catalog[name] = self.index_class(field_name=field_name,
                                          interface=context,
                                          field_callable=call,
                                          *self._args, **self._kw)
