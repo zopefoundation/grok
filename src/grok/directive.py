@@ -200,7 +200,8 @@ class InterfaceDirective(SingleValue, OnceDirective):
 
 
 class GlobalUtilityDirective(MultipleTimesDirective):
-    def check_arguments(self, factory, provides=None, name=u''):
+    def check_arguments(self, factory, provides=None, name=u'',
+                        direct=False):
         if provides is not None and not IInterface.providedBy(provides):
             raise GrokImportError("You can only pass an interface to the "
                                   "provides argument of %s." % self.name)
@@ -210,9 +211,10 @@ class GlobalUtilityDirective(MultipleTimesDirective):
 
 
 class GlobalUtilityInfo(object):
-    def __init__(self, factory, provides=None, name=u''):
+    def __init__(self, factory, provides=None, name=u'', direct=False):
         self.factory = factory
-        
+        self.direct = direct
+
         if provides is None:
             provides = util.class_annotation(factory, 'grok.provides', None)
         self.provides = provides

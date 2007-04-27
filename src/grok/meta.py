@@ -297,7 +297,11 @@ class GlobalUtilityDirectiveGrokker(grok.ModuleGrokker):
         for info in infos:
             if info.provides is None:
                 util.check_implements_one(info.factory)
-            component.provideUtility(info.factory(),
+            if info.direct:
+                obj = info.factory
+            else:
+                obj = info.factory()
+            component.provideUtility(obj,
                                      provides=info.provides,
                                      name=info.name)
 

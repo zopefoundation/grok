@@ -97,7 +97,24 @@ grok.global_utility directive:
   True
   >>> small3 is not small2 and small3 is not small
   True
+
+Normally one registers a utility factory, such as the class, as a
+global utility. It is also possible to register an arbitrary object directly
+as a global utility. You do this by passing a 'direct' argument set to
+'True'. This can be useful if one needs to register functions (such
+as factory functions) that can be looked up as a utility, or if the
+class you want to register as a global utility has an __init__ that
+takes arguments, where you want to do the instantiation yourself.
+Let's look up an instance we registered this way:
+
+  >>> small4 = component.getUtility(ISmallClub, name='smallish')
+  >>> ISmallClub.providedBy(small4)
+  True
+  >>> isinstance(small4, SmallClub)
+  True
+  
 """
+
 import grok
 from zope import interface
 
@@ -158,3 +175,6 @@ grok.global_utility(NightClub, provides=ISpikyClub)
 
 grok.global_utility(SmallClub, provides=ITinyClub)
 grok.global_utility(SmallClub, name='small')
+
+grok.global_utility(SmallClub(), name='smallish',
+                    direct=True)
