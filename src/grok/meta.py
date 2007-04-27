@@ -616,6 +616,7 @@ class ViewletGrokker(grok.ClassGrokker):
         # Try to set up permissions (copied from the View grokker)
 
         factory.module_info = module_info # to make /static available
+        factory_name = factory.__name__.lower()
         
         permissions = grok.util.class_annotation(factory, 'grok.require', [])
         if not permissions:
@@ -635,6 +636,42 @@ class ViewletGrokker(grok.ClassGrokker):
             checker = NamesChecker(['update','render'], permissions[0])
         
         defineChecker(factory, checker)
+
+
+        # find templates
+        template_name = util.class_annotation(factory, 'grok.template',
+                                              factory_name)
+        template = templates.get(template_name)
+
+        if factory_name != template_name:
+            # grok.template is being used
+            if templates.get(factory_name):
+                raise GrokError("Multiple possible templates for view %r. It "
+                                "uses grok.template('%s'), but there is also "
+                                "a template called '%s'."
+                                % (factory, template_name, factory_name),
+                                factory)
+
+        if template:
+            # FIXME: this logic needs to be changed
+            if (getattr(factory, 'render', None) and not
+                util.check_subclass(factory, components.GrokForm) and not
+                util.check_subclass(factory, components.Viewlet)):
+                # we do not accept render and template both for a view
+                # (unless it's a form, they happen to have render.
+                raise GrokError(
+                    "Multiple possible ways to render view %r. "
+                    "It has both a 'render' method as well as "
+                    "an associated template." % factory, factory)
+
+            templates.markAssociated(template_name)
+            factory.template = template
+        else:
+            if not getattr(factory, 'render', None):
+                # we do not accept a view without any way to render it
+                raise GrokError("View %r has no associated template or "
+                                "'render' method." % factory, factory)
+
         
         # New directive
         viewletmanager = grok.util.class_annotation(factory, 'grok.viewletmanager', [])
