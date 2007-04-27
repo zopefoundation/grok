@@ -41,8 +41,11 @@ class IGrokBaseClasses(interface.Interface):
     AddForm = interface.Attribute("Base class for add forms.")
     EditForm = interface.Attribute("Base class for edit forms.")
     DisplayForm = interface.Attribute("Base class for display forms.")
-    Layer = interface.Attribute("Base interface for skin layers.")
-
+    ILayer = interface.Attribute("Base interface for layers.")
+    Skin = interface.Attribute("Base class for skin.")
+    ViewletManager = interface.Attribute("Base class for viewletmanager.")
+    Viewlet = interface.Attribute("Base class for viewlet.")
+    
 class IGrokErrors(interface.Interface):
 
     def GrokError(message, component):

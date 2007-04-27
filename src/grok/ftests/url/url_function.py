@@ -6,8 +6,8 @@ absolute URL of objects.
   >>> from grok import url
   >>> import grok
   >>> grok.grok('grok.ftests.url.url_function')
-  
-  >>> from grok.ftests.url.url import Herd, Mammoth
+
+  >>> from grok.ftests.url.url_function import Herd, Mammoth
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   >>> manfred = Mammoth()
@@ -24,7 +24,7 @@ Now let's use url on some things::
   >>> browser.open("http://localhost/herd/manfred/another")
   >>> print browser.contents
   http://localhost/herd/manfred/another
-  
+
 We get the views manually so we can do a greater variety of url() calls:
 
   >>> from zope import component
@@ -65,6 +65,7 @@ It works properly in the face of non-ascii characters in URLs:
   True
 """
 import grok
+from grok import url
 
 class Herd(grok.Container, grok.Model):
     pass
@@ -77,7 +78,7 @@ grok.context(Mammoth)
 class Index(grok.View):
     def render(self):
         return url(self.request, self)
-    
+
 class Another(grok.View):
     def render(self):
         return url(self.request, self)

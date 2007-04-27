@@ -7,8 +7,11 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserPublisher,
                                                IBrowserSkinType)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
+from zope.publisher.browser import IBrowserView
+from zope.viewlet.interfaces import IViewletManager, IViewlet
 from zope.security.permission import Permission
 from zope.security.interfaces import IPermission
+from zope.security.checker import NamesChecker, defineChecker
 from zope.annotation.interfaces import IAnnotations
 
 from zope.app.publisher.xmlrpc import MethodPublisher
@@ -26,6 +29,7 @@ from zope.exceptions.interfaces import DuplicationError
 import grok
 from grok import util, components, formlib
 from grok.error import GrokError
+
 
 
 class ModelGrokker(grok.ClassGrokker):
@@ -110,9 +114,6 @@ class XMLRPCGrokker(grok.ClassGrokker):
             permission = getattr(method, '__grok_require__',
                                  default_permission)
             util.make_checker(factory, method_view, permission)
-    
-class ILayerGrokker(grok.ClassGrokker):
-    component_class = grok.ILayer
 
 
 class ViewGrokker(grok.ClassGrokker):
@@ -297,18 +298,6 @@ class StaticResourcesGrokker(grok.ModuleGrokker):
             resource_factory, (IDefaultBrowserLayer,),
             interface.Interface, name=module_info.dotted_name)
 
-
-class RegisterSkinDirectiveGrokker(grok.ModuleGrokker):
-
-    def register(self, context, module_info, templates):
-        infos = module_info.getAnnotation('grok.register_skin',[])
-        if infos:
-            for skin in infos:
-                name = skin.name
-                if not skin.name:
-                    name = skin.layer.__name__
-                zope.component.interface.provideInterface(name, skin.layer,
-                                                          IBrowserSkinType)
 
 
 class GlobalUtilityDirectiveGrokker(grok.ModuleGrokker):
@@ -586,6 +575,10 @@ class IndexesSetupSubscriber(object):
         return intids
 
 
+class ILayerGrokker(grok.ClassGrokker):
+    component_class = grok.ILayer
+
+
 class SkinGrokker(grok.ClassGrokker):
     component_class = grok.Skin
 
@@ -595,3 +588,65 @@ class SkinGrokker(grok.ClassGrokker):
                                     None) or grok.IDefaultBrowserLayer
         name = grok.util.class_annotation(factory, 'grok.name', factory.__name__.lower())
         zope.component.interface.provideInterface(name, layer, IBrowserSkinType)
+
+
+class ViewletManagerGrokker(grok.ClassGrokker):
+    component_class = (grok.ViewletManager, grok.OrderedViewletManager)
+
+    def register(self, context, name, factory, module_info, templates):
+
+        name = grok.util.class_annotation(factory, 'grok.name', factory.__name__.lower())
+        view_layer = util.class_annotation(factory, 'grok.layer',
+                                                    None) or module_info.getAnnotation('grok.layer',
+                                                     None) or IDefaultBrowserLayer
+        
+        view_context = util.determine_class_context(factory, context)
+        component.provideAdapter(factory,
+                                 adapts=(None, # TODO: Make configurable
+                                         view_layer, # TODO: Make configurable
+                                         view_context),
+                                 provides=IViewletManager,
+                                 name=name)
+
+            
+class ViewletGrokker(grok.ClassGrokker):
+    component_class = grok.Viewlet
+                
+    def register(self, context, name, factory, module_info, templates):
+        # Try to set up permissions (copied from the View grokker)
+
+        factory.module_info = module_info # to make /static available
+        
+        permissions = grok.util.class_annotation(factory, 'grok.require', [])
+        if not permissions:
+            checker = NamesChecker(['update', 'render'])
+        elif len(permissions) > 1:
+            raise GrokError('grok.require was called multiple times in viewlet '
+                            '%r. It may only be called once.' % factory,
+                            factory)
+        elif permissions[0] == 'zope.Public':
+            checker = NamesChecker(['update','render'])
+        else:
+            perm = permissions[0]
+            if component.queryUtility(IPermission, name=perm) is None:
+                raise GrokError('Undefined permission %r in view %r. Use '
+                            'grok.define_permission first.'
+                            % (perm, factory), factory)
+            checker = NamesChecker(['update','render'], permissions[0])
+        
+        defineChecker(factory, checker)
+        
+        # New directive
+        viewletmanager = grok.util.class_annotation(factory, 'grok.viewletmanager', [])
+        layer = util.class_annotation(factory, 'grok.layer',
+                                            None) or module_info.getAnnotation('grok.layer',
+                                             None) or IDefaultBrowserLayer
+       
+        component.provideAdapter(factory,
+                                 adapts=(None, # TODO: Make configurable
+                                         layer,
+                                         IBrowserView,
+                                         viewletmanager),
+                                 provides=IViewlet,
+                                 name=name)
+
