@@ -151,6 +151,8 @@ class ViewGrokker(grok.ClassGrokker):
                                 % (factory, template_name, factory_name),
                                 factory)
 
+        factory_template = getattr(factory, 'template', None)
+
         if template:
             if (getattr(factory, 'render', None) and not
                 util.check_subclass(factory, components.GrokForm)):
@@ -163,6 +165,8 @@ class ViewGrokker(grok.ClassGrokker):
 
             templates.markAssociated(template_name)
             factory.template = template
+        elif factory_template and isinstance(factory_template, (components.PageTemplate, components.PageTemplateFile)):
+            pass
         else:
             if not getattr(factory, 'render', None):
                 # we do not accept a view without any way to render it
@@ -652,13 +656,15 @@ class ViewletGrokker(grok.ClassGrokker):
                                 % (factory, template_name, factory_name),
                                 factory)
 
+        factory_template = getattr(factory,'template', None)
+        
         if template:
-            # FIXME: this logic needs to be changed
             if (getattr(factory, 'render', None) and not
                 util.check_subclass(factory, components.GrokForm) and not
                 util.check_subclass(factory, components.Viewlet)):
                 # we do not accept render and template both for a view
-                # (unless it's a form, they happen to have render.
+                # (unless it's a form, they happen to have render.)
+                # Forms currently not implemented in viewlets.
                 raise GrokError(
                     "Multiple possible ways to render view %r. "
                     "It has both a 'render' method as well as "
@@ -666,6 +672,8 @@ class ViewletGrokker(grok.ClassGrokker):
 
             templates.markAssociated(template_name)
             factory.template = template
+        elif factory_template and isinstance(factory_template, (components.PageTemplate, components.PageTemplateFile)):
+            pass
         else:
             if not getattr(factory, 'render', None):
                 # we do not accept a view without any way to render it
