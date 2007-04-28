@@ -202,6 +202,14 @@ class View(BrowserPage):
             obj = self.context
         return util.url(self.request, obj, name)
 
+    def application_url(self):
+        obj = self.context
+        while obj:
+            if isinstance(obj, Application):
+                return self.url(obj)
+            obj = obj.__parent__
+        raise ValueError("No application found.")
+
     def redirect(self, url):
         return self.request.response.redirect(url)
 
