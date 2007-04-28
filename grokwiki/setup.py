@@ -16,5 +16,6 @@ Grok: Now even cavemen can use wikis!
     license='ZPL',
 
     install_requires=['setuptools',
+                      'zc.sourcefactory',
                      ],
 )
