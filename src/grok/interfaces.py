@@ -43,8 +43,6 @@ class IGrokBaseClasses(interface.Interface):
     DisplayForm = interface.Attribute("Base class for display forms.")
     ILayer = interface.Attribute("Base interface for layers.")
     Skin = interface.Attribute("Base class for skin.")
-    ViewletManager = interface.Attribute("Base class for viewletmanager.")
-    Viewlet = interface.Attribute("Base class for viewlet.")
     
 class IGrokErrors(interface.Interface):
 
@@ -134,8 +132,6 @@ class IGrokDirectives(interface.Interface):
                  The site should in this case be a container.
         name_in_container - the name to use for storing the utility
         """
-    def register_skin(name, iface):
-        """Register skin name for layer."""
 
     def define_permission(permission):
         """Defines a new permission with the id ``permission``."""
