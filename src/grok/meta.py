@@ -599,6 +599,8 @@ class ViewletManagerGrokker(grok.ClassGrokker):
 
     def register(self, context, name, factory, module_info, templates):
 
+        factory.module_info = module_info # to make /static available
+
         name = grok.util.class_annotation(factory, 'grok.name', factory.__name__.lower())
         view_layer = util.class_annotation(factory, 'grok.layer',
                                                     None) or module_info.getAnnotation('grok.layer',

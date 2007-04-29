@@ -518,6 +518,61 @@ class Skin(object):
 class ViewletManager(ViewletManagerBase):
     template = None
 
+    def __init__(self, context, request, view):
+        super(ViewletManager, self).__init__(context, request, view)
+        self.static = component.queryAdapter(
+            self.request,
+            interface.Interface,
+            name=self.module_info.package_dotted_name
+            )
+        
+
+    def render(self):
+        """See zope.contentprovider.interfaces.IContentProvider"""
+        # Now render the view
+        if self.template:
+            #return self.template(viewlets=self.viewlets)
+            return self._render_template()
+        else:
+            return u'\n'.join([viewlet.render() for viewlet in self.viewlets])
+                                                
+        
+    @property
+    def response(self):
+        return self.request.response
+
+    def _render_template(self):
+        namespace = self.template.pt_getContext()
+        namespace['request'] = self.request
+        namespace['view'] = self
+        namespace['viewlets'] = self.viewlets
+        namespace['static'] = self.static
+        namespace['context'] = self.context
+        # XXX need to check whether we really want to put None here if missing
+        return self.template.pt_render(namespace)
+
+    def url(self, obj=None, name=None):
+        # if the first argument is a string, that's the name. There should
+        # be no second argument
+        if isinstance(obj, basestring):
+            if name is not None:
+                raise TypeError(
+                    'url() takes either obj argument, obj, string arguments, '
+                    'or string argument')
+            name = obj
+            obj = None
+
+        if name is None and obj is None:
+            # create URL to view itself
+            obj = self
+        elif name is not None and obj is None:
+            # create URL to view on context
+            obj = self.context
+        return util.url(self.request, obj, name)
+
+    def redirect(self, url):
+        return self.request.response.redirect(url)
+
     
 class OrderedViewletManager(ViewletManager):
     def sort(self, viewlets):
