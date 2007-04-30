@@ -15,24 +15,26 @@ Strange Land", the verb *grok* is introduced:
   part of the observed -- to merge, blend, intermarry, lose identity
   in group experience.
 
-The ``martian`` package is a spin-off from the `Grok project`_. In
-Grok, as well as in the ``martian`` package, "grokking" stands for the
-process of deducing declarative configuration actions from Python
-code.
+In the context of this package, "grokking" stands for the process of
+deducing declarative configuration actions from Python code. In the
+novel, grokking is originally a concept that comes from the planet
+Mars. Martians *grok*. Since this package helps you grok code, it's
+called Martian.
 
-In the novel, grokking is originally a concept that comes from the
-planet Mars. Martians *grok*. Since this package helps you grok code,
-it's a Martian.
+The ``martian`` package is a spin-off from the `Grok project`_, in the
+context of which this codebase was first developed. While Grok uses
+it, the code is completely independent of Grok.
 
 .. _`Grok project`: http://grok.zope.org
 
 Motivation
 ----------
 
-What does all this mean? In order to explain this, let's first look at
-an example of a simple framework that can be *configured* with
-plugins. We will define a framework for handling files based on their
-extensions::
+"Deducing declarative configuration actions from Python code" - that
+sounds very abstracxt. What does it actually mean? In order to explain
+this, let's first look at an example of a simple framework that can be
+*configured* with plugins. We will define a framework for handling
+files based on their extensions::
 
   >>> class filehandler(FakeModule):
   ...   import os
@@ -49,32 +51,35 @@ extensions::
   ...      name, ext = os.path.splitext(filepath)
   ...      return extension_handlers[ext](filepath)
 
-Since normally we cannot create modules in a doctest, we will emulate
-Python modules using the ``FakeModule`` class. Whenever you see
-``FakeModule`` subclasses, imagine you're looking at a module
-definition. We also need to be able to import our fake module, so we
-also have a fake import statement that lets us do this::
+Since normally we cannot create modules in a doctest, we have emulated
+the ``filehandler`` Python module using the ``FakeModule``
+class. Whenever you see ``FakeModule`` subclasses, imagine you're
+looking at a module definition in a ``.py`` file. Now that we have
+defined a module ``filehandler, we also need to be able to import
+it. To do so we can use a a fake import statement that lets us do
+this::
 
   >>> filehandler = fake_import(filehandler)
 
-Now let's try the ``handle_file`` function for a few file types::
+Now let's try the ``handle`` function for a few file types::
 
   >>> filehandler.handle('test.txt')
   'Text file'
   >>> filehandler.handle('test2.xml')
   'XML file'
 
-File extensions that we do not recognize give us a KeyError::
+File extensions that we do not recognize cause a ``KeyError`` to be
+raisedr::
  
   >>> filehandler.handle('image.png')  
   Traceback (most recent call last):
   ...
   KeyError: '.png'
 
-What about pluggability? We want to plug into this filehandler
-framework and provide the a handler for ``.png`` files. Since we are
-writing a plugin, we cannot change the ``filehandler`` module
-directly. Let's write an extension module instead::
+We now want to plug into this filehandler framework and provide the a
+handler for ``.png`` files. Since we are writing a plugin, we cannot
+change the ``filehandler`` module directly. Let's write an extension
+module instead::
 
   >>> class pnghandler(FakeModule):
   ...    def handle_png(filepath):
@@ -83,36 +88,46 @@ directly. Let's write an extension module instead::
   ...    filehandler.extension_handlers['.png'] = handle_png
   >>> pnghandler = fake_import(pnghandler)
 
-PNG handling works now::
+In the extension module, we manipulate the ``extension_handlers``
+dictionary of the ``filehandler`` module and plug in our own
+function. PNG handling works now::
 
   >>> filehandler.handle('image.png')
   'PNG file'
 
 The action of registering something into a central registry is also
-called *configuration*. Larger frameworks often offer a lot of ways to
-configure them: ways to combine its own components along with
-components you provide to build a larger application. Using Python
-code to manually hook components into registries can get rather
-cumbersome and poses a maintenance risk. It is tempting to start doing
-fancy things in Python code such as conditional configuration, making
-the configuration state of a program hard to understand. Doing
+called *configuration*. Larger frameworks often offer a lot of points
+where you can configure them: ways to combine its own components with
+components you provide yourself to build a larger application. 
+
+Above we plug into our ``extension_handler`` registry using Python
+code. Using separate code to manually hook components into registries
+can get rather cumbersome - each time you write an extension, you also
+need to remember you need to register it. It also poses a maintenance
+risk. It is tempting to start doing fancy things in Python code such
+as conditional configuration, making the configuration state of a
+program hard to understand. Another problem is that doing
 configuration at import time can also lead to unwanted side effects
-during import and ordering problems.
+during import and ordering problems. It can also make code harder to
+test.
 
 Martian provides a framework that allows configuration to be expressed
-in declarative Python code. The idea is to make these declarations so
-minimal and easy to read that even complex and extensive configuration
-does not overly burden the programmer or the person reading the code.
-Configuration actions are also executed during a separate phase ("grok
-time"), not at import time.
+in declarative Python code. These declarations can often be decuded
+from the structure of the code itself. The idea is to make these
+declarations so minimal and easy to read that even extensive
+configuration does not overly burden the programmers working with the
+code. Configuration actions are executed during a separate phase
+("grok time"), not at import time, which makes it easier to reason
+about and easier to test.
 
 Martians that grok
 ------------------
 
-What is a ``Martian``? It is an object that can grok other objects -
-execute configuration actions pertaining to the other
-object. Different kinds of Martians can grok different types of
-objects.
+In this section we define the concept of a ``Martian``. A ``Martian``
+is an object that can *grok* other objects - execute configuration
+actions pertaining to the other object, such as registering it with
+some central registry. Different kinds of Martians can grok different
+types of objects.
 
 Let's define a Martian to help us register the file type handler
 functions as seen in our previous example::
@@ -137,15 +152,15 @@ looking for with the ``component_class`` attribute. In addition, we've
 amended the ``match`` method to make sure we only match those
 instances that have a name that starts with ``handle_`.
 
-This martian will provide the IMartian interface::
+An instance will provide the IMartian interface::
 
   >>> filetype_martian = FileTypeMartian()
   >>> from martian.interfaces import IMartian
   >>> IMartian.providedBy(filetype_martian)
   True
 
-The martian will only match function objects that have a name
-that starts with ``'handle_'``::
+The martian will match function objects that have a name that starts
+with ``'handle_'``::
 
   >>> filetype_martian.match('handle_txt', filehandler.handle_txt)
   True
@@ -177,8 +192,8 @@ Now let's use the martian to grok a new handle function::
   True
   >>> filetype_martian.grok('handle_jpg', handle_jpg)
 
-Grokking will have have registered a handler for ``.jpg`` files (deducing
-the extension to register under from the function name)::
+After we grokked, we have have registered a handler for ``.jpg`` files
+(the extension to register under was deduced from the function name)::
  
   >>> sorted(filehandler.extension_handlers.keys())
   ['.jpg', '.png', '.txt', '.xml']
@@ -192,21 +207,22 @@ handle JPG files as well::
 Grokking a module
 -----------------
 
-Let's now look at a special martian that can grok a Python
-module::
+Grokking individual components is useful, but to make Martian really
+useful we need to be able to grok whole modules or packages as well.
+Let's look at a special martian that can grok a Python module::
 
   >>> from martian import ModuleMartian
   >>> module_martian = ModuleMartian()
-  
+
 The idea is that the ``ModuleMartian`` groks any components in a
-module that it recognizes. A ModuleMartian does not work alone. It
+module that it recognizes. A ``ModuleMartian`` does not work alone. It
 needs to be supplied with one or more martians that can grok
 components to be found in a module. Let's register the
 ``filetype_martian`` with our ``module_martian``::
 
   >>> module_martian.register(filetype_martian)
 
-We define a module that defines a lot of filetype handlers to be
+We now define a module that defines a few filetype handlers to be
 grokked::
 
   >>> class lotsofhandlers(FakeModule):
@@ -243,9 +259,9 @@ The system indeed recognizes them now::
   >>> filehandler.handle('test.exe')
   'EXE file'
 
-As you can see, we can now define handlers without ever having to
-register them manually. We can now rewrite our original module and
-take out the manual registrations completely::
+As you can see, with Martian we can now define handlers without ever
+having to register them manually. This allows us to rewrite our
+original module and take out the manual registrations completely::
 
   >>> class filehandler(FakeModule):
   ...   import os
