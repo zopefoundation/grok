@@ -7,11 +7,6 @@ from martian import util
 from martian.components import (MartianBase, ClassMartian, InstanceMartian,
                                 GlobalMartian)
 
-def is_baseclass(name, component):
-    return (type(component) is type and
-            (name.endswith('Base') or
-             util.class_annotation_nobase(component, 'grok.baseclass', False)))
-        
 class ModuleMartian(MartianBase):
     implements(IMultiMartian)
 
@@ -39,7 +34,7 @@ class ModuleMartian(MartianBase):
             obj = getattr(module, name)
             if not util.defined_locally(obj, module.__name__):
                 continue
-            if is_baseclass(name, obj):
+            if util.is_baseclass(name, obj):
                 continue
             grokked = martian.grok(name, obj, **kw)
             if grokked:
@@ -127,3 +122,25 @@ class MultiMartian(MartianBase):
             return self._multi_global_martian.grok(name, obj, **kw)
         else:
             return self._multi_instance_martian.grok(name, obj, **kw)
+
+# deep meta mode here - we define martians that can pick up the
+# three kinds of martian: ClassMartian, InstanceMartian and ModuleMartian
+class MetaMartian(ClassMartian):
+    def grok(self, name, obj, **kw):
+        the_martian.register(obj())
+
+class ClassMetaMartian(MetaMartian):
+    component_class = ClassMartian
+
+class InstanceMetaMartian(MetaMartian):
+    component_class = InstanceMartian
+
+class GlobalMetaMartian(MetaMartian):
+    component_class = GlobalMartian
+    
+# the global single martian to bootstrap everything
+the_martian = MultiMartian()
+# bootstrap the meta-martians
+the_martian.register(ClassMetaMartian())
+the_martian.register(InstanceMetaMartian())
+the_martian.register(GlobalMetaMartian())

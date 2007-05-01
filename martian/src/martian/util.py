@@ -47,6 +47,10 @@ def check_subclass(obj, class_):
 def caller_module():
     return sys._getframe(2).f_globals['__name__']
 
+def is_baseclass(name, component):
+    return (type(component) is type and
+            (name.endswith('Base') or
+             class_annotation_nobase(component, 'grok.baseclass', False)))
 
 def class_annotation(obj, name, default):
     return getattr(obj, '__%s__' % name.replace('.', '_'), default)
