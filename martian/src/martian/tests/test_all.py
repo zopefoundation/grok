@@ -1,6 +1,6 @@
 import unittest
 from zope.testing import doctest
-import new
+import new, types
 
 class FakeModule(object):
     pass
@@ -38,7 +38,7 @@ def fake_import(fake_module):
             except AttributeError:
                 pass
         setattr(module, name, obj)
-        glob[name] = obj
+
     # provide correct globals for functions
     for name in dir(module):
         if name.startswith('__'):
@@ -46,12 +46,12 @@ def fake_import(fake_module):
         obj = getattr(module, name)
         try:
             code = obj.func_code
+            new_func = new.function(code, glob, name)
+            new_func.__module__ = module.__name__
+            setattr(module, name, new_func)
+            glob[name] = new_func
         except AttributeError:
-            continue
-        new_func = new.function(code, glob, name)
-        new_func.__module__ = module.__name__
-        setattr(module, name, new_func)
-        glob[name] = new_func
+            pass
     return module
 
 optionflags = doctest.NORMALIZE_WHITESPACE + doctest.ELLIPSIS

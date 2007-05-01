@@ -1,4 +1,4 @@
-import types
+import types, inspect
 
 from zope.interface import implements
 
@@ -66,31 +66,19 @@ class MultiMartianBase(MartianBase):
     
 class MultiInstanceMartian(MultiMartianBase):
     def get_bases(self, obj):
-        # XXX how to work with old-style classes?
-        return obj.__class__.__mro__
-
-class MultiOldStyleInstanceMartian(MultiMartianBase):
-    # XXX to be written
-    pass
+        return inspect.getmro(obj.__class__)
 
 class MultiClassMartian(MultiMartianBase):
     def get_bases(self, obj):
-        # XXX how to work with old-style classes?
-        return obj.__mro__
-
-class MultiOldStyleClassMartian(MultiMartianBase):
-    # XXX to be written
-    pass
-
+        return inspect.getmro(obj)
+    
 class MultiMartian(MartianBase):
     implements(IMultiMartian)
-
-    # XXX extend with old-style class support
     
     def __init__(self):
         self._multi_instance_martian = MultiInstanceMartian()
         self._multi_class_martian = MultiClassMartian()
-        
+
     def register(self, martian):
         if isinstance(martian, InstanceMartian):
             self._multi_instance_martian.register(martian)
@@ -100,7 +88,7 @@ class MultiMartian(MartianBase):
             assert 0, "Unknown type of martian: %r" % martian
 
     def grok(self, name, obj, **kw):
-        if type(obj) is type:
+        if type(obj) in (type, types.ClassType):
             return self._multi_class_martian.grok(name, obj, **kw)
         else:
             return self._multi_instance_martian.grok(name, obj, **kw)

@@ -207,7 +207,7 @@ to be founded in a module::
   >>> module_martian = ModuleMartian(filetype_martian)
 
 Note that directly putting a martian into a ``ModuleMartian`` is
-typically not recommended - typically you would put in a multi martian
+typically not recommended - normally you would put in a multi martian
 (see the examples for multi martians). We can do it here as the only
 thing we want to grok are functions and other objects are rejected on
 a name basis.
@@ -661,3 +661,50 @@ Now we grok::
 GlobalMartian
 -------------
 
+Old-style class support
+-----------------------
+
+So far we have only grokked either new-style classes or instances of
+new-style classes. It is also possible to grok old-style classes and
+their instances::
+
+  >>> class oldstyle(FakeModule):
+  ...   class Machine:
+  ...     pass
+  ...   all_machines = {}
+  ...   all_machine_instances = {}
+  >>> oldstyle = fake_import(oldstyle)
+
+Let's make a martian for the old style class::
+
+  >>> class MachineMartian(ClassMartian):
+  ...   component_class = oldstyle.Machine
+  ...   def grok(self, name, obj):
+  ...     oldstyle.all_machines[name] = obj
+  ...     return True
+
+And another martian for old style instances::
+
+  >>> class MachineInstanceMartian(InstanceMartian):
+  ...   component_class = oldstyle.Machine
+  ...   def grok(self, name, obj):
+  ...     oldstyle.all_machine_instances[name] = obj
+  ...     return True
+
+The multi martian should succesfully grok the old-style ``Machine`` class
+and instances of it::
+
+  >>> multi = MultiMartian()
+  >>> multi.register(MachineMartian())
+  >>> multi.register(MachineInstanceMartian())
+  >>> class Robot(oldstyle.Machine):
+  ...   pass
+  >>> multi.grok('Robot', Robot)
+  True
+  >>> oldstyle.all_machines.keys()
+  ['Robot']
+  >>> robot = Robot()
+  >>> multi.grok('robot', robot)
+  True
+  >>> oldstyle.all_machine_instances.keys()
+  ['robot']
