@@ -15,16 +15,24 @@ def is_baseclass(name, component):
 class ModuleMartian(MartianBase):
     implements(IMultiMartian)
 
-    def __init__(self, martian, global_martian=None):
+    def __init__(self, martian=None):
+        if martian is None:
+            martian = MultiMartian()
         self._martian = martian
-        self._global_martian = global_martian
+
+    def register(self, martian):
+        self._martian.register(martian)
         
     def grok(self, name, module, **kw):
         grokked_status = False
-        if self._global_martian:
-            grokked_status = self._global_martian.grok(name, module, **kw)
         martian = self._martian
-    
+
+        # trigger any global martians
+        grokked = martian.grok(name, module, **kw)
+        if grokked:
+            grokked_status = True
+
+        # try to grok everything in module
         for name in dir(module):
             if name.startswith('__grok_'):
                 continue
@@ -72,6 +80,8 @@ class MultiInstanceMartian(MultiMartianBase):
 
 class MultiClassMartian(MultiMartianBase):
     def get_bases(self, obj):
+        if type(obj) is types.ModuleType:
+            return []
         return inspect.getmro(obj)
 
 class MultiGlobalMartian(MartianBase):
@@ -97,17 +107,23 @@ class MultiMartian(MartianBase):
     def __init__(self):
         self._multi_instance_martian = MultiInstanceMartian()
         self._multi_class_martian = MultiClassMartian()
-
+        self._multi_global_martian = MultiGlobalMartian()
+        
     def register(self, martian):
         if isinstance(martian, InstanceMartian):
             self._multi_instance_martian.register(martian)
         elif isinstance(martian, ClassMartian):
             self._multi_class_martian.register(martian)
+        elif isinstance(martian, GlobalMartian):
+            self._multi_global_martian.register(martian)
         else:
             assert 0, "Unknown type of martian: %r" % martian
 
     def grok(self, name, obj, **kw):
-        if type(obj) in (type, types.ClassType):
+        obj_type = type(obj)
+        if obj_type in (type, types.ClassType):
             return self._multi_class_martian.grok(name, obj, **kw)
+        elif obj_type is types.ModuleType:
+            return self._multi_global_martian.grok(name, obj, **kw)
         else:
             return self._multi_instance_martian.grok(name, obj, **kw)

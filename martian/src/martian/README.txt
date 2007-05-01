@@ -201,10 +201,11 @@ Let's look at a special martian that can grok a Python module::
 
 The idea is that the ``ModuleMartian`` groks any components in a
 module that it recognizes. A ``ModuleMartian`` does not work alone. It
-needs to be supplied with a martian that can grok the components
-to be founded in a module::
+needs to be supplied with one or more martians that can grok the
+components to be founded in a module::
 
-  >>> module_martian = ModuleMartian(filetype_martian)
+  >>> module_martian = ModuleMartian()
+  >>> module_martian.register(filetype_martian)
 
 Note that directly putting a martian into a ``ModuleMartian`` is
 typically not recommended - normally you would put in a multi martian
@@ -322,7 +323,8 @@ multiple colors in a module::
   ...   blue = Color(0, 0, 255)
   ...   white = Color(255, 255, 255)
   >>> colors = fake_import(colors)
-  >>> colors_martian = ModuleMartian(color_martian)
+  >>> colors_martian = ModuleMartian() 
+  >>> colors_martian.register(color_martian)
   >>> colors_martian.grok('colors', colors)
   True
   >>> sorted(color.all_colors.items())
@@ -400,7 +402,8 @@ We can also grok other objects, but this will have no effect::
   >>> multi_martian.grok('something_else', something_else)
   False
 
-Let's put our ``multi_martian`` in a ``ModuleMartian``::
+Let's put our ``multi_martian`` in a ``ModuleMartian``. We can do
+this by passing it explicitly to the ``ModuleMartian`` factory::
 
   >>> module_martian = ModuleMartian(multi_martian)
 
@@ -637,6 +640,10 @@ Let's construct a ``ModuleMartian`` that can grok this module::
 
   >>> mix_martian = ModuleMartian(multi)
 
+Note that this is actually equivalent to calling ``ModuleMartian``
+without arguments and then calling ``register`` for the individual
+``ClassMartian`` and ``InstanceMartian`` objects.
+
 Before we do the grokking, let's clean up our registration
 dictionaries::
 
@@ -682,14 +689,12 @@ it in the ``read_amount`` dictionary::
 
 Let's construct a ``ModuleMartian`` with this ``GlobalMartian`` registered::
 
-  >>> from martian.core import MultiGlobalMartian
-  >>> multi_global_martian = MultiGlobalMartian()
-  >>> multi_global_martian.register(AmountMartian())
-  >>> mix_martian = ModuleMartian(multi, multi_global_martian)
+  >>> martian = ModuleMartian()
+  >>> martian.register(AmountMartian())
 
 Now we grok and should pick up the right value::
 
-  >>> mix_martian.grok('g', g)
+  >>> martian.grok('g', g)
   True
   >>> read_amount[None]
   50 
