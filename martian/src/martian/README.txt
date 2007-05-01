@@ -198,9 +198,15 @@ Let's look at a special martian that can grok a Python module::
 The idea is that the ``ModuleMartian`` groks any components in a
 module that it recognizes. A ``ModuleMartian`` does not work alone. It
 needs to be supplied with a martian that can grok the components
-to be founded in a module. Let's register use our ``filetype_martian``::
+to be founded in a module::
 
   >>> module_martian = ModuleMartian(filetype_martian)
+
+Note that directly putting a martian into a ``ModuleMartian`` is
+typically not recommended - typically you would put in a multi martian
+(see the examples for multi martians). We can do it here as the only
+thing we want to grok are functions and other objects are rejected on
+a name basis.
 
 We now define a module that defines a few filetype handlers to be
 grokked::
@@ -264,9 +270,8 @@ Let's use martian to do the registrations for us::
 InstanceMartian
 ---------------
 
-Previously we've introduced a martian that can look for module-level
-functions. We also can also define martians to look for other things, such
-instances. Let's define a module that defines what we want to grok::
+We have seen how to grok module-level functions. Let's now grok some
+other kind of instance, a ``Color``::
 
   >>> class color(FakeModule):
   ...   class Color(object):
@@ -283,7 +288,6 @@ We now want a martian that can recognize colors and put them in the
 ``all_colors`` dictionary, with the names as the keys, and the color
 object as the values. We can use ``InstanceMartian`` to construct it::
 
-  >>> from martian import InstanceMartian
   >>> class ColorMartian(InstanceMartian):
   ...   component_class = color.Color
   ...   def grok(self, name, obj):
@@ -408,6 +412,82 @@ We can now grok a module for both ``Color`` and ``Sound`` instances::
 
 ClassMartian
 ------------
+
+Besides instances we can also grok classes. Let's define an application
+where we register classes representing animals::
+
+  >>> class animal(FakeModule):
+  ...   class Animal(object):
+  ...     name = None
+  ...     def __repr__(self):
+  ...       return '<Animal %s>' % self.name
+  ...   all_animals = {}
+  ...   def create_animal(name):
+  ...     return all_animals[name]() 
+  >>> animal = fake_import(animal)
+  
+Let's define a martian that can grok an ``Animal``::
+
+  >>> from martian import ClassMartian
+  >>> class AnimalMartian(ClassMartian):
+  ...   component_class = animal.Animal
+  ...   def grok(self, name, obj, **kw):
+  ...     animal.all_animals[obj.name] = obj
+
+Let's test our martian::
+
+  >>> animal_martian = AnimalMartian()
+  >>> class Snake(animal.Animal):
+  ...   name = 'snake'
+  >>> animal_martian.grok('snake', Snake)
+  >>> animal.all_animals.keys()
+  ['snake']
+
+We can create a snake now::
+
+  >>> animal.create_animal('snake')
+  <Animal snake>
+
+MultiClassMartian
+-----------------
+
+We now want to be able to grok the following module and have the
+``Animal`` subclasses (but not the ``Chair`` class, which is not an
+animal) automatically become available::
+
+  >>> class animals(FakeModule):
+  ...   class Elephant(animal.Animal):
+  ...     name = 'elephant'
+  ...   class Tiger(animal.Animal):
+  ...     name = 'tiger'
+  ...   class Lion(animal.Animal):
+  ...     name = 'lion'
+  ...   class Chair(object):
+  ...     name = 'chair'
+  >>> animals = fake_import(animals)
+
+First we need to wrap our ``AnimalMartian`` into a ``MultiClassMartian``::
+
+ >>> from martian.core import MultiClassMartian
+ >>> multi_martian = MultiClassMartian()
+ >>> multi_martian.register(animal_martian)
+
+Now let's wrap it into a ``ModuleMartian`` and grok the module::
+
+  >>> martian = ModuleMartian(multi_martian)
+  >>> martian.grok('animals', animals)
+
+The animals (but not anything else) should have become available::
+
+  >>> sorted(animal.all_animals.keys())
+  ['elephant', 'lion', 'snake', 'tiger']
+
+We can create animals using their name now::
+
+  >>> animal.create_animal('elephant')
+  <Animal elephant>
+  >>> animal.create_animal('tiger')
+  <Animal tiger>
 
 GlobalMartian
 -------------
