@@ -21,12 +21,6 @@ NOT_DEFINED = object()
 
 class MartianBase(object):
     implements(IMartian)
-    
-    priority = 0
-    continue_scanning = False
-
-    def match(self, name, obj):
-        raise NotImplementedError
 
     def grok(self, name, obj, **kw):
         raise NotImplementedError
@@ -35,10 +29,6 @@ class MartianBase(object):
 class GlobalMartian(MartianBase):
     """Martian that groks once per module.
     """
-
-    def match(self, name, obj):
-        # we never match with any object
-        return False
 
     def grok(self, name, obj, **kw):
         raise NotImplementedError
@@ -56,12 +46,9 @@ class ComponentMartianBase(MartianBase):
 class ClassMartian(ComponentMartianBase):
     """Martian that groks classes in a module.
     """
-    def match(self, name, obj):
-        return util.check_subclass(obj, self.component_class)
-
+    pass
 
 class InstanceMartian(ComponentMartianBase):
     """Martian that groks instances in a module.
     """
-    def match(self, name, obj):
-        return isinstance(obj, self.component_class)
+    pass

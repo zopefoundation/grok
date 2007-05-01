@@ -15,22 +15,14 @@
 from zope.interface import Interface, Attribute
 
 class IMartian(Interface):
-    priority = Attribute('Integer indicating relative priority')
-    continue_scanning = Attribute('If true, continue scanning after match')
-
-    def match(name, obj):
-        """Returns True if this Martian can grok obj.
-
-        name - name of object (in module)
-        obj - object to potentially grok
-        """
-
     def grok(name, obj, **kw):
         """Grok obj.
 
         name - name of object (in module)
         obj - object to grok
         **kw - optional parameters passed along the grokking process.
+
+        May do extra filtering based on name or obj.
         """
 
 class IComponentMartian(IMartian):

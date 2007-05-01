@@ -15,10 +15,7 @@ class ModuleMartian(components.MartianBase):
 
     def __init__(self, martian):
         self._martian = martian
-
-    def match(self, name, module):
-        return isinstance(module, types.ModuleType)
-    
+   
     def grok(self, name, module, **kw):
         martian = self._martian
         
@@ -34,8 +31,6 @@ class ModuleMartian(components.MartianBase):
                 continue
             if is_baseclass(name, obj):
                 continue
-            if not martian.match(name, obj):
-                continue
             martian.grok(name, obj, **kw)
 
 class MultiMartianBase(components.MartianBase):
@@ -50,13 +45,6 @@ class MultiMartianBase(components.MartianBase):
         if martian not in martians:
             martians.append(martian)
     
-    def match(self, name, obj):
-        for martians in self._martians.values():
-            for martian in martians:
-                if martian.match(name, obj):
-                    return True
-        return False
-
     def grok(self, name, obj, **kw):
         used_martians = set()
         for base in self.get_bases(obj):
@@ -73,13 +61,23 @@ class MultiInstanceMartian(MultiMartianBase):
         # XXX how to work with old-style classes?
         return obj.__class__.__mro__
 
+class MultiOldStyleInstanceMartian(MultiMartianBase):
+    # XXX to be written
+    pass
+
 class MultiClassMartian(MultiMartianBase):
     def get_bases(self, obj):
         # XXX how to work with old-style classes?
         return obj.__mro__
 
+class MultiOldStyleClassMartian(MultiMartianBase):
+    # XXX to be written
+    pass
+
 class MultiMartian(components.MartianBase):
     implements(IMultiMartian)
+
+    # XXX extend with old-style class support
     
     def __init__(self):
         self._multi_instance_martian = MultiInstanceMartian()

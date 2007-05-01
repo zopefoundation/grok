@@ -124,10 +124,10 @@ Martians that grok
 ------------------
 
 In this section we define the concept of a ``Martian``. A ``Martian``
-is an object that can *grok* other objects - execute configuration
-actions pertaining to the other object, such as registering it with
-some central registry. Different kinds of Martians can grok different
-types of objects.
+is an object that can *grok* objects - execute configuration actions
+pertaining to the grokked object, such as registering it with some
+central registry. Different kinds of martians can grok different types
+of objects (instances, classes, functions).
 
 Let's define a Martian to help us register the file type handler
 functions as seen in our previous example::
@@ -137,20 +137,20 @@ functions as seen in our previous example::
   >>> from martian import InstanceMartian
   >>> class FileTypeMartian(InstanceMartian):
   ...   component_class = types.FunctionType 
-  ...   def match(self, name, obj):
-  ...     return (super(FileTypeMartian, self).match(name, obj) and 
-  ...             name.startswith('handle_'))
   ...
   ...   def grok(self, name, obj, **kw):
-  ...       ext = name.split('_')[1]
-  ...       filehandler.extension_handlers['.' + ext] = obj
-
+  ...     if not name.startswith('handle_'):
+  ...       return
+  ...     ext = name.split('_')[1]
+  ...     filehandler.extension_handlers['.' + ext] = obj
 
 This ``InstanceMartian`` allows us to grok instances of a particular
 type (such as functions). We need to define the type of object we're
-looking for with the ``component_class`` attribute. In addition, we've
-amended the ``match`` method to make sure we only match those
-instances that have a name that starts with ``handle_`.
+looking for with the ``component_class`` attribute. In the ``grok``
+method, we first make sure we only grok functions that have a name
+that starts with ``handle_``. Then we determine the used extension
+from the name and register the funcion in the ``extension_handlers``
+dictionary of the ``filehandler`` module.
 
 An instance will provide the IMartian interface::
 
@@ -159,37 +159,10 @@ An instance will provide the IMartian interface::
   >>> IMartian.providedBy(filetype_martian)
   True
 
-The martian will match function objects that have a name that starts
-with ``'handle_'``::
-
-  >>> filetype_martian.match('handle_txt', filehandler.handle_txt)
-  True
-  >>> filetype_martian.match('handle_xml', filehandler.handle_xml)
-  True
-  >>> filetype_martian.match('handle_png', pnghandler.handle_png)
-  True
-
-It won't match ``handle``, as that does not start with ``handle_``::
-
-  >>> filetype_martian.match('handle', filehandler.handle)
-  False
-
-It also won't match non-function objects that happen to be prefixed
-with ``handle_``::
-
-  >>> class handle_foo(object):
-  ...   pass
-  >>> filetype_martian.match('handle_foo', handle_foo)
-  False
-  >>> filetype_martian.match('handle_foo', handle_foo())
-  False
-
 Now let's use the martian to grok a new handle function::
 
   >>> def handle_jpg(filepath):
   ...   return "JPG file"
-  >>> filetype_martian.match('handle_jpg', handle_jpg)
-  True
   >>> filetype_martian.grok('handle_jpg', handle_jpg)
 
 After we grokked, we have have registered a handler for ``.jpg`` files
@@ -203,6 +176,15 @@ handle JPG files as well::
   
   >>> filehandler.handle('image2.jpg')
   'JPG file'
+
+If we try to grok a function that doesn't start with ``handle_`` in its
+name, nothing will happen::
+
+  >>> def something(filepath):
+  ...   return 'Something'
+  >>> filetype_martian.grok('something', something)
+  >>> 'something' in filehandler.extension_handlers
+  False
 
 Grokking a module
 -----------------
@@ -233,11 +215,6 @@ grokked::
   ...   def handle_svg(filepath):
   ...     return "SVG file"
   >>> lotsofhandlers = fake_import(lotsofhandlers)
-
-Our module martian matches this module::
-
-  >>> module_martian.match('lotsofhandlers', lotsofhandlers)
-  True
 
 Let's grok it::
 
@@ -312,19 +289,11 @@ object as the values. We can use ``InstanceMartian`` to construct it::
   ...   def grok(self, name, obj):
   ...       color.all_colors[name] = obj
 
-An ``InstanceMartian`` matches only instances of the given
-``component_class``. Let's try that::
+
+Let's create ``color_martian`` and grok a color::
 
   >>> color_martian = ColorMartian()
   >>> black = color.Color(0, 0, 0) # we DO consider black as a color :)
-  >>> color_martian.match('black', black)
-  True
-  >>> not_a_color = object()
-  >>> color_martian.match('foo', not_a_color)
-  False
-
-Now let's grok the color::
-
   >>> color_martian.grok('black', black)
 
 It ends up in the ``all_colors`` dictionary::
