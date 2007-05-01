@@ -140,9 +140,10 @@ functions as seen in our previous example::
   ...
   ...   def grok(self, name, obj, **kw):
   ...     if not name.startswith('handle_'):
-  ...       return
+  ...       return False
   ...     ext = name.split('_')[1]
   ...     filehandler.extension_handlers['.' + ext] = obj
+  ...     return True
 
 This ``InstanceMartian`` allows us to grok instances of a particular
 type (such as functions). We need to define the type of object we're
@@ -150,7 +151,8 @@ looking for with the ``component_class`` attribute. In the ``grok``
 method, we first make sure we only grok functions that have a name
 that starts with ``handle_``. Then we determine the used extension
 from the name and register the funcion in the ``extension_handlers``
-dictionary of the ``filehandler`` module.
+dictionary of the ``filehandler`` module. We return ``True`` if we
+indeed grokked the object.
 
 An instance will provide the IMartian interface::
 
@@ -164,6 +166,7 @@ Now let's use the martian to grok a new handle function::
   >>> def handle_jpg(filepath):
   ...   return "JPG file"
   >>> filetype_martian.grok('handle_jpg', handle_jpg)
+  True
 
 After we grokked, we have have registered a handler for ``.jpg`` files
 (the extension to register under was deduced from the function name)::
@@ -183,6 +186,7 @@ name, nothing will happen::
   >>> def something(filepath):
   ...   return 'Something'
   >>> filetype_martian.grok('something', something)
+  False
   >>> 'something' in filehandler.extension_handlers
   False
 
@@ -225,6 +229,7 @@ grokked::
 Let's grok it::
 
   >>> module_martian.grok('lotsofhandlers', lotsofhandlers)
+  True
 
 The new registrations are now available::
 
@@ -264,6 +269,7 @@ original module and take out the manual registrations completely::
 Let's use martian to do the registrations for us::
 
   >>> module_martian.grok('filehandler', filehandler)
+  True
   >>> filehandler.handle('test.txt')
   'Text file'
 
@@ -291,14 +297,15 @@ object as the values. We can use ``InstanceMartian`` to construct it::
   >>> class ColorMartian(InstanceMartian):
   ...   component_class = color.Color
   ...   def grok(self, name, obj):
-  ...       color.all_colors[name] = obj
-
+  ...     color.all_colors[name] = obj
+  ...     return True
 
 Let's create ``color_martian`` and grok a color::
 
   >>> color_martian = ColorMartian()
   >>> black = color.Color(0, 0, 0) # we DO consider black as a color :)
   >>> color_martian.grok('black', black)
+  True
 
 It ends up in the ``all_colors`` dictionary::
 
@@ -317,6 +324,7 @@ multiple colors in a module::
   >>> colors = fake_import(colors)
   >>> colors_martian = ModuleMartian(color_martian)
   >>> colors_martian.grok('colors', colors)
+  True
   >>> sorted(color.all_colors.items())
   [('black', <Color 0 0 0>), 
    ('blue', <Color 0 0 255>), 
@@ -332,6 +340,7 @@ Subclasses of ``Color`` are also grokked::
   ...   octarine = SpecialColor(-255, 0, -255)
   >>> subcolors = fake_import(subcolors)
   >>> colors_martian.grok('subcolors', subcolors)
+  True
   >>> 'octarine' in color.all_colors
   True
 
@@ -355,7 +364,8 @@ instances of ``Sound``::
   >>> class SoundMartian(InstanceMartian):
   ...   component_class = sound.Sound
   ...   def grok(self, name, obj):
-  ...       sound.all_sounds[name] = obj
+  ...     sound.all_sounds[name] = obj
+  ...     return True
   >>> sound_martian = SoundMartian()
  
 What if we now want to look for ``Sound`` and ``Color`` instances at
@@ -372,6 +382,7 @@ Let's grok a new color with our ``multi_martian``::
 
   >>> grey = Color(100, 100, 100)
   >>> multi_martian.grok('grey', grey)
+  True
   >>> 'grey' in color.all_colors
   True
 
@@ -379,6 +390,7 @@ Let's grok a sound with our ``multi_martian``::
   
   >>> moo = sound.Sound('Moo!')
   >>> multi_martian.grok('moo', moo)
+  True
   >>> 'moo' in sound.all_sounds
   True
 
@@ -386,6 +398,7 @@ We can also grok other objects, but this will have no effect::
 
   >>> something_else = object()
   >>> multi_martian.grok('something_else', something_else)
+  False
 
 Let's put our ``multi_martian`` in a ``ModuleMartian``::
 
@@ -401,6 +414,7 @@ We can now grok a module for both ``Color`` and ``Sound`` instances::
   ...   cheer = Sound('cheer')
   >>> lightandsound = fake_import(lightandsound)
   >>> module_martian.grok('lightandsound', lightandsound)
+  True
   >>> 'dark_red' in color.all_colors
   True
   >>> 'dark_green' in color.all_colors
@@ -433,6 +447,7 @@ Let's define a martian that can grok an ``Animal``::
   ...   component_class = animal.Animal
   ...   def grok(self, name, obj, **kw):
   ...     animal.all_animals[obj.name] = obj
+  ...     return True
 
 Let's test our martian::
 
@@ -440,6 +455,7 @@ Let's test our martian::
   >>> class Snake(animal.Animal):
   ...   name = 'snake'
   >>> animal_martian.grok('snake', Snake)
+  True
   >>> animal.all_animals.keys()
   ['snake']
 
@@ -476,6 +492,7 @@ Now let's wrap it into a ``ModuleMartian`` and grok the module::
 
   >>> martian = ModuleMartian(multi_martian)
   >>> martian.grok('animals', animals)
+  True
 
 The animals (but not anything else) should have become available::
 
@@ -488,6 +505,158 @@ We can create animals using their name now::
   <Animal elephant>
   >>> animal.create_animal('tiger')
   <Animal tiger>
+
+MultiMartian
+------------
+
+``MultiInstanceMartian`` and ``MultiClassMartian`` can grok instances
+and classes respectively, but a ``MultiInstanceMartian`` won't work
+correctly if it runs into a class and vice versa. For that we use a
+``MultiMartian``, which can deal with the full range of objects that
+can be grokked, and skips those it doesn't recognize.
+
+Let's fill a ``MultiMartian`` with a bunch of martians::
+
+  >>> from martian import MultiMartian
+  >>> multi = MultiMartian()
+  >>> multi.register(filetype_martian)
+  >>> multi.register(color_martian)
+  >>> multi.register(sound_martian)
+  >>> multi.register(animal_martian)
+
+Let's try it with some individual objects::
+
+  >>> class Whale(animal.Animal):
+  ...    name = 'whale'
+  >>> multi.grok('Whale', Whale)
+  True
+  >>> 'whale' in animal.all_animals
+  True
+ 
+This should have no effect, but not fail::
+
+  >>> my_whale = Whale()
+  >>> multi.grok('my_whale', my_whale)
+  False
+
+Grokked by the ColorMartian::
+
+  >>> multi.grok('dark_grey', Color(50, 50, 50))
+  True
+  >>> 'dark_grey' in color.all_colors 
+  True
+
+Grokked by the SoundMartian::
+  
+  >>> multi.grok('music', Sound('music'))
+  True
+  >>> 'music' in sound.all_sounds
+  True
+
+Not grokked::
+
+  >>> class RockMusic(Sound):
+  ...   pass
+  >>> multi.grok('RockMusic', RockMusic)
+  False
+
+Grokked by SoundMartian::
+
+  >>> multi.grok('rocknroll', RockMusic('rock n roll'))
+  True
+  >>> 'rocknroll' in sound.all_sounds
+  True
+
+Not grokked::
+
+  >>> class Chair(object):
+  ...   pass
+  >>> multi.grok('Chair', Chair)
+  False
+
+Grokked by ``filetype_martian``::
+
+  >>> def handle_py(filepath):
+  ...   return "Python file"
+  >>> multi.grok('handle_py', handle_py)
+  True
+  >>> '.py' in filehandler.extension_handlers
+  True
+
+Not grokked:
+
+  >>> def foo():
+  ...   pass
+  >>> multi.grok('foo', foo)
+  False
+
+Not grokked either::
+  
+  >>> another = object()
+  >>> multi.grok('another', another)
+  False
+  
+Let's make a module which has a mixture between classes and instances,
+some of which can be grokked::
+
+  >>> class mix(FakeModule):
+  ...   # grokked by AnimalMartian
+  ...   class Whale(animal.Animal):
+  ...      name = 'whale'
+  ...   # not grokked
+  ...   my_whale = Whale()
+  ...   # grokked by ColorMartian
+  ...   dark_grey = Color(50, 50, 50)
+  ...   # grokked by SoundMartian
+  ...   music = Sound('music')
+  ...   # not grokked
+  ...   class RockMusic(Sound):
+  ...      pass
+  ...   # grokked by SoundMartian
+  ...   rocknroll = RockMusic('rock n roll')
+  ...   # grokked by AnimalMartian
+  ...   class Dragon(animal.Animal):
+  ...     name = 'dragon'
+  ...   # not grokked
+  ...   class Chair(object):
+  ...     pass
+  ...   # grokked by filetype_martian
+  ...   def handle_py(filepath):
+  ...     return "Python file"
+  ...   # not grokked
+  ...   def foo():
+  ...     pass
+  ...   # grokked by AnimalMartian
+  ...   class SpermWhale(Whale):
+  ...     name = 'sperm whale'
+  ...   # not grokked
+  ...   another = object()
+  >>> mix = fake_import(mix)
+
+Let's construct a ``ModuleMartian`` that can grok this module::
+
+  >>> mix_martian = ModuleMartian(multi)
+
+Before we do the grokking, let's clean up our registration
+dictionaries::
+
+  >>> filehandler.extension_handlers = {}
+  >>> color.all_colors = {} 
+  >>> sound.all_sounds = {}
+  >>> animal.all_animals = {}
+
+Now we grok::
+
+  >>> mix_martian.grok('mix', mix)
+  True
+  >>> sorted(filehandler.extension_handlers.keys())
+  ['.py']
+  >>> sorted(color.all_colors.keys())
+  ['dark_grey']
+  >>> sorted(sound.all_sounds.keys())
+  ['music', 'rocknroll']
+  >>> sorted(animal.all_animals.keys())
+  ['dragon', 'sperm whale', 'whale']
 
 GlobalMartian
 -------------

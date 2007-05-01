@@ -3,14 +3,16 @@ import types
 from zope.interface import implements
 
 from martian.interfaces import IMartian, IMultiMartian
-from martian import components, util
+from martian import util
+from martian.components import (MartianBase, ClassMartian, InstanceMartian,
+                                GlobalMartian)
 
 def is_baseclass(name, component):
     return (type(component) is type and
             (name.endswith('Base') or
              util.class_annotation_nobase(component, 'grok.baseclass', False)))
         
-class ModuleMartian(components.MartianBase):
+class ModuleMartian(MartianBase):
     implements(IMartian)
 
     def __init__(self, martian):
@@ -18,11 +20,9 @@ class ModuleMartian(components.MartianBase):
    
     def grok(self, name, module, **kw):
         martian = self._martian
-        
-        if isinstance(martian, components.GlobalMartian):
-            martian.grok(name, module, **kw)
-            return
 
+        grokked_status = False
+        
         for name in dir(module):
             if name.startswith('__grok_'):
                 continue
@@ -31,9 +31,13 @@ class ModuleMartian(components.MartianBase):
                 continue
             if is_baseclass(name, obj):
                 continue
-            martian.grok(name, obj, **kw)
+            grokked = martian.grok(name, obj, **kw)
+            if grokked:
+                grokked_status = True
 
-class MultiMartianBase(components.MartianBase):
+        return grokked_status
+    
+class MultiMartianBase(MartianBase):
     implements(IMultiMartian)
 
     def __init__(self):
@@ -47,15 +51,19 @@ class MultiMartianBase(components.MartianBase):
     
     def grok(self, name, obj, **kw):
         used_martians = set()
+        grokked_status = False
         for base in self.get_bases(obj):
             martians = self._martians.get(base)
             if martians is None:
                 continue
             for martian in martians:
                 if martian not in used_martians:
-                    martian.grok(name, obj, **kw)
+                    grokked = martian.grok(name, obj, **kw)
+                    if grokked:
+                        grokked_status = True
                     used_martians.add(martian)
-        
+        return grokked_status
+    
 class MultiInstanceMartian(MultiMartianBase):
     def get_bases(self, obj):
         # XXX how to work with old-style classes?
@@ -74,7 +82,7 @@ class MultiOldStyleClassMartian(MultiMartianBase):
     # XXX to be written
     pass
 
-class MultiMartian(components.MartianBase):
+class MultiMartian(MartianBase):
     implements(IMultiMartian)
 
     # XXX extend with old-style class support
@@ -93,6 +101,6 @@ class MultiMartian(components.MartianBase):
 
     def grok(self, name, obj, **kw):
         if type(obj) is type:
-            self._multi_class_martian.grok(name, obj, **kw)
+            return self._multi_class_martian.grok(name, obj, **kw)
         else:
-            self._multi_instance_martian.grok(name, obj, **kw)
+            return self._multi_instance_martian.grok(name, obj, **kw)

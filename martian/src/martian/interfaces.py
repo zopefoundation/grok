@@ -23,6 +23,9 @@ class IMartian(Interface):
         **kw - optional parameters passed along the grokking process.
 
         May do extra filtering based on name or obj.
+
+        Returns True if grok is attempted, False if object is filtered
+        out by this martian.
         """
 
 class IComponentMartian(IMartian):
