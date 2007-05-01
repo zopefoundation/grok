@@ -212,15 +212,13 @@ useful we need to be able to grok whole modules or packages as well.
 Let's look at a special martian that can grok a Python module::
 
   >>> from martian import ModuleMartian
-  >>> module_martian = ModuleMartian()
 
 The idea is that the ``ModuleMartian`` groks any components in a
 module that it recognizes. A ``ModuleMartian`` does not work alone. It
-needs to be supplied with one or more martians that can grok
-components to be found in a module. Let's register the
-``filetype_martian`` with our ``module_martian``::
+needs to be supplied with a martian that can grok the components
+to be founded in a module. Let's register use our ``filetype_martian``::
 
-  >>> module_martian.register(filetype_martian)
+  >>> module_martian = ModuleMartian(filetype_martian)
 
 We now define a module that defines a few filetype handlers to be
 grokked::
@@ -285,3 +283,163 @@ Let's use martian to do the registrations for us::
   >>> module_martian.grok('filehandler', filehandler)
   >>> filehandler.handle('test.txt')
   'Text file'
+
+InstanceMartian
+---------------
+
+Previously we've introduced a martian that can look for module-level
+functions. We also can also define martians to look for other things, such
+instances. Let's define a module that defines what we want to grok::
+
+  >>> class color(FakeModule):
+  ...   class Color(object):
+  ...     def __init__(self, r, g, b):
+  ...       self.r = r
+  ...       self.g = g
+  ...       self.b = b
+  ...     def __repr__(self):
+  ...       return '<Color %s %s %s>' % (self.r, self.g, self.b) 
+  ...   all_colors = {}
+  >>> color = fake_import(color)
+
+We now want a martian that can recognize colors and put them in the
+``all_colors`` dictionary, with the names as the keys, and the color
+object as the values. We can use ``InstanceMartian`` to construct it::
+
+  >>> from martian import InstanceMartian
+  >>> class ColorMartian(InstanceMartian):
+  ...   component_class = color.Color
+  ...   def grok(self, name, obj):
+  ...       color.all_colors[name] = obj
+
+An ``InstanceMartian`` matches only instances of the given
+``component_class``. Let's try that::
+
+  >>> color_martian = ColorMartian()
+  >>> black = color.Color(0, 0, 0) # we DO consider black as a color :)
+  >>> color_martian.match('black', black)
+  True
+  >>> not_a_color = object()
+  >>> color_martian.match('foo', not_a_color)
+  False
+
+Now let's grok the color::
+
+  >>> color_martian.grok('black', black)
+
+It ends up in the ``all_colors`` dictionary::
+
+  >>> color.all_colors
+  {'black': <Color 0 0 0>}
+
+If we put ``color_martian`` into a ``ModuleMartian``, we can now grok
+multiple colors in a module::
+
+  >>> Color = color.Color
+  >>> class colors(FakeModule):
+  ...   red = Color(255, 0, 0)
+  ...   green = Color(0, 255, 0)
+  ...   blue = Color(0, 0, 255)
+  ...   white = Color(255, 255, 255)
+  >>> colors = fake_import(colors)
+  >>> colors_martian = ModuleMartian(color_martian)
+  >>> colors_martian.grok('colors', colors)
+  >>> sorted(color.all_colors.items())
+  [('black', <Color 0 0 0>), 
+   ('blue', <Color 0 0 255>), 
+   ('green', <Color 0 255 0>), 
+   ('red', <Color 255 0 0>), 
+   ('white', <Color 255 255 255>)]
+
+Subclasses of ``Color`` are also grokked::
+
+  >>> class subcolors(FakeModule):
+  ...   class SpecialColor(Color):
+  ...     pass
+  ...   octarine = SpecialColor(-255, 0, -255)
+  >>> subcolors = fake_import(subcolors)
+  >>> colors_martian.grok('subcolors', subcolors)
+  >>> 'octarine' in color.all_colors
+  True
+
+MultiInstanceMartian
+--------------------
+
+In the previous section we have created a particular martian that
+looks for instances of a component class, in this case
+``Color``. Let's introduce another ``InstanceMartian`` that looks for
+instances of ``Sound``::
+  
+  >>> class sound(FakeModule):
+  ...   class Sound(object):
+  ...     def __init__(self, desc):
+  ...       self.desc = desc
+  ...     def __repr__(self):
+  ...       return '<Sound %s>' % (self.desc) 
+  ...   all_sounds = {}
+  >>> sound = fake_import(sound)
+
+  >>> class SoundMartian(InstanceMartian):
+  ...   component_class = sound.Sound
+  ...   def grok(self, name, obj):
+  ...       sound.all_sounds[name] = obj
+  >>> sound_martian = SoundMartian()
+ 
+What if we now want to look for ``Sound`` and ``Color`` instances at
+the same time? We have to use the ``color_martian`` and
+``sound_martian`` at the same time, and we can do this with a
+``MultiInstanceMartian``::
+
+  >>> from martian.core import MultiInstanceMartian
+  >>> multi_martian = MultiInstanceMartian()
+  >>> multi_martian.register(color_martian)
+  >>> multi_martian.register(sound_martian)
+
+Let's grok a new color with our ``multi_martian``::
+
+  >>> grey = Color(100, 100, 100)
+  >>> multi_martian.grok('grey', grey)
+  >>> 'grey' in color.all_colors
+  True
+
+Let's grok a sound with our ``multi_martian``::
+  
+  >>> moo = sound.Sound('Moo!')
+  >>> multi_martian.grok('moo', moo)
+  >>> 'moo' in sound.all_sounds
+  True
+
+We can also grok other objects, but this will have no effect::
+
+  >>> something_else = object()
+  >>> multi_martian.grok('something_else', something_else)
+
+Let's put our ``multi_martian`` in a ``ModuleMartian``::
+
+  >>> module_martian = ModuleMartian(multi_martian)
+
+We can now grok a module for both ``Color`` and ``Sound`` instances::
+
+  >>> Sound = sound.Sound
+  >>> class lightandsound(FakeModule):
+  ...   dark_red = Color(150, 0, 0)
+  ...   scream = Sound('scream')
+  ...   dark_green = Color(0, 150, 0)
+  ...   cheer = Sound('cheer')
+  >>> lightandsound = fake_import(lightandsound)
+  >>> module_martian.grok('lightandsound', lightandsound)
+  >>> 'dark_red' in color.all_colors
+  True
+  >>> 'dark_green' in color.all_colors
+  True
+  >>> 'scream' in sound.all_sounds
+  True
+  >>> 'cheer' in sound.all_sounds
+  True
+
+ClassMartian
+------------
+
+GlobalMartian
+-------------
+

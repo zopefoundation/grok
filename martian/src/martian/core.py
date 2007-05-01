@@ -2,57 +2,29 @@ import types
 
 from zope.interface import implements
 
-from martian.interfaces import INestedMartian
+from martian.interfaces import IMartian, IMultiMartian
 from martian import components, util
 
-class ModuleMartian(components.MartianBase):
-    implements(INestedMartian)
-
-    def __init__(self):
-        self._martians = {}
+def is_baseclass(name, component):
+    return (type(component) is type and
+            (name.endswith('Base') or
+             util.class_annotation_nobase(component, 'grok.baseclass', False)))
         
-    def register(self, martian):
-        # make sure martians are only registered once
-        key = martian.__class__
-        if key in self._martians:
-            return
-        self._martians[key] = martian
+class ModuleMartian(components.MartianBase):
+    implements(IMartian)
+
+    def __init__(self, martian):
+        self._martian = martian
 
     def match(self, name, module):
         return isinstance(module, types.ModuleType)
     
     def grok(self, name, module, **kw):
-        scanned_results = self._scan(module)
-        # run through all martians registering found components in order
-        for martian in self._get_ordered_martians():
-            # if we run into a GlobalMartian, just do simple registration.
-            # this allows us to hook up martians that actually
-            # do not respond to anything in the module but for instance
-            # go to the filesystem to find templates
-            if isinstance(martian, components.GlobalMartian):
-                martian.grok(name, module, **kw)
-                continue
-
-            found_components = scanned_results.get(martian.component_class, [])
-
-            for name, component in found_components:
-                # this is a base class as it ends with Base, skip
-                if type(component) is type:
-                    if name.endswith('Base'):
-                        continue
-                    elif util.class_annotation_nobase(component,
-                                                      'grok.baseclass', False):
-                        continue
-                martian.grok(name, component, **kw)    
-
-    def _scan(self, module):
-        found_components = {}
-        for martian in self._martians.values():
-            if isinstance(martian, components.GlobalMartian):
-                continue
-            found_components[martian.component_class] = []
-
-        martians = self._get_ordered_martians()
+        martian = self._martian
+        
+        if isinstance(martian, components.GlobalMartian):
+            martian.grok(name, module, **kw)
+            return
 
         for name in dir(module):
             if name.startswith('__grok_'):
@@ -60,21 +32,69 @@ class ModuleMartian(components.MartianBase):
             obj = getattr(module, name)
             if not util.defined_locally(obj, module.__name__):
                 continue
-            # XXX find way to get rid of this inner loop by doing hash table
-            # lookup?
+            if is_baseclass(name, obj):
+                continue
+            if not martian.match(name, obj):
+                continue
+            martian.grok(name, obj, **kw)
+
+class MultiMartianBase(components.MartianBase):
+    implements(IMultiMartian)
+
+    def __init__(self):
+        self._martians = {}
+        
+    def register(self, martian):
+        key = martian.component_class
+        martians = self._martians.setdefault(key, [])
+        if martian not in martians:
+            martians.append(martian)
+    
+    def match(self, name, obj):
+        for martians in self._martians.values():
             for martian in martians:
                 if martian.match(name, obj):
-                    found_components[martian.component_class].append(
-                        (name, obj))
-                    if not martian.continue_scanning:
-                        break
+                    return True
+        return False
 
-        return found_components
+    def grok(self, name, obj, **kw):
+        used_martians = set()
+        for base in self.get_bases(obj):
+            martians = self._martians.get(base)
+            if martians is None:
+                continue
+            for martian in martians:
+                if martian not in used_martians:
+                    martian.grok(name, obj, **kw)
+                    used_martians.add(martian)
+        
+class MultiInstanceMartian(MultiMartianBase):
+    def get_bases(self, obj):
+        # XXX how to work with old-style classes?
+        return obj.__class__.__mro__
 
-    def _get_ordered_martians(self):
-        # sort martians by priority
-        martians = sorted(self._martians.values(),
-                          key=lambda martian: martian.priority)
-        # we want to handle high priority first
-        martians.reverse()
-        return martians
+class MultiClassMartian(MultiMartianBase):
+    def get_bases(self, obj):
+        # XXX how to work with old-style classes?
+        return obj.__mro__
+
+class MultiMartian(components.MartianBase):
+    implements(IMultiMartian)
+    
+    def __init__(self):
+        self._multi_instance_martian = MultiInstanceMartian()
+        self._multi_class_martian = MultiClassMartian()
+        
+    def register(self, martian):
+        if isinstance(martian, InstanceMartian):
+            self._multi_instance_martian.register(martian)
+        elif isinstance(martian, ClassMartian):
+            self._multi_class_martian.register(martian)
+        else:
+            assert 0, "Unknown type of martian: %r" % martian
+
+    def grok(self, name, obj, **kw):
+        if type(obj) is type:
+            self._multi_class_martian.grok(name, obj, **kw)
+        else:
+            self._multi_instance_martian.grok(name, obj, **kw)

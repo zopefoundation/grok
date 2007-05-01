@@ -40,13 +40,13 @@ class IComponentMartian(IMartian):
     """
     component_class = Attribute('Class of the component to match')
     
-class INestedMartian(IComponentMartian):
-    """A martian that contains other martians.
+class IMultiMartian(IComponentMartian):
+    """A martian that is composed out of multiple martians.
     """
     def register(martian):
-        """Register a martian to nest within this one.
+        """Register a martian.
         """
-        
+
 class IModuleInfo(Interface):
     def getModule():
         """Get the module object this module info is representing.
