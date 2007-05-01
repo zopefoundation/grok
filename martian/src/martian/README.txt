@@ -661,6 +661,39 @@ Now we grok::
 GlobalMartian
 -------------
 
+Sometimes you want to let a grok action happen for each module. The
+grok action could for instance read the globals of a module, or even
+static files associated with the module by name. Let's create a module
+with some global value::
+
+  >>> class g(FakeModule):
+  ...   amount = 50
+  >>> g = fake_import(g)
+ 
+Now let's create a ``GlobalMartian`` that reads ``amount`` and stores
+it in the ``read_amount`` dictionary::
+
+  >>> read_amount = {}
+  >>> from martian import GlobalMartian
+  >>> class AmountMartian(GlobalMartian):
+  ...   def grok(self, name, module):
+  ...     read_amount[None] = module.amount
+  ...     return True
+
+Let's construct a ``ModuleMartian`` with this ``GlobalMartian`` registered::
+
+  >>> from martian.core import MultiGlobalMartian
+  >>> multi_global_martian = MultiGlobalMartian()
+  >>> multi_global_martian.register(AmountMartian())
+  >>> mix_martian = ModuleMartian(multi, multi_global_martian)
+
+Now we grok and should pick up the right value::
+
+  >>> mix_martian.grok('g', g)
+  True
+  >>> read_amount[None]
+  50 
+
 Old-style class support
 -----------------------
 

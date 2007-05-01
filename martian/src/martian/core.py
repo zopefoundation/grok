@@ -13,16 +13,18 @@ def is_baseclass(name, component):
              util.class_annotation_nobase(component, 'grok.baseclass', False)))
         
 class ModuleMartian(MartianBase):
-    implements(IMartian)
+    implements(IMultiMartian)
 
-    def __init__(self, martian):
+    def __init__(self, martian, global_martian=None):
         self._martian = martian
-   
-    def grok(self, name, module, **kw):
-        martian = self._martian
-
-        grokked_status = False
+        self._global_martian = global_martian
         
+    def grok(self, name, module, **kw):
+        grokked_status = False
+        if self._global_martian:
+            grokked_status = self._global_martian.grok(name, module, **kw)
+        martian = self._martian
+    
         for name in dir(module):
             if name.startswith('__grok_'):
                 continue
@@ -71,7 +73,24 @@ class MultiInstanceMartian(MultiMartianBase):
 class MultiClassMartian(MultiMartianBase):
     def get_bases(self, obj):
         return inspect.getmro(obj)
-    
+
+class MultiGlobalMartian(MartianBase):
+    implements(IMultiMartian)
+
+    def __init__(self):
+        self._martians = []
+
+    def register(self, martian):
+        self._martians.append(martian)
+
+    def grok(self, name, module, **kw):
+        grokked_status = False
+        for martian in self._martians:
+            status = martian.grok(name, module, **kw)
+            if status:
+                grokked_status = True
+        return grokked_status
+
 class MultiMartian(MartianBase):
     implements(IMultiMartian)
     
