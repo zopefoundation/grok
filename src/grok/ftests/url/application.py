@@ -15,16 +15,23 @@ Asking for the application_url on the cave returns the URL to the cave::
   >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open('http://localhost/cave')
-  >>> browser.url
+  >>> browser.contents
   'http://localhost/cave'
-
+  
 Asking for the application_url on the caveman returns the URL to the cave as
 well::
 
   >>> browser.open('http://localhost/cave/caveman')
-  >>> browser.url
-  'http://localhost/cave/caveman'
+  >>> browser.contents
+  'http://localhost/cave'
 
+You can pass a name to specify a particular view or sub object to add
+to the URL::
+
+  >>> browser.open('http://localhost/cave/caveman/second')
+  >>> browser.contents
+  'http://localhost/cave/second'
+  
 """
 import zope.interface
 
@@ -37,7 +44,12 @@ class Index(grok.View):
     def render(self):
         return self.application_url()
 
+class Second(grok.View):
+    grok.context(zope.interface.Interface)
 
+    def render(self):
+        return self.application_url('second')
+    
 class Cave(grok.Application, grok.Container):
     pass
 

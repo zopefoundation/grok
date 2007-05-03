@@ -202,11 +202,11 @@ class View(BrowserPage):
             obj = self.context
         return util.url(self.request, obj, name)
 
-    def application_url(self):
+    def application_url(self, name=None):
         obj = self.context
         while obj:
             if isinstance(obj, Application):
-                return self.url(obj)
+                return self.url(obj, name)
             obj = obj.__parent__
         raise ValueError("No application found.")
 
