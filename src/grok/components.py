@@ -204,7 +204,7 @@ class View(BrowserPage):
 
     def application_url(self, name=None):
         obj = self.context
-        while obj:
+        while obj is not None:
             if isinstance(obj, Application):
                 return self.url(obj, name)
             obj = obj.__parent__

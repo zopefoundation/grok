@@ -31,6 +31,14 @@ to the URL::
   >>> browser.open('http://localhost/cave/caveman/second')
   >>> browser.contents
   'http://localhost/cave/second'
+
+application_url also works with empty containers::
+
+  >>> from grok.ftests.url.application import Corridors
+  >>> cave['corridors'] = Corridors()
+  >>> browser.open('http://localhost/cave/corridors')
+  >>> browser.contents
+  'http://localhost/cave'
   
 """
 import zope.interface
@@ -55,4 +63,7 @@ class Cave(grok.Application, grok.Container):
 
 
 class CaveMan(grok.Model):
+    pass
+
+class Corridors(grok.Container):
     pass
