@@ -746,3 +746,39 @@ and instances of it::
   True
   >>> oldstyle.all_machine_instances.keys()
   ['robot']
+
+Grokking a package
+------------------
+
+A package consists of several sub modules. When grokking a package,
+all the files in the package will be grokked. Let's first create a simple
+grokker for the ``Animal`` class defined by the package::
+
+  >>> from martian.tests.testpackage import animal
+  >>> all_animals = {}
+  >>> class AnimalGrokker(ClassGrokker):
+  ...   component_class = animal.Animal
+  ...   def grok(self, name, obj, **kw):
+  ...     all_animals[name] = obj
+  ...     return True
+
+The grokker will collect animals into the ``all_animals`` dictionary.
+
+Let's register this grokker for a ModuleGrokker::
+
+  >>> module_grokker = ModuleGrokker()
+  >>> module_grokker.register(AnimalGrokker())
+
+Now let's grok the whole ``testpackage`` for animals::
+
+  >>> from martian import grok_dotted_name
+  >>> grok_dotted_name('martian.tests.testpackage', grokker=module_grokker)
+  
+We should now get some animals::
+
+  >>> sorted(all_animals.keys())
+  ['Animal', 'Bear', 'Dragon', 'Lizard', 'Python', 'SpermWhale', 'Whale']
+
+
+  
+

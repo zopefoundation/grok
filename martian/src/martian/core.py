@@ -3,7 +3,7 @@ import types, inspect
 from zope.interface import implements
 
 from martian.interfaces import IGrokker, IMultiGrokker
-from martian import util
+from martian import util, scan
 from martian.components import (GrokkerBase, ClassGrokker, InstanceGrokker,
                                 GlobalGrokker)
 
@@ -41,7 +41,7 @@ class ModuleGrokker(GrokkerBase):
                 grokked_status = True
 
         return grokked_status
-    
+        
 class MultiGrokkerBase(GrokkerBase):
     implements(IMultiGrokker)
 
@@ -123,6 +123,22 @@ class MultiGrokker(GrokkerBase):
         else:
             return self._multi_instance_grokker.grok(name, obj, **kw)
 
+def grok_dotted_name(dotted_name, grokker=None, **kw):
+    module_info = scan.module_info_from_dotted_name(dotted_name)
+    grok_package(module_info, grokker, **kw)
+    
+def grok_package(module_info, grokker=None, **kw):
+    if grokker is None:
+        grokker = the_module_grokker
+    grok_module(module_info, grokker, **kw)
+    for sub_module_info in module_info.getSubModuleInfos():
+        grok_package(sub_module_info, grokker, **kw)
+
+def grok_module(module_info, grokker, **kw):
+    if grokker is None:
+        grokker = the_module_grokker
+    grokker.grok(module_info.dotted_name, module_info.getModule(), **kw)
+    
 # deep meta mode here - we define grokkers that can pick up the
 # three kinds of grokker: ClassGrokker, InstanceGrokker and ModuleGrokker
 class MetaGrokker(ClassGrokker):
@@ -137,10 +153,13 @@ class InstanceMetaGrokker(MetaGrokker):
 
 class GlobalMetaGrokker(MetaGrokker):
     component_class = GlobalGrokker
-    
+
 # the global single grokker to bootstrap everything
 the_grokker = MultiGrokker()
 # bootstrap the meta-grokkers
 the_grokker.register(ClassMetaGrokker())
 the_grokker.register(InstanceMetaGrokker())
 the_grokker.register(GlobalMetaGrokker())
+
+# a global module grokker
+the_module_grokker = ModuleGrokker(the_grokker)
