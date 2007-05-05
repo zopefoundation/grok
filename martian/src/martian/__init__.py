@@ -1,2 +1,2 @@
-from core import ModuleMartian, MultiMartian
-from components import GlobalMartian, ClassMartian, InstanceMartian
+from core import ModuleGrokker, MultiGrokker
+from components import GlobalGrokker, ClassGrokker, InstanceGrokker

@@ -2,28 +2,28 @@ import types, inspect
 
 from zope.interface import implements
 
-from martian.interfaces import IMartian, IMultiMartian
+from martian.interfaces import IGrokker, IMultiGrokker
 from martian import util
-from martian.components import (MartianBase, ClassMartian, InstanceMartian,
-                                GlobalMartian)
+from martian.components import (GrokkerBase, ClassGrokker, InstanceGrokker,
+                                GlobalGrokker)
 
-class ModuleMartian(MartianBase):
-    implements(IMultiMartian)
+class ModuleGrokker(GrokkerBase):
+    implements(IMultiGrokker)
 
-    def __init__(self, martian=None):
-        if martian is None:
-            martian = MultiMartian()
-        self._martian = martian
+    def __init__(self, grokker=None):
+        if grokker is None:
+            grokker = MultiGrokker()
+        self._grokker = grokker
 
-    def register(self, martian):
-        self._martian.register(martian)
+    def register(self, grokker):
+        self._grokker.register(grokker)
         
     def grok(self, name, module, **kw):
         grokked_status = False
-        martian = self._martian
+        grokker = self._grokker
 
-        # trigger any global martians
-        grokked = martian.grok(name, module, **kw)
+        # trigger any global grokkers
+        grokked = grokker.grok(name, module, **kw)
         if grokked:
             grokked_status = True
 
@@ -36,111 +36,111 @@ class ModuleMartian(MartianBase):
                 continue
             if util.is_baseclass(name, obj):
                 continue
-            grokked = martian.grok(name, obj, **kw)
+            grokked = grokker.grok(name, obj, **kw)
             if grokked:
                 grokked_status = True
 
         return grokked_status
     
-class MultiMartianBase(MartianBase):
-    implements(IMultiMartian)
+class MultiGrokkerBase(GrokkerBase):
+    implements(IMultiGrokker)
 
     def __init__(self):
-        self._martians = {}
+        self._grokkers = {}
         
-    def register(self, martian):
-        key = martian.component_class
-        martians = self._martians.setdefault(key, [])
-        if martian not in martians:
-            martians.append(martian)
+    def register(self, grokker):
+        key = grokker.component_class
+        grokkers = self._grokkers.setdefault(key, [])
+        if grokker not in grokkers:
+            grokkers.append(grokker)
     
     def grok(self, name, obj, **kw):
-        used_martians = set()
+        used_grokkers = set()
         grokked_status = False
         for base in self.get_bases(obj):
-            martians = self._martians.get(base)
-            if martians is None:
+            grokkers = self._grokkers.get(base)
+            if grokkers is None:
                 continue
-            for martian in martians:
-                if martian not in used_martians:
-                    grokked = martian.grok(name, obj, **kw)
+            for grokker in grokkers:
+                if grokker not in used_grokkers:
+                    grokked = grokker.grok(name, obj, **kw)
                     if grokked:
                         grokked_status = True
-                    used_martians.add(martian)
+                    used_grokkers.add(grokker)
         return grokked_status
     
-class MultiInstanceMartian(MultiMartianBase):
+class MultiInstanceGrokker(MultiGrokkerBase):
     def get_bases(self, obj):
         return inspect.getmro(obj.__class__)
 
-class MultiClassMartian(MultiMartianBase):
+class MultiClassGrokker(MultiGrokkerBase):
     def get_bases(self, obj):
         if type(obj) is types.ModuleType:
             return []
         return inspect.getmro(obj)
 
-class MultiGlobalMartian(MartianBase):
-    implements(IMultiMartian)
+class MultiGlobalGrokker(GrokkerBase):
+    implements(IMultiGrokker)
 
     def __init__(self):
-        self._martians = []
+        self._grokkers = []
 
-    def register(self, martian):
-        self._martians.append(martian)
+    def register(self, grokker):
+        self._grokkers.append(grokker)
 
     def grok(self, name, module, **kw):
         grokked_status = False
-        for martian in self._martians:
-            status = martian.grok(name, module, **kw)
+        for grokker in self._grokkers:
+            status = grokker.grok(name, module, **kw)
             if status:
                 grokked_status = True
         return grokked_status
 
-class MultiMartian(MartianBase):
-    implements(IMultiMartian)
+class MultiGrokker(GrokkerBase):
+    implements(IMultiGrokker)
     
     def __init__(self):
-        self._multi_instance_martian = MultiInstanceMartian()
-        self._multi_class_martian = MultiClassMartian()
-        self._multi_global_martian = MultiGlobalMartian()
+        self._multi_instance_grokker = MultiInstanceGrokker()
+        self._multi_class_grokker = MultiClassGrokker()
+        self._multi_global_grokker = MultiGlobalGrokker()
         
-    def register(self, martian):
-        if isinstance(martian, InstanceMartian):
-            self._multi_instance_martian.register(martian)
-        elif isinstance(martian, ClassMartian):
-            self._multi_class_martian.register(martian)
-        elif isinstance(martian, GlobalMartian):
-            self._multi_global_martian.register(martian)
+    def register(self, grokker):
+        if isinstance(grokker, InstanceGrokker):
+            self._multi_instance_grokker.register(grokker)
+        elif isinstance(grokker, ClassGrokker):
+            self._multi_class_grokker.register(grokker)
+        elif isinstance(grokker, GlobalGrokker):
+            self._multi_global_grokker.register(grokker)
         else:
-            assert 0, "Unknown type of martian: %r" % martian
+            assert 0, "Unknown type of grokker: %r" % grokker
 
     def grok(self, name, obj, **kw):
         obj_type = type(obj)
         if obj_type in (type, types.ClassType):
-            return self._multi_class_martian.grok(name, obj, **kw)
+            return self._multi_class_grokker.grok(name, obj, **kw)
         elif obj_type is types.ModuleType:
-            return self._multi_global_martian.grok(name, obj, **kw)
+            return self._multi_global_grokker.grok(name, obj, **kw)
         else:
-            return self._multi_instance_martian.grok(name, obj, **kw)
+            return self._multi_instance_grokker.grok(name, obj, **kw)
 
-# deep meta mode here - we define martians that can pick up the
-# three kinds of martian: ClassMartian, InstanceMartian and ModuleMartian
-class MetaMartian(ClassMartian):
+# deep meta mode here - we define grokkers that can pick up the
+# three kinds of grokker: ClassGrokker, InstanceGrokker and ModuleGrokker
+class MetaGrokker(ClassGrokker):
     def grok(self, name, obj, **kw):
-        the_martian.register(obj())
+        the_grokker.register(obj())
 
-class ClassMetaMartian(MetaMartian):
-    component_class = ClassMartian
+class ClassMetaGrokker(MetaGrokker):
+    component_class = ClassGrokker
 
-class InstanceMetaMartian(MetaMartian):
-    component_class = InstanceMartian
+class InstanceMetaGrokker(MetaGrokker):
+    component_class = InstanceGrokker
 
-class GlobalMetaMartian(MetaMartian):
-    component_class = GlobalMartian
+class GlobalMetaGrokker(MetaGrokker):
+    component_class = GlobalGrokker
     
-# the global single martian to bootstrap everything
-the_martian = MultiMartian()
-# bootstrap the meta-martians
-the_martian.register(ClassMetaMartian())
-the_martian.register(InstanceMetaMartian())
-the_martian.register(GlobalMetaMartian())
+# the global single grokker to bootstrap everything
+the_grokker = MultiGrokker()
+# bootstrap the meta-grokkers
+the_grokker.register(ClassMetaGrokker())
+the_grokker.register(InstanceMetaGrokker())
+the_grokker.register(GlobalMetaGrokker())

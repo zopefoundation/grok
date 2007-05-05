@@ -14,28 +14,28 @@
 
 from zope.interface import implements
 
-from martian.interfaces import IMartian, IComponentMartian
+from martian.interfaces import IGrokker, IComponentGrokker
 from martian import util
 
 NOT_DEFINED = object()
 
-class MartianBase(object):
-    implements(IMartian)
+class GrokkerBase(object):
+    implements(IGrokker)
 
     def grok(self, name, obj, **kw):
         raise NotImplementedError
 
     
-class GlobalMartian(MartianBase):
-    """Martian that groks once per module.
+class GlobalGrokker(GrokkerBase):
+    """Grokker that groks once per module.
     """
 
     def grok(self, name, obj, **kw):
         raise NotImplementedError
     
 
-class ComponentMartianBase(MartianBase):
-    implements(IComponentMartian)
+class ComponentGrokkerBase(GrokkerBase):
+    implements(IComponentGrokker)
 
     component_class = NOT_DEFINED
 
@@ -43,12 +43,12 @@ class ComponentMartianBase(MartianBase):
         raise NotImplementedError
 
 
-class ClassMartian(ComponentMartianBase):
-    """Martian that groks classes in a module.
+class ClassGrokker(ComponentGrokkerBase):
+    """Grokker that groks classes in a module.
     """
     pass
 
-class InstanceMartian(ComponentMartianBase):
-    """Martian that groks instances in a module.
+class InstanceGrokker(ComponentGrokkerBase):
+    """Grokker that groks instances in a module.
     """
     pass

@@ -14,7 +14,7 @@
 
 from zope.interface import Interface, Attribute
 
-class IMartian(Interface):
+class IGrokker(Interface):
     def grok(name, obj, **kw):
         """Grok obj.
 
@@ -28,14 +28,14 @@ class IMartian(Interface):
         out by this martian.
         """
 
-class IComponentMartian(IMartian):
+class IComponentGrokker(IGrokker):
     """A martian that groks components in a module.
 
     Components may be instances or classes indicated by component_class.
     """
     component_class = Attribute('Class of the component to match')
     
-class IMultiMartian(IComponentMartian):
+class IMultiGrokker(IComponentGrokker):
     """A martian that is composed out of multiple martians.
     """
     def register(martian):
