@@ -6,15 +6,18 @@ from martian.interfaces import IGrokker, IMultiGrokker
 from martian import util, scan
 from martian.components import (GrokkerBase, ClassGrokker, InstanceGrokker,
                                 GlobalGrokker)
+from martian.error import GrokError
 
 class ModuleGrokker(GrokkerBase):
     implements(IMultiGrokker)
 
-    def __init__(self, grokker=None):
+    def __init__(self, grokker=None, prepare=None, finalize=None):
         if grokker is None:
             grokker = MultiGrokker()
         self._grokker = grokker
-
+        self.prepare = prepare
+        self.finalize = finalize
+        
     def register(self, grokker):
         self._grokker.register(grokker)
         
@@ -22,6 +25,10 @@ class ModuleGrokker(GrokkerBase):
         grokked_status = False
         grokker = self._grokker
 
+        # prepare module grok - this can also influence the kw dictionary
+        if self.prepare is not None:
+            self.prepare(name, module, kw)
+        
         # trigger any global grokkers
         grokked = grokker.grok(name, module, **kw)
         if grokked:
@@ -40,6 +47,10 @@ class ModuleGrokker(GrokkerBase):
             if grokked:
                 grokked_status = True
 
+        # finalize module grok
+        if self.finalize is not None:
+            self.finalize(name, module, kw)
+        
         return grokked_status
         
 class MultiGrokkerBase(GrokkerBase):
@@ -64,6 +75,10 @@ class MultiGrokkerBase(GrokkerBase):
             for grokker in grokkers:
                 if grokker not in used_grokkers:
                     grokked = grokker.grok(name, obj, **kw)
+                    if grokked not in (True, False):
+                        raise GrokError(
+                            "%r returns %r instead of True or False." %
+                            (grokker, grokked), None)
                     if grokked:
                         grokked_status = True
                     used_grokkers.add(grokker)
@@ -91,8 +106,12 @@ class MultiGlobalGrokker(GrokkerBase):
     def grok(self, name, module, **kw):
         grokked_status = False
         for grokker in self._grokkers:
-            status = grokker.grok(name, module, **kw)
-            if status:
+            grokked = grokker.grok(name, module, **kw)
+            if grokked not in (True, False):
+                raise GrokError(
+                    "%r returns %r instead of True or False." %
+                    (grokker, grokked), None)         
+            if grokked:
                 grokked_status = True
         return grokked_status
 
@@ -134,7 +153,7 @@ def grok_package(module_info, grokker=None, **kw):
     for sub_module_info in module_info.getSubModuleInfos():
         grok_package(sub_module_info, grokker, **kw)
 
-def grok_module(module_info, grokker, **kw):
+def grok_module(module_info, grokker=None, **kw):
     if grokker is None:
         grokker = the_module_grokker
     grokker.grok(module_info.dotted_name, module_info.getModule(), **kw)

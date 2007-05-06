@@ -207,12 +207,6 @@ components to be founded in a module::
   >>> module_grokker = ModuleGrokker()
   >>> module_grokker.register(filetype_grokker)
 
-Note that directly putting a grokker into a ``ModuleGrokker`` is
-typically not recommended - normally you would put in a multi grokker
-(see the examples for multi grokkers). We can do it here as the only
-thing we want to grok are functions and other objects are rejected on
-a name basis.
-
 We now define a module that defines a few filetype handlers to be
 grokked::
 
@@ -405,7 +399,7 @@ We can also grok other objects, but this will have no effect::
 Let's put our ``multi_grokker`` in a ``ModuleGrokker``. We can do
 this by passing it explicitly to the ``ModuleGrokker`` factory::
 
-  >>> module_grokker = ModuleGrokker(multi_grokker)
+  >>> module_grokker = ModuleGrokker(grokker=multi_grokker)
 
 We can now grok a module for both ``Color`` and ``Sound`` instances::
 
@@ -493,7 +487,7 @@ First we need to wrap our ``AnimalGrokker`` into a ``MultiClassGrokker``::
 
 Now let's wrap it into a ``ModuleGrokker`` and grok the module::
 
-  >>> grokker = ModuleGrokker(multi_grokker)
+  >>> grokker = ModuleGrokker(grokker=multi_grokker)
   >>> grokker.grok('animals', animals)
   True
 
@@ -638,7 +632,7 @@ some of which can be grokked::
 
 Let's construct a ``ModuleGrokker`` that can grok this module::
 
-  >>> mix_grokker = ModuleGrokker(multi)
+  >>> mix_grokker = ModuleGrokker(grokker=multi)
 
 Note that this is actually equivalent to calling ``ModuleGrokker``
 without arguments and then calling ``register`` for the individual
@@ -779,6 +773,86 @@ We should now get some animals::
   >>> sorted(all_animals.keys())
   ['Animal', 'Bear', 'Dragon', 'Lizard', 'Python', 'SpermWhale', 'Whale']
 
+Preparation and finalization
+----------------------------
 
-  
+Before grokking a module, it may be that we need to do some
+preparation. This preparation can include setting up some parameters
+to pass along to the grokking process, for instance. We can pass
+a ``prepare`` function a the ModuleGrokker::
 
+  >>> class Number(object):
+  ...   def __init__(self, nr):
+  ...     self.nr = nr
+  >>> all_numbers = {}
+  >>> class NumberGrokker(InstanceGrokker):
+  ...  component_class = Number
+  ...  def grok(self, name, obj, multiplier):
+  ...    all_numbers[obj.nr] = obj.nr * multiplier
+  ...    return True
+  >>> def prepare(name, module, kw):
+  ...   kw['multiplier'] = 3
+  >>> module_grokker = ModuleGrokker(prepare=prepare)
+  >>> module_grokker.register(NumberGrokker())
+ 
+We have created a ``prepare`` function that does one thing: create a
+``multiplier`` parameter that is passed along the grokking
+process. The ``NumberGrokker`` makes use of this to prepare the
+``all_numbers`` dictionary values.
+
+Let's try this with a module::
+
+  >>> class numbers(FakeModule):
+  ...   one = Number(1)
+  ...   two = Number(2)
+  ...   four = Number(4)
+  >>> numbers = fake_import(numbers)
+  >>> module_grokker.grok('numbers', numbers)
+  True
+  >>> sorted(all_numbers.items())
+  [(1, 3), (2, 6), (4, 12)]
+
+You can also optionally register a finalization function, which will
+be run at the end of a module grok::
+
+  >>> def finalize(name, module, kw):
+  ...     all_numbers['finalized'] = True
+  >>> module_grokker = ModuleGrokker(prepare=prepare, finalize=finalize)
+  >>> module_grokker.register(NumberGrokker())
+  >>> all_numbers = {}
+  >>> module_grokker.grok('numbers', numbers)
+  True
+  >>> 'finalized' in all_numbers
+  True
+
+Sanity checking
+---------------
+
+Grokkers must return ``True`` if grokking succeeded, or ``False`` if
+it didn't. If they return something else (typically ``None`` as the
+programmer forgot to), the system will raise an error::
+
+  >>> class BrokenGrokker(InstanceGrokker):
+  ...  component_class = Number
+  ...  def grok(self, name, obj):
+  ...    pass
+
+  >>> module_grokker = ModuleGrokker()
+  >>> module_grokker.register(BrokenGrokker())
+  >>> module_grokker.grok('numbers', numbers) 
+  Traceback (most recent call last):
+    ...
+  GrokError: <BrokenGrokker object at ...> returns None instead of 
+  True or False.
+
+Let's also try this with a GlobalGrokker::
+
+  >>> class MyGrokker(GlobalGrokker):
+  ...   def grok(self, name, module):
+  ...     return "Foo"
+  >>> module_grokker = ModuleGrokker()
+  >>> module_grokker.register(MyGrokker())
+  >>> module_grokker.grok('numbers', numbers)
+  Traceback (most recent call last):
+    ...
+  GrokError: <MyGrokker object at ...> returns 'Foo' instead of True or False.
