@@ -41,6 +41,7 @@ class IGrokBaseClasses(interface.Interface):
     AddForm = interface.Attribute("Base class for add forms.")
     EditForm = interface.Attribute("Base class for edit forms.")
     DisplayForm = interface.Attribute("Base class for display forms.")
+    Indexes = interface.Attribute("Base class for catalog index definitions.")
 
 
 class IGrokErrors(interface.Interface):
@@ -132,6 +133,12 @@ class IGrokDirectives(interface.Interface):
 
         grok.require can be used as a class-level directive or as a
         method decorator."""
+
+    def site(class_or_interface):
+        """Specifies the site that an indexes definition is for.
+
+        It can only be used inside grok.Indexes subclasses.
+        """
 
 
 class IGrokDecorators(interface.Interface):
@@ -266,6 +273,12 @@ class IGrokView(IBrowserPage):
         render() can take arbitrary keyword parameters which will be
         filled in from the request (in that case they *must* be
         present in the request)."""
+
+    def application_url(name=None):
+        """Return the URL of the closest application object in the
+        hierarchy or the URL of a named object (``name`` parameter)
+        relative to the closest application object.
+        """
 
 
 class IGrokForm(IGrokView):
