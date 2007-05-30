@@ -3,24 +3,9 @@
 The \module{grok} module defines a set of components that provide basic Zope 3
 functionality in a convenient way.
 
-\section{\class{grok.Model}}
-
-    Base class to define an application model object.
-
-    Model classes support persistence and containment.
-
-\section{grok.Container}
-
-    Mixin base class to define a container object. The container supports the
-    zope.app.container.interfaces.IContainer interface and is implemented using
-    a BTree, providing reasonable performance for large object collections.
-
-    Typically used together with \class{grok.Model}.
-
-\section{grok.Adapter}
+\section{\class{grok.Adapter}}
 
     Implementation, configuration, and registration of Zope 3 adapters.
-
 
     \begin{classdesc*}{grok.Adapter}
         Base class to define an adapter. Adapters are automatically registered
@@ -49,7 +34,7 @@ functionality in a convenient way.
 class EuropeanToUS(grok.Adapter):
     """A travel-version of a power adapter that adapts european sockets to
     american sockets.
-    
+
     """
     grok.implements(IUSPowerSocket)
     grok.context(EuropeanPowerSocket)
@@ -59,7 +44,51 @@ class EuropeanToUS(grok.Adapter):
         return self.context.power
     \end{verbatim}
 
-\section{grok.MultiAdapter}
+\section{\class{grok.AddForm}}
+
+\section{\class{grok.Annotation}}
+
+\section{\class{grok.Application}}
+
+\section{grok.ClassGrokker}
+
+\section{\class{grok.Container}}
+
+    Mixin base class to define a container object. The container supports the
+    zope.app.container.interfaces.IContainer interface and is implemented using
+    a BTree, providing reasonable performance for large object collections.
+
+    Typically used together with \class{grok.Model}.
+
+\section{\class{grok.DisplayForm}}
+
+\section{\class{grok.EditForm}}
+
+\section{\class{grok.Form}}
+
+\section{\class{grok.GlobalUtility}}
+
+\section{\class{grok.Indexes}}
+
+\section{grok.InstanceGrokker}
+
+\section{\class{grok.JSON}}
+
+\section{\class{grok.LocalUtility}}
+
+\section{\class{grok.Model}}
+
+    Base class to define an application model object.
+
+    Model classes support persistence and containment.
+
+\section{grok.ModuleGrokker}
+
+    Base class to define an application model object.
+
+    Model classes support persistence and containment.
+
+\section{\class{grok.MultiAdapter}}
 
     Base class to define a multi-adapter. Multi-adapters are automatically
     registered.
@@ -73,7 +102,15 @@ class EuropeanToUS(grok.Adapter):
     The class-level directive \function{grok.name} is used to register the
     multi-adapter with a name. If ommitted, no name will be used.
 
-\section{grok.Utility}
+\section{grok.PageTemplate}
+
+\section{grok.PageTemplateFile}
+
+\section{\class{grok.Site}}
+
+\section{\class{grok.Traverser}}
+
+\section{\class{grok.Utility}}
 
     Base class to define a utility. Utilities are automatically registered.
 
@@ -84,10 +121,6 @@ class EuropeanToUS(grok.Adapter):
     The class-level directive \function{grok.name} is used to register the
     utility with a name. If ommitted, no name will be used.
 
-\section{grok.View}
+\section{\class{grok.View}}
 
-\section{grok.XMLRPC}
-
-\section{grok.Traverser}
-
-\section{grok.EditForm}
+\section{\class{grok.XMLRPC}}

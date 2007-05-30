@@ -1,0 +1,43 @@
+\chapter{Functions}
+
+The \module{grok} module provides access to commonly used functions in the
+Zope Component Architecture.
+
+    \section{\function{grok.getSite}}
+
+        \begin{funcdesc}{grok.getSite}{*args}
+        foobar
+        \end{funcdesc}
+
+    \section{\function{grok.notify}}
+
+        \begin{funcdesc}{grok.notify}{*args}
+        foobar
+        \end{funcdesc}
+
+The \module{grok} module provides a number of convenience functions to aid in
+common tasks.
+
+    \section{\function{grok.url}}
+
+        \begin{funcdesc}{grok.url}{request, object, \optional{, name}}
+        Construct a URL for the given \var{request} and \var{object}.
+
+        \var{name} may be a string that gets appended to the object URL.
+        Commonly used to construct an URL to a particular view on the object.
+
+        This function returns the constructed URL as a string.
+
+        An example, that uses grok.url inside a view class:
+        \begin{verbatim}
+import grok
+
+class SomeView(grok.View):
+
+    def render(self):
+        parent_url = grok.url(
+            self.request, self.context.__parent__, 'index')
+        return '<a href="%s">parent</a>' % parent_url
+        \end{verbatim}
+
+        \end{funcdesc}
