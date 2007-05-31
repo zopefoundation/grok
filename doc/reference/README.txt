@@ -41,3 +41,34 @@ The python-dev package provides the mkhowto script::
 This script will be located in::
 
   /usr/lib/python2.4/doc/tools/mkhowto
+
+
+Generating the grok reference from grok source code
+---------------------------------------------------
+
+.. warning:: This is work-in-progress and may lead to disappointing
+             results.
+
+The script mkgrokref.py is able to generate the sources for grok
+reference from the grok source code. It must be run with the
+appropriate PYTHONPATH set (i.e.: including the grok package to scan,
+all packages required by grok, namely the zope 3 packages, and the
+python standard packages). See the header of the script for further
+documentation. There are currently no commandline options supported by
+mkgrokref.py.
+
+To get a very plain reference::
+
+  $ python2.4 mkgrokref.py > myreference.txt
+
+This will produce a ReST formatted text file. Go on with::
+
+  $ rst2latex myreference.txt myreference.tex
+
+Transform the ReStructucturedText to LaTeX. Now we got a LaTeX source,
+which can be further processed as described above. For example::
+
+  $ mkhowto --pdf myreference.tex
+
+The rst2latex script is part of the python docutils package.
+
