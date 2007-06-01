@@ -4,6 +4,7 @@ The \module{grok} module defines a set of components that provide basic Zope 3
 functionality in a convenient way.
 
 \section{\class{grok.Adapter}}
+\label{grok-adapter}
 
     Implementation, configuration, and registration of Zope 3 adapters.
 
@@ -15,21 +16,25 @@ functionality in a convenient way.
             The adapted object.
         \end{memberdesc}
 
-    \begin{bf}Directives:\end{bf}
+        \emph{Directives:}
 
-    \begin{itemize}
-        \item[\function{grok.context(context_obj)}] required, identifies the required object for the
-        adaptation.
+        \begin{methoddesc}{grok.context}{context_obj}
+            required, identifies the required object for the
+            adaptation.
+        \end{methoddesc}
 
-        \item[\function{grok.implements(interface)}] required, identifies the interface the adapter implements.
+        \begin{methoddesc}{grok.implements}{interface}
+            required, identifies the interface the adapter implements.
+        \end{methoddesc}
 
-        \item[\function{grok.name(name)}] optional, identifies the name used for the adapter
-        registration. If ommitted, no name will be used.
-    \end{itemize}
+        \begin{methoddesc}{grok.name}{name}
+            optional, identifies the name used for the adapter
+            registration. If ommitted, no name will be used.
+        \end{methoddesc}
+
     \end{classdesc*}
 
-    \begin{bf}Example:\end{bf}
-
+    \emph{Example:}
     \begin{verbatim}
 class EuropeanToUS(grok.Adapter):
     """A travel-version of a power adapter that adapts european sockets to
@@ -45,12 +50,53 @@ class EuropeanToUS(grok.Adapter):
     \end{verbatim}
 
 \section{\class{grok.AddForm}}
+\label{grok-addform}
+
+    Make \module{zope.formlib} forms accessible in \module{grok}.
+
+    \begin{classdesc*}{grok.AddForm}
+      Form for adding content.
+
+        \begin{memberdesc}{template}
+            The associated template to render.
+        \end{memberdesc}
+
+        \begin{memberdesc}[grok.Fields]{form_fields}
+            Fields to render. 
+        \end{memberdesc}
+
+        \emph{Directives:}
+
+        \begin{methoddesc}{grok.context}{context_obj}
+          required, identifies the required object for the adaptation
+          (forms are views and views are adapters).
+        \end{methoddesc}
+
+
+    \end{classdesc*}
+
+    A \class{grok.AddForm} is a \class{grok.Form}. See
+    \ref{grok-form} (\class{grok.Form}) for deeper insights.
+
+    
+    \emph{Example:}
+\begin{verbatim}
+import grok
+from zope import schema
+
+class Mammoth(grok.Model):
+    class fields:
+        name = schema.TextLine(title=u"Name")
+        size = schema.TextLine(title=u"Size", default=u"Quite normal")
+        somethingelse = None
+
+class Add(grok.AddForm):
+    grok.context(Mammoth)
+\end{verbatim}
 
 \section{\class{grok.Annotation}}
 
 \section{\class{grok.Application}}
-
-\section{grok.ClassGrokker}
 
 \section{\class{grok.Container}}
 
@@ -60,17 +106,210 @@ class EuropeanToUS(grok.Adapter):
 
     Typically used together with \class{grok.Model}.
 
+\section{grok.ClassGrokker}
+
+    Grokker for particular classes in a module.
+
+    Subclasses should have a \var{component_class} available.
+
+    This is a base grokker. It exists in \module{grok.components}
+    because it is meant to be subclassed by code that extends grok.
+    Thus it is like \class{grok.Model}, \class{grok.View}, etc. in
+    that they should not be grokked themselves but subclasses of them.
+  
+
 \section{\class{grok.DisplayForm}}
+\label{grok-displayform}
+
+    See \ref{grok-form} (\class{grok.Form}) for deeper insights.
 
 \section{\class{grok.EditForm}}
+\label{grok-editform}
+
+    \begin{classdesc*}{grok.EditForm}
+        Form for editing content.
+
+        \begin{memberdesc}{template}
+            The associated page template to render. If no template is
+            explicitly set, a default page template will be used.
+        \end{memberdesc}
+
+        \begin{memberdesc}[grok.Fields]{form_fields}
+            Fields to render. 
+        \end{memberdesc}
+
+        \emph{Directives:}
+
+        \begin{methoddesc}{grok.context}{context_obj}
+          required, identifies the required object for the adaptation
+          (forms are views and views are adapters).
+        \end{methoddesc}
+
+
+    \end{classdesc*}
+
+    See \ref{grok-form} (\class{grok.Form}) for deeper insights.
+
+    \emph{Example:}
+\begin{verbatim}
+import grok
+from zope import schema
+
+class Mammoth(grok.Model):
+    class fields:
+        name = schema.TextLine(title=u"Name")
+        size = schema.TextLine(title=u"Size", default=u"Quite normal")
+        somethingelse = None
+
+class Add(grok.EditForm):
+    grok.context(Mammoth)
+\end{verbatim}
 
 \section{\class{grok.Form}}
+\label{grok-form}
+
+    Base class for forms, bringing \class{grok.View} and
+    \module{zope.formlib} together.
+
+    \begin{classdesc*}{grok.Form}
+        Grok forms are \module{zope.formlib} forms and
+        \class{grok.View}s.
+
+        Needed, because \module{zope.formlib}'s
+        Forms have \code{update}/\code{render} methods which have
+        different meanings than \class{grok.View}'s
+        \code{update}/\code{render} methods.  We deal with this issue
+        by 'renaming' \module{zope.formlib}'s \function{update()} to
+        update_form() and by disallowing subclasses to have custom
+        render() methods. 
+
+        Usually, you will only use \class{grok.AddForm}
+        (\ref{grok-addform}), \class{grok.EditForm}
+        (\ref{grok-editform}) or \class{grokDisplayForm}
+        (\ref{grok-displayform}).
+
+
+        \begin{memberdesc}[grok.Fields]{form_fields}
+          It is a \class{grok.Fields} representing the fields to
+          render.
+        \end{memberdesc}
+
+        \begin{memberdesc}{template}
+            The associated template. If no template is explicitly
+            given, a default template will be used.
+        \end{memberdesc}
+
+        \begin{methoddesc}{update}{}
+          Subclasses can override this method just like on regular
+          \class{grok.View}s. It will be called before any form
+          processing happens.
+        \end{methoddesc}
+
+        \begin{methoddesc}{update_form}{}
+          Update the form, i.e. process form input using widgets.
+
+          On zope.formlib forms, this is what the update() method is.
+          In grok views, the update() method has a different meaning.
+          That's why this method is called update_form() in grok
+          forms.
+        \end{methoddesc}
+
+        \begin{methoddesc}{render}{}
+          Render the form, either using the form template or whatever
+          the actions returned in form_result.
+        \end{methoddesc}
+
+        \emph{Directives:}
+
+        \begin{methoddesc}{grok.context}{context_obj}
+            required, identifies the required object for the
+            adaptation (forms are adapters).
+        \end{methoddesc}
+
+    \end{classdesc*}
+
+    \emph{Examples:}
+
+    \subsection{Create grok.Fields with keyword parameters and schema fields}
+
+    A \class{grok.Fields} can receive keyword parameters with schema
+    fields.  These should be avaible in the definition order.
+
+\begin{verbatim}
+import grok
+from zope import schema
+
+class Mammoth(grok.Model):
+    pass
+
+class Edit(grok.EditForm):
+    form_fields = grok.Fields(
+        a = schema.TextLine(title=u"Alpha"),
+        b = schema.TextLine(title=u"Beta"),
+        g = schema.TextLine(title=u"Gamma"),
+        d = schema.TextLine(title=u"Delta"))
+\end{verbatim}
+Now we get the fields in right order:
+\begin{verbatim}
+  >>> grok.grok(__name__)
+
+  >>> from zope import component
+  >>> from zope.publisher.browser import TestRequest
+  >>> request = TestRequest()
+  >>> view = component.getMultiAdapter((Mammoth(), request), name='edit')
+  >>> len(view.form_fields)
+  4
+  >>> [w.__name__ for w in view.form_fields]
+  ['a', 'b', 'g', 'd']
+\end{verbatim}
+    
+    \subsection{Forms cannot define a render method}
+
+    \emph{Forms cannot define a render method.} Here we show the case
+    where the EditForm has an explicit template associate with it. 
+
+\begin{verbatim}
+  import grok
+
+  class Mammoth(grok.Model):
+    pass
+
+  class Edit(grok.EditForm):
+    # not allowed to have a render method
+    def render(self):
+        return "this cannot be"
+
+  edit = grok.PageTemplate('Foo!')
+\end{verbatim}
+Leads to:
+\begin{verbatim}
+  >>> grok.grok(__name__)
+  Traceback (most recent call last):
+  ...
+  GrokError: It is not allowed to specify a custom 'render' method for
+  form <class 'grok.tests.form.norender.Edit'>. Forms either use the default
+  template or a custom-supplied one.
+\end{verbatim}
+
+
+
+
 
 \section{\class{grok.GlobalUtility}}
 
 \section{\class{grok.Indexes}}
 
 \section{grok.InstanceGrokker}
+
+    Grokker for particular instances in a module.
+
+    Subclasses should have a \var{component_class} available.
+
+    This is a base grokker. It exists in \module{grok.components}
+    because it is meant to be subclassed by code that extends grok.
+    Thus it is like \class{grok.Model}, \class{grok.View}, etc. in
+    that they should not be grokked themselves but subclasses of them.
+
 
 \section{\class{grok.JSON}}
 
