@@ -1,0 +1,110 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	metal:define-macro="gaia-page">
+  <head>
+    <title
+	metal:define-slot="title"
+	>grok administration interface</title>
+    <link metal:define-slot="header"
+	rel="stylesheet" type="text/css" href="static/grok.css"
+	  tal:attributes="href view/static/grok.css" />
+  </head>
+
+  <body tal:define="apps context/values">
+    <div>
+    <div id="Banner">
+      <img alt="Grok" src="images/GROK_Logo.jpg"
+	   tal:attributes="src view/static/GROK_Logo.jpg" />
+    </div>
+    <div id="Breadcrumbs">
+      Grok Admin Interface
+    </div>
+    <div id="Fireplace">
+      <img alt="Fire" src="images/Fire.gif"
+	   tal:attributes="src view/static/Fire.gif" />
+    </div>
+    <div id="Content">
+      <div metal:define-slot="content">
+
+	<h1>Welcome to Grok!</h1>
+
+	<div>
+	  Your friendly and easy way to Zope 3.
+	</div>
+
+    </div>
+      <p id="Footer-marker">
+      - <a href="http://grok.zope.org">GROK</a>|<a href="http://www.zope.org">ZOPE3</a> -</p>
+      <p id="Footer-copyright">&copy; Copyright 2007, The Grok Community</p>
+
+    </div>
+
+
+    <div id="Sidebar" metal:define-slot="sidebar">
+      <h1>GROK Navigator</h1>
+      
+      <div id="SearchBox">
+	<input type="text" value="Full-text search..." />
+	<input type="submit" class="button" value="Go" />
+      </div>
+
+      <img alt="---" class="sidebar_divider" src="Sidebar_Bottom.jpg"
+	   tal:attributes="src view/static/Sidebar_Bottom.jpg" />
+
+      <a href="">
+	<div class="feature">
+	  <p>
+	    <img alt="Manage Zope3" src="Develop_btn.jpg"  class="track_button"
+		 tal:attributes="src view/static/Develop_btn.jpg" />
+	    <b>Manage Zope3</b>: Manage your Zope3 Server
+	  </p>
+	</div>
+      </a>
+
+<!--
+      <img alt="---" class="sidebar_divider" src="Sidebar_Bottom.jpg"
+	   tal:attributes="src view/static/Sidebar_Bottom.jpg" />
+-->
+
+      <a href="">
+	<div class="feature">
+	  <p>
+	    <img alt="Debug" src="Eval_btn.jpg"  class="track_button"
+		 tal:attributes="src view/static/Eval_btn.jpg" />
+	    <b>Debug</b> your Grok Applications.
+	  </p>
+	</div>
+      </a>
+
+<!--
+      <img alt="---" class="sidebar_divider" src="Sidebar_Bottom.jpg"
+	   tal:attributes="src view/static/Sidebar_Bottom.jpg" />
+-->
+
+      <a href="">
+	<div class="feature">
+	  <p>
+	    <img alt="Documentation" src="Learn_btn.jpg"  class="track_button"
+		 tal:attributes="src view/static/Learn_btn.jpg" />
+	    <b>Documentation</b>: Learn all about Grok and friends.
+	  </p>
+	</div>
+      </a>
+
+      <img alt="---" class="sidebar_divider" src="Sidebar_Bottom.jpg"
+	   tal:attributes="src view/static/Sidebar_Bottom.jpg" />
+      <div class="version_info">
+	<h3>Current version:</h3>
+	<p>
+	  This is just developer stuff and by no means ready for
+	  production use.
+	</p>
+      </div>
+      <img src="images/Sidebar_Bottom.jpg"
+	   tal:attributes="src view/static/Sidebar_Bottom.jpg" />
+    </div>
+
+  </div>
+
+
+  </body>
+</html>

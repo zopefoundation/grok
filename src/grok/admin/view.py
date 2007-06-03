@@ -15,10 +15,18 @@ class Index(grok.View):
         self.applications = ("%s.%s" % (x.__module__, x.__name__)
                              for x in apps)
 
+class Macros(grok.View):
+    """Only to contain the standard macros."""
+    grok.context(IRootFolder)
+    pass
+
 class Add(grok.View):
     grok.require('grok.ManageApplications')
 
     def render(self, application, name):
+        if name is None or name == "":
+            self.redirect(self.url(self.context))
+            return
         app = zope.component.getUtility(grok.interfaces.IApplication,
                                         name=application)
         self.context[name] = app()
@@ -27,7 +35,10 @@ class Add(grok.View):
 class Delete(grok.View):
     grok.require('grok.ManageApplications')
 
-    def render(self, items):
+    def render(self, items=None):
+        if items is None:
+            self.redirect(self.url(self.context))
+            return
         if not isinstance(items, list):
             items = [items]
         for name in items:

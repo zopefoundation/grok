@@ -1,50 +1,50 @@
-<html>
-  <head>
-    <title>grok administration interface</title>
-  </head>
-
-  <body tal:define="apps context/values">
-    <h1>Grok Applications</h1>
+<html metal:use-macro="context/@@macros/gaia-page">
+  <div metal:fill-slot="content">
+    <h1>Grok Applications:</h1>
 
     <form tal:attributes="action string:${context/@@absolute_url}/delete"
-          tal:condition="apps|nothing">
+	  tal:condition="apps|nothing">
       <fieldset>
-        <legend>Installed applications</legend>
+	<legend>Installed applications</legend>
+	<div tal:repeat="app apps">
+	  <input type="checkbox" 
+		 class="checkbox" 
+		 tal:attributes="value app/__name__;
+				 name string:items" />
+	  <a tal:attributes="href string:${context/@@absolute_url}/${app/__name__}">
+	    <span tal:replace="app/__name__"/>
+	    (<span tal:replace="app/__class__/__name__"/>)
+	  </a>
+	  &nbsp;&nbsp;
+	  <a href="" class="button">Inspect...</a>
+	</div>
 
-    <ul>
-      <li tal:repeat="app apps">
-        <input type="checkbox" tal:attributes="value app/__name__;
-                                               name string:items" />
-        <a tal:attributes="href string:${context/@@absolute_url}/${app/__name__}">
-          <span tal:replace="app/__name__"/>
-          (<span tal:replace="app/__class__/__name__"/>)
-        </a>
-      </li>
-    </ul>
-
-        <p><input type="submit" value="Delete Selected"/></p>
-        </fieldset>
+	<p><input class="button" type="submit" value="Delete Selected"/></p>
+      </fieldset>
     </form>
     <form tal:attributes="action string:${context/@@absolute_url}/add">
       <fieldset>
-        <legend>Add application</legend>
+	<legend>Add application</legend>
+	
+	<p>
+	  <label>Application: 
+	  <select height="1" name="application"> 
+	    <option tal:repeat="app view/applications" 
+		    tal:attributes="value app" 
+		    tal:content="app"
+		    />
+	  </select> 
+	  </label>
+	  <a href="" class="button">Tell me more about this app...</a>
+<!--	  <input type="submit" class="button" value="Tell me more about this app..." /> -->
+	</p>
 
-        <p>
-          <label>Application: 
-            <select height="1" name="application"> 
-              <option tal:repeat="app view/applications" 
-                tal:attributes="value app" 
-                tal:content="app"
-                />
-            </select> 
-          </label>
-        </p>
-
-        <p><label>Name: <input type="text" name="name"/></label></p>
-
-        <p><input type="submit" value="Add"/></p>
+	<p><label>Name your new app: <input type="text" name="name"/></label></p>
+	  
+	<p><input class="button" type="submit" value="Add"/></p>
 
       </fieldset>
     </form>
-  </body>
+  </div>
+
 </html>
