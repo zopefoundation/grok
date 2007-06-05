@@ -196,6 +196,32 @@ home = getAdapter(cave, IHome, name='home')
   \end{itemize}
   \end{classdesc*}
 
+  \begin{bf}Example:\end{bf}
+
+  \begin{verbatim}
+import grok
+from zope import interface
+
+class Fireplace(grok.Model):
+    pass
+
+class Cave(grok.Model):
+    pass
+
+class IHome(interface.Interface):
+    pass
+
+class Home(grok.MultiAdapter):
+    grok.adapts(Cave, Fireplace)
+    grok.implements(IHome)
+
+    def __init__(self, cave, fireplace):
+        self.cave = cave
+        self.fireplace = fireplace
+
+home = IHome(cave, fireplace)
+  \end{verbatim}
+
 \section{grok.PageTemplate}
 
 \section{grok.PageTemplateFile}
