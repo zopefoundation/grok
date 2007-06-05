@@ -135,6 +135,7 @@ def adapter(interface_or_function, *additional_interfaces):
         if implementers is None:
             frame.f_locals['__grok_implementers__'] = implementers = []
         implementers.append((function, implementer, interfaces))
+        return function
 
     if isinstance(interface_or_function, (types.FunctionType,)):
         # The adapter decorator is without argument, which means the
