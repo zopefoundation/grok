@@ -15,6 +15,7 @@
 """
 import os
 import sys
+import types
 
 from zope import component
 from zope import interface
@@ -105,3 +106,42 @@ class SubscribeDecorator:
         if subscribers is None:
             frame.f_locals['__grok_subscribers__'] = subscribers = []
         subscribers.append((function, self.subscribed))
+
+def implementer(interface):
+    frame = sys._getframe(1)
+    if not frame_is_module(frame):
+        raise GrokImportError(
+            "@grok.implementer can only be used on module level.")
+
+    def decorated(function):
+        setattr(function, '__grok_implementer__', interface)
+        return function
+
+    return decorated
+
+def adapter(interface_or_function, *additional_interfaces):
+    frame = sys._getframe(1)
+    if not frame_is_module(frame):
+        raise GrokImportError(
+            "@grok.adapter can only be used on module level.")
+
+    def decorated(function):
+        implementer = getattr(function, '__grok_implementer__', None)
+        if implementer is None:
+            raise GrokImportError(
+                "@grok.implementer should be used as inner decorator.")
+
+        implementers = frame.f_locals.get('__grok_implementers__', None)
+        if implementers is None:
+            frame.f_locals['__grok_implementers__'] = implementers = []
+        implementers.append((function, implementer, interfaces))
+
+    if isinstance(interface_or_function, (types.FunctionType,)):
+        # The adapter decorator is without argument, which means the
+        # function to-be-decorated is passed a first argument.
+        function = interface_or_function
+        interfaces = None # we'll try to find a context during grok-time
+        return decorated(function)
+    else:
+        interfaces = (interface_or_function,)+additional_interfaces
+        return decorated

@@ -40,6 +40,7 @@ from grok.directive import (context, name, template, templatedir, provides,
                             define_permission, require, site)
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import SubscribeDecorator as subscribe
+from grok._grok import adapter, implementer
 from grok.error import GrokError, GrokImportError
 from grok.formlib import action, AutoFields, Fields
 from grok.util import url
