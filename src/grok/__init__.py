@@ -15,7 +15,7 @@
 """
 
 from zope.interface import implements
-from zope.component import adapts
+from zope.component import adapts, adapter
 from zope.event import notify
 from zope.app.component.hooks import getSite
 from zope.lifecycleevent import (
@@ -40,7 +40,7 @@ from grok.directive import (context, name, template, templatedir, provides,
                             define_permission, require, site)
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import SubscribeDecorator as subscribe
-from grok._grok import adapter, implementer
+from grok._grok import implementer
 from grok.error import GrokError, GrokImportError
 from grok.formlib import action, AutoFields, Fields
 from grok.util import url

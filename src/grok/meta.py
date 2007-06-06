@@ -261,15 +261,16 @@ class SubscriberGrokker(grok.ModuleGrokker):
 class AdapterDecoratorGrokker(grok.ModuleGrokker):
 
     def register(self, context, module_info, templates):
-        implementers = module_info.getAnnotation('grok.implementers', [])
-        for function, implementer, interfaces in implementers:
+        implementers = module_info.getAnnotation('implementers', [])
+        for function in implementers:
+            interfaces = getattr(function, '__component_adapts__', None)
             if interfaces is None:
                 # There's no explicit interfaces defined, so we assume the
                 # module context to be the thing adapted.
                 util.check_context(module_info.getModule(), context)
                 interfaces = (context, )
             component.provideAdapter(
-                function, adapts=interfaces, provides=implementer)
+                function, adapts=interfaces, provides=function.__implemented__)
 
 class StaticResourcesGrokker(grok.ModuleGrokker):
 

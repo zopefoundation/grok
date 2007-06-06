@@ -107,42 +107,31 @@ class SubscribeDecorator:
             frame.f_locals['__grok_subscribers__'] = subscribers = []
         subscribers.append((function, self.subscribed))
 
-def implementer(interface):
-    frame = sys._getframe(1)
-    if not frame_is_module(frame):
-        raise GrokImportError(
-            "@grok.implementer can only be used on module level.")
+from zope.interface.declarations import DescriptorAwareMetaClasses, Implements
+class implementer:
 
-    def decorated(function):
-        setattr(function, '__grok_implementer__', interface)
-        return function
+    # XXX This is a copy of z.i.implementer *with* the additional annotating
+    # behaviour. This will be part of future zope.interface release. See:
+    # http://svn.zope.org/zope.interface/branches/jw-annotate-implementers-on-module/
 
-    return decorated
+    def __init__(self, *interfaces):
+        self.interfaces = interfaces
 
-def adapter(interface_or_function, *additional_interfaces):
-    frame = sys._getframe(1)
-    if not frame_is_module(frame):
-        raise GrokImportError(
-            "@grok.adapter can only be used on module level.")
+    def __call__(self, ob):
+        if isinstance(ob, DescriptorAwareMetaClasses):
+            raise TypeError("Can't use implementer with classes.  Use one of "
+                            "the class-declaration functions instead."
+                            )
 
-    def decorated(function):
-        implementer = getattr(function, '__grok_implementer__', None)
-        if implementer is None:
-            raise GrokImportError(
-                "@grok.implementer should be used as inner decorator.")
-
-        implementers = frame.f_locals.get('__grok_implementers__', None)
+        frame = sys._getframe(1)
+        implementers = frame.f_locals.get('__implementers__', None)
         if implementers is None:
-            frame.f_locals['__grok_implementers__'] = implementers = []
-        implementers.append((function, implementer, interfaces))
-        return function
+            frame.f_locals['__implementers__'] = implementers = []
+        implementers.append(ob)
 
-    if isinstance(interface_or_function, (types.FunctionType,)):
-        # The adapter decorator is without argument, which means the
-        # function to-be-decorated is passed a first argument.
-        function = interface_or_function
-        interfaces = None # we'll try to find a context during grok-time
-        return decorated(function)
-    else:
-        interfaces = (interface_or_function,)+additional_interfaces
-        return decorated
+        spec = Implements(*self.interfaces)
+        try:
+            ob.__implemented__ = spec
+        except AttributeError:
+            raise TypeError("Can't declare implements", ob)
+        return ob

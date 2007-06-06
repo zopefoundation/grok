@@ -1,28 +1,11 @@
 """
-@grok.adapter can only be used on module level::
-
-  >>> function_context()
-  Traceback (most recent call last):
-    ...
-  GrokImportError: @grok.adapter can only be used on module level.
-
-  >>> class_context()
-  Traceback (most recent call last):
-    ...
-  GrokImportError: @grok.adapter can only be used on module level.
-
-  >>> @grok.adapter(Cave)
-  ... def func():
-  ...     pass
-  Traceback (most recent call last):
-    ...
-  GrokImportError: @grok.implementer should be used as inner decorator.
-
   >>> grok.grok(__name__)
+  >>>
   >>> cave = Cave()
   >>> home = IHome(cave)
   >>> IHome.providedBy(home)
   True
+  >>>
   >>> isinstance(home, Home)
   True
   >>> anotherhome = IAnotherHome(cave)
@@ -35,6 +18,11 @@
   True
   >>> isinstance(morehome, Home)
   True
+  >>> yetanotherhome = IYetAnotherHome(cave)
+  >>> IHome.providedBy(yetanotherhome)
+  True
+  >>> isinstance(yetanotherhome, Home)
+  True
 """
 
 import grok
@@ -42,19 +30,6 @@ from zope import interface
 
 class IDummy(interface.Interface):
     pass
-
-def function_context():
-    @grok.adapter(IDummy)
-    @grok.implementer(IDummy)
-    def subscriber():
-        pass
-
-def class_context():
-    class Wrapper:
-        @grok.adapter(IDummy)
-        @grok.implementer(IDummy)
-        def subscriber(self):
-            pass
 
 class ICave(interface.Interface):
     pass
@@ -66,6 +41,9 @@ class IAnotherHome(interface.Interface):
     pass
 
 class IMoreHome(interface.Interface):
+    pass
+
+class IYetAnotherHome(interface.Interface):
     pass
 
 class Cave(grok.Model):
@@ -88,4 +66,8 @@ def another_home_for_cave(cave):
 @grok.adapter(ICave)
 @grok.implementer(IMoreHome)
 def more_home_for_cave(cave):
+    return Home()
+
+@grok.implementer(IYetAnotherHome)
+def yet_another_home_for_cave(cave):
     return Home()
