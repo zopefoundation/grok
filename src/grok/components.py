@@ -167,20 +167,13 @@ class View(BrowserPage):
 
         template = getattr(self, 'template', None)
         if template is not None:
-            return self._render_template()
+            return self.template()
         return mapply(self.render, (), self.request)
 
-    def _render_template(self):
-        namespace = self.template.pt_getContext()
-        namespace['request'] = self.request
-        namespace['view'] = self
-        namespace['context'] = self.context
-        # XXX need to check whether we really want to put None here if missing
-        namespace['static'] = self.static
-        return self.template.pt_render(namespace)
 
     def __getitem__(self, key):
         # XXX give nice error message if template is None
+        #import pdb; pdb.set_trace()
         return self.template.macros[key]
 
     def url(self, obj=None, name=None):
@@ -235,6 +228,7 @@ class JSON(BrowserPage):
         method_result = mapply(method, (), self.request)
         return simplejson.dumps(method_result)
 
+
 class GrokPageTemplate(object):
 
     def __repr__(self):
@@ -245,7 +239,7 @@ class GrokPageTemplate(object):
         self.__grok_name__ = name
         self.__grok_location__ = location
 
-
+    
 class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
     expand = 0
 
@@ -262,6 +256,23 @@ class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
         # PageTemplate cannot be subclassed
         self.__grok_module__ = util.caller_module()
 
+    def pt_getContext(self, instance, *args, **_kw):
+        try:
+            instance = instance[0]
+        except IndexError:
+            import pdb; pdb.set_trace()
+            pass # instance = instance
+        
+        namespace = super(PageTemplate, self).pt_getContext(**_kw)
+        namespace['request'] = instance.request
+        namespace['view'] = instance
+        namespace['context'] = context = instance.context
+        namespace['static'] = instance.static
+        return namespace
+
+    def __get__(self, instance, type):
+        return BoundPageTemplate(self, instance)
+
 
 class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
                        pagetemplatefile.PageTemplateFile):
@@ -275,6 +286,43 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
         # XXX unfortunately using caller_module means that
         # PageTemplateFile cannot be subclassed
         self.__grok_module__ = util.caller_module()
+
+    def pt_getContext(self, instance, *args, **_kw):
+        try:
+            instance = instance[0]
+        except IndexError:
+            pass # instance = instance
+        
+        namespace = super(PageTemplateFile, self).pt_getContext(**_kw)
+        namespace['request'] = instance.request
+        namespace['view'] = instance
+        namespace['context'] = context = instance.context
+        namespace['static'] = instance.static
+        return namespace
+
+    def __get__(self, instance, type):
+        return BoundPageTemplate(self, instance)
+
+
+class BoundPageTemplate(object):
+    def __init__(self, pt, ob):
+        object.__setattr__(self, 'im_func', pt)
+        object.__setattr__(self, 'im_self', ob)
+        object.__setattr__(self, 'macros', pt.macros)
+
+    def __call__(self, *args, **kw):
+
+        if self.im_self is None:
+            im_self, args = args[0], args[1:]
+        else:
+            im_self = self.im_self
+        return self.im_func(im_self, *args, **kw)
+
+    def __setattr__(self, name, v):
+        raise AttributeError("Can't set attribute", name)
+
+    def __repr__(self):
+        return "<BoundPageTemplate of %r>" % self.im_self
 
 
 class DirectoryResource(directoryresource.DirectoryResource):
@@ -403,7 +451,7 @@ class GrokForm(object):
                 # causes the widgets to have different data
                 self.resetForm()
                 self.form_reset = False
-            self.form_result = self._render_template()
+            self.form_result = self.template()
 
         return self.form_result
 
