@@ -75,16 +75,16 @@ What does Grok code look like?
         </body></html>
         """")
 
-* `Herd of Mammoths`_ is a very simple application that only goes a bit beyond "hello world".
-* `Grokstar`_ is a simple blog application written with Grok.
-* `Grok Wiki`_ is a simple wiki application written with Grok.
-* `Sample Apps`_ are a collection of sample apps written in Grok/Zope3 by 
+* `Herd of Mammoths`_: a very simple application that only goes a bit beyond "hello world".
+* `Grokstar`_: a simple blog application written with Grok.
+* `Grok Wiki`_: a simple wiki application written with Grok.
+* `Paleosoft.org`_: a collection of sample apps written in Grok/Zope3 by 
   Luciano Ramalho as part of the Google Summer of Code.
 
 .. _Herd of Mammoths: http://www.z3lab.org/sections/blogs/philipp-weitershausen/2007_01_09_you-thought-zope-3-wasn
 .. _Grokstar: http://svn.zope.org/Grokstar/
 .. _Grok Wiki: http://svn.zope.org/grok/trunk/grokwiki/
-.. _Sample Apps: http://paleosoft.org/
+.. _Paleosoft.org: http://paleosoft.org/
 
 ME GROK HYPERLINKS!
 -------------------
