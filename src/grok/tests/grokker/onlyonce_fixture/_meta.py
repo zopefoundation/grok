@@ -1,8 +1,9 @@
-import grok
+import martian
 from component import Alpha
 
-class AlphaGrokker(grok.ClassGrokker):
+class AlphaGrokker(martian.ClassGrokker):
     component_class = Alpha
 
-    def register(self, context, name, factory, module_info, templates):
+    def grok(self, name, factory, context, module_info, templates):
         print "alpha"
+        return True

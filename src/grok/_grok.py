@@ -25,10 +25,13 @@ from zope.app.component.site import LocalSiteManager
 
 import grok
 
-from grok import util, scan, components, grokker, meta
+from grok import util, components, meta
 from grok.error import GrokError, GrokImportError
 from grok.directive import frame_is_module
+from grok import templatereg
 
+import martian
+from martian import scan
 
 _bootstrapped = False
 def bootstrap():
@@ -48,8 +51,8 @@ def bootstrap():
         addSiteHandler, adapts=(grok.Site, grok.IObjectAddedEvent))
 
     # now grok the grokkers
-    grokker.grokkerRegistry.grok(scan.module_info_from_module(meta))
-
+    martian.grok_module(scan.module_info_from_module(meta), the_module_grokker)
+   
 def addSiteHandler(site, event):
     sitemanager = LocalSiteManager(site)
     # LocalSiteManager creates the 'default' folder in its __init__.
@@ -63,7 +66,7 @@ def addSiteHandler(site, event):
 def resetBootstrap():
     global _bootstrapped
     # we need to make sure that the grokker registry is clean again
-    grokker.grokkerRegistry.clear()
+    the_module_grokker.clear()
     _bootstrapped = False
 from zope.testing.cleanup import addCleanUp
 addCleanUp(resetBootstrap)
@@ -74,16 +77,36 @@ def do_grok(dotted_name):
     if not _bootstrapped:
         bootstrap()
         _bootstrapped = True
+    martian.grok_dotted_name(dotted_name, the_module_grokker)
 
-    module_info = scan.module_info_from_dotted_name(dotted_name)
-    grok_tree(module_info)
+def prepare_grok(name, module, kw):
+    module_info = scan.module_info_from_module(module)
+    
+    # XXX hardcoded in here which base classes are possible contexts
+    # this should be made extensible
+    possible_contexts = martian.scan_for_classes(module, [grok.Model,
+                                                          grok.LocalUtility,
+                                                          grok.Container])
+    context = util.determine_module_context(module_info, possible_contexts)
+    
+    kw['context'] = context    
+    kw['module_info'] = module_info
+    kw['templates'] = templatereg.TemplateRegistry()
 
+def finalize_grok(name, module, kw):
+    module_info = kw['module_info']
+    templates = kw['templates']
+    unassociated = list(templates.listUnassociated())
+    if unassociated:
+        raise GrokError("Found the following unassociated template(s) when "
+                        "grokking %r: %s.  Define view classes inheriting "
+                        "from grok.View to enable the template(s)."
+                        % (module_info.dotted_name,
+                           ', '.join(unassociated)), module_info)
 
-def grok_tree(module_info):
-    grokker.grokkerRegistry.grok(module_info)
-
-    for sub_module_info in module_info.getSubModuleInfos():
-        grok_tree(sub_module_info)
+the_module_grokker = martian.ModuleGrokker(martian.MetaMultiGrokker(),
+                                           prepare=prepare_grok,
+                                           finalize=finalize_grok)
 
 # decorators
 class SubscribeDecorator:

@@ -104,19 +104,19 @@ class GrokkerRegistry(object):
 # deep meta mode here - we define grokkers for grok.ClassGrokker,
 # grok.InstanceGrokker, and grokker.ModuleGrokker.
 
-class MetaGrokker(grok.ClassGrokker):
-    def register(self, context, name, factory, module_info, templates):
-        grokkerRegistry.registerGrokker(factory())
+## class MetaGrokker(grok.ClassGrokker):
+##     def register(self, context, name, factory, module_info, templates):
+##         grokkerRegistry.registerGrokker(factory())
 
-class ClassGrokkerGrokker(MetaGrokker):
-    component_class = grok.ClassGrokker
+## class ClassGrokkerGrokker(MetaGrokker):
+##     component_class = grok.ClassGrokker
 
-class InstanceGrokkerGrokker(MetaGrokker):
-    component_class = grok.InstanceGrokker
+## class InstanceGrokkerGrokker(MetaGrokker):
+##     component_class = grok.InstanceGrokker
 
-class ModuleGrokkerGrokker(MetaGrokker):
-    component_class = grok.ModuleGrokker
+## class ModuleGrokkerGrokker(MetaGrokker):
+##     component_class = grok.ModuleGrokker
 
 # the global grokker registry
-grokkerRegistry = GrokkerRegistry()
+#grokkerRegistry = GrokkerRegistry()
 
