@@ -53,55 +53,6 @@ from zope.app.component.site import SiteManagerContainer
 from grok import util, interfaces, formlib
 
 
-# These base grokkers exist in grok.components because they are meant
-# to be subclassed by code that extends grok.  Thus they are like
-# grok.Model, grok.View, etc. in that they should not be grokked
-# themselves but subclasses of them.
-
-class GrokkerBase(object):
-    """A common base class for all grokkers.
-    """
-
-    priority = 0
-    continue_scanning = False
-
-
-class ClassGrokker(GrokkerBase):
-    """Grokker for particular classes in a module.
-    """
-    # subclasses should have a component_class class variable
-
-    def match(self, obj):
-        return util.check_subclass(obj, self.component_class)
-
-    def register(self, context, name, factory, module_info, templates):
-        raise NotImplementedError
-
-
-class InstanceGrokker(GrokkerBase):
-    """Grokker for particular instances in a module.
-    """
-    # subclasses should have a component_class class variable
-
-    def match(self, obj):
-        return isinstance(obj, self.component_class)
-
-    def register(self, context, name, instance, module_info, templates):
-        raise NotImplementedError
-
-
-class ModuleGrokker(GrokkerBase):
-    """Grokker that gets executed once for a module.
-    """
-
-    def match(self, obj):
-        # we never match with any object
-        return False
-
-    def register(self, context, module_info, templates):
-        raise NotImplementedError
-
-
 class Model(Contained, persistent.Persistent):
     # XXX Inheritance order is important here. If we reverse this,
     # then containers can't be models anymore because no unambigous MRO
