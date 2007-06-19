@@ -30,27 +30,8 @@ from zope.security.interfaces import IPermission
 
 from grok.error import GrokError, GrokImportError
 
-def not_unicode_or_ascii(value):
-    if isinstance(value, unicode):
-        return False
-    if not isinstance(value, str):
-        return True
-    return is_not_ascii(value)
-
-is_not_ascii = re.compile(eval(r'u"[\u0080-\uffff]"')).search
-
-
-def isclass(obj):
-    """We cannot use ``inspect.isclass`` because it will return True
-    for interfaces"""
-    return isinstance(obj, (types.ClassType, type))
-
-
-def check_subclass(obj, class_):
-    if not isclass(obj):
-        return False
-    return issubclass(obj, class_)
-
+from martian.util import (not_unicode_or_ascii, is_not_ascii,
+                          isclass, check_subclass)
 
 def caller_module():
     return sys._getframe(2).f_globals['__name__']
