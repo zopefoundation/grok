@@ -8,10 +8,10 @@
   ...     xmlns="http://namespaces.zope.org/zope"
   ...     xmlns:grok="http://namespaces.zope.org/grok"
   ...     >
-  ...     <grok:grok package="grok.tests.scan.stoneage.cave"/>
+  ...     <grok:grok package="grok.tests.zcml.stoneage.cave"/>
   ... </configure>''', context=context)
 
-  >>> from grok.tests.scan.stoneage.cave import Cave
+  >>> from grok.tests.zcml.stoneage.cave import Cave
   >>> cave = Cave()
   
   >>> from zope.publisher.browser import TestRequest

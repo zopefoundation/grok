@@ -8,11 +8,11 @@
   ...     xmlns="http://namespaces.zope.org/zope"
   ...     xmlns:grok="http://namespaces.zope.org/grok"
   ...     >
-  ...     <grok:grok package="grok.tests.scan.stoneage"/>
+  ...     <grok:grok package="grok.tests.zcml.stoneage"/>
   ... </configure>''', context=context)
 
-  >>> from grok.tests.scan.stoneage.cave import Cave
-  >>> from grok.tests.scan.stoneage.hunt.mammoth import Mammoth
+  >>> from grok.tests.zcml.stoneage.cave import Cave
+  >>> from grok.tests.zcml.stoneage.hunt.mammoth import Mammoth
   >>> manfred = Mammoth()
   >>> cave = Cave()
   
