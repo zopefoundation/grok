@@ -81,14 +81,8 @@ def do_grok(dotted_name):
 
 def grok_component(name, component,
                    context=None, module_info=None, templates=None):
-    kw = {}
-    if context is not None:
-        kw['context'] = context
-    if module_info is not None:
-        kw['module_info'] = module_info
-    if templates is not None:
-        kw['templates'] = templates
-    return the_multi_grokker.grok(name, component, **kw)
+    return the_multi_grokker.grok(name, component,
+                                  context, module_info, templates)
 
 def prepare_grok(name, module, kw):
     module_info = scan.module_info_from_module(module)
