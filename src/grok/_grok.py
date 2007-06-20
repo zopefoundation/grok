@@ -79,6 +79,17 @@ def do_grok(dotted_name):
         _bootstrapped = True
     martian.grok_dotted_name(dotted_name, the_module_grokker)
 
+def grok_component(name, component,
+                   context=None, module_info=None, templates=None):
+    kw = {}
+    if context is not None:
+        kw['context'] = context
+    if module_info is not None:
+        kw['module_info'] = module_info
+    if templates is not None:
+        kw['templates'] = templates
+    return the_multi_grokker.grok(name, component, **kw)
+
 def prepare_grok(name, module, kw):
     module_info = scan.module_info_from_module(module)
     
@@ -104,7 +115,8 @@ def finalize_grok(name, module, kw):
                         % (module_info.dotted_name,
                            ', '.join(unassociated)), module_info)
 
-the_module_grokker = martian.ModuleGrokker(martian.MetaMultiGrokker(),
+the_multi_grokker = martian.MetaMultiGrokker()
+the_module_grokker = martian.ModuleGrokker(the_multi_grokker,
                                            prepare=prepare_grok,
                                            finalize=finalize_grok)
 
