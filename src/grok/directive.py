@@ -26,7 +26,6 @@ from martian.directive import (MultipleTimesDirective, BaseTextDirective,
                                ModuleDirectiveContext,
                                ClassDirectiveContext,
                                ClassOrModuleDirectiveContext)
-
 from martian import util
 
 class GlobalUtilityDirective(MultipleTimesDirective):
