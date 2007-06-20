@@ -24,9 +24,11 @@ from zope.exceptions.interfaces import DuplicationError
 
 import martian
 from martian.error import GrokError
+from martian import util
 
 import grok
-from grok import util, components, formlib
+from grok import components, formlib
+from grok.util import check_adapts, get_default_permission, make_checker
 
 class ModelGrokker(martian.ClassGrokker):
     component_class = grok.Model
@@ -65,7 +67,7 @@ class MultiAdapterGrokker(martian.ClassGrokker):
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
             util.check_implements_one(factory)
-        util.check_adapts(factory)
+        check_adapts(factory)
         name = util.class_annotation(factory, 'grok.name', '')
         component.provideAdapter(factory, provides=provides, name=name)
         return True
@@ -90,7 +92,7 @@ class XMLRPCGrokker(martian.ClassGrokker):
         # the outside -- need to discuss how to restrict such things.
         methods = util.methods_from_class(factory)
 
-        default_permission = util.get_default_permission(factory)
+        default_permission = get_default_permission(factory)
         
         for method in methods:
             # Make sure that the class inherits MethodPublisher, so that the
@@ -109,7 +111,7 @@ class XMLRPCGrokker(martian.ClassGrokker):
             # level or zope.Public.
             permission = getattr(method, '__grok_require__',
                                  default_permission)
-            util.make_checker(factory, method_view, permission)
+            make_checker(factory, method_view, permission)
         return True
     
 class ViewGrokker(martian.ClassGrokker):
@@ -175,8 +177,8 @@ class ViewGrokker(martian.ClassGrokker):
                                  name=view_name)
 
         # protect view, public by default
-        default_permission = util.get_default_permission(factory)
-        util.make_checker(factory, factory, default_permission)
+        default_permission = get_default_permission(factory)
+        make_checker(factory, factory, default_permission)
     
         # safety belt: make sure that the programmer didn't use
         # @grok.require on any of the view's methods.
@@ -197,7 +199,7 @@ class JSONGrokker(martian.ClassGrokker):
         view_context = util.determine_class_context(factory, context)
         methods = util.methods_from_class(factory)
 
-        default_permission = util.get_default_permission(factory)
+        default_permission = get_default_permission(factory)
         
         for method in methods:
             # Create a new class with a __view_name__ attribute so the
@@ -217,7 +219,7 @@ class JSONGrokker(martian.ClassGrokker):
 
             permission = getattr(method, '__grok_require__',
                                  default_permission)
-            util.make_checker(factory, method_view, permission)
+            make_checker(factory, method_view, permission)
         return True
     
 class TraverserGrokker(martian.ClassGrokker):

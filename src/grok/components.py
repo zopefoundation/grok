@@ -50,8 +50,10 @@ from zope.app.container.contained import Contained
 from zope.app.container.interfaces import IReadContainer
 from zope.app.component.site import SiteManagerContainer
 
-from grok import util, interfaces, formlib
+from martian import util
 
+from grok import interfaces, formlib
+from grok.util import url
 
 class Model(Contained, persistent.Persistent):
     # XXX Inheritance order is important here. If we reverse this,
@@ -151,7 +153,7 @@ class View(BrowserPage):
         elif name is not None and obj is None:
             # create URL to view on context
             obj = self.context
-        return util.url(self.request, obj, name)
+        return url(self.request, obj, name)
 
     def application_url(self, name=None):
         obj = self.context

@@ -10,7 +10,7 @@
 
 """
 import grok
-from grok import util
+from martian import util
 
 class A(object):
     __grok_foo__ = [5]

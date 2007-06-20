@@ -27,7 +27,7 @@ from martian.directive import (MultipleTimesDirective, BaseTextDirective,
                                ClassDirectiveContext,
                                ClassOrModuleDirectiveContext)
 
-from grok import util
+from martian import util
 
 class GlobalUtilityDirective(MultipleTimesDirective):
     def check_arguments(self, factory, provides=None, name=u'',

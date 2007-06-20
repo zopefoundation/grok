@@ -26,11 +26,11 @@ from zope.app.component.site import LocalSiteManager
 import martian
 from martian import scan
 from martian.error import GrokError, GrokImportError
-from martian.util import frame_is_module
+from martian.util import frame_is_module, determine_module_context
 
 import grok
 
-from grok import util, components, meta
+from grok import components, meta
 from grok import templatereg
 
 _bootstrapped = False
@@ -87,7 +87,7 @@ def prepare_grok(name, module, kw):
     possible_contexts = martian.scan_for_classes(module, [grok.Model,
                                                           grok.LocalUtility,
                                                           grok.Container])
-    context = util.determine_module_context(module_info, possible_contexts)
+    context = determine_module_context(module_info, possible_contexts)
     
     kw['context'] = context    
     kw['module_info'] = module_info
