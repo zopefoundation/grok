@@ -22,11 +22,11 @@ from zope.app.catalog.interfaces import ICatalog
 
 from zope.exceptions.interfaces import DuplicationError
 
+import martian
+from martian.error import GrokError
+
 import grok
 from grok import util, components, formlib
-from grok.error import GrokError
-
-import martian
 
 class ModelGrokker(martian.ClassGrokker):
     component_class = grok.Model

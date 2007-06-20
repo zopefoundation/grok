@@ -6,8 +6,9 @@ from zope.interface.interfaces import IMethod, IInterface
 from zope.app.catalog.field import FieldIndex
 from zope.app.catalog.text import TextIndex
 
-from grok.error import GrokError, GrokImportError
-from grok.directive import frame_is_class
+from martian.error import GrokError, GrokImportError
+from martian.util import frame_is_class
+
 from grok.interfaces import IIndexDefinition
 
 class IndexDefinition(object):

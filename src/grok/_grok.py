@@ -23,15 +23,15 @@ from zope.component.interfaces import IDefaultViewName
 from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.app.component.site import LocalSiteManager
 
+import martian
+from martian import scan
+from martian.error import GrokError, GrokImportError
+from martian.util import frame_is_module
+
 import grok
 
 from grok import util, components, meta
-from grok.error import GrokError, GrokImportError
-from grok.directive import frame_is_module
 from grok import templatereg
-
-import martian
-from martian import scan
 
 _bootstrapped = False
 def bootstrap():

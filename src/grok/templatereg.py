@@ -1,7 +1,7 @@
+from martian.error import GrokError
+
 import os
 import grok
-from grok.error import GrokError
-
 
 class TemplateRegistry(object):
 

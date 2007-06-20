@@ -28,7 +28,7 @@ from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
 from zope.security.checker import NamesChecker, defineChecker
 from zope.security.interfaces import IPermission
 
-from grok.error import GrokError, GrokImportError
+from martian.error import GrokError, GrokImportError
 
 from martian.util import (not_unicode_or_ascii, is_not_ascii,
                           isclass, check_subclass)
