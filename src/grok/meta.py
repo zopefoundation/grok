@@ -90,7 +90,7 @@ class XMLRPCGrokker(grok.ClassGrokker):
         methods = util.methods_from_class(factory)
 
         default_permission = util.get_default_permission(factory)
-        
+
         for method in methods:
             # Make sure that the class inherits MethodPublisher, so that the
             # views have a location
@@ -109,7 +109,7 @@ class XMLRPCGrokker(grok.ClassGrokker):
             permission = getattr(method, '__grok_require__',
                                  default_permission)
             util.make_checker(factory, method_view, permission)
-    
+
 class ViewGrokker(grok.ClassGrokker):
     component_class = grok.View
 
@@ -175,7 +175,7 @@ class ViewGrokker(grok.ClassGrokker):
         # protect view, public by default
         default_permission = util.get_default_permission(factory)
         util.make_checker(factory, factory, default_permission)
-    
+
         # safety belt: make sure that the programmer didn't use
         # @grok.require on any of the view's methods.
         methods = util.methods_from_class(factory)
@@ -195,7 +195,7 @@ class JSONGrokker(grok.ClassGrokker):
         methods = util.methods_from_class(factory)
 
         default_permission = util.get_default_permission(factory)
-        
+
         for method in methods:
             # Create a new class with a __view_name__ attribute so the
             # JSON class knows what method to call.
@@ -258,6 +258,19 @@ class SubscriberGrokker(grok.ModuleGrokker):
             for iface in subscribed:
                 zope.component.interface.provideInterface('', iface)
 
+class AdapterDecoratorGrokker(grok.ModuleGrokker):
+
+    def register(self, context, module_info, templates):
+        implementers = module_info.getAnnotation('implementers', [])
+        for function in implementers:
+            interfaces = getattr(function, '__component_adapts__', None)
+            if interfaces is None:
+                # There's no explicit interfaces defined, so we assume the
+                # module context to be the thing adapted.
+                util.check_context(module_info.getModule(), context)
+                interfaces = (context, )
+            component.provideAdapter(
+                function, adapts=interfaces, provides=function.__implemented__)
 
 class StaticResourcesGrokker(grok.ModuleGrokker):
 
@@ -429,10 +442,10 @@ def setupUtility(site, utility, provides, name=u'',
 
     if setup is not None:
         setup(utility)
-        
+
     site_manager.registerUtility(utility, provided=provides,
                                  name=name)
-    
+
 class DefinePermissionGrokker(grok.ModuleGrokker):
 
     priority = 1500
@@ -452,7 +465,7 @@ class DefinePermissionGrokker(grok.ModuleGrokker):
 
 class AnnotationGrokker(grok.ClassGrokker):
     component_class = grok.Annotation
- 
+
     def register(self, context, name, factory, module_info, templates):
         adapter_context = util.determine_class_context(factory, context)
         provides = util.class_annotation(factory, 'grok.provides', None)
@@ -518,14 +531,14 @@ class IndexesGrokker(grok.InstanceGrokker):
                                    context, module_info),
             adapts=(site,
                     grok.IObjectAddedEvent))
-        
+
 class IndexesSetupSubscriber(object):
     def __init__(self, catalog_name, indexes, context, module_info):
         self.catalog_name = catalog_name
         self.indexes = indexes
         self.context = context
         self.module_info = module_info
-        
+
     def __call__(self, site, event):
         # make sure we have an intids
         self._createIntIds(site)
@@ -555,7 +568,7 @@ class IndexesSetupSubscriber(object):
         catalog = Catalog()
         setupUtility(site, catalog, ICatalog, name=self.catalog_name)
         return catalog
-    
+
     def _createIntIds(self, site):
         """Create intids if needed, and return it.
         """
