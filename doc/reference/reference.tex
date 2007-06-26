@@ -1,0 +1,71 @@
+% Complete documentation on the extended LaTeX markup used for Python
+% documentation is available in ``Documenting Python'', which is part
+% of the standard documentation for Python.  It may be found online
+% at:
+%
+%     http://www.python.org/doc/current/doc/doc.html
+
+\documentclass{manual}
+\RequirePackage[latin9]{inputenc}
+\usepackage{graphicx}
+
+\title{grok reference}
+
+% Please at least include a long-lived email address;
+% the rest is at your discretion.
+\authoraddress{
+    The grok team\\
+    Email: <grok-dev@zope.org>
+}
+
+\date{\today}   % update before release!
+                % Use an explicit date so that reformatting
+                % doesn't cause a new date to be used.  Setting
+                % the date to \today can be used during draft
+                % stages to make it easier to handle versions.
+
+\release{unreleased}      % release version; this is used to define the
+                          % \version macro
+
+\makeindex          % tell \index to actually write the .idx file
+
+\begin{document}
+
+\maketitle
+
+    \begin{quote}
+    ``Grok means to understand so thoroughly that the observer becomes a part
+    of the observed --- merge, blend, intermarry, lose identity in group
+    experience. It means almost everything that we mean by religion,
+    philosophy, and science --- it means as little to us (because we are from
+    Earth) as color means to a blind man.'' -- Robert A. Heinlein, Stranger in
+    a Strange Land
+    \end{quote}
+
+\begin{abstract}
+This is the grok reference documentation. It is organized by the Python
+artefacts that implement the concepts.
+
+Grok makes Zope 3 concepts more accessible for application developers. This
+reference is not intended as introductory material for those concepts. Please
+refer to the original Zope 3 documentation and the grok tutorial for
+introductory material.
+\end{abstract}
+
+\tableofcontents
+
+\include{core}
+
+\include{components}
+
+\include{directives}
+
+\include{decorators}
+
+\include{functions}
+
+\include{events}
+
+\include{exceptions}
+
+\end{document}

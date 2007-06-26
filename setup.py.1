@@ -1,0 +1,84 @@
+##############################################################################
+#
+# Copyright (c) 2007 Zope Foundation and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
+"""Setup
+
+$Id: setup.py 77034 2007-06-25 12:57:23Z srichter $
+"""
+import os
+from setuptools import setup, find_packages
+
+def read(*rnames):
+    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
+
+setup(
+    name='grok',
+    version='0.9',
+    author='Grok Team',
+    author_email='grok-dev@zope.org',
+    url='https://launchpad.net/grok',
+    download_url='svn://svn.zope.org/repos/main/grok/trunk#egg=grok-dev',
+    description='Grok: Now even cavemen can use Zope 3!',
+    long_description=open('README.txt').read(),
+    license='ZPL',
+    packages = find_packages('src'),
+    include_package_data = True,
+    package_dir = {'':'src'},
+    install_requires = [
+        'setuptools',
+        'z3c.csvvocabulary',
+        'z3c.form',
+        'z3c.formui',
+        'z3c.layer',
+        'z3c.pagelet',
+        'z3c.template',
+        'z3c.viewlet',
+        'z3c.zrtresource',
+        'zc.resourcelibrary',
+        'zc.table',
+        'zope.annotation',
+        'zope.app.container',
+        'zope.app.catalog',
+        'zope.app.intid',
+        'zope.app.pagetemplate',
+        'zope.app.rotterdam',
+        'zope.app.session',
+        'zope.app.appsetup',
+        'zope.app.authentication',
+        'zope.app.component',
+        'zope.app.container',
+        'zope.app.error',
+        'zope.app.form',
+        'zope.app.publisher',
+        'zope.app.publication',
+        'zope.app.security',
+        'zope.app.securitypolicy',
+        'zope.app.twisted',
+        'zope.app.wsgi',
+        'zope.app.zcmlfiles',
+        'zope.contentprovider',
+        'zope.component',
+        'zope.interface',
+        'zope.location',
+        'zope.pagetemplate',
+        'zope.publisher',
+        'zope.rdb',
+        'zope.schema',
+        'zope.testbrowser',
+        'zope.traversing',
+        'zope.viewlet',
+        'simplejson',
+        ],
+    dependency_links = ['http://download.zope.org/distribution'],
+    zip_safe = False,
+    )

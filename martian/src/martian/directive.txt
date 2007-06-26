@@ -1,0 +1,200 @@
+Directives
+==========
+
+A martian directive is a special function call that causes information
+to be set on module or class level. This information is set as a
+Python module is imported, so should do the minimum amount of work (as
+import side-effects are bad). The idea is that this information can
+then be picked up by a martian-based framework during grok time.
+
+Martian has an infrastructure to make it easy to define new
+directives.
+
+Directive contexts
+------------------
+
+If a directive is given ``ModuleDirectiveContext`` it can only work in
+real modules::
+
+  >>> from martian.directive import SingleTextDirective, ModuleDirectiveContext
+  >>> foo = SingleTextDirective('grok.foo', ModuleDirectiveContext())
+
+We cannot show a working example of the ``foo`` directive in this
+doctest as it is not a real module. It would look like this::
+  
+   foo('hello world')
+
+We have placed this code in a real module and will import it::
+
+  >>> from martian.tests.directive import modulecontext
+
+We expect modulecontext to contain a special attribute ``__grok_foo__``
+with the string ``'hello world'``::
+
+  >>> modulecontext.__grok_foo__
+  'hello world'
+
+This directive cannot be used in a class as it's not allowed by its context::
+ 
+  >>> class Test(object):
+  ...   foo('hello world')
+  Traceback (most recent call last):
+   ...
+  GrokImportError: grok.foo can only be used on module level.
+
+Now let's define a directive that can only work in classes::
+
+  >>> from martian.directive import ClassDirectiveContext
+  >>> bar = SingleTextDirective('grok.bar', ClassDirectiveContext())
+
+It won't work in a module::
+
+  >>> from martian.tests.directive import classcontextbroken
+  Traceback (most recent call last):
+    ...
+  GrokImportError: grok.bar can only be used on class level.
+
+It will work in a class context::
+
+  >>> class Test(object):
+  ...   bar('hello world')
+  >>> Test.__grok_bar__
+  'hello world'
+
+Now let's define a directive that can be used both on module-level as
+well as on class-level::
+
+  >>> from martian.directive import ClassOrModuleDirectiveContext
+  >>> qux = SingleTextDirective('grok.qux', ClassOrModuleDirectiveContext())
+
+It can be used in a class::
+
+  >>> class Test(object):
+  ...   qux('hello world')
+  >>> Test.__grok_qux__
+  'hello world'
+
+It can also be used in a module::
+
+  >>> from martian.tests.directive import classormodulecontext
+  >>> classormodulecontext.__grok_qux__
+  'hello world'
+
+Calling a directive once or multiple times
+------------------------------------------
+
+Directives can either be called once in a particular context, or
+multiple times. Let's define a type of directive that can only be
+called once::
+  
+  >>> from martian.directive import OnceDirective, SingleValue, BaseTextDirective
+  >>> class MyDirective(BaseTextDirective, SingleValue, OnceDirective):
+  ...   pass
+  >>> hoi = MyDirective('hoi', ClassDirectiveContext())
+
+When we try to use it twice, we get an error::
+
+  >>> class Test(object):
+  ...   hoi('once')
+  ...   hoi('twice')
+  Traceback (most recent call last):
+    ...
+  GrokImportError: hoi can only be called once per class.
+
+This also works for module-level directives::
+
+  >>> from martian.tests.directive import onlyoncemodulecontext
+  Traceback (most recent call last):
+    ...
+  GrokImportError: hoi can only be called once per module.
+
+Now let's define a directive that can be called multiple times::
+
+  >>> from martian.directive import MultipleTimesDirective
+  >>> class MyDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
+  ...   pass
+  >>> dag = MyDirective('dag', ClassDirectiveContext())
+
+It will allow you to use it multiple times::
+ 
+  >>> class Test(object):
+  ...   dag('once')
+  ...   dag('twice')
+
+The underlying annotation will have stored the multiple values::
+
+  >>> Test.__dag__
+  ['once', 'twice']
+
+Directive values
+----------------
+
+A ``BaseTextDirective`` directive accepts unicode or plain ascii values::
+
+ >>> class Test(object):
+ ...   hoi('hello')
+ >>> class Test(object):
+ ...   hoi(u'è')
+
+It won't accept values in another encoding::
+
+ >>> class Test(object):
+ ...   hoi(u'è'.encode('latin-1'))
+ Traceback (most recent call last):
+   ...
+ GrokImportError: You can only pass unicode or ASCII to hoi.
+ >>> class Test(object):
+ ...   hoi(u'è'.encode('UTF-8'))
+ Traceback (most recent call last):
+   ...
+ GrokImportError: You can only pass unicode or ASCII to hoi.
+
+A ``InterfaceOrClassDirective`` only accepts class or interface objects::
+
+  >>> from martian.directive import InterfaceOrClassDirective
+  >>> class MyDirective(InterfaceOrClassDirective, SingleValue, OnceDirective):
+  ...   pass
+  >>> hello = MyDirective('hello', ClassDirectiveContext())
+  >>> class SomeClass(object):
+  ...    pass
+  >>> class Test(object):
+  ...   hello(SomeClass)
+  >>> class SomeOldStyleClass:
+  ...   pass
+  >>> class Test(object):
+  ...   hello(SomeOldStyleClass)
+  >>> from zope.interface import Interface
+  >>> class ISomeInterface(Interface):
+  ...   pass
+  >>> class Test(object):
+  ...   hello(ISomeInterface)
+
+But not anything else::
+  
+  >>> class Test(object):
+  ...   hello(None)
+  Traceback (most recent call last):
+   ...
+  GrokImportError: You can only pass classes or interfaces to hello.
+  >>> class Test(object):
+  ...   hello('foo')
+  Traceback (most recent call last):
+   ...
+  GrokImportError: You can only pass classes or interfaces to hello.
+
+An ``InterfaceDirective`` accepts only interfaces::
+
+  >>> from martian.directive import InterfaceDirective
+  >>> class MyDirective(InterfaceDirective, SingleValue, OnceDirective):
+  ...   pass
+  >>> hello2 = MyDirective('hello2', ClassDirectiveContext())
+  >>> class Test(object):
+  ...   hello2(ISomeInterface)
+
+But not classes::
+
+  >>> class Test(object):
+  ...   hello2(SomeClass)
+  Traceback (most recent call last):
+    ...
+  GrokImportError: You can only pass interfaces to hello2.

@@ -1,0 +1,6 @@
+<html>
+<body>
+<p>The text: <span tal:replace="python:context.text">text</span></p>
+<p><a tal:attributes="href python:view.url('edit')">Edit this page</a></p>
+</body>
+</html>

@@ -1,0 +1,66 @@
+Grok Tutorial Samples installation
+----------------------------------
+
+The Grok tutorial samples make use of a system called buildout. First,
+we'll set up a buildout script that can be reused by all tutorials. Just
+type this in the ``groktut`` directory::
+
+  $ python2.4 bootstrap.py
+
+This will download and install buildout. It will create various
+directories, only one of which, ``eggs``, is important. This directory
+contains all Python eggs shared by the tutorial samples.
+
+Then, we need to install Zope 3 and point the tutorial samples to it.
+First, download Zope 3. We will be showing some Unix style
+instructions here - Windows users should download and run the Zope 3
+installer instead. Go to your preferred installation directory (or
+stay in ``groktut``)::
+
+  $ wget http://www.zope.org/Products/Zope3/3.3.1/Zope-3.3.1.tgz
+  $ tar xvzf Zope-3.3.1.tgz
+  $ cd Zope-3.3.1
+
+We need to tell Zope 3 in which directory it should install itself
+(using ``--prefix``)::
+
+  $ ./configure --prefix=/path/to/zope331
+
+We now make and install it::
+
+  $ make
+  $ make install
+
+Make a note of the Zope 3 installation directory (you too, Windows
+user).
+
+Go back to the ``groktut`` directory and edit the ``buildout_tut.cfg``
+file. Change the ``location`` line to point to your Zope 3
+installation::
+
+  [zope3]
+  # change this to the path to an installed Zope 3 installation
+  location = /path/to/zope331
+
+Now go to the tutorial sample you'd like to look at::
+
+  $ cd an_empty_grok_project
+
+  $ ../buildout -N
+
+The -N option tells the buildout_ system not to look for newer files
+on the network. This greatly speeds up the buildout process if you
+have all required eggs already available, like the second time you run
+the buildout of a sample, as it skips network access.
+
+.. _buildout: http://cheeseshop.python.org/pypi/zc.buildout
+
+You will have a separate Zope instance created for you in each
+tutorial directory you run the buildout script. From the specific
+tutorial directory, you can start up Zope like this::
+
+  $ parts/instance/bin/zopectl fg
+
+Zope should then be running on port 8080 (http://localhost:8080).
+
+Just Ctrl-C when you're done.

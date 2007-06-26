@@ -1,0 +1,412 @@
+==========================
+Grok: Making Zope 3 Easier
+==========================
+
+**NOTE:** This document was written *before* grok was implemented.  It
+has been part of the design phase during which it served well to
+discuss and preserve grok's goals.  The actual implementation of grok
+differs from the concrete code examples given here.  This is NOT a
+grok tutorial nor should it be seen as any part of grok's current
+documentation!
+
+
+Publishing web pages
+====================
+
+You want to publish a web site that is in a directory. This includes
+any pictures and javascript and CSS you may have in that directory::
+
+  import grok
+
+  class Website(grok.View):
+      grok.files('mydirectory')
+
+XXX use htdocs here, familiar to some people
+
+Once you do this, you can browse into these from the Zope 3 root site.
+Files and assets in any subdirectories will also be published. (XXX
+how?)
+
+Dynamic pages
+=============
+
+Often you want your web pages not to be static but *dynamic*. A web
+page is dynamic when, before the web page is served to your user for
+display in a browser, you want to generate part or all of the
+information of the web page automatically. 
+
+Zope reads your HTML files as Zope Page Templates (ZPT), meaning you
+can use TAL (Template Attribute Language) to script your
+templates. TAL is added to HTML as attributes, meaning your HTML still
+looks very familiar. For an example of very simple TAL, consider this
+HTML snippet::
+
+  <p tal:content="python:1 + 1">Result here</p>
+
+This will generate the following::
+
+  <p>2</p>
+
+This means that the result of the Python expression `1 + 1` is
+dynamically inserted as the content of this `p` tag, replacing what
+was already there.
+
+You can add TAL to any of your HTML pages to make them dynamic.
+
+For more about TAL see XXX (TAL tutorial in here?)
+
+Using Python
+============
+
+Just TAL by itself, even when you use `python:` to embed snippets of
+Python, is limited. The idea of good application design is to use TAL
+just for fairly simple templating purposes, and to do anything a bit
+more complicated in Python code. Using TAL with Python code is easy:
+you just add methods to your view class and use them from your
+template. 
+
+Here we add a method that formats the current date and time::
+
+  from zope import grok
+  from datetime import datetime
+
+  class Website(grok.View):
+      grok.files('mydirectory')
+      
+      def currentDatetime(self):
+          return datetime.now().strftime('%Y-%m-%d %H:%M')
+
+We can then use this with TAL to display the current date and time::
+
+  <p tal:content="view/currentDatetime">Datetime goes here</p>
+
+All the methods you add to the class of your site are automatically
+available on the special `view` name from within your
+templates. `view` is one of the few names that are available in views
+by default.
+
+Note that we have used TAL's built-in `path` language here; this can
+be used for simple method calls instead of spelling it out explicitly.
+For the same effect, you can also use it using Python directly::
+
+  <p tal:content="python:view.currentDatetime()">Datetime goes here</p>
+
+This can be useful when you want to pass parameters to your methods.
+
+Generating HTML from Python
+===========================
+
+Sometimes you want to generate complicated HTML in Python and then
+include it in an existing web page. For reasons of security against
+cross-site scripting attacks, TAL will automatically escape any HTML
+into `&gt;` and `&lt;`. With the `structure` directive, you can tell
+TAL explicitly to not escape HTML this way, so it is passed literally
+into the template::
+
+  from zope import grok
+
+  class Website(grok.View):
+      grok.files('mydirectory')
+    
+      def someHTML(self):
+           return '<strong>%s</strong>' % (1 + 1)
+
+And then with TAL in one of your templates::
+
+  <p tal:content="structure view/someHTML">Result goes here</p>
+
+Generating the whole page from Python
+=====================================
+
+If for some reason you do not want to use a HTML template but just
+want to generate HTML directly from Python, this is also possible::
+
+  class Foo(grok.View):
+      @grok.page('serverload.html')
+      def serverLoad(self):
+          return '<html>..</html>'
+
+XXX a word on unicode
+
+Simple forms
+============
+
+Typical web applications have forms. Let's make a web form and use
+it. First we'll add the following form to one of our templates::
+
+  <form action="hello.html" method="post">
+    <p>
+    Please type your name: <input type="text" name="name" value="" /><br/>
+    <input type="submit" value="Submit" />
+    </p>
+  </form>
+
+As you can see, this form submits to the template named
+`hello.html`. Create such a template in your site and put the
+following TAL in there::
+
+  <html><body>
+  <p>Hello, <strong tal:content="request/form/name">name</strong></p>
+  </body></html>
+
+Now when you go to the form and submit it with the name `John`, you
+should see a web page that says:
+
+  Hello **John**
+
+Simple forms with Python
+========================
+
+Let's make a simple calculator to demonstrate how we combine this with
+Python::
+
+  <form action="sum.html" method="post">
+    <p>
+    First value: <input type="text" name="first" value="" /><br />
+    Second value: <input type="text" name="second" value="" /><br />
+    <input type="submit" value="Get the sum" />
+    </p>
+  </form>
+
+And create the following template `sum.html`::
+
+  <html><body>
+  <p>The sum is: <strong tal:content="data/sum">the sum goes here</strong></p>
+  </body></html>
+
+We've referred to a method `sum` here that does not exist yet, so let's
+implement it. It takes the raw values in the request and adds them to
+together, returning the sum::
+
+  from zope import grok
+
+  from ... import TemplateFile
+
+  class Website(grok.View):
+      grok.files('mydirectory')
+
+      @grok.page('sum.html')
+      def sum(self):
+          # before
+          self.sendEmail()
+          # call template (pull calculateSum2)
+          result = self.renderTemplate('sum.html', sum=self.calculateSum())
+          # post processing
+          result = result.replace('foo', 'bar')
+          return result
+
+
+      def sum(self):
+          self.before()
+          result = self.render('sum.html', **self.push())
+          result = self.after(result)
+          return result
+
+      def before(self):
+          pass
+
+class Website(grok.View):
+      grok.files('mydirectory')
+  
+      class sum(object):
+          """corresponds to sum.html"""
+ 
+          @grok.before()
+          def sendEmail(self):
+            ...
+
+          @grok.after()
+          def barify(self, result):
+              return result.replace('foo', 'bar')
+
+          def calculateSum(self):
+              return ...
+
+          def sum2(self):
+              return ...
+
+      class fancysum(sum):
+          """corresponds to fancysum.html"""
+
+           def calculateSum(self):
+                ...
+
+     
+      @grok.data('sum.html', 'sum')      
+      def sum(self):
+          # get hold of the form, from the request object that
+          # we can get from self
+          form = self.request.form
+          # now get first and second from the form; if no value found
+          # assume it's 0
+          first = form.get('first', 0)
+          second = form.get('second', 0)
+          # convert the input which was text to the numbers
+          # note that we don't handle any errors yet in case someone fills in
+          # something that's not a number
+          first = int(first)
+          second = int(second)
+          # now add the numbers and return this result
+          return first + second
+
+      @grok.page('sum.html')
+      def sum(self):
+          return "<html>...</html>"
+
+
+Form side effects
+=================
+
+Often you don't just want to see a result page when a user submits a
+form, but you want the let the system do some work just before we show
+the result. An example of this is to send an email. Another common
+example is to store the data that's in the form in a database
+somewhere. 
+
+This can be easily accomplished using the `@grok.before` decorator,
+which allows us to execute some Python code just before the template
+is rendered::
+
+  class Website(grok.View):
+      grok.templates('mydirectory')
+    
+      @grok.before('email_sent.html')
+      def email(self):
+          ... send the email XXX ... 
+
+
+Storing data
+============
+
+Instead of emailing the data, what if we wanted to record what the
+user entered instead? Zope offers a number of options for storing
+data, such as making a connection to relational databases (XXX which
+we'll handle later?), but Zope also ships with a powerful database of
+its own: the Zope Object Database (ZODB).
+
+The ZODB is a database of Python objects. You can store any Python object
+in it, and there are just a few things you need to be aware of initially:
+
+* You should subclass your own data classes from persistent.Persistent
+  so it's easy to store them in the ZODB.
+
+* To make sure the ZODB knows you changed a mutable attribute in the
+  instance, set the special `_p_changed` attribute on that instance to
+  `True`. This is only necessary if that attribute is not `Persistent`
+  itself. It's not necessary when you assign to an attribute directly
+  using `=`.
+
+This may sound complicated but it's not. Don't worry for now - most
+things work as normal in Python, and the rules just described are not
+difficult.
+
+So how do we get a space in the database to store our data in?
+`zope.grok` supports a special area where you can store your data.
+
+To get to the database in Python code, call `grok.database()`. This
+gives us access to a dictionary-like object, in which we can store our
+own sub objects::
+
+  from zope import grok
+  from persistent import Persistent
+
+  class NamesStorage(Persistent):
+     def __init__(self):
+        self.names = []
+
+    def addName(self, name):
+        self.names.append(name)
+        self._p_changed = True
+
+  class Website(grok.View):
+     grok.templates('mydirectory')
+   
+     def getNamesStorage(self):
+         """Get the names storage, or create it if it's not there yet.
+         """
+         db = grok.database()
+         storage = db.get('myapp.names_storage')
+         if storage is None:
+             db['myapp.names_storage'] = NamesStorage()
+         return storage
+
+     def storeName(self):
+         """
+         Retrieve the name from request and store it in
+         the names section.
+         """
+         storage = self.getNamesStorage()
+         storage.addName(self.request['name'])
+         
+XXX should following be separate section?
+
+Note that storing names in a list is not very efficient if the list of
+names grows to a larger size, as the object database will need to load
+the whole list of names into memory each time it is changed. We can
+avoid this using BTrees. XXX BTree explanation
+
+XXX showing the names in a web page
+
+Self-posting forms 
+==================
+
+It's a good design for many forms to be *self-posting*, that is, the
+result of a form submission shows the original form again. This way,
+mistakes by the user can be easily shown in the context of the form,
+and the user can correct them. When the form submission does succeed,
+the user is commonly redirected to another page.
+
+Let's first make a form that posts to itself, we'll call it just
+`form.html`::
+
+  <html><body>
+    <form action="." method="post">
+      <input type="text" name="number" value="" />
+    </form>
+  </body></html>
+
+We expect the user to enter an integer number, and we also want it the
+number to be required. Only if those conditions are true 
+....
+
+XXX can't use . perhaps, need to do absolute trick and explain it: request/URL
+
+n. .. self posting form ..
+
+Powerful forms using formlib
+============================
+
+class Foo(grok.View):
+
+    class Form(grok.Form):
+       grok.name('entry.html')
+       # would really be step 7 to control the template
+       # that renders the form. (this template needs to be
+       # moved)
+       template = grok.Template('entry.html')
+       
+       form_fields = grok.Fields(
+          name=schema.TextLine(title='Name'),
+          )
+
+       @grok.action('Submit')
+       def handle_submit(self, action, data):
+           .. send email ..
+           self.message = "The mail has successfully been sent."
+
+
+
+class MeetingView(grok.view):
+
+    grok.context(IMeeting, id=getfromrequestpath)
+
+n. You want to associate your application to a specific site
+
+n. You want to create a site content object
+
+n. You want to create a content object and associate views to that.
+
+n. You want to index content objects to search them.
+
+
+Some basic explanation of what's going on with unicode in Zope 3.

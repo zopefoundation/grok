@@ -1,0 +1,5 @@
+<html>
+<body>
+<p tal:content="structure python:view.some_html()"></p>
+</body>
+</html>

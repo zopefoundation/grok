@@ -1,0 +1,50 @@
+\chapter{Core}
+
+The \module{grok} module defines a few functions to interact with grok itself.
+
+
+\section{\function{grok.grok} -- Grok a package or module}
+
+    \begin{funcdesc}{grok}{dotted_name}
+
+    Grokking a package or module activates the contained components (like
+    models, views, adapters, templates, etc.) and registers them with Zope 3's
+    component architecture.
+
+    The \var{dotted_name} must specify either a Python module or package
+    that is available from the current PYTHONPATH.
+
+    Grokking a module:
+
+    \begin{enumerate}
+
+        \item Scan the module for known components: models, adapters,
+              utilities, views, traversers, templates and subscribers.
+
+        \item Check whether a directory with file system templates
+              exists (\file{<modulename>_templates}).  If it exists,
+              load the file system templates into the template
+              registry for this module.
+
+        \item Determine the module context. 
+
+        \item Register all components with the Zope 3 component architecture.
+
+        \item Initialize schemata for registered models
+
+    \end{enumerate}
+
+    Grokking a package:
+
+    \begin{enumerate}
+        \item Grok the package as a module.
+
+        \item Check for a static resource directory (\file{static})
+          and register it if it exists.
+
+        \item Recursively grok all sub-modules and sub-packages.
+
+    \end{enumerate}
+
+    \end{funcdesc}
+

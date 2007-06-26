@@ -1,0 +1,15 @@
+body {
+    font-family: Helvetica, Arial, sans;
+}
+
+.wikicontent {
+    margin:1em;
+    background-color:#EEEEEE;
+    border:1px solid #999999;
+    padding:1em;
+}
+
+#footer {
+    font-size:70%;
+    color:#999999;
+}

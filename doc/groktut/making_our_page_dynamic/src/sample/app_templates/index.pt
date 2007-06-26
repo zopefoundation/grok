@@ -1,0 +1,5 @@
+<html>
+<body>
+<p tal:content="python: 1 + 1">this is replaced</p>
+</body>
+</html>

@@ -1,0 +1,236 @@
+================
+Tutorial outline
+================
+
+This is not the tutorial itself, but a sketch of what the tutorial
+could look like. This hopefully inspires people to contribute to the
+tutorial. The structure of the tutorial is very much use-case driven
+and about getting things done. This means we tend to discuss the
+component architecture itself very late.
+
+Note that while I've indicated the overal aim of sections in chapters,
+that doesn't mean a chapter is absolutely decicated to a single
+topic. If for instance in the course of explaining search it becomes
+important to override traversal, it can be discussed right there.
+
+Main tutorial
+=============
+
+Getting started with Grok
+-------------------------
+
+This section aims to get a beginner up and running with Grok, using
+grokproject. It doesn't really go into any code yet, except to
+describe what grokproject creates.
+
+  * Setting up grokproject
+
+  * Creating a grok project
+
+  * Starting up Zope
+
+  * An empty Grok project
+
+Showing pages
+-------------
+
+We get beginners up to speed with writing view logic in Grok. This is
+basically the first thing beginners want - just get some HTML on the
+screen. Basic templating, supplementing templating with view-level
+methods, and various basic interaction patterns. Models are still out
+of scope. Armed with this knowledge people should already be able to
+write simple web applications with Grok, if at least they don't have
+to worry much about storing data.
+
+  * Publishing a simple web page
+
+  * A second view
+
+  * Making our page dynamic
+
+  * Static resources for our web page
+
+  * Using view methods
+
+  * Generating HTML from Python
+
+  * Completely Python-driven views
+
+  * Doing some calculation before viewing a page
+
+  * Reading URL parameters
+
+  * Simple forms
+
+Models
+------
+
+Once we know how to show things, we need to go into what we're
+actually showing: the model. This involves view/model separation,
+dealing with the ZODB and persistence, and constructing applications
+from models and containers. 
+
+Note that we also include some more advanced view use cases which only
+tend to become relevant with more complicated applications (such as
+redirection).
+
+  * A view for a model
+ 
+  * Storing data
+ 
+  * Redirection
+
+  * Showing the value in the form
+
+  * The rules of persistence
+ 
+  * Containers
+
+Some notes:
+
+* What if a container already contains an item with the same name? We will
+  get an error. How to handle this error elegantly?
+
+Forms
+-----
+
+Now that we've seen the form and storage basics, we go a step further
+and show the power of automatic form generation from schemas.
+
+Building on the patterns we've seen before, we develop a simple CRUD
+application with an overview screen and add and edit forms. This will
+also include at least a glance at interfaces in the context of
+schemas.
+
+Search
+------
+
+We have a way for a user to enter information. Now we need to build an
+application that does something with it. We extend our CRUD
+application with indexing and search, using the catalog.
+
+By now the application should also be advanced enough to explain
+overriding traversal, for instance to enable simple 'tag' based
+browsing mechanism based on search. We need to show a pattern where
+non-persistent objects are created in traversal.
+
+This will also lead into a brief introduction of utility lookup and
+sites.
+
+XXX setting up the catalog is easy now, but it can be automated a bit
+    further still in Grok.
+
+XXX We probably need hurry.query. This needs some work on the Grok end
+    to expose this nicely.
+
+Custom widgets
+--------------
+
+The defaults are never enough when it comes to web forms. This is a
+nice point to introduce making your own custom form widgets.
+
+We will also show how you can use AJAX with Grok so you can give your
+widget some dynamic behavior.
+
+XXX we need to make it easy to make widgets in Grok.
+
+XXX this needs work on the Grok end to at least expose JSON, and perhaps
+     we need to ship with a 'recommended' Javascript library.
+
+Security
+--------
+
+Explain how Grok allows you to protect your views. In the course of
+this we also need to explain a bit about Zope 3's user authentication
+system, as we need users to test this with.
+
+XXX We need to flesh out user authentication issues in Grok.
+
+Extending our application
+-------------------------
+
+We show one of Zope 3's main strengths: we create a separate codebase
+in a completely separate project that extends the first. Then we
+demonstrate many extension patterns Zope 3 offers:
+
+  * creating an extension project (using buildout and SVN externals?)
+
+  * a new look for old models (skins)
+
+  * the benefit of interfaces
+
+  * events
+
+  * adapters
+
+Appendices
+==========
+
+While these topics may not presuppose a lot of knowledge, we probably
+do not want to scatter all of this through the tutorial itself so as
+not to distract from the main story (though we may change our minds if
+it seems to come out naturally).
+
+Explicit configuration
+----------------------
+
+Should give an introduction on the principles of Grok: explicit
+configuration using directives, with defaults so you can leave them
+off if you follow the grok patterns.
+
+I'm not sure yet whether this can be part of the main flow of the
+text. We at the very least will refer to this at some point in the
+text though, and we need to refer people to this for more information.
+
+The Component Architecture
+--------------------------
+
+Explain how many bits and pieces we've seen so far are actually
+aspects of the component architecture.
+
+Automatic testing
+-----------------
+
+A brief introduction to automatic testing. Introduce how to unit test
+and functional test with doctests.
+
+XXX We probably need to do some development work on a test grokker.
+
+XMLRPC 
+------
+
+Show how to do XMLRPC with Grok.
+
+Extending grok
+--------------
+
+Grok can be extended using Grokkers. Explain how to do it here.
+
+Development issues
+------------------
+
+We describe best practices on how to manage your code when developing
+with Grok. This touches topics like setup.py, buildout, and also
+version control systems.
+
+ * Pulling in new dependencies from the Cheeseshop.
+
+ * Putting your project into SVN
+
+ * Uploading your project to the Python Cheeseshop
+
+Items I'm not sure where to place yet
+=====================================
+
+These items will need to find a place in the main narrative or the
+appendices. They're listed here so we don't forget about them:
+
+  * Constructing urls with view.url()
+
+  * base classes
+
+  * Events
+
+  * Showing error pages.
+
+  * Discussion on viewlets/portlets.

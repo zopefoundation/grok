@@ -1,0 +1,17 @@
+CREDITS
+=======
+
+* Martijn Faassen
+ 
+* Wolfgang Schnerring
+
+* Christian Theune
+
+* Philipp von Weitershausen
+
+* Jan-Wijbrand Kolman
+
+Thank you
+---------
+
+* The core Grok developers.

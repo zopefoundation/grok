@@ -1,0 +1,21 @@
+<html>
+<head>
+</head>
+<body>
+  <h2>Existing entries</h2>
+  <ul>
+    <li tal:repeat="key python:context.keys()">
+      <a tal:attributes="href python:view.url(key)" 
+         tal:content="python:key"></a>
+    </li>
+  </ul>
+ 
+  <h2>Add a new entry</h2>
+  <form tal:attributes="action python:view.url()" method="POST">
+    Name: <input type="text" name="name" value="" /><br />
+    Text: <input type="text" name="text" value="" /><br />
+    <input type="submit" value="Add entry" />
+  </form>
+
+</body>
+</html>

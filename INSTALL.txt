@@ -1,0 +1,48 @@
+Preparing for grok development
+------------------------------
+
+Grok is installed via buildout <http://cheeseshop.python.org/pypi/zc.buildout>.
+
+You may have setuptools already installed for your system Python. In
+that case, you may need to upgrade it first because buildout requires
+a very recent version::
+
+    $ sudo easy_install -U setuptools
+
+If this command fails because easy_install is not available, there is
+a good chance you do not have setuptools available for your system
+Python. If so, there is no problem because setuptools will be
+installed locally by buildout.
+
+Bootstrap the buildout environment::
+
+    $ python bootstrap/bootstrap.py
+
+and run the buildout command::
+
+    $ bin/buildout
+    [lots of stuff will be downloaded and installed locally here]
+
+Running the demo applications
+-----------------------------
+
+Start the instance:
+
+    $ cd parts/instance
+    $ bin/zopectl fg
+
+If you now connect to port 8080 and log in with username 'grok',
+password 'grok', you should be able to add the grok-based applications
+(such as grokwiki) from the menu.
+
+Running the tests
+-----------------
+
+Grok's tests are easily run by executing the test runner that's
+installed in the ``bin`` directory::
+
+    $ bin/test
+
+For functional tests we've set up a special test instance just for
+running the test from, which includes the minimum needed ZCML (so the
+tests run a tidbit faster).
