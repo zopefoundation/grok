@@ -59,7 +59,7 @@ class AdapterGrokker(martian.ClassGrokker):
                                  provides=provides,
                                  name=name)
         return True
-        
+
 class MultiAdapterGrokker(martian.ClassGrokker):
     component_class = grok.MultiAdapter
 
@@ -93,7 +93,7 @@ class XMLRPCGrokker(martian.ClassGrokker):
         methods = util.methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
-        
+
         for method in methods:
             # Make sure that the class inherits MethodPublisher, so that the
             # views have a location
@@ -113,7 +113,7 @@ class XMLRPCGrokker(martian.ClassGrokker):
                                  default_permission)
             make_checker(factory, method_view, permission)
         return True
-    
+
 class ViewGrokker(martian.ClassGrokker):
     component_class = grok.View
 
@@ -179,7 +179,7 @@ class ViewGrokker(martian.ClassGrokker):
         # protect view, public by default
         default_permission = get_default_permission(factory)
         make_checker(factory, factory, default_permission)
-    
+
         # safety belt: make sure that the programmer didn't use
         # @grok.require on any of the view's methods.
         methods = util.methods_from_class(factory)
@@ -190,7 +190,7 @@ class ViewGrokker(martian.ClassGrokker):
                                 'for XML-RPC methods.'
                                 % (method.__name__, factory), factory)
         return True
-    
+
 
 class JSONGrokker(martian.ClassGrokker):
     component_class = grok.JSON
@@ -200,7 +200,7 @@ class JSONGrokker(martian.ClassGrokker):
         methods = util.methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
-        
+
         for method in methods:
             # Create a new class with a __view_name__ attribute so the
             # JSON class knows what method to call.
@@ -221,7 +221,7 @@ class JSONGrokker(martian.ClassGrokker):
                                  default_permission)
             make_checker(factory, method_view, permission)
         return True
-    
+
 class TraverserGrokker(martian.ClassGrokker):
     component_class = grok.Traverser
 
@@ -231,14 +231,14 @@ class TraverserGrokker(martian.ClassGrokker):
                                  adapts=(factory_context, IBrowserRequest),
                                  provides=IBrowserPublisher)
         return True
-    
+
 class ModulePageTemplateGrokker(martian.InstanceGrokker):
     # this needs to happen before any other grokkers execute that actually
     # use the templates
     priority = 1000
 
     component_class = grok.PageTemplate
-    
+
     def grok(self, name, instance, context, module_info, templates):
         templates.register(name, instance)
         instance._annotateGrokInfo(name, module_info.dotted_name)
@@ -267,6 +267,21 @@ class SubscriberGrokker(martian.GlobalGrokker):
             component.provideHandler(factory, adapts=subscribed)
             for iface in subscribed:
                 zope.component.interface.provideInterface('', iface)
+        return True
+
+class AdapterDecoratorGrokker(martian.GlobalGrokker):
+
+    def grok(self, name, module, context, module_info, templates):
+        implementers = module_info.getAnnotation('implementers', [])
+        for function in implementers:
+            interfaces = getattr(function, '__component_adapts__', None)
+            if interfaces is None:
+                # There's no explicit interfaces defined, so we assume the
+                # module context to be the thing adapted.
+                util.check_context(module_info.getModule(), context)
+                interfaces = (context, )
+            component.provideAdapter(
+                function, adapts=interfaces, provides=function.__implemented__)
         return True
 
 class StaticResourcesGrokker(martian.GlobalGrokker):
@@ -438,10 +453,10 @@ def setupUtility(site, utility, provides, name=u'',
 
     if setup is not None:
         setup(utility)
-        
+
     site_manager.registerUtility(utility, provided=provides,
                                  name=name)
-    
+
 class DefinePermissionGrokker(martian.GlobalGrokker):
 
     priority = 1500
@@ -459,10 +474,10 @@ class DefinePermissionGrokker(martian.GlobalGrokker):
                                      name=permission)
 
         return True
-    
+
 class AnnotationGrokker(martian.ClassGrokker):
     component_class = grok.Annotation
- 
+
     def grok(self, name, factory, context, module_info, templates):
         adapter_context = util.determine_class_context(factory, context)
         provides = util.class_annotation(factory, 'grok.provides', None)
@@ -508,7 +523,7 @@ class ApplicationGrokker(martian.ClassGrokker):
                                       name='%s.%s' % (module_info.dotted_name,
                                                       name))
         return True
-    
+
 class IndexesGrokker(martian.InstanceGrokker):
     component_class = components.IndexesClass
 
@@ -530,14 +545,14 @@ class IndexesGrokker(martian.InstanceGrokker):
             adapts=(site,
                     grok.IObjectAddedEvent))
         return True
-    
+
 class IndexesSetupSubscriber(object):
     def __init__(self, catalog_name, indexes, context, module_info):
         self.catalog_name = catalog_name
         self.indexes = indexes
         self.context = context
         self.module_info = module_info
-        
+
     def __call__(self, site, event):
         # make sure we have an intids
         self._createIntIds(site)
@@ -567,7 +582,7 @@ class IndexesSetupSubscriber(object):
         catalog = Catalog()
         setupUtility(site, catalog, ICatalog, name=self.catalog_name)
         return catalog
-    
+
     def _createIntIds(self, site):
         """Create intids if needed, and return it.
         """
