@@ -58,7 +58,7 @@ class ModuleInfo(object):
         """
         return os.path.join(os.path.dirname(self.path), name)
 
-    def getSubModuleInfos(self):
+    def getSubModuleInfos(self, exclude_tests=True):
         if not self.isPackage():
             return []
         directory = os.path.dirname(self.path)
@@ -68,7 +68,9 @@ class ModuleInfo(object):
             entry_path = os.path.join(directory, entry)
             name, ext = os.path.splitext(entry)
             dotted_name = self.dotted_name + '.' + name
-
+            # By default skip (functional) tests pacakges and modules
+            if exclude_tests and (name in ['tests', 'ftests']):
+                continue
             # Case one: modules
             if (os.path.isfile(entry_path) and ext in ['.py', '.pyc']):
                 if name == '__init__':
@@ -97,7 +99,7 @@ class ModuleInfo(object):
                                   '%s.%s' % (self.package_dotted_name, name))
         else:
             return None
-        
+
 
     def getAnnotation(self, key, default):
         key = key.replace('.', '_')
