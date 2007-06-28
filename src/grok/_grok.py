@@ -15,6 +15,7 @@
 """
 import os
 import sys
+import types
 
 from zope import component
 from zope import interface
@@ -52,7 +53,7 @@ def bootstrap():
 
     # now grok the grokkers
     martian.grok_module(scan.module_info_from_module(meta), the_module_grokker)
-   
+
 def addSiteHandler(site, event):
     sitemanager = LocalSiteManager(site)
     # LocalSiteManager creates the 'default' folder in its __init__.
@@ -89,15 +90,15 @@ def grok_component(name, component,
 
 def prepare_grok(name, module, kw):
     module_info = scan.module_info_from_module(module)
-    
+
     # XXX hardcoded in here which base classes are possible contexts
     # this should be made extensible
     possible_contexts = martian.scan_for_classes(module, [grok.Model,
                                                           grok.LocalUtility,
                                                           grok.Container])
     context = determine_module_context(module_info, possible_contexts)
-    
-    kw['context'] = context    
+
+    kw['context'] = context
     kw['module_info'] = module_info
     kw['templates'] = templatereg.TemplateRegistry()
 
@@ -137,3 +138,30 @@ class SubscribeDecorator:
         if subscribers is None:
             frame.f_locals['__grok_subscribers__'] = subscribers = []
         subscribers.append((function, self.subscribed))
+
+from zope.component._declaration import adapter as _adapter
+class adapter(_adapter):
+
+    def __init__(self, *interfaces):
+        # Override the z.c.adapter decorator to force sanity checking
+        # and have better error reporting.
+        if not interfaces:
+            raise GrokImportError(
+                "@grok.adapter requires at least one argument.")
+        if type(interfaces[0]) is types.FunctionType:
+            raise GrokImportError(
+                "@grok.adapter requires at least one argument.")
+        self.interfaces = interfaces
+
+from zope.interface.declarations import implementer as _implementer
+class implementer(_implementer):
+
+    def __call__(self, ob):
+        # XXX we do not have function grokkers (yet) so we put the annotation
+        # on the module.
+        frame = sys._getframe(1)
+        implementers = frame.f_locals.get('__implementers__', None)
+        if implementers is None:
+            frame.f_locals['__implementers__'] = implementers = []
+        implementers.append(ob)
+        return _implementer.__call__(self, ob)

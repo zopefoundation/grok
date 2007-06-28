@@ -41,6 +41,7 @@ from grok.directive import (context, name, template, templatedir, provides,
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import grok_component
 from grok._grok import SubscribeDecorator as subscribe
+from grok._grok import adapter, implementer
 from martian.error import GrokError, GrokImportError
 from grok.formlib import action, AutoFields, Fields
 from grok.util import url

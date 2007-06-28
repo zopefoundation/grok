@@ -6,25 +6,30 @@
 
   <!-- This file is the equivalent of site.zcml and it is -->
   <!-- used for functional testing setup -->
-
-  <!-- zope dependency includes -->
-  <include package="zope.app.securitypolicy" file="meta.zcml" />
-  <include package="zope.i18n" file="meta.zcml" />
   <include package="zope.security" file="meta.zcml" />
-  <include package="zope.app.zcmlfiles" />
-  <include package="zope.app.securitypolicy" file="configure.zcml" />
-  <include package="zope.contentprovider" />
+  <include package="zope.i18n" file="meta.zcml" />
+  <include package="zope.app.securitypolicy" file="meta.zcml" />
+  <include package="zope.app.zcmlfiles" file="meta.zcml" />
+  <include package="grok" file="meta.zcml" />
+
+  <include package="zope.annotation" />
+  <include package="zope.copypastemove" />
   <include package="zope.formlib" />
   <include package="zope.i18n.locales" />
+  <include package="zope.publisher" />
+  <include package="zope.size" />
+  <include package="zope.traversing" />
   <include package="zope.traversing.browser" />
+  <include package="zope.publisher" />
+  <include package="zope.app.zcmlfiles" />
+  <include package="zope.app.securitypolicy" />
   <include package="zope.app.authentication" />
   <include package="zope.app.catalog" />
   <include package="zope.app.intid" />
   <include package="zope.app.keyreference" />
   <include package="zope.app.twisted" />
-  <include package="zope.app.session" />
-  <include package="zope.viewlet" />
 
+  <!-- zope dependency includes -->
   <include package="zope.app.zcmlfiles" file="ftesting.zcml" />
 
   <!-- my friend the caveman -->
