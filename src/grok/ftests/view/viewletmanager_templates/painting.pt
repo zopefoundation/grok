@@ -1,0 +1,8 @@
+<html>
+<body>
+<h1 tal:content="structure provider:cave">Hello, world!</h1>
+<div tal:content="structure provider:cavecolumn">Hello, world!</div>
+<div tal:content="structure provider:provider.first">Hello, world!</div>
+</body>
+</html>
+
