@@ -161,6 +161,16 @@ class SingleTextDirective(BaseTextDirective, SingleValue, OnceDirective):
     Directive that accepts a single unicode/ASCII value, only once.
     """
 
+class SingleIntegerDirective(SingleValue, OnceDirective):
+    """
+    Directive that accepts a single integer value, only once.
+    """
+
+    def check_arguments(self, value):
+        if not int(value) == value:
+            raise GrokImportError("You can only pass an integer to "
+                                  "%s." % self.name)
+
 
 class MultipleTextDirective(BaseTextDirective, SingleValue,
                             MultipleTimesDirective):

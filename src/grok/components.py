@@ -51,6 +51,11 @@ from zope.app.container.contained import Contained
 from zope.app.container.interfaces import IReadContainer
 from zope.app.component.site import SiteManagerContainer
 
+from zope.viewlet.manager import ViewletManagerBase
+from zope.viewlet.viewlet import ViewletBase
+
+from z3c.viewlet.manager import WeightOrderedViewletManager
+
 from martian import util
 
 from grok import interfaces, formlib
@@ -97,45 +102,39 @@ class Annotation(persistent.Persistent):
     pass
 
 
-class View(BrowserPage):
-    interface.implements(interfaces.IGrokView)
-
-    def __init__(self, context, request):
-        super(View, self).__init__(context, request)
-        self.static = component.queryAdapter(
-            self.request,
-            interface.Interface,
-            name=self.module_info.package_dotted_name
-            )
-
-    @property
-    def response(self):
-        return self.request.response
-
-    def __call__(self):
-        mapply(self.update, (), self.request)
-        if self.request.response.getStatus() in (302, 303):
-            # A redirect was triggered somewhere in update().  Don't
-            # continue rendering the template or doing anything else.
-            return
-
-        template = getattr(self, 'template', None)
-        if template is not None:
-            return self._render_template()
-        return mapply(self.render, (), self.request)
+class ViewBase(object):
 
     def _render_template(self):
         namespace = self.template.pt_getContext()
         namespace['request'] = self.request
         namespace['view'] = self
         namespace['context'] = self.context
-        # XXX need to check whether we really want to put None here if missing
         namespace['static'] = self.static
         return self.template.pt_render(namespace)
 
-    def __getitem__(self, key):
-        # XXX give nice error message if template is None
-        return self.template.macros[key]
+    def application(self):
+        obj = self.context
+        while obj is not None:
+            if isinstance(obj, Application):
+                return obj
+            obj = obj.__parent__
+        raise ValueErrror("No application found.")
+
+    def site(self):
+        obj = self.context
+        while obj is not None:
+            if isinstance(obj, grok.Site):
+                return obj
+            obj = obj.__parent__
+        raise ValueErrror("No site found.")
+
+    def application_url(self, name=None):
+        obj = self.context
+        while obj is not None:
+            if isinstance(obj, Application):
+                return self.url(obj, name)
+            obj = obj.__parent__
+        raise ValueErrror("No application found.")
 
     def url(self, obj=None, name=None):
         # if the first argument is a string, that's the name. There should
@@ -155,17 +154,41 @@ class View(BrowserPage):
             # create URL to view on context
             obj = self.context
         return url(self.request, obj, name)
-
-    def application_url(self, name=None):
-        obj = self.context
-        while obj is not None:
-            if isinstance(obj, Application):
-                return self.url(obj, name)
-            obj = obj.__parent__
-        raise ValueError("No application found.")
-
+        
     def redirect(self, url):
         return self.request.response.redirect(url)
+        
+    @property
+    def response(self):
+        return self.request.response
+
+
+class View(BrowserPage, ViewBase):
+    interface.implements(interfaces.IGrokView)
+
+    def __init__(self, context, request):
+        super(View, self).__init__(context, request)
+        self.static = component.queryAdapter(
+            self.request,
+            interface.Interface,
+            name=self.module_info.package_dotted_name
+            )
+
+    def __call__(self):
+        mapply(self.update, (), self.request)
+        if self.request.response.getStatus() in (302, 303):
+            # A redirect was triggered somewhere in update().  Don't
+            # continue rendering the template or doing anything else.
+            return
+
+        template = getattr(self, 'template', None)
+        if template is not None:
+            return self._render_template()
+        return mapply(self.render, (), self.request)
+
+    def __getitem__(self, key):
+        # XXX give nice error message if template is None
+        return self.template.macros[key]
 
     def update(self):
         pass
@@ -471,4 +494,70 @@ class ILayer(IDefaultBrowserLayer):
 
 class Skin(object):
     pass
+
+class TemplateContentBase(object):
+    """Mixin class to provide render method using given template"""
+
+    def render(self):
+        mapply(self.update, (), self.request)
+        if self.request.response.getStatus() in (302, 303):
+            # A redirect was triggered somewhere in update().  Don't
+            # continue rendering the template or doing anything else.
+            return
+
+        template = getattr(self, 'template', None)
+        if template is not None:
+            return self._render_template()
+
+
+class ContentProvider(ViewBase, TemplateContentBase):
+
+    def __init__(self, context, request, view):
+        self.__parent__ = view
+        self.context = context
+        self.request = request
+        self.static = component.queryAdapter(
+            self.request,
+            interface.Interface,
+            name=self.module_info.package_dotted_name
+            )        
+        return self.request.response
+
+# use z3c orderedviewletmanager
+class ViewletManager(WeightOrderedViewletManager, ViewBase):
+    """  A grok.View-like ViewletManager
+    """
+    template = None
+
+    def __init__(self, context, request, view):
+        super(ViewletManager, self).__init__(context, request, view)
+        self.static = component.queryAdapter(
+            self.request,
+            interface.Interface,
+            name=self.module_info.package_dotted_name
+            )
+
+    def update(self):
+        super(WeightOrderedViewletManager, self).update()
+
+    def render(self):
+        # Now render the view
+        template = getattr(self, 'template', None)
+        if template is not None:
+            return self._render_template()
+        else:
+            return u'\n'.join([viewlet.render() for viewlet in self.viewlets])
+
+
+class Viewlet(ViewletBase, ViewBase, TemplateContentBase):
+    """ A grok.View-like viewlet
+    """
+
+    def __init__(self, context, request, view, manager):
+        super(Viewlet, self).__init__(context, request, view, manager)
+        self.static = component.queryAdapter(
+            self.request,
+            interface.Interface,
+            name=self.module_info.package_dotted_name
+            )
 

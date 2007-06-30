@@ -4,6 +4,7 @@ import zope.component.interface
 from zope import interface, component
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
+                                               IBrowserView,
                                                IBrowserPublisher,
                                                IBrowserSkinType)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
@@ -22,6 +23,7 @@ from zope.app.catalog.catalog import Catalog
 from zope.app.catalog.interfaces import ICatalog
 
 from zope.exceptions.interfaces import DuplicationError
+from zope.contentprovider.interfaces import IContentProvider
 
 import martian
 from martian.error import GrokError
@@ -179,6 +181,61 @@ class ViewGrokker(martian.ClassGrokker):
         component.provideAdapter(factory,
                                  adapts=(view_context, view_layer),
                                  provides=interface.Interface,
+                                 name=view_name)
+
+        # protect view, public by default
+        default_permission = get_default_permission(factory)
+        make_checker(factory, factory, default_permission)
+
+        # safety belt: make sure that the programmer didn't use
+        # @grok.require on any of the view's methods.
+        methods = util.methods_from_class(factory)
+        for method in methods:
+            if getattr(method, '__grok_require__', None) is not None:
+                raise GrokError('The @grok.require decorator is used for '
+                                'method %r in view %r. It may only be used '
+                                'for XML-RPC methods.'
+                                % (method.__name__, factory), factory)
+        return True
+
+class ContentProviderGrokker(martian.ClassGrokker):
+    component_class = grok.ContentProvider
+
+    def grok(self, name, factory, context, module_info, templates):
+        view_context = util.determine_class_context(factory, context)
+
+        factory.module_info = module_info
+        factory_name = factory.__name__.lower()
+
+        # find templates
+        template_name = util.class_annotation(factory, 'grok.template',
+                                              factory_name)
+        template = templates.get(template_name)
+
+        if factory_name != template_name:
+            # grok.template is being used
+            if templates.get(factory_name):
+                raise GrokError("Multiple possible templates for view %r. It "
+                                "uses grok.template('%s'), but there is also "
+                                "a template called '%s'."
+                                % (factory, template_name, factory_name),
+                                factory)
+
+        if template:
+            templates.markAssociated(template_name)
+            factory.template = template
+
+        view_layer = util.class_annotation(factory, 'grok.layer',
+                                           None) or module_info.getAnnotation('grok.layer',
+                                               None) or IDefaultBrowserLayer
+
+        view_name = util.class_annotation(factory, 'grok.name',
+                                          factory_name)
+        # __view_name__ is needed to support IAbsoluteURL on views
+        factory.__view_name__ = view_name
+        component.provideAdapter(factory,
+                                 adapts=(view_context, view_layer, IBrowserView),
+                                 provides=IContentProvider,
                                  name=view_name)
 
         # protect view, public by default
@@ -614,3 +671,4 @@ class SkinGrokker(martian.ClassGrokker):
         zope.component.interface.provideInterface(name, layer, IBrowserSkinType)
 
         return True
+

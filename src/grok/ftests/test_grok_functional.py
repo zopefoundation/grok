@@ -42,6 +42,7 @@ def FunctionalDocTestSuite(*paths, **kw):
 
 def suiteFromPackage(name):
     files = resource_listdir(__name__, name)
+    files = ['viewletmanager.py']
     suite = unittest.TestSuite()
     for filename in files:
         if not filename.endswith('.py'):
@@ -55,10 +56,12 @@ def suiteFromPackage(name):
         suite.addTest(test)
     return suite
 
+all = ['view', 'static', 'xmlrpc', 'traversal', 'form', 'url',
+                 'security', 'utility', 'catalog', 'admin']
+all = ['view']
 def test_suite():
     suite = unittest.TestSuite()
-    for name in ['view', 'static', 'xmlrpc', 'traversal', 'form', 'url',
-                 'security', 'utility', 'catalog', 'admin']:
+    for name in all:
         suite.addTest(suiteFromPackage(name))
     return suite
 

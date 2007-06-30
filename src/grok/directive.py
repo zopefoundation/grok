@@ -19,6 +19,7 @@ from zope.interface.interfaces import IInterface
 from martian.error import GrokImportError
 from martian.directive import (MultipleTimesDirective, BaseTextDirective,
                                SingleValue, SingleTextDirective,
+                               SingleIntegerDirective,
                                MultipleTextDirective,
                                MarkerDirective,
                                InterfaceDirective,
@@ -112,3 +113,8 @@ site = InterfaceOrClassDirective('grok.site',
                                  ClassDirectiveContext())
 layer = InterfaceOrClassDirective('grok.layer',
                            ClassOrModuleDirectiveContext())
+viewletmanager = InterfaceOrClassDirective('grok.viewletmanager',
+                                           ClassDirectiveContext())
+talnamespace = InterfaceDirective('grok.talnamespace',
+                               ClassDirectiveContext())
+weight = SingleIntegerDirective('grok.weight', ClassDirectiveContext())

@@ -8,12 +8,14 @@
   <!-- used for functional testing setup -->
   <include package="zope.security" file="meta.zcml" />
   <include package="zope.i18n" file="meta.zcml" />
+  <include package="zope.viewlet" file="meta.zcml" />
   <include package="zope.app.securitypolicy" file="meta.zcml" />
   <include package="zope.app.zcmlfiles" file="meta.zcml" />
   <include package="grok" file="meta.zcml" />
 
   <include package="zope.annotation" />
   <include package="zope.copypastemove" />
+  <include package="zope.contentprovider" />
   <include package="zope.formlib" />
   <include package="zope.i18n.locales" />
   <include package="zope.publisher" />
@@ -21,6 +23,7 @@
   <include package="zope.traversing" />
   <include package="zope.traversing.browser" />
   <include package="zope.publisher" />
+  <include package="zope.viewlet" />
   <include package="zope.app.zcmlfiles" />
   <include package="zope.app.securitypolicy" />
   <include package="zope.app.authentication" />

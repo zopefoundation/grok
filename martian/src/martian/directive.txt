@@ -80,6 +80,23 @@ It can also be used in a module::
   >>> classormodulecontext.__grok_qux__
   'hello world'
 
+Now let's define an integer directive::
+
+  >>> from martian.directive import SingleIntegerDirective
+  >>> weight = SingleIntegerDirective('grok.weight', ClassDirectiveContext())
+  >>> class Test(object):
+  ...   weight('2')
+  Traceback (most recent call last):
+    ...
+  GrokImportError: You can only pass an integer to grok.weight.
+
+Integers only are allowed::
+
+  >>> class Test(object):
+  ...   weight(2)
+  >>> Test.__grok_weight__
+  2
+
 Calling a directive once or multiple times
 ------------------------------------------
 

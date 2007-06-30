@@ -30,6 +30,7 @@ setup(
                       'zope.app.publisher',
                       'zope.app.testing',
                       'zope.component',
+                      'zope.contentprovider',
                       'zope.configuration',
                       'zope.dottedname',
                       'zope.event',
@@ -42,10 +43,14 @@ setup(
                       'zope.security',
                       'zope.testing',
                       'zope.traversing',
+                      'zope.viewlet',
+
+                      'z3c.viewlet',
 
                       # needed for ftests and typical deployments
                       'zope.testbrowser',
                       'zope.app.twisted',
                       'zope.app.securitypolicy',
-                      'zope.app.zcmlfiles'],
+                      'zope.app.zcmlfiles',
+                      ],
 )
