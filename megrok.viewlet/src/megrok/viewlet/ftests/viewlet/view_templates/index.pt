@@ -1,0 +1,13 @@
+<html>
+<body>
+<tal:block tal:content="structure provider:site.title" />
+<div id="leftcolumn">
+<tal:block tal:content="structure provider:site.leftcolumnmanager" />
+</div>
+<tal:block tal:content="structure provider:site.firstmanager" />
+<div id="rightcolumn">
+<tal:block tal:content="structure provider:site.rightcolumnmanager" />
+</div>
+</body>
+</html>
+
