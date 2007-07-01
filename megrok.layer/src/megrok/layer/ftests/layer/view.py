@@ -15,9 +15,8 @@
   </body>
   </html>
   
-In another branch this would raise NotFound
 
-  >>> #browser.open("http://localhost/++skin++Rotterdam/manfred/cavedrawings")
+  >>> browser.open("http://localhost/++skin++Rotterdam/manfred/cavedrawings")
   Traceback (most recent call last):
   ...
   NotFound: Object: <megrok.layer.ftests.layer.view.Mammoth object at ...>, name: u'cavedrawings'

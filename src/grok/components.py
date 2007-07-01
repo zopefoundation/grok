@@ -95,46 +95,39 @@ class MultiAdapter(object):
 class Annotation(persistent.Persistent):
     pass
 
-
-class View(BrowserPage):
-    interface.implements(interfaces.IGrokView)
-
-    def __init__(self, context, request):
-        super(View, self).__init__(context, request)
-        self.static = component.queryAdapter(
-            self.request,
-            interface.Interface,
-            name=self.module_info.package_dotted_name
-            )
-
-    @property
-    def response(self):
-        return self.request.response
-
-    def __call__(self):
-        mapply(self.update, (), self.request)
-        if self.request.response.getStatus() in (302, 303):
-            # A redirect was triggered somewhere in update().  Don't
-            # continue rendering the template or doing anything else.
-            return
-
-        template = getattr(self, 'template', None)
-        if template is not None:
-            return self._render_template()
-        return mapply(self.render, (), self.request)
+class ViewBase(object):
 
     def _render_template(self):
         namespace = self.template.pt_getContext()
         namespace['request'] = self.request
         namespace['view'] = self
         namespace['context'] = self.context
-        # XXX need to check whether we really want to put None here if missing
         namespace['static'] = self.static
         return self.template.pt_render(namespace)
 
-    def __getitem__(self, key):
-        # XXX give nice error message if template is None
-        return self.template.macros[key]
+    def application(self):
+        obj = self.context
+        while obj is not None:
+            if isinstance(obj, Application):
+                return obj
+            obj = obj.__parent__
+        raise ValueErrror("No application found.")
+
+    def site(self):
+        obj = self.context
+        while obj is not None:
+            if isinstance(obj, grok.Site):
+                return obj
+            obj = obj.__parent__
+        raise ValueErrror("No site found.")
+
+    def application_url(self, name=None):
+        obj = self.context
+        while obj is not None:
+            if isinstance(obj, Application):
+                return self.url(obj, name)
+            obj = obj.__parent__
+        raise ValueErrror("No application found.")
 
     def url(self, obj=None, name=None):
         # if the first argument is a string, that's the name. There should
@@ -154,20 +147,45 @@ class View(BrowserPage):
             # create URL to view on context
             obj = self.context
         return url(self.request, obj, name)
-
-    def application_url(self, name=None):
-        obj = self.context
-        while obj is not None:
-            if isinstance(obj, Application):
-                return self.url(obj, name)
-            obj = obj.__parent__
-        raise ValueError("No application found.")
-
+        
     def redirect(self, url):
         return self.request.response.redirect(url)
+        
+    @property
+    def response(self):
+        return self.request.response
 
     def update(self):
         pass
+
+
+class View(BrowserPage, ViewBase):
+    interface.implements(interfaces.IGrokView)
+
+    def __init__(self, context, request):
+        super(View, self).__init__(context, request)
+        self.static = component.queryAdapter(
+            self.request,
+            interface.Interface,
+            name=self.module_info.package_dotted_name
+            )
+
+    def __call__(self):
+        mapply(self.update, (), self.request)
+        if self.request.response.getStatus() in (302, 303):
+            # A redirect was triggered somewhere in update().  Don't
+            # continue rendering the template or doing anything else.
+            return
+
+        template = getattr(self, 'template', None)
+        if template is not None:
+            return self._render_template()
+        return mapply(self.render, (), self.request)
+
+    def __getitem__(self, key):
+        # XXX give nice error message if template is None
+        return self.template.macros[key]
+
 
 class GrokViewAbsoluteURL(AbsoluteURL):
 

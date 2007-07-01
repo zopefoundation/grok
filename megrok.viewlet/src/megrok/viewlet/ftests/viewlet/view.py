@@ -24,9 +24,7 @@ This doctest uses grok.ContentProvider, grok.ViewletManager and grok.Viewlet.
   </body>
   </html>
 
-In another branch this would raise NotFound
-
-  >>> #browser.open("http://localhost/manfred/@@skinnedindex")
+  >>> browser.open("http://localhost/manfred/@@skinnedindex")
   Traceback (most recent call last):
   ...
   NotFound...'@@skinnedindex'

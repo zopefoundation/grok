@@ -1,7 +1,7 @@
 import martian
 import grok
 from zope import component
-from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
+from zope.publisher.interfaces.browser import (IBrowserRequest,
                                                IBrowserView)
 from zope.viewlet.interfaces import IViewlet, IViewletManager
 from zope.contentprovider.interfaces import IContentProvider
@@ -68,7 +68,7 @@ class ContentProviderGrokker(ViewGrokkerBase):
 
         view_layer = util.class_annotation(factory, 'megrok.layer.layer',
                                            None) or module_info.getAnnotation('megrok.layer.layer',
-                                               None) or IDefaultBrowserLayer
+                                               None) or IBrowserRequest
 
         view_name = util.class_annotation(factory, 'grok.name',
                                           self.factory_name)
@@ -95,7 +95,7 @@ class ViewletGrokker(ViewGrokkerBase):
 
         view_layer = util.class_annotation(factory, 'megrok.layer.layer',
                                            None) or module_info.getAnnotation('megrok.layer.layer',
-                                               None) or IDefaultBrowserLayer
+                                               None) or IBrowserRequest
 
         view_name = util.class_annotation(factory, 'grok.name',
                                           self.factory_name)

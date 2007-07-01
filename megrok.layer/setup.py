@@ -16,6 +16,10 @@ Grok: Now even cavemen can use z3c.form!
     license='ZPL',
 
     install_requires=['setuptools',
+                      'z3c.layer',
+                      'z3c.template',
+                      'z3c.macro',
+                      'z3c.pagelet',
                      ],
 )
 

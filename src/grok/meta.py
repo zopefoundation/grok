@@ -167,12 +167,15 @@ class ViewGrokker(martian.ClassGrokker):
                 raise GrokError("View %r has no associated template or "
                                 "'render' method." % factory, factory)
 
+        view_layer = util.class_annotation(factory, 'megrok.layer.layer',
+                                    None) or module_info.getAnnotation('megrok.layer.layer',
+                                    None) or IBrowserRequest
         view_name = util.class_annotation(factory, 'grok.name',
                                           factory_name)
         # __view_name__ is needed to support IAbsoluteURL on views
         factory.__view_name__ = view_name
         component.provideAdapter(factory,
-                                 adapts=(view_context, IDefaultBrowserLayer),
+                                 adapts=(view_context, view_layer),
                                  provides=interface.Interface,
                                  name=view_name)
 
@@ -310,7 +313,7 @@ class StaticResourcesGrokker(martian.GlobalGrokker):
         resource_factory = components.DirectoryResourceFactory(
             resource_path, module_info.dotted_name)
         component.provideAdapter(
-            resource_factory, (IDefaultBrowserLayer,),
+            resource_factory, (IBrowserRequest,),
             interface.Interface, name=module_info.dotted_name)
         return True
 

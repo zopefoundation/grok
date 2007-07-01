@@ -9,68 +9,7 @@ from zope.publisher.publish import mapply
 
 from z3c.viewlet.manager import WeightOrderedViewletManager
 
-class ViewBase(object):
-
-    def _render_template(self):
-        namespace = self.template.pt_getContext()
-        namespace['request'] = self.request
-        namespace['view'] = self
-        namespace['context'] = self.context
-        namespace['static'] = self.static
-        return self.template.pt_render(namespace)
-
-    def application(self):
-        obj = self.context
-        while obj is not None:
-            if isinstance(obj, grok.Application):
-                return obj
-            obj = obj.__parent__
-        raise ValueErrror("No application found.")
-
-    def site(self):
-        obj = self.context
-        while obj is not None:
-            if isinstance(obj, grok.Site):
-                return obj
-            obj = obj.__parent__
-        raise ValueErrror("No site found.")
-
-    def application_url(self, name=None):
-        obj = self.context
-        while obj is not None:
-            if isinstance(obj, grok.Application):
-                return self.url(obj, name)
-            obj = obj.__parent__
-        raise ValueErrror("No application found.")
-
-    def url(self, obj=None, name=None):
-        # if the first argument is a string, that's the name. There should
-        # be no second argument
-        if isinstance(obj, basestring):
-            if name is not None:
-                raise TypeError(
-                    'url() takes either obj argument, obj, string arguments, '
-                    'or string argument')
-            name = obj
-            obj = None
-
-        if name is None and obj is None:
-            # create URL to view itself
-            obj = self
-        elif name is not None and obj is None:
-            # create URL to view on context
-            obj = self.context
-        return url(self.request, obj, name)
-        
-    def redirect(self, url):
-        return self.request.response.redirect(url)
-        
-    @property
-    def response(self):
-        return self.request.response
-
-    def update(self):
-        pass
+from grok.components import ViewBase
 
 class TemplateContentBase(object):
     """Mixin class to provide render method using given template"""
