@@ -2,7 +2,7 @@
 Since grok.global_utility is a MultipleTimesDirective, there is a list of
 GlobalUtilityInfo objects annotated on the module.
 
-  >>> from grok import scan
+  >>> from martian import scan
   >>> from grok.tests.directive import multipletimes
   >>> module_info = scan.module_info_from_module(multipletimes)
   >>> guis = module_info.getAnnotation('grok.global_utility', None)

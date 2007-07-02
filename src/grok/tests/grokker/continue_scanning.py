@@ -26,15 +26,16 @@ class Beta(object):
 
 class AlphaGrokker(grok.ClassGrokker):
     component_class = Alpha
-    continue_scanning = True
     priority = 1 # we need to go before BetaGrokker
 
-    def register(self, context, name, factory, module_info, templates):
+    def grok(self, name, factory, context, module_info, templates):
         print "alpha"
-
+        return True
 
 class BetaGrokker(grok.ClassGrokker):
     component_class = Beta
 
-    def register(self, context, name, factory, module_info, templates):
+    def grok(self, name, factory, context, module_info, templates):
         print "beta"
+        return True
+    

@@ -33,20 +33,22 @@ class Gamma(object):
 class AlphaGrokker(grok.ClassGrokker):
     component_class = Alpha
 
-    def register(self, context, name, factory, module_info, templates):
+    def grok(self, name, factory, context, module_info, templates):
         print "alpha"
-
+        return True
 
 class BetaGrokker(grok.ClassGrokker):
     component_class = Beta
     priority = 1
 
-    def register(self, context, name, factory, module_info, templates):
+    def grok(self, name, factory, context, module_info, templates):
         print "beta"
-
+        return True
+    
 class GammaGrokker(grok.ClassGrokker):
     component_class = Gamma
     priority = -1
 
-    def register(self, context, name, factory, module_info, templates):
+    def grok(self, name, factory, context, module_info, templates):
         print "gamma"
+        return True

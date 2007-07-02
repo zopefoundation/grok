@@ -29,7 +29,7 @@ from zope.app.container.contained import (
     IObjectRemovedEvent, ObjectRemovedEvent,
     IContainerModifiedEvent, ContainerModifiedEvent)
 
-from grok.components import ClassGrokker, InstanceGrokker, ModuleGrokker
+from martian import ClassGrokker, InstanceGrokker, GlobalGrokker
 from grok.components import Model, Adapter, MultiAdapter, View, XMLRPC, JSON
 from grok.components import PageTemplate, PageTemplateFile, Container, Traverser
 from grok.components import Site, GlobalUtility, LocalUtility, Annotation
@@ -39,9 +39,11 @@ from grok.directive import (context, name, template, templatedir, provides,
                             baseclass, global_utility, local_utility,
                             define_permission, require, site)
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
+from grok._grok import grok_component
 from grok._grok import SubscribeDecorator as subscribe
 from grok._grok import adapter, implementer
-from grok.error import GrokError, GrokImportError
+from martian.error import GrokError, GrokImportError
+
 from grok.formlib import action, AutoFields, Fields
 from grok.util import url
 

@@ -190,6 +190,21 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
     def grok(dotted_name):
         """Grok a module or package specified by ``dotted_name``."""
 
+    def grok_component(name, component, context=None, module_info=None,
+                       templates=None):
+        """Grok an arbitrary object. Can be useful during testing.
+
+        name - the name of the component (class name, or global instance name
+               as it would appear in a module).
+        component - the object (class, etc) to grok.
+        context - the context object (optional).
+        module_info - the module being grokked (optional).
+        templates - the templates registry (optional).
+
+        Note that context, module_info and templates might be required
+        for some grokkers which rely on them.
+        """
+    
     def url(request, obj, name=None):
         """Generate the URL to an object with optional name attached.
         """
