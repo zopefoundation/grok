@@ -5,8 +5,8 @@ configure providers, viewletmanagers and viewlets.
 It is more wordy and not as convenient as the grokked equivalent.
 
   >>> import grok
-  >>> from megrok.viewlet.ftests.viewlet.adapter import Mammoth
-  >>> grok.grok('megrok.viewlet.ftests.viewlet.adapter')
+  >>> from megrok.viewlet.tests.viewlet.adapter import Mammoth
+  >>> grok.grok('megrok.viewlet.tests.viewlet.adapter')
   >>> getRootFolder()["manfred"] = Mammoth()
 
   >>> from zope.testbrowser.testing import Browser
@@ -34,17 +34,18 @@ import zope.component
 from z3c.viewlet.manager import WeightOrderedViewletManager
 
 import megrok.layer
+import megrok.view
 
 class Mammoth(grok.Model):
     pass
 
-class IMySkinLayer(megrok.layer.ILayer):
+class IMySkinLayer(megrok.layer.IMinimalLayer):
     pass
 
 class MySkin(megrok.layer.Skin):
     megrok.layer.layer(IMySkinLayer)
 
-class Painting(grok.View):
+class Painting(megrok.view.View):
     """Template must be in *_templates, I tried and I tried to find out
     why when inline the `provider` tal directive wasn't found"""
     pass

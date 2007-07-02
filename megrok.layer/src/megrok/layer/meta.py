@@ -6,9 +6,10 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserSkinType)
 from martian import util
 import megrok.layer
+from megrok.layer.components import ILayer
 
 class ILayerGrokker(martian.ClassGrokker):
-    component_class = megrok.layer.ILayer
+    component_class = ILayer
 
 
 class SkinGrokker(martian.ClassGrokker):

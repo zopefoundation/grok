@@ -5,7 +5,7 @@ def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
 setup(
-    name='megrok.layer',
+    name='megrok.view',
     version='0.1',
     author='Grok Team',
     author_email='grok-dev@zope.org',
@@ -14,7 +14,7 @@ setup(
 Grok: Now even cavemen can use Zope3!
 """,
     long_description=(
-        read('src/megrok/layer/README.txt')
+        read('src/megrok/view/README.txt')
         ),
     packages=find_packages('src'),
     package_dir = {'': 'src'},
@@ -23,8 +23,7 @@ Grok: Now even cavemen can use Zope3!
     license='ZPL',
 
     install_requires=['setuptools',
-                      'z3c.layer',
-                      'megrok.view',
+                      'megrok.template',
                      ],
 )
 

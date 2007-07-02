@@ -1,9 +1,9 @@
 """
-This doctest uses grok.ContentProvider, grok.ViewletManager and grok.Viewlet.
+This doctest uses grok.ContentProvider, megrok.view.ViewletManager and grok.Viewlet.
 
   >>> import grok
-  >>> from megrok.viewlet.ftests.viewlet.view import Mammoth
-  >>> grok.grok('megrok.viewlet.ftests.viewlet.view')
+  >>> from megrok.viewlet.tests.viewlet.view import Mammoth
+  >>> grok.grok('megrok.viewlet.tests.viewlet.view')
   >>> getRootFolder()["manfred"] = Mammoth()
 
   >>> from zope.testbrowser.testing import Browser
@@ -49,22 +49,23 @@ This doctest uses grok.ContentProvider, grok.ViewletManager and grok.Viewlet.
 import grok
 import megrok.layer
 import megrok.viewlet
+import megrok.view
 
 class Mammoth(grok.Model):
     title = u'Manfred'
 
-class IMySkinLayer(megrok.layer.ILayer):
+class IMySkinLayer(megrok.layer.IMinimalLayer):
     pass
 
 class MySkin(megrok.layer.Skin):
     megrok.layer.layer(IMySkinLayer)
 
-class Index(grok.View):
+class Index(megrok.view.View):
     """Template must be in *_templates, I tried and I tried to find out
     why when the template is inline the `provider` tal directive isn't found"""
     pass
 
-class SkinnedIndex(grok.View):
+class SkinnedIndex(megrok.view.View):
     """Template must be in *_templates, I tried and I tried to find out
     why when the template is inline the `provider` tal directive isn't found"""
     megrok.layer.layer(IMySkinLayer)

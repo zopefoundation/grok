@@ -1,0 +1,65 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:meta="http://namespaces.zope.org/meta"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           i18n_domain="zope"
+           package="megrok.layer.tests">
+
+  <include package="grok" file="meta.zcml" />
+  <include package="megrok.view" file="meta.zcml" />
+  <include package="megrok.viewlet" file="meta.zcml" />
+  <include package="megrok.layer" file="meta.zcml" />
+
+  <include package="zope.app.zcmlfiles" />
+
+  <!-- -->
+  <!-- -->
+
+  <include package="zope.app.securitypolicy" file="meta.zcml" />
+  <include package="zope.app.authentication" />
+  <securityPolicy
+    component="zope.app.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
+
+  <include package="zope.app.securitypolicy" />
+
+  <role id="zope.Anonymous" title="Everybody"
+        description="All users have this role implicitly" />
+
+  <role id="zope.Manager" title="Site Manager" />
+
+  <principal
+   id="zope.manager"
+   title="Administrator"
+   login="mgr"
+   password="mgrpw" />
+
+  <grant
+   role="zope.Manager"
+   principal="zope.manager"
+   />
+
+  <unauthenticatedPrincipal
+    id="zope.anybody"
+    title="Unauthenticated User" />
+
+  <unauthenticatedGroup
+    id="zope.Anybody"
+    title="Unauthenticated Users"
+    />
+
+  <authenticatedGroup
+    id="zope.Authenticated"
+    title="Authenticated Users"
+    />
+
+  <everybodyGroup
+    id="zope.Everybody"
+    title="All Users"
+    />
+
+  <grantAll role="zope.Manager" />
+
+
+  <include package="grok" />
+
+</configure>
+

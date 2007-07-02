@@ -1,6 +1,6 @@
 import grok
-from zope import component
-from zope import interface
+import zope.component
+import zope.interface
 
 from zope.publisher.interfaces.browser import IBrowserView
 from zope.publisher.browser import BrowserView
@@ -9,7 +9,7 @@ from zope.publisher.publish import mapply
 
 from z3c.viewlet.manager import WeightOrderedViewletManager
 
-from grok.components import ViewBase
+from megrok.view.components import ViewBase
 
 class TemplateContentBase(object):
     """Mixin class to provide render method using given template"""
@@ -33,16 +33,16 @@ class ContentProvider(ViewBase, TemplateContentBase):
         self.__parent__ = self.view = view
         self.context = context
         self.request = request
-        self.static = component.queryAdapter(
+        self.static = zope.component.queryAdapter(
             self.request,
-            interface.Interface,
+            zope.interface.Interface,
             name=self.module_info.package_dotted_name
             )        
 
 class Viewlet(BrowserView, ViewBase, TemplateContentBase):
     """ A grok.View-like viewlet
     """
-    interface.implements(IViewlet)
+    zope.interface.implements(IViewlet)
 
     def __init__(self, context, request, view, manager):
         #super(Viewlet, self).__init__(context, request)
@@ -50,9 +50,9 @@ class Viewlet(BrowserView, ViewBase, TemplateContentBase):
         self.context = context
         self.request = request
         self.manager = manager
-        self.static = component.queryAdapter(
+        self.static = zope.component.queryAdapter(
             self.request,
-            interface.Interface,
+            zope.interface.Interface,
             name=self.module_info.package_dotted_name
             )
 
@@ -66,9 +66,9 @@ class ViewletManager(WeightOrderedViewletManager, ContentProvider):
         self.__parent__ = self.view = view
         self.context = context
         self.request = request
-        self.static = component.queryAdapter(
+        self.static = zope.component.queryAdapter(
             self.request,
-            interface.Interface,
+            zope.interface.Interface,
             name=self.module_info.package_dotted_name
             )
 

@@ -1,7 +1,7 @@
 """
   >>> import grok
-  >>> from megrok.layer.ftests.layer.view import Mammoth
-  >>> grok.grok('megrok.layer.ftests.layer.view')
+  >>> from megrok.layer.tests.layer.view import Mammoth
+  >>> grok.grok('megrok.layer.tests.layer.view')
   >>> getRootFolder()["manfred"] = Mammoth()
 
   >>> from zope.testbrowser.testing import Browser
@@ -19,7 +19,7 @@
   >>> browser.open("http://localhost/++skin++Rotterdam/manfred/cavedrawings")
   Traceback (most recent call last):
   ...
-  NotFound: Object: <megrok.layer.ftests.layer.view.Mammoth object at ...>, name: u'cavedrawings'
+  NotFound: Object: <megrok.layer.tests.layer.view.Mammoth object at ...>, name: u'cavedrawings'
 
   >>> browser.open("http://localhost/++skin++Rotterdam/manfred/moredrawings")
   >>> print browser.contents
@@ -39,7 +39,7 @@ from zope import interface
 import megrok.layer
 megrok.layer.layer(IBasicSkin)
 
-class MySkinLayer(megrok.layer.ILayer):
+class MySkinLayer(megrok.layer.IMinimalLayer):
     pass
 
 class MySkin(megrok.layer.Skin):

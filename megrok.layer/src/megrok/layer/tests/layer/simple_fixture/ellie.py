@@ -14,7 +14,7 @@ index = grok.PageTemplate("""\
 </body>
 </html>""")
 
-class MammothLayer(megrok.layer.ILayer):
+class MammothLayer(megrok.layer.IMinimalLayer):
     pass
 
 class MammothSkin(megrok.layer.Skin):
