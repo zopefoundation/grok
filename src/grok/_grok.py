@@ -94,7 +94,6 @@ def prepare_grok(name, module, kw):
     # XXX hardcoded in here which base classes are possible contexts
     # this should be made extensible
     possible_contexts = martian.scan_for_classes(module, [grok.Model,
-                                                          grok.LocalUtility,
                                                           grok.Container])
     context = determine_module_context(module_info, possible_contexts)
 
