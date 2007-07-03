@@ -17,5 +17,6 @@ setup(
     zip_safe=False,    
     install_requires=['setuptools',
                       'martian',
-                      'simplejson'],
+                      'simplejson',
+                      'zc.catalog == 1.1.1'],
 )

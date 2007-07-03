@@ -5,6 +5,7 @@ from zope.interface.interfaces import IMethod, IInterface
 
 from zope.app.catalog.field import FieldIndex
 from zope.app.catalog.text import TextIndex
+from zc.catalog.catalogindex import SetIndex
 
 from martian.error import GrokError, GrokImportError
 from martian.util import frame_is_class
@@ -54,3 +55,6 @@ class Field(IndexDefinition):
 
 class Text(IndexDefinition):
     index_class = TextIndex
+
+class Set(IndexDefinition):
+    index_class = SetIndex
