@@ -61,9 +61,15 @@ just like any grok view. (But then you may as well use View).
 
 We can also use megrok.template to provide more sophisticated possiblities.
 
+  >>> from megrok.view.tests.view.template import SculptureView
+  >>> view = SculptureView(mammoth, request)
+  >>> print view.render()
+  <div>Sculpture template</div>
+
 """
 import grok
 import megrok.view
+import megrok.template
 
 class Mammoth(grok.Model):
     pass
@@ -81,5 +87,11 @@ carving = grok.PageTemplate("""\
 <div>Carving inline template</div>
 """)
 
-class Sculpture(megrok.template.Template):
+class SculptureView(megrok.view.TemplateView):
+    """We don't need to define a template here because the following
+    TemplateFactory will be used"""
     pass
+
+class Sculpture(megrok.template.TemplateFactory):
+    grok.context(SculptureView)
+

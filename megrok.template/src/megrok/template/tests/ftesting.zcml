@@ -9,6 +9,7 @@
   <include package="megrok.viewlet" file="meta.zcml" />
   <include package="megrok.layer" file="meta.zcml" />
   <include package="megrok.template" file="meta.zcml" />
+  <include package="zope.app.pagetemplate" file="meta.zcml" />
 
   <include package="zope.app.zcmlfiles" />
 

@@ -1,5 +1,6 @@
 import zope.component
 import zope.interface
+from zope.component.interfaces import ComponentLookupError
 from zope.publisher.browser import BrowserPage
 from zope.publisher.publish import mapply
 from zope.pagetemplate.interfaces import IPageTemplate
@@ -11,13 +12,7 @@ from grok.interfaces import IGrokView
 
 class ViewBase(object):
 
-    def _render_template(self):
-        namespace = self.template.pt_getContext()
-        namespace['request'] = self.request
-        namespace['view'] = self
-        namespace['context'] = self.context
-        namespace['static'] = self.static
-        return self.template.pt_render(namespace)
+    template_name = u''
 
     def application(self):
         obj = self.context
@@ -78,6 +73,9 @@ class ViewBase(object):
 
 
 class View(BrowserPage, ViewBase):
+    """Chief difference here between grok.View is that this is registered not on
+    IDefaultBrowserLayer but on IBrowserRequest so that it is available to MinimalLayer
+    which does not subclass IDefaultBrowserLayer"""
     zope.interface.implements(IGrokView)
 
     def __init__(self, context, request):
@@ -89,16 +87,26 @@ class View(BrowserPage, ViewBase):
             )
 
     def __call__(self):
+        """note that I've lost the static directory in the namespace,
+        to bring this back in would mean changes to z3c.template.
+
+        I'll think again about this further on"""
+        # should check if update() is not called elsewhere
         mapply(self.update, (), self.request)
         if self.request.response.getStatus() in (302, 303):
-            # A redirect was triggered somewhere in update().  Don't
-            # continue rendering the template or doing anything else.
             return
-
         template = getattr(self, 'template', None)
-        if template is not None:
-            return self._render_template()
+        if template is None:
+            try:
+                template = zope.component.getMultiAdapter(
+                    (self, self.request), IPageTemplate)
+                return template(self)
+            except ComponentLookupError:
+                pass
+        else:
+            return template(self)
         return mapply(self.render, (), self.request)
+
 
 class ITemplateView(zope.interface.Interface):
     pass
@@ -123,26 +131,16 @@ class TemplateView(BrowserPage, ViewBase):
             name=self.module_info.package_dotted_name
             )
 
-    def _render_template(self):
-        # z3c.template factory is a z.a.viewpagetemplatefile
-        namespace = self.template.pt_getContext(self, self.request)
-        namespace['request'] = self.request
-        namespace['view'] = self
-        namespace['context'] = self.context
-        namespace['static'] = self.static
-        #for key in namespace.keys():
-        #    print key
-        return self.template.pt_render(namespace)
-
     def render(self):
-        # should check if update() is not called elsewhere
         mapply(self.update, (), self.request)
-        if self.template is None:
-            self.template = zope.component.getMultiAdapter(
+        if self.request.response.getStatus() in (302, 303):
+            return
+        template = getattr(self, 'template', None)
+        if template is None:
+            template = zope.component.getMultiAdapter(
                 (self, self.request), IPageTemplate)
-            self.template.macro = None
-            return self._render_template()
-        return self._render_template()
+            return template(self)
+        return template(self)
 
 class ILayoutView(zope.interface.Interface):
     pass
@@ -166,21 +164,16 @@ class LayoutView(BrowserPage, ViewBase):
             name=self.module_info.package_dotted_name
             )
 
-    def _render_layout(self):
-        # z3c.template factory is a z.a.viewpagetemplatefile
-        namespace = self.layout.pt_getContext(self, self.request)
-        namespace['request'] = self.request
-        namespace['view'] = self
-        namespace['context'] = self.context
-        namespace['static'] = self.static
-        return self.layout.pt_render(namespace)
-
     def __call__(self):
-        # should check if update() is not called elsewhere
         mapply(self.update, (), self.request)
-        if self.layout is None:
-            self.layout = zope.component.getMultiAdapter(
+        if self.request.response.getStatus() in (302, 303):
+            return
+        layout = getattr(self, 'layout', None)
+        if layout is None:
+            layout = zope.component.getMultiAdapter(
                 (self, self.request), ILayoutTemplate)
-            return self._render_layout()
-        return self._render_layout()
+            return layout(self)
+        return layout(self)
 
+    def render(self):
+        pass

@@ -1,9 +1,9 @@
-from martian.directive import (InterfaceOrClassDirective,
-                            ClassDirectiveContext)
+from martian.directive import (SingleTextDirective,
+                               ClassDirectiveContext)
 
-layout = InterfaceOrClassDirective('megrok.template.layout',
+layout = SingleTextDirective('megrok.template.layout',
                            ClassDirectiveContext())
-macro = InterfaceOrClassDirective('megrok.template.macro',
+macro = SingleTextDirective('megrok.template.macro',
                            ClassDirectiveContext())
-content_type = InterfaceOrClassDirective('megrok.template.content_type',
+content_type = SingleTextDirective('megrok.template.content_type',
                            ClassDirectiveContext())

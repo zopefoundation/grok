@@ -37,6 +37,7 @@ from zope.app.rotterdam import rotterdam
 from zope import interface
 
 import megrok.layer
+import megrok.view
 megrok.layer.layer(IBasicSkin)
 
 class MySkinLayer(megrok.layer.IMinimalLayer):
@@ -48,7 +49,7 @@ class MySkin(megrok.layer.Skin):
 class Mammoth(grok.Model):
     pass
 
-class CaveDrawings(grok.View):
+class CaveDrawings(megrok.view.View):
     pass
 
 cavedrawings = grok.PageTemplate("""\
@@ -59,13 +60,13 @@ cavedrawings = grok.PageTemplate("""\
 </html>
 """)
 
-class MoreDrawings(grok.View):
+class MoreDrawings(megrok.view.View):
     megrok.layer.layer(rotterdam)
 
     def render(self):
         return "Pretty"
 
-class EvenMoreDrawings(grok.View):
+class EvenMoreDrawings(megrok.view.View):
     megrok.layer.layer(MySkinLayer)
 
     def render(self):

@@ -1,3 +1,3 @@
-from directive import layout, macro
-from components import TemplateFactory
+from directive import layout, macro, content_type
+from components import TemplateFactory, LayoutFactory
 

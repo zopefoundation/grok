@@ -35,6 +35,7 @@ from z3c.viewlet.manager import WeightOrderedViewletManager
 
 import megrok.layer
 import megrok.view
+import megrok.template
 
 class Mammoth(grok.Model):
     pass
@@ -49,6 +50,10 @@ class Painting(megrok.view.View):
     """Template must be in *_templates, I tried and I tried to find out
     why when inline the `provider` tal directive wasn't found"""
     pass
+
+class PaintingPT(megrok.template.TemplateFactory):
+    grok.template('painting')
+    grok.context(Painting)
 
 class MammothContentProvider(grok.MultiAdapter):
     grok.adapts(Mammoth, IMySkinLayer, IBrowserView)

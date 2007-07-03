@@ -26,11 +26,19 @@ class ViewGrokkerBase(martian.ClassGrokker):
         factory.module_info = module_info
         self.factory_name = factory.__name__.lower()
 
+        self.view_layer = util.class_annotation(factory, 'megrok.layer.layer',
+                                           None) or module_info.getAnnotation('megrok.layer.layer',
+                                               None) or IBrowserRequest
+
+        self.view_name = util.class_annotation(factory, 'grok.name',
+                                          self.factory_name)
+
         # find templates
         template_name = util.class_annotation(factory, 'grok.template',
                                               self.factory_name)
         template = templates.get(template_name)
 
+        factory.template_name = template_name
         if self.factory_name != template_name:
             # grok.template is being used
             if templates.get(self.factory_name):
@@ -41,13 +49,6 @@ class ViewGrokkerBase(martian.ClassGrokker):
                                 factory)
 
         self.register_template(factory, template, template_name, templates)
-
-        self.view_layer = util.class_annotation(factory, 'megrok.layer.layer',
-                                           None) or module_info.getAnnotation('megrok.layer.layer',
-                                               None) or IBrowserRequest
-
-        self.view_name = util.class_annotation(factory, 'grok.name',
-                                          self.factory_name)
 
         # __view_name__ is needed to support IAbsoluteURL on views
         factory.__view_name__ = self.view_name
@@ -71,15 +72,16 @@ class ViewGrokkerBase(martian.ClassGrokker):
         return True
 
     def register_template(self, factory, template, template_name, templates):
-        """May be overridden"""
+        """Jumping a bit here to make the z3c.template Macro available to the
+        template, either it needs to be in grok.PageTemplate ...?"""
+
+        print '\ntemplatename:', template_name,'template:', template,'factory:', factory, '\n'
         if template:
             templates.markAssociated(template_name)
             factory.template = template
         else:
-            if not getattr(factory, 'render', None):
-                # we do not accept a view without any way to render it
-                raise GrokError("View %r has no associated template or "
-                                "'render' method." % factory, factory)
+            # we assume that a template has or will be grokked from a class
+            pass
 
 
     def register(self, factory, module_info):
@@ -106,29 +108,6 @@ class TemplateViewGrokker(ViewGrokkerBase):
                                  adapts=(self.view_context, self.view_layer),
                                  provides=zope.interface.Interface,
                                  name=self.view_name)
-
-    def register_template(self, factory, template, template_name, templates):
-        """Jumping a bit here to make the z3c.template Macro available to the
-        template, either it needs to be in grok.PageTemplate ...?"""
-        contentType = getattr(factory, 'contentType', 'text/html')
-        if template:
-            print '\n', template, '\n'
-            #filename = getattr(template, 'filename', None)
-            #if not filename:
-            #    raise GrokError("%s cannot use the inline "
-            #                    "template called '%s'. Please use grok.PageTemplateFle "
-            #                    "or drop a template in %s_templates called '%s'"
-            #                    % (factory, template_name, 
-            #                       factory.module_info.name, 
-            #                       self.factory_name),
-            #                    factory)
-            filename = template.__grok_location__
-            templates.markAssociated(template_name)
-            #template = TemplateFactory(filename, contentType)
-            factory.template = template
-        else:
-            # we assume that a template has or will be grokked from a class
-            pass
 
 class LayoutViewGrokker(ViewGrokkerBase):
     component_class = megrok.view.LayoutView

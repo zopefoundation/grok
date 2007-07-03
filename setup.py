@@ -50,5 +50,6 @@ setup(
                       'zope.app.twisted',
                       'zope.app.securitypolicy',
                       'zope.app.zcmlfiles',
+                      'martian',
                       ],
 )

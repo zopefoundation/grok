@@ -23,8 +23,16 @@ class TemplateContentBase(object):
         if self.request.response.getStatus() in (302, 303):
             return
         template = getattr(self, 'template', None)
-        if template is not None:
-            return self._render_template()
+        if template is None:
+            try:
+                template = zope.component.getMultiAdapter(
+                    (self, self.request), IPageTemplate)
+                return template(self)
+            except ComponentLookupError:
+                pass
+        else:
+            return template(self)
+        return mapply(self.render, (), self.request)
 
 
 class ContentProvider(ViewBase, TemplateContentBase):
@@ -94,7 +102,7 @@ class ViewletManager(WeightOrderedViewletManager, ContentProvider):
             return
         template = getattr(self, 'template', None)
         if template is not None:
-            return self._render_template()
+            return template(self)
         else:
             return u'\n'.join([viewlet.render() for viewlet in self.viewlets])
 

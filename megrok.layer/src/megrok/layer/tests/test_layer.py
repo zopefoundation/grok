@@ -9,6 +9,7 @@ functional.defineLayer('TestLayer', 'ftesting.zcml')
 def suiteFromPackage(name):
     files = resource_listdir(__name__, name)
     suite = unittest.TestSuite()
+    #files = ['view.py']
     for filename in files:
         if not filename.endswith('.py'):
             continue

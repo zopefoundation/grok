@@ -52,6 +52,7 @@ The same works with views that define update():
 """
 import grok
 import megrok.view
+import megrok.template
 
 class Mammoth(grok.Model):
     pass
@@ -64,14 +65,10 @@ class RenderWithArguments(megrok.view.View):
 
 class UpdateWithArguments(megrok.view.View):
     grok.name('update')
-    grok.template('update')
 
     def update(self, message, another):
         self.message = message
         self.another = another
 
-update = grok.PageTemplate("""
-Coming to us from update():
-Message: <span tal:replace="view/message" />
-Another: <span tal:replace="view/another" />
-""")
+class Update(megrok.template.TemplateFactory):
+    grok.context(UpdateWithArguments)
