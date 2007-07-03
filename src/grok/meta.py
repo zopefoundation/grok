@@ -310,7 +310,7 @@ class StaticResourcesGrokker(martian.GlobalGrokker):
         resource_factory = components.DirectoryResourceFactory(
             resource_path, module_info.dotted_name)
         component.provideAdapter(
-            resource_factory, (IDefaultBrowserLayer,),
+            resource_factory, (IBrowserRequest,),
             interface.Interface, name=module_info.dotted_name)
         return True
 
