@@ -105,6 +105,11 @@ anonymous check out of the latest version of Grok with the following command:::
 
   svn co svn://svn.zope.org/repos/main/grok/trunk grok
 
+ME GROK MINI-TUTORIALS
+----------------------
+
+* `Newbie Search Tutorial <searching.html>`_
+
 ME GROK SPRINTS AND BLOGS!
 --------------------------
 
