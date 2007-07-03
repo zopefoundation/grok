@@ -17,6 +17,8 @@ CREDITS
 
 * Tim Terlegård (JSON support)
 
+* Sebastian Ware (website effort, documentation)
+
 * Christian Zagrodnick (early grok discussions)
 
 * ME GROK (team mascot)
