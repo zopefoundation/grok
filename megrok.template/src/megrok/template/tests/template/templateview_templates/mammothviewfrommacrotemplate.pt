@@ -1,0 +1,3 @@
+<div>This won't be rendered</div>
+<div metal:define-macro="mymacro">This is within the mymacro macro</div>
+<div>This won't be rendered</div>
