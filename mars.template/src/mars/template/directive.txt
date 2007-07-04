@@ -1,0 +1,52 @@
+========================
+Mars Template Directives
+========================
+
+Of all the available directives for registering templates only ``grok.template``
+is required to define the file containing the page template, either relative to
+the module or an absolute path.
+
+Directives specific to this package
+-----------------------------------
+
+* mars.template.macro(name):
+  The macro to be used.  This allows us to define different macros in on template.
+  The template designer can now create whole site, the ViewTemplate can then
+  extract the macros for single viewlets or views.  If no macro is given the whole
+  template is used for rendering.
+  Default: empty
+
+* mars.template.content_type(name):
+  The content type identifies the type of data.
+  Default: text/html
+
+Also the mars.layer directive may be used
+-----------------------------------------
+
+* mars.layer.layer(class_or_interface):
+  The layer for which the template should be available.
+  Default: zope.publisher.browser.interfaces.IDefaultBrowserLayer
+
+Relevant grok directives
+------------------------
+
+* grok.template(path):
+  This is used different to IGrokDirectives.template. It looks up the file
+  containing the page template using the path relative to the current module, if
+  not found it tries `path` as an absolute path, if not found GrokError is
+  raised. The file should end in extensions ``.pt`` or ``.html``.
+  **Required**
+
+* grok.name(name):
+  If defined the template will be registered as a `named adapter`.
+  Default: empty string
+
+* grok.context(class_or_interface):
+  The view for which the template should be available.
+  Default: module context
+
+* grok.provides(interface):
+  Explicitly specify with which interface a component will be looked up.
+  Default: zope.pagetemplate.interfaces.IPageTemplate for TemplateFactory
+           z3c.template.interfaces.ILayoutTemplate for LayoutFactory
+

@@ -1,4 +1,0 @@
-Coming to us from update():
-Message: <span tal:replace="view/message" />
-Another: <span tal:replace="view/another" />
-

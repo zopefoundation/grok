@@ -1,0 +1,18 @@
+=====================
+Mars Layer Directives
+=====================
+
+Directives specific to this package
+-----------------------------------
+
+* mars.layer.layer(class_or_interface):
+  The layer for which the object should be available.
+  Default: zope.publisher.browser.interfaces.IBrowserRequest
+
+Relevant grok directives
+------------------------
+
+* grok.name(name):
+  The name for which the skin is registered.
+  Default: factory.__name__.lower()
+
