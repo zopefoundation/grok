@@ -19,9 +19,24 @@ The base layers available are:
 Example Code
 ------------
 
-  >>> import mars.layer
-  >>> class IMyLayer(mars.layer.IMinimalLayer):
-  ...     pass
-  >>> class MySkin(mars.layer.Skin):
-  ...   mars.layer.layer(IMyLayer)
+::
 
+  import mars.layer
+
+  class IMyLayer(mars.layer.IMinimalLayer):
+      pass
+
+  class MySkin(mars.layer.Skin):
+      mars.layer.layer(IMyLayer)
+
+Skin is available as http://localhost/++skin++myskin
+
+Directives
+----------
+
+Please see ``directive.txt``.
+
+Tests
+-----
+
+See test directory.

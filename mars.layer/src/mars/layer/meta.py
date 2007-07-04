@@ -20,6 +20,7 @@ class SkinGrokker(martian.ClassGrokker):
                                     None) or module_info.getAnnotation('mars.layer.layer',
                                     None) or IBrowserRequest
         name = grok.util.class_annotation(factory, 'grok.name', factory.__name__.lower())
+        #print '\nName: ', name, 'Factory: ', factory, '\n'
         zope.component.interface.provideInterface(name, layer, IBrowserSkinType)
 
         return True

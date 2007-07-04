@@ -11,4 +11,30 @@ templates.
 
 This package uses martian to configure z3c.template based templates.
 
+Example Code
+------------
+
+::
+
+    class View(grok.View):
+
+        def render(self):
+            template = zope.component.getMultiAdapter(
+                (self, self.request), IPageTemplate)
+            return template(self)
+
+    class ViewTemplate(mars.template.TemplateFactory):
+        grok.template('templates/macro.pt')
+        grok.context(View)
+        mars.template.macro('mymacro')
+
+Directives
+----------
+
+Please see ``directive.txt``.
+
+Tests
+-----
+
+See test directory.
 

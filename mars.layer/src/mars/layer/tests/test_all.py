@@ -8,14 +8,17 @@ functional.defineLayer('TestMinimalLayer', 'minimal-ftesting.zcml')
 functional.defineLayer('TestPageletLayer', 'pagelet-ftesting.zcml')
 
 def test_suite():
-    dottedname = 'mars.layer.tests.%s'
     suite = unittest.TestSuite()
-    test = FunctionalDocTestSuite(dottedname % 'minimal')
-    test.layer = TestMinimalLayer
-    suite.addTest(test)
+    dottedname = 'mars.layer.tests.%s'
+    for name in ['minimal', 'directive']:
+        test = FunctionalDocTestSuite(dottedname % name)
+        test.layer = TestMinimalLayer
+        suite.addTest(test)
+
     test = FunctionalDocTestSuite(dottedname % 'pagelet')
     test.layer = TestPageletLayer
     suite.addTest(test)
+
     return suite
 
 

@@ -2,12 +2,11 @@ import os
 
 import zope.component
 import zope.interface
-from zope.publisher.interfaces.browser import IBrowserRequest
+from zope.publisher.interfaces.browser import IBrowserView
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from zope.pagetemplate.interfaces import IPageTemplate
 
-from z3c.template.template import TemplateFactory
-from z3c.template.interfaces import ILayoutTemplate
+from z3c.macro.zcml import MacroFactory
 
 import martian
 from martian import util
@@ -16,14 +15,16 @@ from martian.error import GrokError
 import grok
 from grok.util import check_adapts
 
-import mars.template
+import mars.macro
 
 # TODO raise errors if anything missing?
-class TemplateFactoryGrokkerBase(martian.ClassGrokker):
-    component_class = None
+class MacroFactoryGrokker(martian.ClassGrokker):
+    component_class = mars.macro.MacroFactory
 
     def grok(self, name, factory, context, module_info, templates):
+
         view_context = util.determine_class_context(factory, context)
+
         factory.module_info = module_info
         factory_name = factory.__name__.lower()
 
@@ -42,37 +43,22 @@ class TemplateFactoryGrokkerBase(martian.ClassGrokker):
                             % (factory.__name__),
                             factory)
 
-        provides = util.class_annotation(factory, 'grok.provides', self.provides)
-        macro = util.class_annotation(factory, 'mars.template.macro', None)
         contentType = util.class_annotation(factory,
-                                    'mars.template.content_type', 'text/html')
+                                    'mars.macro.content_type', 'text/html')
         view_layer = util.class_annotation(factory, 'mars.layer.layer',
                                        None) or module_info.getAnnotation('mars.layer.layer',
                                        None) or IDefaultBrowserLayer
-        view_name = util.class_annotation(factory, 'grok.name', '')
 
-        factory = TemplateFactory(filepath, contentType, macro)
-        zope.interface.directlyProvides(factory, provides)
+        view_name = util.class_annotation(factory, 'grok.name', factory_name)
+        macro = util.class_annotation(factory, 'mars.macro.macro', view_name)
+        view = util.class_annotation(factory, 'mars.macro.view', IBrowserView)
+
+        factory = MacroFactory(filepath, macro, contentType)
         #print '\nname:', view_name,'context:', view_context,'factory:', factory, '\n'
         zope.component.provideAdapter(factory,
-                                 adapts=(view_context, view_layer),
-                                 provides=provides,
+                                 adapts=(view_context, view, view_layer),
+                                 provides=IMacroTemplate,
                                  name=view_name)
         return True
-
-
-class TemplateFactoryGrokker(TemplateFactoryGrokkerBase):
-    component_class = mars.template.TemplateFactory
-
-    @property
-    def provides(self):
-        return IPageTemplate
-
-class LayoutFactoryGrokker(TemplateFactoryGrokkerBase):
-    component_class = mars.template.LayoutFactory
-
-    @property
-    def provides(self):
-        return ILayoutTemplate
 
 

@@ -1,13 +1,14 @@
 """
+Test the claimed directives.
 
   >>> import grok
-  >>> grok.grok('mars.layer.tests.minimal')
+  >>> grok.grok('mars.layer.tests.directive')
 
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
   >>> browser.addHeader('Authorization', 'Basic mgr:mgrpw')
 
-  >>> skinURL = 'http://localhost/++skin++myskin'
+  >>> skinURL = 'http://localhost/++skin++namedskin'
 
 Try opening page.htm which is registered in ftesting.zcml for
 z3c.layer.IMinimalBrowserLayer.
@@ -28,19 +29,14 @@ z3c.layer.IMinimalBrowserLayer.
   <BLANKLINE>
   <BLANKLINE>
 
-
 """
-
 import grok
 import mars.layer
 
 class IMyLayer(mars.layer.IMinimalLayer):
     pass
 
-# layer can be set on module level and will therefore be the layer
-# for all views, template and macros in the module
-mars.layer.layer(IMyLayer)
-
 class MySkin(mars.layer.Skin):
-    pass
+    grok.name('namedskin')
+    mars.layer.layer(IMyLayer)
 

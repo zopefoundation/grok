@@ -25,6 +25,7 @@ Also the mars.layer directive may be used
 
 * mars.layer.layer(class_or_interface):
   The layer for which the template should be available.
+  This directive can be used at module level
   Default: zope.publisher.browser.interfaces.IDefaultBrowserLayer
 
 Relevant grok directives
@@ -42,7 +43,8 @@ Relevant grok directives
   Default: empty string
 
 * grok.context(class_or_interface):
-  The view for which the template should be available.
+  The view for which the template should be available. Usually should be
+  defined.
   Default: module context
 
 * grok.provides(interface):

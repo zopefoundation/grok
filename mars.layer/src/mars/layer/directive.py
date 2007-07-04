@@ -1,4 +1,4 @@
-from grok.directive import (InterfaceOrClassDirective,
+from martian.directive import (InterfaceOrClassDirective,
                             ClassOrModuleDirectiveContext)
 
 layer = InterfaceOrClassDirective('mars.layer.layer',
