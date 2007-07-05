@@ -1,10 +1,8 @@
 """
-Test the claimed directives.
-
   >>> import grok
-  >>> grok.grok('mars.macro.tests.directive')
+  >>> grok.grok('mars.macro.tests.macro')
 
-  >>> from mars.macro.tests.directive import Mammoth
+  >>> from mars.macro.tests.macro import Mammoth
   >>> mammoth = getRootFolder()["mammoth"] = Mammoth()
 
   >>> from zope.testbrowser.testing import Browser
@@ -42,6 +40,11 @@ import grok
 import mars.macro
 import mars.template
 
+class Navigation(mars.macro.MacroFactory):
+    """Name defaults to factory.__name__, 'navigation'"""
+    grok.template('templates/navigation.pt') # required
+    grok.context(zope.interface.Interface) # required if no module context 
+
 class Mammoth(grok.Model):
     pass
 
@@ -58,11 +61,4 @@ class First(grok.View):
 class FirstLayout(mars.template.LayoutFactory):
     grok.template('templates/first.pt')
     grok.context(First)
-
-class MyNavigationMacro(mars.macro.MacroFactory):
-    grok.name('navigation') # define the name for macro
-    grok.template('templates/navigation.pt') # required
-    grok.context(Mammoth) # explicitly define the context
-    mars.macro.view(First) # explicitly define the view
-    mars.macro.content_type('text/html') # explicitly define content type
 

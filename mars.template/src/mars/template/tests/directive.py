@@ -14,8 +14,8 @@ use testbrowser.
   >>> browser = Browser()
   >>> browser.handleErrors = False
 
-  >>> #browser.open("http://localhost/++skin++myskin/mammoth/@@view")
-  >>> browser.open("http://localhost/mammoth/@@view")
+  >>> browser.open("http://localhost/++skin++myskin/mammoth/@@view")
+  >>> #browser.open("http://localhost/mammoth/@@view")
   >>> print browser.contents
   <body>
   <div>Rendered content</div>
@@ -35,6 +35,7 @@ from grok.interfaces import IGrokView
 
 import mars.template
 import mars.layer
+import mars.view
 
 class IMyLayer(mars.layer.IMinimalLayer):
     pass
@@ -48,12 +49,11 @@ class IMyPageTemplate(zope.interface.Interface):
 class Mammoth(grok.Model):
     pass
 
-class View(grok.View):
-
-    def __call__(self):
-        template = zope.component.getMultiAdapter(
-            (self, self.request), IMyPageTemplate, name='complex')
-        return template(self)
+class View(mars.view.LayoutView):
+    """Here use LayoutView which uses layers"""
+    mars.layer.layer(IMyLayer)
+    mars.view.layout('complex') # forces named layout template lookup
+    _layout_interface = IMyPageTemplate # if template provides specific interface
 
     def render(self):
         return u'Rendered content'
@@ -65,6 +65,6 @@ class ViewLayout(mars.template.LayoutFactory):
     grok.provides(IMyPageTemplate) # view must use this interface to lookup
     mars.template.macro('body') # define the macro to use
     mars.template.content_type('text/html') # define the contentType
-    #mars.layer.layer(IMyLayer) # registered on this layer.
+    mars.layer.layer(IMyLayer) # registered on this layer.
     
 

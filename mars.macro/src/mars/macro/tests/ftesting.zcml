@@ -11,6 +11,7 @@
 
   <include package="z3c.layer.minimal.tests" file="ftesting.zcml" />
 
+  <include package="z3c.macro" />
   <include package="grok" />
 
 </configure>

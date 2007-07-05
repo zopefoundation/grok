@@ -1,0 +1,41 @@
+========================
+Mars Template Directives
+========================
+
+Directives specific to this package
+-----------------------------------
+
+* mars.view.layout(name):
+  If defined the layout for LayoutView will be looked up as a `named adapter`.
+  Should only be defined if the layout template has been registered as a named
+  adapter.
+  Default: ''
+
+
+The mars.layer directive may be used
+-----------------------------------------
+
+* mars.layer.layer(class_or_interface):
+  The layer for which the template should be available.
+  Default: zope.publisher.browser.interfaces.IDefaultBrowserLayer
+
+Relevant grok directives
+------------------------
+
+* grok.name(name):
+  Name of the view, available in url as object/@@viewname.
+  Default: factory.__name__.lower()
+
+* grok.context(class_or_interface):
+  The view for which the template should be available. Usually should be
+  defined.
+  Default: module context
+
+* grok.template(name):
+  If defined the template will be looked up as a `named adapter`. Should only be
+  defined if the template has been registered as a named adapter.
+  Default: ''
+
+* grok.provides(class_or_interface):
+  Interface the class is looked up as, probably wouldn't be used.
+  Default: zope.interface.Interface

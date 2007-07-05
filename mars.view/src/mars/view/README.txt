@@ -1,0 +1,41 @@
+=========
+Mars View
+=========
+
+Martian is a library that allows the embedding of configuration
+information in Python code. Martian can then grok the system and
+do the appropriate configuration registrations.
+
+z3c packages bring significant clarity and a pattern for forms, view and
+templates.
+
+This package uses martian to configure views. The views here defined are
+TemplateView and LayoutView, both use adapter lookup to locate the template to
+be used (but can class attributes `template` for TemplateView and LayoutView and `layout` for
+LayoutView will be used before adapter lookup).
+
+TemplateView provides only a `render` method which returns the rendered
+template.
+
+LayoutView has a `__call__` method that returns the rendered layout template in
+addition to a `render` method inherited from TemplateView which returns the
+rendered template.
+
+Example Code
+------------
+
+::
+
+    Code
+
+Directives
+----------
+
+Please see ``directive.txt``.
+
+Tests
+-----
+
+See test directory.
+
+

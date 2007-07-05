@@ -7,6 +7,7 @@ from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from zope.pagetemplate.interfaces import IPageTemplate
 
 from z3c.macro.zcml import MacroFactory
+from z3c.macro.interfaces import IMacroTemplate
 
 import martian
 from martian import util
@@ -54,7 +55,8 @@ class MacroFactoryGrokker(martian.ClassGrokker):
         view = util.class_annotation(factory, 'mars.macro.view', IBrowserView)
 
         factory = MacroFactory(filepath, macro, contentType)
-        #print '\nname:', view_name,'context:', view_context,'factory:', factory, '\n'
+        #print '\nname:', view_name,'context:', view_context,\
+        #      'factory:', factory, 'view: ', view, 'layer', view_layer, '\n'
         zope.component.provideAdapter(factory,
                                  adapts=(view_context, view, view_layer),
                                  provides=IMacroTemplate,

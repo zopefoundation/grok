@@ -44,6 +44,7 @@ def make_checker(factory, view_factory, permission):
         checker = NamesChecker(['__call__'])
     else:
         checker = NamesChecker(['__call__'], permission)
+
     defineChecker(view_factory, checker)
 
 def check_permission(factory, permission):

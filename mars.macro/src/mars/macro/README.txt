@@ -16,7 +16,15 @@ Example Code
 
 ::
 
-    Code
+ class Navigation(mars.macro.MacroFactory):
+     """Name defaults to factory.__name__, 'navigation'"""
+     grok.template('templates/navigation.pt') # required
+     grok.context(zope.interface.Interface) # required if no module context 
+
+The following tal statement will look up the defined macro and insert its
+template.::
+
+ <div metal:use-macro="macro:naviagition" />
 
 Directives
 ----------
