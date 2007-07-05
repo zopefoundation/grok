@@ -38,8 +38,8 @@ class TemplateFactoryGrokkerBase(martian.ClassGrokker):
                 filepath = template_name
         if filepath is None:
             raise GrokError("No template found for %s."
-                            " Please use grok.template to define path to file."
-                            " containing the template"
+                            " Please use grok.template to define path to the"
+                            " file containing the template"
                             % (factory.__name__),
                             factory)
 

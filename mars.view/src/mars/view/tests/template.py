@@ -15,6 +15,7 @@ TemplateViews look up a template as an adpater.
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()
   >>> view = Painting(mammoth, request)
+  >>> from zope.publisher.interfaces.browser import IBrowserView
 
 Since a template is not yet registered, rendering the view will fail:
 

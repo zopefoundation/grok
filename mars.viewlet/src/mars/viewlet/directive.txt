@@ -1,6 +1,18 @@
-===============================
-Mars ContentProvider Directives
-===============================
+=======================
+Mars Viewlet Directives
+=======================
+
+Directives specific to this package
+-----------------------------------
+
+* mars.viewlet.manager(class_or_interface):
+  The manager for which the viewlet is registered.
+  Default: IViewletManager (?)
+
+* mars.viewlet.view(class_or_interface):
+  The view for which the viewlet is registered.
+  Default: zope.publisher.interfaces.browser.IBrowserView
+
 
 The mars.layer directive may be used
 -----------------------------------------

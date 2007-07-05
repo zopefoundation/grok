@@ -8,8 +8,8 @@ functional.defineLayer('TestLayer', 'ftesting.zcml')
 
 def test_suite():
     suite = unittest.TestSuite()
-    dottedname = 'mars.view.tests.%s'
-    for name in ['layout', 'template']:
+    dottedname = 'mars.viewlet.tests.%s'
+    for name in ['viewlet']:
         test = FunctionalDocTestSuite(dottedname % name)
         test.layer = TestLayer
         suite.addTest(test)

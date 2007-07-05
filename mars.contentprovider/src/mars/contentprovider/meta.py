@@ -11,8 +11,6 @@ class ContentProviderGrokker(ViewGrokkerBase):
     
     def register(self, factory, module_info):
 
-#        print '\nname:', self.view_name,'context:', self.view_context,'factory:', factory,\
-#              'layer:', self.view_layer, 'provides', self.provides, '\n'
         zope.component.provideAdapter(factory,
                                  adapts=(self.view_context, self.view_layer, IBrowserView),
                                  provides=self.provides,

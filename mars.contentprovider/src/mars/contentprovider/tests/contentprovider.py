@@ -22,9 +22,6 @@ import mars.layer
 import mars.template
 import mars.contentprovider
 
-class Mammoth(grok.Model):
-    title = u'Manfred'
-
 class IMySkinLayer(mars.layer.IMinimalLayer):
     pass
 
@@ -33,6 +30,9 @@ mars.layer.layer(IMySkinLayer)
 
 class MySkin(mars.layer.Skin):
     pass
+
+class Mammoth(grok.Model):
+    title = u'Manfred'
 
 class Index(mars.view.LayoutView):
     pass

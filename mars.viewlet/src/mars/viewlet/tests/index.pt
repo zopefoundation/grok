@@ -1,0 +1,11 @@
+<html>
+<body>
+<div id="leftcolumn">
+<tal:block tal:content="structure provider:leftcolumn" />
+</div>
+<div id="rightcolumn">
+<tal:block tal:content="structure provider:rightcolumn" />
+</div>
+</body>
+</html>
+

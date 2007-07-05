@@ -13,7 +13,21 @@ Example Code
 
 ::
 
-    Code
+ class Index(mars.view.LayoutView):
+     pass
+
+ class IndexLayout(mars.template.LayoutFactory):
+     grok.template('index.pt')
+     grok.context(Index)
+
+ class Title(mars.contentprovider.ContentProvider):
+
+     def render(self):
+         return self.context.title
+
+Template for index may be::
+
+ <tal:block tal:content="structure provider:title" />
 
 Directives
 ----------
