@@ -20,7 +20,7 @@ class ViewGrokkerBase(martian.ClassGrokker):
     view_name = ''
     layer_name = ''
     view_context = None
-    provider = zope.interface.Interface
+    provides = zope.interface.Interface
 
     def grok(self, name, factory, context, module_info, templates):
         self.view_context = util.determine_class_context(factory, context)
@@ -44,7 +44,7 @@ class ViewGrokkerBase(martian.ClassGrokker):
 
         # don't know if this would ever need to be set
         self.provides = util.class_annotation(factory, 'grok.provides',
-                                                self.provider)
+                                                self.provides)
         #print '\nname:', self.view_name,'context:', self.view_context,'factory:', factory,\
         #      'layer:', self.view_layer, '\n'
         self.register(factory, module_info)

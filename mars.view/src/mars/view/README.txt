@@ -24,9 +24,37 @@ rendered template.
 Example Code
 ------------
 
-::
+The following registers a view for Context named view. It has a
+`render` method that renders the template defined by ViewTemplate::
 
-    Code
+ class Context(grok.Model):
+     pass
+
+ class View(mars.view.TemplateView):
+     pass
+
+ class ViewTemplate(mars.template.TemplateFactory):
+     grok.template('templates/template.pt')
+     grok.context(View)
+
+The following snippet registers a view for Context named view. It has a
+`__call__` method that renders the template defined by ViewLayout in addition to a
+`render` method that renders the template defined by ViewTemplate::
+
+ class Context(grok.Model):
+     pass
+
+ class View(mars.view.LayoutView):
+     pass
+
+ class ViewLayout(mars.template.LayoutFactory):
+     grok.template('templates/template.pt')
+     grok.context(View)
+
+ class ViewSnippet(mars.template.TemplateFactory):
+     grok.template('templates/snippet.pt')
+     grok.context(View)
+
 
 Directives
 ----------

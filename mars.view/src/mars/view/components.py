@@ -11,6 +11,9 @@ import grok
 from grok.interfaces import IGrokView
 
 class ViewBase(object):
+    """Maybe this could be in the grok.components module?
+    
+    All of this is directly copied from grok.View"""
 
     template_name = u''
 
@@ -71,7 +74,7 @@ class ViewBase(object):
         # give nice error message if template is None
         return self.template.macros[key]
 
-class TemplateViewBase(BrowserPage, ViewBase):
+class TemplateViewBase(ViewBase):
     """Mixin to reuse render method"""
     template = None
     _template_name = u'' # will be set if grok.template defined
@@ -89,23 +92,17 @@ class TemplateViewBase(BrowserPage, ViewBase):
             return template(self)
         return template(self)
 
-class TemplateView(TemplateViewBase):
-    """This differs from the above in that instead of expecting a template
-    or render method, the template will be looked up.
-    No call method is provided.
-    """
+
+class TemplateView(TemplateViewBase, BrowserPage):
 
     def __init__(self, context, request):
         super(TemplateView, self).__init__(context, request)
 
-class LayoutView(TemplateViewBase):
-    """This differs from the above in that instead of expecting a template
-    or render method, a layout template will be looked up in the call method
-    """
+
+class LayoutView(TemplateViewBase, BrowserPage):
     layout = None
     _layout_name = u'' # will be set if mars.view.layout defined
     _layout_interface = ILayoutTemplate
-
 
     def __init__(self, context, request):
         super(LayoutView, self).__init__(context, request)

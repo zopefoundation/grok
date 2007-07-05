@@ -2,8 +2,8 @@
 Testing the LayoutView, which unlike grok.View will look up a layout.
 
   >>> import grok
-  >>> from mars.view.tests.layout import Mammoth
   >>> grok.grok('mars.view.tests.layout')
+  >>> from mars.view.tests.layout import Mammoth
   >>> getRootFolder()["manfred"] = Mammoth()
 
   >>> from zope.testbrowser.testing import Browser

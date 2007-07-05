@@ -21,6 +21,7 @@ import mars.template
 # TODO raise errors if anything missing?
 class TemplateFactoryGrokkerBase(martian.ClassGrokker):
     component_class = None
+    provides = None
 
     def grok(self, name, factory, context, module_info, templates):
         view_context = util.determine_class_context(factory, context)
@@ -63,16 +64,10 @@ class TemplateFactoryGrokkerBase(martian.ClassGrokker):
 
 class TemplateFactoryGrokker(TemplateFactoryGrokkerBase):
     component_class = mars.template.TemplateFactory
-
-    @property
-    def provides(self):
-        return IPageTemplate
+    provides = IPageTemplate
 
 class LayoutFactoryGrokker(TemplateFactoryGrokkerBase):
     component_class = mars.template.LayoutFactory
-
-    @property
-    def provides(self):
-        return ILayoutTemplate
+    provides = ILayoutTemplate
 
 
