@@ -36,6 +36,12 @@ Relevant grok directives
   defined if the template has been registered as a named adapter.
   Default: ''
 
+* grok.require(permission):
+  Protect the view class with ``permission``.
+  ``permission`` must already be defined, e.g. using
+  grok.define_permission.
+  Default: []
+
 * grok.provides(class_or_interface):
   Interface the class is looked up as, probably wouldn't be used.
   Default: zope.interface.Interface

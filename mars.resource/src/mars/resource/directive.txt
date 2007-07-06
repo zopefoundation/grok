@@ -1,0 +1,34 @@
+========================
+Mars Template Directives
+========================
+
+Directives specific to this package
+-----------------------------------
+
+* mars.resource.file(name):
+  Path to the resource
+  **Required** one only of image or file for Resource
+
+* mars.resource.image(name):
+  Path to the resource
+  **Required** one only of image or file for Resource
+
+* mars.resource.directory(name):
+  Path to the resource directory
+  **Required** for ResourceDirectory
+
+Also the mars.layer directive may be used
+-----------------------------------------
+
+* mars.layer.layer(class_or_interface):
+  The layer for which the template should be available.
+  Default: zope.publisher.browser.interfaces.IDefaultBrowserLayer
+
+Relevant grok directives
+------------------------
+
+* grok.name(name):
+  Name by which resource or resource directory is located
+  **Required**
+
+[And possibly grok.require??]
