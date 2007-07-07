@@ -1,0 +1,23 @@
+================
+Grok Mini-HowTos
+================
+
+.. image:: /resources/evencaveman.jpg
+   :alt: Now even cavemen can use Zope3
+   :class: right
+
+These mini-tutorials have been contributed by members of the Grok community.
+
+* `Newbie Search Tutorial </minitutorials/searching.html>`_:
+  Grok supports the vanilla indexing services available in Zope 3 straight out of
+  the box. Catalog uses developer defined indexes for searching. In other words,
+  you have to define the indexes you want to use to search you objects before you
+  perform the actual search.
+
+* `Macros With Grok </minitutorials/macros.html>`_:
+  Grok supports the vanilla indexing services available in Zope 3 straight out of
+  the box. Catalog uses developer defined indexes for searching. In other words,
+  you have to define the indexes you want to use to search you objects before you
+  perform the actual search.
+
+

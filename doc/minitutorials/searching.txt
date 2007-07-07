@@ -4,20 +4,29 @@ Newbie Search Tutorial
 
 Introduction
 ------------
-Grok supports the vanilla indexing services available in Zope 3 straight out of the box. Catalog uses developer defined indexes for searching. In other words, you have to define the indexes you want to use to search you objects before you perform the actual search.
+Grok supports the vanilla indexing services available in Zope 3 straight out of
+the box. Catalog uses developer defined indexes for searching. In other words,
+you have to define the indexes you want to use to search you objects before you
+perform the actual search.
 
 * FieldIndex: search matching an entire field
 * SetIndex: search for keywords in a field
 * TextIndex: full-text searching
 * ValueSearch: search for values using ranges
 
-The time for Zope to generate a new index is proportional to the amount of objects that need to be analysed.
+The time for Zope to generate a new index is proportional to the amount of
+objects that need to be analysed.
 
 Setup
 -----
-The egg (package) containing the search functionality is called [zc.catalog-x.x.x-py2.x.egg] and is installed when "buildout.cfg" contains "zope.app.catalog" in the list of the directive "zcml=". This is the default configuration.
+The egg (package) containing the search functionality is called
+[zc.catalog-x.x.x-py2.x.egg] and is installed when "buildout.cfg" contains
+"zope.app.catalog" in the list of the directive "zcml=". This is the default
+configuration.
 
-Some applications might require specific versions of catalog. This is specified in the "setup.py" script. The following directive indicates that zc.catalog version 1.1.1 is required.
+Some applications might require specific versions of catalog. This is specified
+in the "setup.py" script. The following directive indicates that zc.catalog
+version 1.1.1 is required.
 
 ::
 
@@ -28,7 +37,8 @@ Some applications might require specific versions of catalog. This is specified 
                   'hurry.workflow',
                   ],
 
-The "hurry.query" package gives you some simple tools to perform advanced searching. (add "hurry.query" to "zcml=" in "buildout.cfg")
+The "hurry.query" package gives you some simple tools to perform advanced
+searching. (add "hurry.query" to "zcml=" in "buildout.cfg")
 
 Example
 -------
@@ -110,8 +120,11 @@ Example
 
 Note
 ----
-In the above example, the indexes are only added when a new application is installed. You will have to manually create new indexes if you wish to add them to an existing application.
+In the above example, the indexes are only added when a new application is
+installed. You will have to manually create new indexes if you wish to add them
+to an existing application.
 
 Learning More
 -------------
-The "hurry.query" package contains the DocTest "query.txt" that shows how to perform more complex search queries.
+The "hurry.query" package contains the DocTest "query.txt" that shows how to
+perform more complex search queries.
