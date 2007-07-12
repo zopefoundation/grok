@@ -9,43 +9,18 @@ type this in the ``groktut`` directory::
 
 This will download and install buildout. It will create various
 directories, only one of which, ``eggs``, is important. This directory
-contains all Python eggs shared by the tutorial samples.
+contains all Python eggs shared by the tutorial samples.  If you
+already have a directory for sharing eggs with other buildouts, you
+can edit ``buildout_tut.cfg`` and change the ``eggs-directory`` option
+to point to this directory, e.g.::
 
-Then, we need to install Zope 3 and point the tutorial samples to it.
-First, download Zope 3. We will be showing some Unix style
-instructions here - Windows users should download and run the Zope 3
-installer instead. Go to your preferred installation directory (or
-stay in ``groktut``)::
+  [buildout]
+  eggs-directory = /home/me/shared-eggs
 
-  $ wget http://www.zope.org/Products/Zope3/3.3.1/Zope-3.3.1.tgz
-  $ tar xvzf Zope-3.3.1.tgz
-  $ cd Zope-3.3.1
-
-We need to tell Zope 3 in which directory it should install itself
-(using ``--prefix``)::
-
-  $ ./configure --prefix=/path/to/zope331
-
-We now make and install it::
-
-  $ make
-  $ make install
-
-Make a note of the Zope 3 installation directory (you too, Windows
-user).
-
-Go back to the ``groktut`` directory and edit the ``buildout_tut.cfg``
-file. Change the ``location`` line to point to your Zope 3
-installation::
-
-  [zope3]
-  # change this to the path to an installed Zope 3 installation
-  location = /path/to/zope331
-
-Now go to the tutorial sample you'd like to look at::
+Now go to the tutorial sample you'd like to look at and launch
+buildout::
 
   $ cd an_empty_grok_project
-
   $ ../buildout -N
 
 The -N option tells the buildout_ system not to look for newer files
@@ -59,7 +34,7 @@ You will have a separate Zope instance created for you in each
 tutorial directory you run the buildout script. From the specific
 tutorial directory, you can start up Zope like this::
 
-  $ parts/instance/bin/zopectl fg
+  $ bin/instance fg
 
 Zope should then be running on port 8080 (http://localhost:8080).
 
