@@ -9,15 +9,15 @@ Grok Mini-HowTos
 These mini-tutorials have been contributed by members of the Grok community.
 
 * `Newbie Search Tutorial </minitutorials/searching.html>`_:
-  Grok supports the vanilla indexing services available in Zope 3 straight out of
-  the box. Catalog uses developer defined indexes for searching. In other words,
-  you have to define the indexes you want to use to search you objects before you
-  perform the actual search.
+
+  Grok supports the vanilla indexing services available in Zope 3
+  straight out of the box. The catalog uses developer-defined indexes
+  for searching. In other words, you have to define the indexes you
+  want to use to search you objects before you perform the actual
+  search.
 
 * `Macros With Grok </minitutorials/macros.html>`_:
-  Grok supports the vanilla indexing services available in Zope 3 straight out of
-  the box. Catalog uses developer defined indexes for searching. In other words,
-  you have to define the indexes you want to use to search you objects before you
-  perform the actual search.
 
-
+  Macros are a way to define a chunk of presentation in one template,
+  and share it in others. Changes to the macro are immediately
+  reflected in all templates, that use it.
