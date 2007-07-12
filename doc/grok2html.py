@@ -2,8 +2,6 @@ import os
 import codecs
 import sys
 
-sys.path.append('/opt/odd-bobs/Zope3/src')
-
 import docutils.core
 from docutils.writers.html4css1 import Writer
 
@@ -22,9 +20,11 @@ class ReStructuredTextToHTMLRenderer:
             'halt_level': 6,
             'input_encoding': 'utf8',
             'output_encoding': 'utf8',
-            'initial_header_level': 2
+            'initial_header_level': 2,
+            # don't try to include the stylesheet (docutils gets hiccups)
+            'stylesheet_path': '',
         }
-            # 'output_encoding': 'utf8',
+
         writer = Writer()
         writer.translator_class = ZopeTranslator
         html = docutils.core.publish_string(
@@ -113,14 +113,19 @@ Menu = [
         {'href':'/minitutorials/index.html','title':u'How Tos','klass':''},
         ]
 
-if __name__ == '__main__':
-    source_dir = '.'
-    www_dir = '/opt/odd-bobs/grok-www'
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+
+    if not len(argv) == 1:
+        print "Usage: grok2html OUTDIR"
+        sys.exit(1)
+
+    source_dir = os.path.dirname(__file__)
+    os.chdir(source_dir)
+    www_dir = argv[0]
+
     rest_files = []
-    if www_dir == '':
-        print 'Please define the target directory for html files'
-        import sys
-        sys.exit()
     rest_files.append(RestFile('index', 
                               os.path.join(source_dir, 'index.txt'),
                               os.path.join(www_dir, 'index.html')))
@@ -142,3 +147,5 @@ if __name__ == '__main__':
     template = PageTemplateFile(os.path.join(source_dir, 'template.pt'))
     create_html(rest_files, template)
 
+if __name__ == '__main__':
+    main()
