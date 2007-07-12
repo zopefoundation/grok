@@ -14,7 +14,7 @@ setup(
     packages=find_packages('src'),
     package_dir = {'': 'src'},
     include_package_data = True,
-    zip_safe=False,    
+    zip_safe=False,
     install_requires=['setuptools',
                       'martian',
                       'simplejson',
