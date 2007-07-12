@@ -242,9 +242,14 @@ Python distutils and setuptools. You can use the ``setup.py`` file to
 upload your project to the Python Cheeseshop. We will discuss this in
 more detail later in this tutorial. (XXX)
 
-We have already seen the ``parts`` directory. This directory contains
-configuration and data created by ``buildout``, such as the Zope
-object database (ZODB) instance.
+We have already seen the ``bin`` directory. It contains the startup
+script for the Zope instance (``bin/instance``) as well as the
+executable for the buildout system (``bin/buildout``) which can be
+used to re-build the Zope instance and possibly update the Grok and
+Zope packages.
+
+The ``parts`` directory contains configuration and data created by
+``buildout``, such as the Zope object database (ZODB) instance.
 
 The actual code of the project will all be inside the ``src``
 directory. In it is a Python package directory called ``sample`` with
