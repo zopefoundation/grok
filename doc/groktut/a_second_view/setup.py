@@ -20,9 +20,9 @@ setup(name='Sample',
       zip_safe=False,
       install_requires=['setuptools',
                         'grok',
-                        # -*- Extra requirements: -*-
+                        # Add extra requirements here
                         ],
       entry_points="""
-      # -*- Entry points: -*-
+      # Add entry points here
       """,
       )
