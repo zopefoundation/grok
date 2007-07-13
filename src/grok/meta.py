@@ -1,3 +1,18 @@
+##############################################################################
+#
+# Copyright (c) 2006−2007 Zope Corporation and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
+"""Grokkers for the various components."""
+
 import os
 
 import zope.component.interface
@@ -30,6 +45,7 @@ import grok
 from grok import components, formlib
 from grok.util import check_adapts, get_default_permission, make_checker
 
+
 class ModelGrokker(martian.ClassGrokker):
     component_class = grok.Model
 
@@ -37,6 +53,7 @@ class ModelGrokker(martian.ClassGrokker):
         for field in formlib.get_context_schema_fields(factory):
             setattr(factory, field.__name__, field.default)
         return True
+
 
 class ContainerGrokker(ModelGrokker):
     component_class = grok.Container
@@ -60,6 +77,7 @@ class AdapterGrokker(martian.ClassGrokker):
                                  name=name)
         return True
 
+
 class MultiAdapterGrokker(martian.ClassGrokker):
     component_class = grok.MultiAdapter
 
@@ -72,6 +90,7 @@ class MultiAdapterGrokker(martian.ClassGrokker):
         component.provideAdapter(factory, provides=provides, name=name)
         return True
 
+
 class GlobalUtilityGrokker(martian.ClassGrokker):
     component_class = grok.GlobalUtility
 
@@ -82,6 +101,7 @@ class GlobalUtilityGrokker(martian.ClassGrokker):
         name = util.class_annotation(factory, 'grok.name', '')
         component.provideUtility(factory(), provides=provides, name=name)
         return True
+
 
 class XMLRPCGrokker(martian.ClassGrokker):
     component_class = grok.XMLRPC
@@ -113,6 +133,7 @@ class XMLRPCGrokker(martian.ClassGrokker):
                                  default_permission)
             make_checker(factory, method_view, permission)
         return True
+
 
 class ViewGrokker(martian.ClassGrokker):
     component_class = grok.View
@@ -222,6 +243,7 @@ class JSONGrokker(martian.ClassGrokker):
             make_checker(factory, method_view, permission)
         return True
 
+
 class TraverserGrokker(martian.ClassGrokker):
     component_class = grok.Traverser
 
@@ -231,6 +253,7 @@ class TraverserGrokker(martian.ClassGrokker):
                                  adapts=(factory_context, IBrowserRequest),
                                  provides=IBrowserPublisher)
         return True
+
 
 class ModulePageTemplateGrokker(martian.InstanceGrokker):
     # this needs to happen before any other grokkers execute that actually
@@ -244,9 +267,11 @@ class ModulePageTemplateGrokker(martian.InstanceGrokker):
         instance._annotateGrokInfo(name, module_info.dotted_name)
         return True
 
+
 class ModulePageTemplateFileGrokker(ModulePageTemplateGrokker):
     priority = 1000
     component_class = grok.PageTemplateFile
+
 
 class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
     # do this early on, but after ModulePageTemplateGrokker, as
@@ -258,6 +283,7 @@ class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
         templates.findFilesystem(module_info)
         return True
 
+
 class SubscriberGrokker(martian.GlobalGrokker):
 
     def grok(self, name, module, context, module_info, templates):
@@ -268,6 +294,7 @@ class SubscriberGrokker(martian.GlobalGrokker):
             for iface in subscribed:
                 zope.component.interface.provideInterface('', iface)
         return True
+
 
 class AdapterDecoratorGrokker(martian.GlobalGrokker):
 
@@ -283,6 +310,7 @@ class AdapterDecoratorGrokker(martian.GlobalGrokker):
             component.provideAdapter(
                 function, adapts=interfaces, provides=function.__implemented__)
         return True
+
 
 class StaticResourcesGrokker(martian.GlobalGrokker):
 
@@ -314,6 +342,7 @@ class StaticResourcesGrokker(martian.GlobalGrokker):
             interface.Interface, name=module_info.dotted_name)
         return True
 
+
 class GlobalUtilityDirectiveGrokker(martian.GlobalGrokker):
 
     def grok(self, name, module, context, module_info, templates):
@@ -330,6 +359,7 @@ class GlobalUtilityDirectiveGrokker(martian.GlobalGrokker):
                                      provides=info.provides,
                                      name=info.name)
         return True
+
 
 class SiteGrokker(martian.ClassGrokker):
     component_class = grok.Site
@@ -404,6 +434,7 @@ class SiteGrokker(martian.ClassGrokker):
 
         return True
 
+
 def localUtilityRegistrationSubscriber(site, event):
     """A subscriber that fires to set up local utilities.
     """
@@ -420,6 +451,7 @@ def localUtilityRegistrationSubscriber(site, event):
     # we are done. If this subscriber gets fired again, we therefore
     # do not register utilities anymore
     site.__grok_utilities_installed__ = True
+
 
 def setupUtility(site, utility, provides, name=u'',
                  name_in_container=None, public=False, setup=None):
@@ -457,6 +489,7 @@ def setupUtility(site, utility, provides, name=u'',
     site_manager.registerUtility(utility, provided=provides,
                                  name=name)
 
+
 class DefinePermissionGrokker(martian.GlobalGrokker):
 
     priority = 1500
@@ -474,6 +507,7 @@ class DefinePermissionGrokker(martian.GlobalGrokker):
                                      name=permission)
 
         return True
+
 
 class AnnotationGrokker(martian.ClassGrokker):
     component_class = grok.Annotation
@@ -512,6 +546,7 @@ class AnnotationGrokker(martian.ClassGrokker):
         component.provideAdapter(getAnnotation)
         return True
 
+
 class ApplicationGrokker(martian.ClassGrokker):
     component_class = grok.Application
     priority = 500
@@ -523,6 +558,7 @@ class ApplicationGrokker(martian.ClassGrokker):
                                       name='%s.%s' % (module_info.dotted_name,
                                                       name))
         return True
+
 
 class IndexesGrokker(martian.InstanceGrokker):
     component_class = components.IndexesClass
@@ -545,6 +581,7 @@ class IndexesGrokker(martian.InstanceGrokker):
             adapts=(site,
                     grok.IObjectAddedEvent))
         return True
+
 
 class IndexesSetupSubscriber(object):
     def __init__(self, catalog_name, indexes, context, module_info):
