@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Zope Corporation and Contributors.
+# Copyright (c) 2006-2007 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -11,21 +11,23 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Grok ZCML-Directives
-"""
+"""Grok ZCML directives."""
+
 from zope import interface
 import zope.configuration.fields
+
 import grok
 
+
 class IGrokDirective(interface.Interface):
-    """Grok a package or module.
-    """
+    """Grok a package or module."""
 
     package = zope.configuration.fields.GlobalObject(
         title=u"Package",
         description=u"The package or module to be analyzed by grok.",
         required=False,
         )
+
 
 def grokDirective(_context, package):
     grok.grok(package.__name__)
