@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Zope Corporation and Contributors.
+# Copyright (c) 2006−2007 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -11,8 +11,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Grok components
-"""
+"""Grok components"""
 
 import os
 import persistent
@@ -55,6 +54,7 @@ from martian import util
 from grok import interfaces, formlib
 from grok.util import url
 
+
 class Model(Contained, persistent.Persistent):
     # XXX Inheritance order is important here. If we reverse this,
     # then containers can't be models anymore because no unambigous MRO
@@ -73,6 +73,7 @@ class Site(SiteManagerContainer):
 class Application(Site):
     """A top-level application object."""
     interface.implements(interfaces.IApplication)
+
 
 class Adapter(object):
 
@@ -169,6 +170,7 @@ class View(BrowserPage):
     def update(self):
         pass
 
+
 class GrokViewAbsoluteURL(AbsoluteURL):
 
     def _getContextName(self, context):
@@ -180,6 +182,7 @@ class GrokViewAbsoluteURL(AbsoluteURL):
 class XMLRPC(object):
     pass
 
+
 class JSON(BrowserPage):
 
     def __call__(self):
@@ -187,6 +190,7 @@ class JSON(BrowserPage):
         method = getattr(self, view_name)
         method_result = mapply(method, (), self.request)
         return simplejson.dumps(method_result)
+
 
 class GrokPageTemplate(object):
 
@@ -316,12 +320,14 @@ class ContainerTraverser(Traverser):
         # try to get the item from the container
         return self.context.get(name)
 
+
 default_form_template = PageTemplateFile(os.path.join(
     'templates', 'default_edit_form.pt'))
 default_form_template.__grok_name__ = 'default_edit_form'
 default_display_template = PageTemplateFile(os.path.join(
     'templates', 'default_display_form.pt'))
 default_display_template.__grok_name__ = 'default_display_form'
+
 
 class GrokForm(object):
     """Mix-in to console zope.formlib's forms with grok.View and to
@@ -375,6 +381,7 @@ class GrokForm(object):
         self.update_form()
         return self.render()
 
+
 class Form(GrokForm, form.FormBase, View):
     # We're only reusing the form implementation from zope.formlib, we
     # explicitly don't want to inherit the interface semantics (mostly
@@ -394,8 +401,10 @@ class Form(GrokForm, form.FormBase, View):
                       "'applyData' instead.", DeprecationWarning, 2)
         return bool(self.applyData(obj, **data))
 
+
 class AddForm(Form):
     pass
+
 
 class EditForm(GrokForm, form.EditFormBase, View):
     # We're only reusing the form implementation from zope.formlib, we
@@ -433,6 +442,7 @@ class EditForm(GrokForm, form.EditFormBase, View):
         else:
             self.status = 'No changes'
 
+
 class DisplayForm(GrokForm, form.DisplayFormBase, View):
     # We're only reusing the form implementation from zope.formlib, we
     # explicitly don't want to inherit the interface semantics (mostly
@@ -440,6 +450,7 @@ class DisplayForm(GrokForm, form.DisplayFormBase, View):
     interface.implementsOnly(interfaces.IGrokForm)
 
     template = default_display_template
+
 
 class IndexesClass(object):
     def __init__(self, name, bases=(), attrs=None):
@@ -461,5 +472,5 @@ class IndexesClass(object):
         # __grok_module__ is needed to make defined_locally() return True for
         # inline templates
         self.__grok_module__ = util.caller_module()
-        
+
 Indexes = IndexesClass('Indexes')
