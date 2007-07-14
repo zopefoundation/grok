@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006−2007 Zope Corporation and Contributors.
+# Copyright (c) 2006-2007 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -49,10 +49,8 @@ from zope.app.container.contained import Contained
 from zope.app.container.interfaces import IReadContainer
 from zope.app.component.site import SiteManagerContainer
 
-from martian import util
-
-from grok import interfaces, formlib
-from grok.util import url
+import martian.util
+from grok import interfaces, formlib, util
 
 
 class Model(Contained, persistent.Persistent):
@@ -154,7 +152,7 @@ class View(BrowserPage):
         elif name is not None and obj is None:
             # create URL to view on context
             obj = self.context
-        return url(self.request, obj, name)
+        return util.url(self.request, obj, name)
 
     def application_url(self, name=None):
         obj = self.context
@@ -208,7 +206,7 @@ class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
 
     def __init__(self, template):
         super(PageTemplate, self).__init__()
-        if util.not_unicode_or_ascii(template):
+        if martian.util.not_unicode_or_ascii(template):
             raise ValueError("Invalid page template. Page templates must be "
                              "unicode or ASCII.")
         self.write(template)
@@ -217,7 +215,7 @@ class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
         # inline templates
         # XXX unfortunately using caller_module means that
         # PageTemplate cannot be subclassed
-        self.__grok_module__ = util.caller_module()
+        self.__grok_module__ = martian.util.caller_module()
 
 
 class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
@@ -231,7 +229,7 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
         # inline templates
         # XXX unfortunately using caller_module means that
         # PageTemplateFile cannot be subclassed
-        self.__grok_module__ = util.caller_module()
+        self.__grok_module__ = martian.util.caller_module()
 
 
 class DirectoryResource(directoryresource.DirectoryResource):
@@ -277,7 +275,7 @@ class Traverser(object):
     def publishTraverse(self, request, name):
         subob = self.traverse(name)
         if subob is not None:
-            return subob
+            return util.safely_locate_maybe(subob, self.context, name)
 
         # XXX Special logic here to deal with containers.  It would be
         # good if we wouldn't have to do this here. One solution is to
@@ -471,6 +469,6 @@ class IndexesClass(object):
         self.__grok_indexes__ = indexes
         # __grok_module__ is needed to make defined_locally() return True for
         # inline templates
-        self.__grok_module__ = util.caller_module()
+        self.__grok_module__ = martian.util.caller_module()
 
 Indexes = IndexesClass('Indexes')

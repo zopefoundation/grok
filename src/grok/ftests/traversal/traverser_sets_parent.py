@@ -1,10 +1,10 @@
 """
-Models can determine how they want to be traversed by
-implementing a 'traverse' method:
+A traverser can set the __parent__ (and __name__) attributes itself,
+in which case Grok's traverser won't interfere:
 
   >>> import grok
-  >>> from grok.ftests.traversal.modeltraverse import Herd
-  >>> grok.grok('grok.ftests.traversal.modeltraverse')
+  >>> from grok.ftests.traversal.traverser_sets_parent import Herd
+  >>> grok.grok('grok.ftests.traversal.traverser_sets_parent')
   >>> getRootFolder()["herd"] = Herd('The Big Mammoth Herd')
 
   >>> from zope.testbrowser.testing import Browser
@@ -15,7 +15,7 @@ implementing a 'traverse' method:
   <html>
   <body>
   <h1>Hello, Manfred!</h1>
-  <p>Manfred is part of The Big Mammoth Herd.</p>
+  <p>Manfred is part of The Three Stooges.</p>
   </body>
   </html>
 
@@ -24,7 +24,7 @@ implementing a 'traverse' method:
   <html>
   <body>
   <h1>Hello, Ellie!</h1>
-  <p>Ellie is part of The Big Mammoth Herd.</p>
+  <p>Ellie is part of The Three Stooges.</p>
   </body>
   </html>
 
@@ -36,12 +36,16 @@ class Herd(grok.Model):
     def __init__(self, name):
         self.name = name
 
-    def getMammoth(self, name):
-        return Mammoth(name)
+class HerdTraverser(grok.Traverser):
+    grok.context(Herd)
 
     def traverse(self, name):
-        return self.getMammoth(name)
-    
+        mammoth = Mammoth(name)
+        # We pretend the mammoth is the child object of some competely
+        # differnt Herd object.
+        mammoth.__parent__ = Herd('The Three Stooges')
+        return mammoth
+
 class Mammoth(grok.Model):
 
     def __init__(self, name):

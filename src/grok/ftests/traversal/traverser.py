@@ -5,7 +5,7 @@ also create a separate traverser component:
   >>> import grok
   >>> from grok.ftests.traversal.traverser import Herd
   >>> grok.grok('grok.ftests.traversal.traverser')
-  >>> getRootFolder()["herd"] = Herd()
+  >>> getRootFolder()["herd"] = Herd('The Big Mammoth Herd')
 
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
@@ -15,6 +15,7 @@ also create a separate traverser component:
   <html>
   <body>
   <h1>Hello, Manfred!</h1>
+  <p>Manfred is part of The Big Mammoth Herd.</p>
   </body>
   </html>
 
@@ -23,6 +24,7 @@ also create a separate traverser component:
   <html>
   <body>
   <h1>Hello, Ellie!</h1>
+  <p>Ellie is part of The Big Mammoth Herd.</p>
   </body>
   </html>
 
@@ -30,7 +32,9 @@ also create a separate traverser component:
 import grok
 
 class Herd(grok.Model):
-    pass
+
+    def __init__(self, name):
+        self.name = name
 
 class HerdTraverser(grok.Traverser):
     grok.context(Herd)
@@ -52,6 +56,7 @@ index = grok.PageTemplate("""\
 <html>
 <body>
 <h1>Hello, <span tal:replace="context/name/title" />!</h1>
+<p><span tal:replace="context/name/title" /> is part of <span tal:replace="context/__parent__/name" />.</p>
 </body>
 </html>
 """)
