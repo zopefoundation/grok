@@ -21,6 +21,8 @@ CREDITS
 
 * Christian Zagrodnick (early grok discussions)
 
+* Mikhail Kashkin
+
 * ME GROK (team mascot)
 
 Thank you

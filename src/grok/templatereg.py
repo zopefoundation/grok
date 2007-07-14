@@ -2,6 +2,7 @@ from martian.error import GrokError
 
 import os
 import grok
+import warnings
 
 class TemplateRegistry(object):
 
@@ -34,9 +35,13 @@ class TemplateRegistry(object):
                 continue
 
             if not template_file.endswith('.pt'):
-                raise GrokError("Unrecognized file '%s' in template directory "
-                                "'%s'." % (template_file, template_dir),
-                                module_info.getModule())
+                # Warning when importing files. This should be
+                # allowed because people may be using editors that generate
+                # '.bak' files and such.
+                warnings.warn("File '%s' has an unrecognized extension in "
+                              "directory '%s'" %
+                              (template_file, template_dir), UserWarning, 2)
+                continue
 
             template_name = template_file[:-3] # cut off .pt
             template = grok.PageTemplateFile(template_file, template_dir)

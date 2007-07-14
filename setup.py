@@ -33,6 +33,7 @@ setup(
                       'zope.component',
                       'zope.configuration',
                       'zope.dottedname',
+                      'zope.deprecation',
                       'zope.event',
                       'zope.formlib',
                       'zope.interface',
