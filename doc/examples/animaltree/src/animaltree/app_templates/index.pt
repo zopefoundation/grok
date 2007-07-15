@@ -1,0 +1,17 @@
+<html>
+<head>
+</head>
+<body>
+  <h1>Animal Tree</h1>
+
+  <p>Think of an animal.</p>
+
+  <p>Based on a paleolithic knowledge base, this system will
+  guess the animal you are thinking about.</p>
+
+  <p>Click start when you have a specific animal in mind.</p>
+  
+  <!-- XXX: is there a better way of building a url to a certain view of another model? -->
+  <a tal:attributes="href python:view.application_url()+'/start/guess'">Start</a>
+
+</body>

@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" tal:attributes="href static/adder.css">
+    <title>Grok Adder</title>
+    <script type="text/javascript">
+        function setfocus() { document.forms[0].term.focus() }
+    </script>
+  </head>
+  <body onload=setfocus()>
+    <h1>Adder</h1>
+    <span tal:condition="view/message" tal:content="view/message" />
+    <form tal:attributes="action view/url">
+      <input type="text" name="term">
+      <input type="submit" value="+" name="bt_add">
+      <hr>
+      <input tal:condition="context/terms" type="submit" value="Clear" name="bt_clear">
+    </form>
+    <table tal:condition="context/terms">
+     <tr>
+       <th>Total</th>
+       <th tal:content="context/total"></th>
+     </tr>
+     <tr tal:repeat="term context/terms" tal:attributes="class repeat/term/even">
+       <td class="count" tal:content="repeat/term/number">11</td>
+       <td tal:content="term">11</td>
+     </tr>
+    </table>
+  </body>
+</html>

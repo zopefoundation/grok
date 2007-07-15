@@ -1,0 +1,30 @@
+<html>
+<head>
+</head>
+<body>
+  <h2>Time to learn a new animal</h2>
+  
+  <form tal:attributes="action view/url">
+  
+    <p>Which animal did you have in mind?</p>
+    <input type="text" name="new_animal" />
+    
+    <p>What question would distinguish that from a
+       <strong tal:content="context/text" />?
+    </p>
+    <input type="text" name="new_question" size="70" />
+  
+    <p>And the answer for a
+       <strong tal:content="context/text" /> would be?
+    </p>
+    <p><input type="submit" name="bt_yes" value="Yes" /> 
+       <input type="submit" name="bt_no" value="No" />
+       <span>&nbsp;</span>
+       <em>I am not sure. Let's 
+	  <!-- XXX: is there a better way of building a url to a certain view of another model? -->
+	  <a tal:attributes="href python:view.application_url()+'/start/guess'">restart</a>.</em>
+    </p>
+
+  </form>
+
+</body>  

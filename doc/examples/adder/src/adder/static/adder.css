@@ -1,0 +1,22 @@
+body {
+  background-color: #FFE29A;
+  font-family: courier, fixed, monospace;
+}
+span {
+  font-size: 9pt;
+  color: #D00;
+}
+table {
+  font-size: 12pt;
+  text-align: right;
+}
+tr.False {
+  background-color: #FFEFC7;
+}
+tr.True {
+  background-color: white;
+}
+td.count {
+  font-size: 9pt;
+  color: #888;
+}
