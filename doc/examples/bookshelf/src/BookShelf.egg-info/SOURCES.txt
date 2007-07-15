@@ -1,0 +1,12 @@
+setup.py
+src/BookShelf.egg-info/PKG-INFO
+src/BookShelf.egg-info/SOURCES.txt
+src/BookShelf.egg-info/dependency_links.txt
+src/BookShelf.egg-info/entry_points.txt
+src/BookShelf.egg-info/not-zip-safe
+src/BookShelf.egg-info/paster_plugins.txt
+src/BookShelf.egg-info/requires.txt
+src/BookShelf.egg-info/top_level.txt
+src/bookshelf/__init__.py
+src/bookshelf/app.py
+src/bookshelf/testing.py

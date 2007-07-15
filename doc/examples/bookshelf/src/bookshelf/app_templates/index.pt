@@ -1,0 +1,14 @@
+<html metal:use-macro="context/@@master/page">
+<head>
+   <title metal:fill-slot="title">Main</title>
+</head>
+<body>
+  <span metal:fill-slot="content_title">Main</span>      
+
+  <div metal:fill-slot="content">
+
+  Main page stuff will be here.
+  
+  </div>	
+</body>
+</html>

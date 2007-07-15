@@ -1,0 +1,6 @@
+- Add more (and different) attributes to Book and Article
+- Add more indexes
+- Show how to perform some advanced queries, involving more than one attribute and one class
+- Add doctests and make them pass
+- Update doc/searching.txt, enhance the text
+- Add some hurry.query code and examples to the tutorial

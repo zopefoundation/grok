@@ -1,0 +1,36 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:define-macro="page">
+<head>
+  <title metal:define-slot="title">
+    Grok BookShelf
+  </title>
+</head>
+<body>
+  <div class="top">
+    <a tal:attributes="href python:view.application_url()">
+        Grok BookShelf
+    </a>
+    <ul>
+        <li><a tal:attributes="href python:view.application_url('shelf')">catalog</a></li>
+    </ul>
+  </div>
+  <div metal:define-slot="body">
+    <div class="content_menu">
+      <span metal:define-slot="content_menu">
+        <span class="content_title">
+            <span metal:define-slot="content_title">
+            Content title
+            </span>
+        </span>
+        <span metal:define-slot="content_actions" />
+      </span>
+    </div>
+    <div class="content">
+      <div metal:define-slot="content">
+        Your content here...
+      </div>
+    </div>
+  </div>
+</body>
+</html>
