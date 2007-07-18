@@ -65,7 +65,7 @@ the ``METAL`` attribute::
 
 and the slots therein with::
 
-    metal:define-slots=<slot-name> 
+    metal:define-slot=<slot-name> 
 
 Let's define a very plain page macro::
 
@@ -130,7 +130,8 @@ where the slot-name must be defined in the macro. Now, change
 
     <html metal:use-macro="context/@@mymacros/mypage">
       <body>
-        <div metal:fill-slot="body">
+        <!-- slot 'mybody' was defined in the macro above -->
+        <div metal:fill-slot="mybody">
           My content from index.pt
         </div>
       </body>
