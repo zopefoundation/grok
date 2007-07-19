@@ -69,6 +69,10 @@ class RestFile(object):
         settings["context"] = Context(self.url, self.title, self.content)
         content = page.pt_render(namespace=settings)
         #fp = open(self.target, 'w')
+        targetdir = os.path.dirname(self.target)
+        if not os.path.isdir(targetdir):
+            print 'Creating dir: ', targetdir
+            os.mkdir(targetdir)
         fp = codecs.open(self.target,"w",'utf8')
         fp.write(content)
         fp.close()
@@ -122,8 +126,13 @@ def main(argv=None):
         sys.exit(1)
 
     source_dir = os.path.dirname(__file__)
+    www_dir = os.path.abspath(argv[0])
+
+    if not os.path.isdir(www_dir):
+        print "OUTDIR '%s' does not exist." % (www_dir,)
+        sys.exit(1)
+    
     os.chdir(source_dir)
-    www_dir = argv[0]
 
     rest_files = []
     rest_files.append(RestFile('index', 
