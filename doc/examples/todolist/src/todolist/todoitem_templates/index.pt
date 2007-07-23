@@ -1,0 +1,13 @@
+<html>
+<body>
+	
+	<h1 tal:content="context/title">todo item title goes here</h1>
+
+	<p><a tal:attributes="href python:view.url(context.__parent__)">
+		Back to main page
+	</a></p>
+	
+	<p><a tal:attributes="href python:view.url('edit')">Edit</a></p>
+
+</body>
+</html>
