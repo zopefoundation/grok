@@ -54,10 +54,6 @@ installed in the ``bin`` directory::
 
     $ bin/test
 
-For functional tests we've set up a special test instance just for
-running the test from, which includes the minimum needed ZCML (so the
-tests run a tidbit faster).
-
 Generating the website files
 ----------------------------
 
