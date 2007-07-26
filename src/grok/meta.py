@@ -23,6 +23,9 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.security.permission import Permission
 from zope.security.interfaces import IPermission
+from zope.app.securitypolicy.role import Role
+from zope.app.securitypolicy.rolepermission import rolePermissionManager
+
 from zope.annotation.interfaces import IAnnotations
 
 from zope.app.publisher.xmlrpc import MethodPublisher
@@ -506,6 +509,20 @@ class DefinePermissionGrokker(martian.GlobalGrokker):
             component.provideUtility(Permission(permission, title=permission),
                                      name=permission)
 
+        return True
+
+
+class DefineRoleGrokker(martian.GlobalGrokker):
+
+    priority = 1500
+
+    def grok(self, name, module, context, module_info, templates):
+        role_infos = module_info.getAnnotation('grok.define_role', [])
+        for role_id, permissions in role_infos:
+            component.provideUtility(
+                Role(role_id, title=role_id), name=role_id)
+            for permission in permissions:
+                rolePermissionManager.grantPermissionToRole(permission, role_id)
         return True
 
 

@@ -13,7 +13,7 @@
 ##############################################################################
 """Grok directives.
 """
-
+import types
 from zope.interface.interfaces import IInterface
 
 from martian.error import GrokImportError
@@ -47,7 +47,7 @@ class GlobalUtilityInfo(object):
         if provides is None:
             provides = util.class_annotation(factory, 'grok.provides', None)
         self.provides = provides
-        
+
         if name is u'':
             name = util.class_annotation(factory, 'grok.name', u'')
         self.name = name
@@ -77,6 +77,18 @@ class LocalUtilityInfo(object):
         self.name_in_container = name_in_container
 
 
+class DefineRoleDirective(MultipleTimesDirective):
+
+    def check_arguments(self, id, permissions):
+        if not isinstance(permissions, (types.ListType, types.TupleType)):
+            raise GrokImportError(
+                "You need to pass a list or tuple of permission ids to the "
+                "permissions argument of %s." % self.name)
+
+    def value_factory(self, id, permissions):
+        return (id, permissions)
+
+
 class RequireDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
 
     def store(self, frame, value):
@@ -93,6 +105,7 @@ class RequireDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
             return func
         return decorator
 
+
 # Define grok directives
 name = SingleTextDirective('grok.name', ClassDirectiveContext())
 template = SingleTextDirective('grok.template', ClassDirectiveContext())
@@ -107,6 +120,7 @@ local_utility = LocalUtilityDirective('grok.local_utility',
                                       ClassDirectiveContext())
 define_permission = MultipleTextDirective('grok.define_permission',
                                           ModuleDirectiveContext())
+define_role = DefineRoleDirective('grok.define_role', ModuleDirectiveContext())
 require = RequireDirective('grok.require', ClassDirectiveContext())
 site = InterfaceOrClassDirective('grok.site',
                                  ClassDirectiveContext())
