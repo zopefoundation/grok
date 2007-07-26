@@ -23,7 +23,6 @@ When we log in (e.g. as a manager), we can access the views just fine:
   >>> principalRoleManager.assignRoleToPrincipal(
   ...    'grok.PaintingOwner', 'zope.mgr')
   >>> browser.addHeader('Authorization', 'Basic mgr:mgrpw')
-  >>> browser.handleErrors = False
   >>> browser.open("http://localhost/@@cavepainting")
   >>> print browser.contents
   What a beautiful painting.
@@ -38,10 +37,7 @@ When we log in (e.g. as a manager), we can access the views just fine:
 
   >>> browser.open("http://localhost/@@approvecavepainting")
   Traceback (most recent call last):
-  ...
-  Unauthorized: (<grok.ftests.security.roles.ApproveCavePainting object at ...>,
-  '__call__', 'grok.ApprovePainting')
-
+  HTTPError: HTTP Error 403: Forbidden
 """
 
 import grok
