@@ -521,6 +521,8 @@ class DefineRoleGrokker(martian.GlobalGrokker):
         for role_id, permissions in role_infos:
             component.provideUtility(
                 Role(role_id, title=role_id), name=role_id)
+            if permissions is None:
+                continue
             for permission in permissions:
                 rolePermissionManager.grantPermissionToRole(permission, role_id)
         return True

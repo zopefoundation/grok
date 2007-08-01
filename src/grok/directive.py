@@ -80,10 +80,13 @@ class LocalUtilityInfo(object):
 class DefineRoleDirective(MultipleTimesDirective):
 
     def check_arguments(self, id, permissions):
-        if not isinstance(permissions, (types.ListType, types.TupleType)):
-            raise GrokImportError(
-                "You need to pass a list or tuple of permission ids to the "
-                "permissions argument of %s." % self.name)
+        if permissions is None:
+            return
+        if isinstance(permissions, types.TupleType):
+            return
+        raise GrokImportError(
+            "You need to pass either None, or a tuple of permission ids to "
+            "the permissions argument of %s." % self.name)
 
     def value_factory(self, id, permissions):
         return (id, permissions)
