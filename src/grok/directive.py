@@ -17,7 +17,8 @@ import types
 from zope.interface.interfaces import IInterface
 
 from martian.error import GrokImportError
-from martian.directive import (MultipleTimesDirective, BaseTextDirective,
+from martian.directive import (OnceDirective,
+                               MultipleTimesDirective, BaseTextDirective,
                                SingleValue, SingleTextDirective,
                                MultipleTextDirective,
                                MarkerDirective,
@@ -77,21 +78,6 @@ class LocalUtilityInfo(object):
         self.name_in_container = name_in_container
 
 
-class DefineRoleDirective(MultipleTimesDirective):
-
-    def check_arguments(self, id, permissions):
-        if permissions is None:
-            return
-        if isinstance(permissions, types.TupleType):
-            return
-        raise GrokImportError(
-            "You need to pass either None, or a tuple of permission ids to "
-            "the permissions argument of %s." % self.name)
-
-    def value_factory(self, id, permissions):
-        return (id, permissions)
-
-
 class RequireDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
 
     def store(self, frame, value):
@@ -108,6 +94,13 @@ class RequireDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
             return func
         return decorator
 
+class MultiValueOnceDirective(OnceDirective):
+
+    def check_arguments(self, *values):
+        pass
+    
+    def value_factory(self, *args):
+        return args
 
 # Define grok directives
 name = SingleTextDirective('grok.name', ClassDirectiveContext())
@@ -123,7 +116,9 @@ local_utility = LocalUtilityDirective('grok.local_utility',
                                       ClassDirectiveContext())
 define_permission = MultipleTextDirective('grok.define_permission',
                                           ModuleDirectiveContext())
-define_role = DefineRoleDirective('grok.define_role', ModuleDirectiveContext())
 require = RequireDirective('grok.require', ClassDirectiveContext())
 site = InterfaceOrClassDirective('grok.site',
                                  ClassDirectiveContext())
+title = SingleTextDirective('grok.title', ClassDirectiveContext())
+permissions = MultiValueOnceDirective(
+    'grok.permissions', ClassDirectiveContext())
