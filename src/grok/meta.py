@@ -508,25 +508,25 @@ class DefinePermissionGrokker(martian.GlobalGrokker):
             # TODO permission title and description
             component.provideUtility(Permission(permission, title=permission),
                                      name=permission)
-
         return True
 
+class DefineRoleGrokker(martian.ClassGrokker):
+    component_class = grok.Role
+    priority = DefinePermissionGrokker.priority - 1
 
-class DefineRoleGrokker(martian.GlobalGrokker):
+    def grok(self, name, factory, context, module_info, templates):
+        role_name = util.class_annotation(factory, 'grok.name', None)
+        if role_name is None:
+            raise GrokError(
+                "A role needs to have a dotted name for its id. Use "
+                "grok.name to specifiy one.", factory)            
+        title = util.class_annotation(factory, 'grok.title', role_name)
+        component.provideUtility(Role(role_name, title=title), name=role_name)
 
-    priority = 1500
-
-    def grok(self, name, module, context, module_info, templates):
-        role_infos = module_info.getAnnotation('grok.define_role', [])
-        for role_id, permissions in role_infos:
-            component.provideUtility(
-                Role(role_id, title=role_id), name=role_id)
-            if permissions is None:
-                continue
-            for permission in permissions:
-                rolePermissionManager.grantPermissionToRole(permission, role_id)
+        permissions = util.class_annotation(factory, 'grok.permissions', ())
+        for permission in permissions:
+            rolePermissionManager.grantPermissionToRole(permission, role_name)
         return True
-
 
 class AnnotationGrokker(martian.ClassGrokker):
     component_class = grok.Annotation

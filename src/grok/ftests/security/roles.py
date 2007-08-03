@@ -48,9 +48,11 @@ grok.define_permission('grok.EditPainting')
 grok.define_permission('grok.ErasePainting')
 grok.define_permission('grok.ApprovePainting')
 
-grok.define_role(
-    'grok.PaintingOwner',
-    ('grok.ViewPainting', 'grok.EditPainting', 'grok.ErasePainting'))
+class PaintingOwner(grok.Role):
+    grok.name('grok.PaintingOwner')
+    grok.title('Painting Owner')
+    grok.permissions(
+        'grok.ViewPainting', 'grok.EditPainting', 'grok.ErasePainting')
 
 class CavePainting(grok.View):
 
