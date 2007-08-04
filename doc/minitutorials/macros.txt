@@ -129,7 +129,7 @@ should now give the same result as above, although we didn't call
 for.
 
 When we fill the slots, we get different content rendered within
-the same macro. You can fill slots using
+the same macro. You can fill slots using::
 
     metal:fill-slot="<slot-name>"
 
