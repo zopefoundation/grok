@@ -45,7 +45,9 @@ templates contain `metal`-statements to define the desired
 macros. Macros generally are attributes of the page template wherein they
 are defined, but to get them rendered, we usually use views.
 
-We define a view ``MyMacros`` the usual way in ``app.py``::
+We define a view ``MyMacros`` the usual way in ``app.py``:
+
+.. code-block:: python
 
    import grok
 
@@ -202,7 +204,9 @@ Defining 'all-purpose' macros
 To define an 'all-purpose' macro, i.e. a macro, that can render
 objects of (nearly) any type and thus be accessed from any
 other page template, just set a very general context for your macro
-view::
+view:
+
+.. code-block:: python
 
     from zope.interface import Interface
     import grok
