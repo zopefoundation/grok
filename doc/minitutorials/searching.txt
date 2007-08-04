@@ -2,6 +2,8 @@
 Newbie Search Tutorial
 ======================
 
+:Author: Sebastian Ware
+
 Introduction
 ------------
 Grok supports the vanilla indexing services available in Zope 3 straight out of

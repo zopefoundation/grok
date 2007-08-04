@@ -2,6 +2,8 @@
 Mini-Howto: Macros with Grok
 ============================
 
+:Author: Uli Fouquet
+
 Intended Audience:
 
   * Python Developers

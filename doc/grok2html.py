@@ -1,6 +1,7 @@
 import os
 import codecs
 import sys
+import urllib
 
 import docutils.core
 from docutils.writers.html4css1 import Writer
@@ -8,6 +9,9 @@ from docutils.writers.html4css1 import Writer
 from zope.app.renderer.rest import ZopeTranslator
 from zope.pagetemplate.pagetemplate import PageTemplate
 from zope.pagetemplate.pagetemplatefile import PageTemplateFile
+
+# registers code-block directive using pygments.
+import pygments_code_block_directive
 
 class ReStructuredTextToHTMLRenderer:
     """Convert from Restructured Text to HTML."""
@@ -44,16 +48,34 @@ class RestFile(object):
     def __init__(self, url, source, target):
         self.url = url
         self.target = target
-        if os.path.isfile(target):
+        if os.path.isfile(target) and os.path.isfile(source):
             if os.path.getmtime(source) < os.path.getmtime(target):
                 self.active = False
         if os.path.isfile(source):
             self.source = codecs.open(source,"r",'utf8').read()
+        elif source.startswith("http"):
+            print "Downloading %s" % source
+            try:
+                response = urlopen(source)
+                self.source = response.read()
+            except IOError, e:
+                if hasattr(e, 'reason'):
+                    print 'We failed to reach a server.'
+                    print 'Reason: ', e.reason
+                elif hasattr(e, 'code'):
+                    print 'The server couldn\'t fulfill the request.'
+                    print 'Error code:', e.code
+                self.source = u''
         else:
             self.source = source
         srctxt = self.source.split('\n')
-        title = srctxt[0]
-        if title.startswith("====="): title = srctxt[1]
+        title = ''
+        count = 0
+        while title == '':
+            title = srctxt[count]
+            count += 1
+            if title.startswith("=====") or title.startswith(".."):
+                title = srctxt[count]
         self.title = title
 
     def set_rest_content(self):
@@ -135,24 +157,27 @@ def main(argv=None):
     os.chdir(source_dir)
 
     rest_files = []
-    rest_files.append(RestFile('index', 
-                              os.path.join(source_dir, 'index.txt'),
-                              os.path.join(www_dir, 'index.html')))
-    rest_files.append(RestFile('about', 
-                              os.path.join(source_dir, 'about.txt'),
-                              os.path.join(www_dir, 'about.html')))
-    rest_files.append(RestFile('tutorial', 
-                              os.path.join(source_dir, 'tutorial.txt'),
-                              os.path.join(www_dir, 'tutorial.html')))
-    rest_files.append(RestFile('mini-index', 
-                              os.path.join(source_dir, 'minitutorials', 'index.txt'),
-                              os.path.join(www_dir, 'minitutorials', 'index.html')))
-    rest_files.append(RestFile('searching', 
-                              os.path.join(source_dir, 'minitutorials', 'searching.txt'),
-                              os.path.join(www_dir, 'minitutorials', 'searching.html')))
-    rest_files.append(RestFile('macros', 
-                              os.path.join(source_dir, 'minitutorials', 'macros.txt'),
-                              os.path.join(www_dir, 'minitutorials', 'macros.html')))
+#    rest_files.append(RestFile('index', 
+#                              os.path.join(source_dir, 'index.txt'),
+#                              os.path.join(www_dir, 'index.html')))
+#    rest_files.append(RestFile('about', 
+#                              os.path.join(source_dir, 'about.txt'),
+#                              os.path.join(www_dir, 'about.html')))
+#    rest_files.append(RestFile('tutorial', 
+#                              os.path.join(source_dir, 'tutorial.txt'),
+#                              os.path.join(www_dir, 'tutorial.html')))
+#    rest_files.append(RestFile('mini-index', 
+#                              os.path.join(source_dir, 'minitutorials', 'index.txt'),
+#                              os.path.join(www_dir, 'minitutorials', 'index.html')))
+#    rest_files.append(RestFile('searching', 
+#                              os.path.join(source_dir, 'minitutorials', 'searching.txt'),
+#                              os.path.join(www_dir, 'minitutorials', 'searching.html')))
+#    rest_files.append(RestFile('macros', 
+#                              os.path.join(source_dir, 'minitutorials', 'macros.txt'),
+#                              os.path.join(www_dir, 'minitutorials', 'macros.html')))
+#    rest_files.append(RestFile('zc.buildout', 
+#                  'http://svn.zope.org/*checkout*/zc.buildout/trunk/doc/tutorial.txt',
+#                  os.path.join(www_dir, 'minitutorials', 'buildout.html')))
     template = PageTemplateFile(os.path.join(source_dir, 'template.pt'))
     create_html(rest_files, template)
 

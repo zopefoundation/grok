@@ -4,7 +4,8 @@ setup(
     name='grokdocs',
     install_requires=['docutils',
                       'zope.pagetemplate',
-                      'zope.app.renderer'
+                      'zope.app.renderer',
+                      'Pygments'
                       ],
     py_modules = ['grok2html'],
     entry_points="""

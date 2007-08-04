@@ -37,7 +37,8 @@ class ZopePublicationSansProxy(object):
     def callObject(self, request, ob):
         checker = selectChecker(ob)
         if checker is not None:
-            checker.check(ob, '__call__')
+            print '\n', checker, '\n'
+            #checker.check(ob, '__call__')
         return super(ZopePublicationSansProxy, self).callObject(request, ob)
 
 
