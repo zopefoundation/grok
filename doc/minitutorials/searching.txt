@@ -30,7 +30,7 @@ Some applications might require specific versions of catalog. This is specified
 in the "setup.py" script. The following directive indicates that zc.catalog
 version 1.1.1 is required.
 
-::
+.. code-block:: python
 
     install_requires=['setuptools',
                   'grok',
@@ -44,7 +44,8 @@ searching. (add "hurry.query" to "zcml=" in "buildout.cfg")
 
 Example
 -------
-::
+
+.. code-block:: python
 
     # interfaces.py
     class IProtonObject(Interface):
@@ -53,7 +54,7 @@ Example
         """
         body = schema.Text(title=u'Body', required=False)
 
-::
+.. code-block:: python
 
     # protonobject.py
     class ProtonObject(grok.Model):
@@ -65,7 +66,7 @@ Example
         def __init__(self, body):
             self.body = body
 
-::
+.. code-block:: python
 
     # app.py
     from hurry.query.query import Query, Text
