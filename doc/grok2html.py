@@ -56,7 +56,7 @@ class RestFile(object):
         elif source.startswith("http"):
             print "Downloading %s" % source
             try:
-                response = urlopen(source)
+                response = urllib.urlopen(source)
                 self.source = response.read()
             except IOError, e:
                 if hasattr(e, 'reason'):
@@ -157,27 +157,27 @@ def main(argv=None):
     os.chdir(source_dir)
 
     rest_files = []
-#    rest_files.append(RestFile('index', 
-#                              os.path.join(source_dir, 'index.txt'),
-#                              os.path.join(www_dir, 'index.html')))
-#    rest_files.append(RestFile('about', 
-#                              os.path.join(source_dir, 'about.txt'),
-#                              os.path.join(www_dir, 'about.html')))
-#    rest_files.append(RestFile('tutorial', 
-#                              os.path.join(source_dir, 'tutorial.txt'),
-#                              os.path.join(www_dir, 'tutorial.html')))
-#    rest_files.append(RestFile('mini-index', 
-#                              os.path.join(source_dir, 'minitutorials', 'index.txt'),
-#                              os.path.join(www_dir, 'minitutorials', 'index.html')))
-#    rest_files.append(RestFile('searching', 
-#                              os.path.join(source_dir, 'minitutorials', 'searching.txt'),
-#                              os.path.join(www_dir, 'minitutorials', 'searching.html')))
-#    rest_files.append(RestFile('macros', 
-#                              os.path.join(source_dir, 'minitutorials', 'macros.txt'),
-#                              os.path.join(www_dir, 'minitutorials', 'macros.html')))
-#    rest_files.append(RestFile('zc.buildout', 
-#                  'http://svn.zope.org/*checkout*/zc.buildout/trunk/doc/tutorial.txt',
-#                  os.path.join(www_dir, 'minitutorials', 'buildout.html')))
+    rest_files.append(RestFile('index', 
+                              os.path.join(source_dir, 'index.txt'),
+                              os.path.join(www_dir, 'index.html')))
+    rest_files.append(RestFile('about', 
+                              os.path.join(source_dir, 'about.txt'),
+                              os.path.join(www_dir, 'about.html')))
+    rest_files.append(RestFile('tutorial', 
+                              os.path.join(source_dir, 'tutorial.txt'),
+                              os.path.join(www_dir, 'tutorial.html')))
+    rest_files.append(RestFile('mini-index', 
+                              os.path.join(source_dir, 'minitutorials', 'index.txt'),
+                              os.path.join(www_dir, 'minitutorials', 'index.html')))
+    rest_files.append(RestFile('searching', 
+                              os.path.join(source_dir, 'minitutorials', 'searching.txt'),
+                              os.path.join(www_dir, 'minitutorials', 'searching.html')))
+    rest_files.append(RestFile('macros', 
+                              os.path.join(source_dir, 'minitutorials', 'macros.txt'),
+                              os.path.join(www_dir, 'minitutorials', 'macros.html')))
+    rest_files.append(RestFile('zc.buildout', 
+                  'http://svn.zope.org/*checkout*/zc.buildout/trunk/doc/tutorial.txt',
+                  os.path.join(www_dir, 'minitutorials', 'buildout.html')))
     template = PageTemplateFile(os.path.join(source_dir, 'template.pt'))
     create_html(rest_files, template)
 
