@@ -26,6 +26,14 @@ These mini-tutorials have been contributed by members of the Grok community.
 
   Author: Uli Fouquet
 
+* `XMLRPC With Grok </minitutorials/xmlrpc.html>`_:
+
+  XMLRPC (http://xmlrpc.com) is a spec and a set of implementations
+  that allow software running on disparate operating systems, running in
+  different environments to make procedure calls over the Internet.
+
+  Author: Kushal Das
+
 Buildout
 ========
 

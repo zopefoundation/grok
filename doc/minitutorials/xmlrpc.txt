@@ -2,12 +2,12 @@
 XML-RPC using Grok
 ====================
 
-by Kushal Das
+:Author: Kushal Das
 
 What is XML-RPC ?
 ------------------
 
-From the site (http://xmlrpc.com): it’s a spec and a set of implementations
+From the site (http://xmlrpc.com): it's a spec and a set of implementations
 that allow software running on disparate operating systems, running in
 different environments to make procedure calls over the Internet.
 
@@ -22,7 +22,7 @@ Grok accomplishes this by being based on Zope 3, an advanced object-oriented
 web framework. While Grok is based on Zope 3, and benefits a lot from it, you
 do not need to know Zope at all in order to get productive with Grok. 
 
-So, it is cool, isn’t it? :)
+So, it is cool, isn't it? :)
 
 Installation
 --------------
@@ -36,22 +36,22 @@ This will download and install grok for you. After this we are ready to rock...
 Creating our first project
 -----------------------------
 
-Let’s create the project named “Foo”. For that give the command::
+Let's create the project named "Foo". For that give the command::
 
     $ grokproject Foo
 
-This will create a subdirectory in the current directory named “Foo”, then it
+This will create a subdirectory in the current directory named "Foo", then it
 will download Zope3 and install Grok with that which you can start working
 with. It will ask you a few questions like::
 
-    Enter module (Name of a demo Python module placed into the package) [’app.py’]:
+    Enter module (Name of a demo Python module placed into the package) ['app.py']:
 
 Press Enter for the default value. Then::
 
     Enter user (Name of an initial administrator user): grok
     Enter passwd (Password for the initial administrator user): grok
 
-We typed “grok” for both the user and password.
+We typed "grok" for both the user and password.
 
 Starting up Zope
 --------------------
@@ -88,7 +88,7 @@ shown below::
 
 We will another class which will be available through this application class,
 the new class should inherit ``grok.XMLRPC for this``, and we will write a 
-``say()`` method. It will return “Hello World!”. So, the changed file::
+``say()`` method. It will return "Hello World!". So, the changed file::
 
     import grok
 
@@ -105,7 +105,7 @@ the new class should inherit ``grok.XMLRPC for this``, and we will write a
         def say(self):
             return 'Hello world!'
 
-The name of the class doesn’t matter, so you can give it any name.
+The name of the class doesn't matter, so you can give it any name.
 Restart the Zope in the console, and you can connect to it through any xmlrpc
 client. Below is an example (fooclient.py)::
 
@@ -129,7 +129,7 @@ What is a class annotation?
 -----------------------------
 
 A class annotation is a declarative way to tell grok something about a Python
-class. Let’s see the example, we write a Boom.py with a Boom class::
+class. Let's see the example, we write a Boom.py with a Boom class::
 
     import grok
     from app import Foo

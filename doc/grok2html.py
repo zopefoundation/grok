@@ -175,6 +175,9 @@ def main(argv=None):
     rest_files.append(RestFile('macros', 
                               os.path.join(source_dir, 'minitutorials', 'macros.txt'),
                               os.path.join(www_dir, 'minitutorials', 'macros.html')))
+    rest_files.append(RestFile('xmlrpc', 
+                              os.path.join(source_dir, 'minitutorials', 'xmlrpc.txt'),
+                              os.path.join(www_dir, 'minitutorials', 'xmlrpc.html')))
     rest_files.append(RestFile('zc.buildout', 
                   'http://svn.zope.org/*checkout*/zc.buildout/trunk/doc/tutorial.txt',
                   os.path.join(www_dir, 'minitutorials', 'buildout.html')))
