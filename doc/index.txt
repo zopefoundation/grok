@@ -108,8 +108,9 @@ anonymous check out of the latest version of Grok with the following command:::
 ME GROK MINI-TUTORIALS!
 -----------------------
 
-* `Newbie Search HowTo <minitutorials/searching.html>`_
-* `Newbie Macros HowTo <minitutorials/macros.html>`_
+* `Newbie Search HowTo <minitutorials/searching.html>`_ Sebastian Ware
+* `Newbie Macros HowTo <minitutorials/macros.html>`_ Uli Fouquet
+* `Newbie XMLRPC HowTo <minitutorials/xmlrpc.html>`_ Kushal Das
 
 ME GROK SPRINTS AND BLOGS!
 --------------------------
