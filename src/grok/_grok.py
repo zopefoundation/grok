@@ -82,7 +82,6 @@ def do_grok(dotted_name):
 
 def grok_component(name, component,
                    context=None, module_info=None, templates=None):
-    #import pdb; pdb.set_trace()
     return the_multi_grokker.grok(name, component,
                                   context=context,
                                   module_info=module_info,
