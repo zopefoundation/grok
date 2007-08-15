@@ -55,4 +55,5 @@ class Edit(grok.View):
 
         # Update the text and redirect
         self.context.update(text)
+        self.flash('Saved.')
         self.redirect(self.url(self.context))

@@ -1,50 +1,14 @@
-<html>
-  <head>
-    <title>grok administration interface</title>
-  </head>
-
-  <body tal:define="apps context/values">
-    <h1>Grok Applications</h1>
-
-    <form tal:attributes="action string:${context/@@absolute_url}/delete"
-          tal:condition="apps|nothing">
-      <fieldset>
-        <legend>Installed applications</legend>
-
-    <ul>
-      <li tal:repeat="app apps">
-        <input type="checkbox" tal:attributes="value app/__name__;
-                                               name string:items" />
-        <a tal:attributes="href string:${context/@@absolute_url}/${app/__name__}">
-          <span tal:replace="app/__name__"/>
-          (<span tal:replace="app/__class__/__name__"/>)
-        </a>
-      </li>
-    </ul>
-
-        <p><input type="submit" value="Delete Selected"/></p>
-        </fieldset>
-    </form>
-    <form tal:attributes="action string:${context/@@absolute_url}/add">
-      <fieldset>
-        <legend>Add application</legend>
-
-        <p>
-          <label>Application: 
-            <select height="1" name="application"> 
-              <option tal:repeat="app view/applications" 
-                tal:attributes="value app" 
-                tal:content="app"
-                />
-            </select> 
-          </label>
-        </p>
-
-        <p><label>Name: <input type="text" name="name"/></label></p>
-
-        <p><input type="submit" value="Add"/></p>
-
-      </fieldset>
-    </form>
-  </body>
+<html metal:use-macro="context/@@macros/gaia-page">
+  <div metal:fill-slot="content">
+    <h1></h1>
+    <div class="logo">
+      <a href="context/@@appsindex"
+	 tal:attributes="href string:${context/@@absolute_url}/applications">
+	<img alt="Image of Grok relaxing..."
+	     src="grok-relax.jpg"
+	     tal:attributes="src view/static/grok-relax.png" />
+      </a>
+    </div>
+  </div>
+  <div metal:fill-slot="footer">asda</div>
 </html>

@@ -1,0 +1,35 @@
+<html metal:use-macro="context/@@macros/gaia-page">
+  <head>
+    <title metal:fill-slot="title">Grok Login</title>
+  </head>
+  <body>
+    <div metal:fill-slot="menu-links" />
+    <div metal:fill-slot="content">
+      <h1>Welcome to Grok</h1>
+      <form method="post">
+	<fieldset>
+	  <legend>Login</legend>
+
+	  <table>
+	    <tr>
+	      <td><label for="login">Username:</label></td>
+	      <td><input id="login" type="text" name="login" /></td>
+	    </tr>
+	    <tr>
+	      <td><label for="password">Password:</label></td>
+	      <td><input id="password" type="password" name="password" /></td>
+	    </tr>
+	    <tr>
+	      <td></td>
+	      <td><input type="submit" value="Login"/></td>
+	    </tr>
+	  </table>
+	  <p>
+	    Note: To proceed you must have cookies enabled in your browser
+	  </p>
+
+	</fieldset>
+      </form>
+    </div>
+  </body>
+</html>

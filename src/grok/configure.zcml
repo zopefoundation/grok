@@ -22,6 +22,8 @@
   <include package="zope.app.intid" />
   <include package="zope.app.keyreference" />
   <include package="zope.app.catalog" />
+  <include package="zope.app.renderer" />
+  <include package="zope.app.session" />
 
   <securityPolicy
       component="zope.app.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
