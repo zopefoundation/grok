@@ -49,6 +49,8 @@ from zope.app.container.contained import Contained
 from zope.app.container.interfaces import IReadContainer
 from zope.app.component.site import SiteManagerContainer
 
+import z3c.flashmessage.interfaces
+
 import martian.util
 from grok import interfaces, formlib, util
 
@@ -167,6 +169,11 @@ class View(BrowserPage):
 
     def update(self):
         pass
+
+    def flash(self, message, type='message'):
+        source = component.getUtility(
+            z3c.flashmessage.interfaces.IMessageSource, name='session')
+        source.send(message, type)
 
 
 class GrokViewAbsoluteURL(AbsoluteURL):

@@ -238,8 +238,7 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
 
 
 class IGrokView(IBrowserPage):
-    """Grok views all provide this interface.
-    """
+    """Grok views all provide this interface."""
 
     context = interface.Attribute('context', "Object that the view presents.")
 
@@ -294,6 +293,9 @@ class IGrokView(IBrowserPage):
         hierarchy or the URL of a named object (``name`` parameter)
         relative to the closest application object.
         """
+
+    def flash(message, type='message'):
+        """Send a short message to the user."""
 
 
 class IGrokForm(IGrokView):
@@ -413,5 +415,3 @@ class IIndexDefinition(interface.Interface):
         Use name for index name and attribute to index. Set up
         index for interface or class context.
         """
-    
-        
