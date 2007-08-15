@@ -16,7 +16,7 @@
       <fieldset>
         <legend>Admin message</legend>
 
-        <p>Let's you display an administrative message on all pages.<br />
+        <p>Lets you display an administrative message on all pages.<br />
 
         <input
           type="text"
