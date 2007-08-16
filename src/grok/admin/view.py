@@ -14,7 +14,6 @@ from grok.admin.utilities import getPathLinksForDottedName, getParentURL
 
 import zope.component
 from zope.interface import Interface
-from zope.app import zapi
 from zope.interface.interface import InterfaceClass
 from zope.app.applicationcontrol.interfaces import IServerControl
 from zope.app.applicationcontrol.applicationcontrol import applicationController
@@ -350,7 +349,7 @@ class Server(GAIAView):
 
     @property
     def server_control(self):
-        return zapi.getUtility(IServerControl)
+        return zope.component.getUtility(IServerControl)
 
     @property
     def runtime_info(self):
