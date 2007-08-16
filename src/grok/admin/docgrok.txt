@@ -77,7 +77,7 @@ specialist. For example a package doctor, who happens to be called
 `DocGrokPackage` :
 
     >>> from grok.admin.docgrok import DocGrokPackage
-    >>> doctor = DocGrokPackage('grok.admin')
+    >>> doctor = DocGrokPackage('grok')
     >>> doctor
     <grok.admin.docgrok.DocGrokPackage ...>
 
@@ -85,7 +85,7 @@ Using ``getPath()`` we get the dotted path of the thing, the doctor
 cares for:
 
     >>> doctor.getPath()
-    'grok.admin'
+    'grok'
 
 Fine. Obviously DocGrokPackages know as much as DocGroks. That's
 little. But a ``DocGrokPackage`` knows also about package-things:
