@@ -204,6 +204,10 @@ padding:0.5em;
 margin-left:1.5em;
 }
 
+.menu-label1 { 
+width: 40em;
+}
+
 /* ---- docgrok related ---- */
 .docgrok-entry {
 margin-bottom:0.5em;

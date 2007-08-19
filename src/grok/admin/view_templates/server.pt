@@ -27,6 +27,23 @@
         <input type="hidden" name="submitted" value="true"/>
         <input type="submit" name="save_message" class="button" value="Save"/>
 
+	</p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Users, Roles and Permissions</legend>
+
+        <p>Edit users and roles.<br />
+
+	<span class="docgrok-annotation1">
+	  <a href="users">Edit Users</a>
+	</span><br />
+
+	<span class="docgrok-annotation1">
+	  <a href="permissions">Edit Permissions</a>
+	</span><br />
+
+	</p>
       </fieldset>
 
       <span class="header">Server process info</span>

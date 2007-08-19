@@ -21,6 +21,9 @@ Utilities. This is done here.
 from zope.component import adapter, provideHandler
 from zope.app.appsetup.interfaces import IDatabaseOpenedWithRootEvent
 
+AUTH_FOLDERNAME=u'authentication'
+USERFOLDER_NAME=u'Users'
+USERFOLDER_PREFIX=u'grokadmin'
 
 def getPrincipalCredentialsFromZCML():
     """Read all principals' attributes from site.zcml.
@@ -55,9 +58,9 @@ def setupSessionAuthentication(root_folder=None,
                                                       u'password': u'grok',
                                                       u'title': u'Manager'
                                                       }],
-                               auth_foldername=u'authentication',
-                               userfolder_name=u'Users',
-                               userfolder_prefix=u'grokadmin'
+                               auth_foldername=AUTH_FOLDERNAME,
+                               userfolder_name=USERFOLDER_NAME,
+                               userfolder_prefix=USERFOLDER_PREFIX
                                ):
     """Add session authentication PAU to root_folder.
 

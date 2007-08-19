@@ -408,6 +408,31 @@ class Server(GAIAView):
         self.redirect(self.url())
 
 
+class Users(GAIAView):
+    """Users management screen."""
+
+    grok.name('users')
+    grok.require('grok.ManageApplications')
+
+    def getPrincipals(self):
+        from grok.admin import AUTH_FOLDERNAME, USERFOLDER_NAME
+
+        sm = self.context.getSiteManager()
+        if AUTH_FOLDERNAME not in list(sm.keys()):
+            return []
+        pau = sm[AUTH_FOLDERNAME]
+        if USERFOLDER_NAME not in list(pau.keys()):
+            return []
+        userfolder = pau[USERFOLDER_NAME]
+        users = list(userfolder.search({'search':''}))
+        return [userfolder.principalInfo(x) for x in users]
+        
+
+    def update(self):
+        self.principals = self.getPrincipals()
+        pass
+
+
 
 def getDottedPathDict(dotted_path):
     """Get a dict containing parts of a dotted path as links.
