@@ -29,7 +29,7 @@
 
 	</p>
       </fieldset>
-
+<!--
       <fieldset>
         <legend>Users, Roles and Permissions</legend>
 
@@ -45,7 +45,7 @@
 
 	</p>
       </fieldset>
-
+-->
       <span class="header">Server process info</span>
       <div id="server-processes">
       <dl tal:define="ri view/runtime_info">
