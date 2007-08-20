@@ -21,20 +21,12 @@
 	  <span class="docgrok-description1">Python path:</span>
 	  <span class="docgrok-pathvalue" 
 		tal:content="context/path">path.in.python</span>
-	  <div class="docgrok-annotation2">
-	    Use <span class="docgrok-pycode1">import 
-	    <span tal:replace="context/path">path</span></span>
-	    to use the functionality of this package in your application or component.
-	  </div>
 	</div>
 
 	<div class="docgrok-entry">
 	  <span class="docgrok-description1">Absolute file path: </span>
 	  <span class="docgrok-pathvalue" 
 		tal:content="context/getFilePath">absolute/file/path</span>
-	  <div class="docgrok-annotation2">
-	    This is, where this package is located in file system.
-	  </div>
 	</div>
 
 	<h2>Textfiles:</h2>
@@ -76,14 +68,6 @@
 		 tal:condition="item/doc"
 		 tal:content="structure item/doc">
 	    </div>
-	    <div class="docgrok-annotation2"
-		 tal:condition="not: item/doc">
-	      You can use <span class="docgrok-pycode1">import <span
-	      tal:replace="string: ${context/path}.${item/name}">a.b</span>
-	    </span>
-	    to make the elements of this package available in your 
-	    application or component.
-	    </div>
 	  </div>
 	</div>
 
@@ -102,14 +86,6 @@
 	    <div class="docgrok-annotation2"
 		 tal:condition="item/doc"
 		 tal:content="structure item/doc">
-	    </div>
-	    <div class="docgrok-annotation2"
-		 tal:condition="not: item/doc">
-	      You can use <span class="docgrok-pycode1">import <span
-	      tal:replace="string: ${context/path}.${item/name}">a.b</span>
-	    </span>
-	    to make the elements of this module available in your 
-	    application or component.
 	    </div>
 	  </div>
 	</div>

@@ -22,20 +22,12 @@
 	  <span class="docgrok-description1">Python path:</span>
 	  <span class="docgrok-pathvalue" 
 		tal:content="context/path">path.in.python</span>
-	  <div class="docgrok-annotation2">
-	    Use <span class="docgrok-pycode1">import 
-	    <span tal:replace="context/path">path</span></span>
-	    to use the functionality of this module in your application or component.
-	  </div>
 	</div>
 
 	<div class="docgrok-entry">
 	  <span class="docgrok-description1">Absolute file path: </span>
 	  <span class="docgrok-pathvalue" 
 		tal:content="context/getFilePath">/absolute/file/path</span>
-	  <div class="docgrok-annotation2">
-	    This is the file, where this module is located in file system.
-	  </div>
 	</div>
 
       </div>
@@ -57,14 +49,6 @@
 		 tal:condition="item/doc"
 		 tal:content="structure item/doc">
 	    </div>
-	    <div class="docgrok-annotation2"
-		 tal:condition="not: item/doc">
-	      Use <span class="docgrok-pycode1">from <span
-	      tal:replace="context/path">x</span> import <span
-	      tal:replace="item/name">y</span></span> to make the
-	      functionality of this class available in your application
-	      or component.
-	    </div>
 	  </div>
 	</div>
 
@@ -84,14 +68,6 @@
 		 tal:condition="item/doc"
 		 tal:content="structure item/doc">
 	    </div>
-	    <div class="docgrok-annotation2"
-		 tal:condition="not: item/doc">
-	      Use <span class="docgrok-pycode1">from <span
-	      tal:replace="context/path">x</span> import <span
-	      tal:replace="item/name">y</span></span> to make this
-	      interface definition available in your application
-	      or component.
-	    </div>
 	  </div>
 	</div>
 
@@ -110,14 +86,6 @@
 	    <div class="docgrok-annotation2"
 		 tal:condition="item/doc"
 		 tal:content="structure item/doc">
-	    </div>
-	    <div class="docgrok-annotation2"
-		 tal:condition="not: item/doc">
-	      Use <span class="docgrok-pycode1">from <span
-	      tal:replace="context/path">x</span> import <span
-	      tal:replace="item/name">y</span></span> to make the
-	      functionality of this class available in your application
-	      or component.
 	    </div>
 	  </div>
 	</div>
