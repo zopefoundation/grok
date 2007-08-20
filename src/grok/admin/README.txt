@@ -29,8 +29,8 @@ Users of ``grokproject``, might find this file in
 Using the admin-UI
 ------------------
 
-After login you can log out or, before doing that, visit some of the
-main management topics, as described below:
+After login you can visit some of the main management topics, as
+described below:
 
 On top of the admin-UI you can always find three links to the main
 management activities currently possible with GAIA:

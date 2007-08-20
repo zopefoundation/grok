@@ -273,40 +273,6 @@ class Index(GAIAView):
         self.redirect(self.url('applications'))
 
 
-class LoginForm(GAIAView):
-    """A login screen for session based authentication.
-
-    To activate loginForm, i.e. session based authentication, an
-    appropriate PluggableAuthenticationUtility (PAU) must be set up in
-    the applications root folder (which happens here to be the global
-    root folder). The setup is done for the admin app in __init__.py.
-    """
-    # 'loginForm.html' is the page template name, that standard
-    # session based authentication looks for. The form must provide an
-    # input field 'login' for the username and another input field
-    # 'password'.
-    grok.name('loginForm.html')
-
-    def update(self, login=None, password=None, camefrom=None):
-        request = self.request
-        if (not IUnauthenticatedPrincipal.providedBy(request.principal)):
-            camefrom = request.get('camefrom', '.')
-            self.redirect(camefrom)
-        return
-
-class Logout(GAIAView):
-    """Log out screen."""
-
-    grok.name('logout')
-
-    def update(self):
-        auth = zope.component.getUtility(IAuthentication)
-        logout = ILogout(auth)
-        logout.logout(self.request)
-        pass
-
-
-
 class Applications(GAIAView):
     """View for application management."""
 

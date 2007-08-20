@@ -29,23 +29,6 @@
 
 	</p>
       </fieldset>
-<!--
-      <fieldset>
-        <legend>Users, Roles and Permissions</legend>
-
-        <p>Edit users and roles.<br />
-
-	<span class="docgrok-annotation1">
-	  <a href="users">Edit Users</a>
-	</span><br />
-
-	<span class="docgrok-annotation1">
-	  <a href="permissions">Edit Permissions</a>
-	</span><br />
-
-	</p>
-      </fieldset>
--->
       <span class="header">Server process info</span>
       <div id="server-processes">
       <dl tal:define="ri view/runtime_info">

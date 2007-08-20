@@ -26,9 +26,7 @@
 	  <span i18n:translate="">User:
 	  <span tal:replace="request/principal/title"
 		i18n:name="user_title">User</span>
-	  </span>&nbsp;
-	  [<a href=""
-	  tal:attributes="href string:${view/root_url}/logout">log out</a>]
+	  </span>
 	</span>
       </div>
 
