@@ -3,7 +3,9 @@ import grok.interfaces
 from zope.app.folder.interfaces import IRootFolder
 
 grok.context(IRootFolder)
-grok.define_permission('grok.ManageApplications')
+
+class ManageApplications(grok.Permission):
+    grok.name('grok.ManageApplications')
 
 class Index(grok.View):
     grok.name('index.html') # the root folder isn't a grok.Model
