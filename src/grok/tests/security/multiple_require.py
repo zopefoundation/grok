@@ -10,8 +10,11 @@ Multiple calls of grok.require in one class are not allowed.
 import grok
 import zope.interface
 
-grok.define_permission('permission.1')
-grok.define_permission('permission.2')
+class One(grok.Permission):
+    grok.name('permission.1')
+
+class Two(grok.Permission):
+    grok.name('permission.2')
 
 class MultipleView(grok.View):
     grok.context(zope.interface.Interface)

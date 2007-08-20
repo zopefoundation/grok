@@ -43,10 +43,17 @@ When we log in (e.g. as a manager), we can access the views just fine:
 import grok
 import zope.interface
 
-grok.define_permission('grok.ViewPainting')
-grok.define_permission('grok.EditPainting')
-grok.define_permission('grok.ErasePainting')
-grok.define_permission('grok.ApprovePainting')
+class View(grok.Permission):
+    grok.name('grok.ViewPainting')
+
+class Edit(grok.Permission):
+    grok.name('grok.EditPainting')
+
+class Erase(grok.Permission):
+    grok.name('grok.ErasePainting')
+
+class Approve(grok.Permission):
+    grok.name('grok.ApprovePainting')
 
 class PaintingOwner(grok.Role):
     grok.name('grok.PaintingOwner')
