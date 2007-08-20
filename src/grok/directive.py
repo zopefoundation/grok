@@ -98,7 +98,7 @@ class MultiValueOnceDirective(OnceDirective):
 
     def check_arguments(self, *values):
         pass
-    
+
     def value_factory(self, *args):
         return args
 
@@ -114,8 +114,6 @@ global_utility = GlobalUtilityDirective('grok.global_utility',
                                         ModuleDirectiveContext())
 local_utility = LocalUtilityDirective('grok.local_utility',
                                       ClassDirectiveContext())
-define_permission = MultipleTextDirective('grok.define_permission',
-                                          ModuleDirectiveContext())
 require = RequireDirective('grok.require', ClassDirectiveContext())
 site = InterfaceOrClassDirective('grok.site',
                                  ClassDirectiveContext())

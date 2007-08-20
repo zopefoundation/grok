@@ -43,6 +43,8 @@ class IGrokBaseClasses(interface.Interface):
     DisplayForm = interface.Attribute("Base class for display forms.")
     Indexes = interface.Attribute("Base class for catalog index definitions.")
 
+    Permission = interface.Attribute("Base class for a permission definition.")
+    Role = interface.Attribute("Base class for a role definition.")
 
 class IGrokErrors(interface.Interface):
 
@@ -122,14 +124,11 @@ class IGrokDirectives(interface.Interface):
         name_in_container - the name to use for storing the utility
         """
 
-    def define_permission(permission):
-        """Defines a new permission with the id ``permission``."""
-
     def require(permission):
         """Protect a view class or an XMLRPC method with ``permision``.
 
         ``permission`` must already be defined, e.g. using
-        grok.define_permission.
+        grok.Permission.
 
         grok.require can be used as a class-level directive or as a
         method decorator."""

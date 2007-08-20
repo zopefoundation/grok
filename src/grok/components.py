@@ -473,5 +473,8 @@ class IndexesClass(object):
 
 Indexes = IndexesClass('Indexes')
 
+class Permission(object):
+    pass
+
 class Role(object):
     pass
