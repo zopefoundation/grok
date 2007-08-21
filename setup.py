@@ -5,6 +5,8 @@ import os
 # make sure we only depend on versions for which there is a windows
 # binary. In some cases this means we rely on an earlier version than the
 # latest/greatest version as no Windows binary has been released for it yet.
+# in some cases we also need to do this for non-binary dependencies, as
+# more recent versions rely on versions for which no binary eggs exist.
 
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
@@ -49,7 +51,7 @@ setup(
                       'zope.app.container == 3.5.0.a1',
                       'zope.app.folder',
                       'zope.app.intid',
-                      # XXX not binary, but needed for ZODB 3.8.0b22
+                      # not binary, but needed for ZODB 3.8.0b2
                       'zope.app.keyreference == 3.4.0a1',
                       'zope.app.pagetemplate',
                       'zope.app.publication',
@@ -66,10 +68,8 @@ setup(
                       'zope.deprecation',
                       'zope.event',
                       'zope.formlib',
-                      # XXX there is a later 3.4.0 release
-                      'zope.hookable == 3.4.0a1',
-                      # XXX there is a later 3.4.0 release
-                      'zope.i18nmessageid == 3.4.0a1',
+                      'zope.hookable',
+                      'zope.i18nmessageid',
                       'zope.interface == 3.4.0',
                       'zope.lifecycleevent',
                       'zope.pagetemplate',
@@ -81,6 +81,6 @@ setup(
                       'zope.traversing',
                       'zope.testbrowser',
                       'zc.catalog',
-                      'z3c.flashmessage >=1.0dev-r77761',
+                      'z3c.flashmessage >=1.0b1',
                       ],
 )
