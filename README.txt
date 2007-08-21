@@ -1,3 +1,6 @@
+Grok
+****
+
 What is grok?
 =============
 
@@ -9,6 +12,9 @@ lies in using **convention over configuration** and **sensible
 defaults** when wiring components together.  That means neither a
 configuration language like ZCML nor a lot of repetition are needed to
 create a web application with grok.
+
+You can find out much more about Grok at our http://grok.zope.org
+website.
 
 Who is grok?
 ============

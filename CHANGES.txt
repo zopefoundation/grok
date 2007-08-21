@@ -1,0 +1,40 @@
+Grok changes
+************
+
+0.10 (2007-08-21)
+=================
+
+Feature changes
+---------------
+
+* Integrated admin user interface.
+
+* Martian-based configuration.
+
+* Grok should now work on Windows.
+
+* Grok is now based on zope3recipes.
+
+* Flash message infrastructure included.
+
+Bug fixes
+---------
+ 
+* A fix in Martian where multiple grok.Model or grok.Container classes
+  could result in something being found as a context twice.
+
+0.9 series (early 2007 until july 2007)
+=======================================
+
+Feature changes
+---------------
+
+Grok was released in "continuous release" mode from SVN during this period.
+
+0.1 series (september 2006 until early 2007)
+============================================
+
+Feature changes
+---------------
+
+Grok was created in september 2006.
