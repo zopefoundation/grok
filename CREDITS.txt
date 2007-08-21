@@ -11,6 +11,8 @@ CREDITS
 
 * Jan-Wijbrand Kolman (Grok Zwei sprint, meta grokker improvements)
 
+* Uli Fouquet (admin interface, summer of code student)
+
 * Darryl Cousins (website, admin interface)
 
 * Kevin Teague (website)
