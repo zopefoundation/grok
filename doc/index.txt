@@ -53,7 +53,7 @@ Watch Grok in Action
 * `Introduction to Grok`_ is a talk given by Philipp von Weitershausen to a group of Zope developers.
 
 .. _Simple ToDo: http://www.archive.org/details/grok_todo_part1 
-.. _Introduction to Grok: http://comlounge.tv/blog/archive/2007/02/11/cltv23-snow-sprint-2007-grok-presentation
+.. _Introduction to Grok: http://comlounge.tv/blog/zope/cltv23-snow-sprint-2007-grok-presentation
 
 
 What does Grok code look like?
