@@ -23,6 +23,8 @@ CREDITS
 
 * Mikhail Kashkin
 
+* Wim Boucqaert (admin interface layout improvements)
+
 * ME GROK (team mascot)
 
 Thank you
