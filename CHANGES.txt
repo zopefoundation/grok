@@ -9,13 +9,12 @@ Feature changes
 
 * Integrated admin user interface.
 
-* Martian-based configuration.
-
-* Grok should now work on Windows.
-
-* Grok is now based on zope3recipes.
+* Configuration using Martian (http://pypi.python.org/pypi/martian).
 
 * Flash message infrastructure included.
+
+* Adjust dependencies for Grok so that grokproject should work on
+  Windows.
 
 Bug fixes
 ---------
