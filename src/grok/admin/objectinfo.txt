@@ -141,7 +141,7 @@ The filename can be a compiled file ('.pyc') or a Python source file
 
   >>> filename = ObjectInfo(grok.admin.objectinfo.ObjectInfo).getfile()
   >>> filename = filename[-1] == 'c' and filename or filename + 'c'
-  >>> filename
+  >>> pnorm(filename)
   '.../grok/admin/objectinfo.pyc'
 
 
@@ -154,7 +154,7 @@ Here the same applies as for getfile().
   >>> info.getsourcefile() is None
   True
 
-  >>> ObjectInfo(grok.admin.objectinfo.ObjectInfo).getsourcefile()
+  >>> pnorm(ObjectInfo(grok.admin.objectinfo.ObjectInfo).getsourcefile())
   '.../grok/admin/objectinfo.py'
 
   >>> info.getsourcelines() is None

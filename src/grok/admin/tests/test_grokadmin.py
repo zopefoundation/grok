@@ -13,6 +13,7 @@
 ##############################################################################
 """Setup for tests."""
 
+import os
 import unittest
 from pkg_resources import resource_listdir
 from zope.testing import doctest, cleanup
@@ -47,13 +48,22 @@ def suiteFromPackage(name):
         suite.addTest(test)
     return suite
 
+def pnorm(path):
+    """Normalization of paths to use forward slashes. This is needed
+    to make sure the tests work on windows.
+    """
+    return path.replace(os.sep, '/')
+
 def test_suite():
     suite = unittest.TestSuite()
+    globs = {'pnorm': pnorm}
+
     for name in []:
         suite.addTest(suiteFromPackage(name))
     for name in ['docgrok.txt','objectinfo.txt', 'utilities.py']:
         suite.addTest(doctest.DocFileSuite(name,
                                            package='grok.admin',
+                                           globs=globs,
                                            setUp=setUpZope,
                                            tearDown=cleanUpZope,
                                            optionflags=doctest.ELLIPSIS+

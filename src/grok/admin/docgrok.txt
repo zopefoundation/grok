@@ -201,7 +201,7 @@ Ah, yes, very interesting. We got the dotted path of the examined
 class. But, where can we find the definition of it in file system? Ask
 the doc:
 
-    >>> doctor.getFilePath()
+    >>> pnorm(doctor.getFilePath())
     '.../grok/__init__.py'
 
 This is not exactly, what we wanted to know, is it? We got the package
@@ -214,7 +214,7 @@ as we asked for ``grok.View`` the answer was correct.
 To check it, let's see, what happens, if we give the real dotted path:
 
     >>> doctor = DocGrokGrokView('grok.components.View')
-    >>> doctor.getFilePath()
+    >>> pnorm(doctor.getFilePath())
     '.../grok/components.py'
 
 Ah, right. This is, what we wanted. Now we can use some of the derived
