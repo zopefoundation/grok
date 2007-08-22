@@ -38,6 +38,7 @@ setup(
     zip_safe=False,
     install_requires=['setuptools',
                       'martian',
+                      'grokcore.component',
                       'simplejson',
                       'pytz',
                       'ZODB3 == 3.8.0b2',
