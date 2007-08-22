@@ -27,6 +27,7 @@ setup(
     long_description=open('README.txt').read(),
     license='ZPL',
     packages=find_packages(),
+    namespace_packages=['grokcore'],
     include_package_data = True,
     zip_safe=False,
     install_requires=['setuptools',
