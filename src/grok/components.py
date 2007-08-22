@@ -479,3 +479,9 @@ class IndexesClass(object):
         self.__grok_module__ = martian.util.caller_module()
 
 Indexes = IndexesClass('Indexes')
+
+class Permission(object):
+    pass
+
+class Role(object):
+    pass

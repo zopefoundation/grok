@@ -23,6 +23,9 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.security.permission import Permission
 from zope.security.interfaces import IPermission
+from zope.app.securitypolicy.role import Role
+from zope.app.securitypolicy.rolepermission import rolePermissionManager
+
 from zope.annotation.interfaces import IAnnotations
 
 from zope.app.publisher.xmlrpc import MethodPublisher
@@ -489,25 +492,42 @@ def setupUtility(site, utility, provides, name=u'',
     site_manager.registerUtility(utility, provided=provides,
                                  name=name)
 
-
-class DefinePermissionGrokker(martian.GlobalGrokker):
-
+class DefinePermissionGrokker(martian.ClassGrokker):
+    component_class = grok.Permission
     priority = 1500
 
-    def grok(self, name, module, context, module_info, templates):
-        permissions = module_info.getAnnotation('grok.define_permission', [])
-        for permission in permissions:
-            # IPermission.title says that permission ids (and titles,
-            # descriptions) *must* be unicode objects.  Good news is
-            # that the directive handler already made sure we either
-            # got pure ASCII or unicode here:
-            permission = unicode(permission)
-            # TODO permission title and description
-            component.provideUtility(Permission(permission, title=permission),
-                                     name=permission)
-
+    def grok(self, name, factory, context, module_info, templates):
+        permission_name = util.class_annotation(factory, 'grok.name', None)
+        if permission_name is None:
+            raise GrokError(
+                "A permission needs to have a dotted name for its id. Use "
+                "grok.name to specify one.", factory)
+        permission_name = unicode(permission_name)
+        title = unicode(
+            util.class_annotation(factory, 'grok.title', permission_name))
+        # TODO permission description
+        component.provideUtility(
+            Permission(permission_name, title=title),
+            name=permission_name)
         return True
 
+class DefineRoleGrokker(martian.ClassGrokker):
+    component_class = grok.Role
+    priority = DefinePermissionGrokker.priority - 1
+
+    def grok(self, name, factory, context, module_info, templates):
+        role_name = util.class_annotation(factory, 'grok.name', None)
+        if role_name is None:
+            raise GrokError(
+                "A role needs to have a dotted name for its id. Use "
+                "grok.name to specify one.", factory)
+        title = util.class_annotation(factory, 'grok.title', role_name)
+        component.provideUtility(Role(role_name, title=title), name=role_name)
+
+        permissions = util.class_annotation(factory, 'grok.permissions', ())
+        for permission in permissions:
+            rolePermissionManager.grantPermissionToRole(permission, role_name)
+        return True
 
 class AnnotationGrokker(martian.ClassGrokker):
     component_class = grok.Annotation

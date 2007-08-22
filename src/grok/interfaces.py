@@ -122,14 +122,15 @@ class IGrokDirectives(interface.Interface):
         name_in_container - the name to use for storing the utility
         """
 
-    def define_permission(permission):
-        """Defines a new permission with the id ``permission``."""
+    def permissions(permissions):
+        """Specify the permissions that comprise a role.
+        """
 
     def require(permission):
         """Protect a view class or an XMLRPC method with ``permision``.
 
         ``permission`` must already be defined, e.g. using
-        grok.define_permission.
+        grok.Permission.
 
         grok.require can be used as a class-level directive or as a
         method decorator."""
@@ -204,7 +205,7 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
         Note that context, module_info and templates might be required
         for some grokkers which rely on them.
         """
-    
+
     def url(request, obj, name=None):
         """Generate the URL to an object with optional name attached.
         """

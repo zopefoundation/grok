@@ -55,7 +55,9 @@ from grok.admin.objectinfo import ZopeObjectInfo
 DOCGROK_ITEM_NAMESPACE = 'docgrok-obj'
 
 grok.context(IRootFolder)
-grok.define_permission('grok.ManageApplications')
+
+class ManageApplications(grok.Permission):
+    grok.name('grok.ManageApplications')
 
 def find_filepath(dotted_path):
     """Find the filepath for a dotted name.
@@ -248,13 +250,13 @@ class DocGrokGrokker(InstanceGrokker):
 
     Then we get create an (empty) 'ModuleGrokker'. 'ModuleGrokkers'
     can grok whole modules. ::
-      
+
       >>> from martian import ModuleGrokker
       >>> module_grokker = ModuleGrokker()
 
     Then we register the 'docgrok_grokker', which should contain some
     base handlers for modules, classes, etc. by default::
-      
+
       >>> module_grokker.register(docgrok.docgrok_grokker)
 
     The 'docgrok_grokker' is an instance of 'DocGrokGrokker'::
@@ -296,10 +298,10 @@ class DocGrokGrokker(InstanceGrokker):
 
     Now we want to register this new DocGrok with the 'global
     machinery'. Easy::
-    
+
       >>> module_grokker.grok('mammoth_grokker', mammoth)
       True
-      
+
     Now the 'handle_mammoths' function is considered to deliver a
     valid DocGrok, whenever it is asked. Every time, someone asks the
     docgroks 'handle()' function for a suitable docgrok for things
@@ -313,11 +315,11 @@ class DocGrokGrokker(InstanceGrokker):
     TODO: Show how to make a docgrok view.
 
     That's it.
-    
+
     """
     component_class = types.FunctionType
 
-    def grok(self, name, obj, **kw):        
+    def grok(self, name, obj, **kw):
         if not name.startswith('handle_'):
             return False
         if name in [x['name'] for x in docgrok_handlers]:
@@ -326,7 +328,7 @@ class DocGrokGrokker(InstanceGrokker):
                                      'handler':obj})
         return True
 
-    
+
 class DocGrok(grok.Model):
     """DocGrok helps us finding out things about ourselves.
 
@@ -428,7 +430,7 @@ def getItemLink(name, baseurl):
         path = path.rsplit('/', 1)
     path = "/%s/%s%s/@@inspect.html" % (DOCGROK_ITEM_NAMESPACE, path, name)
     path = path.replace('//', '/')
-    url[2] = path 
+    url[2] = path
     return urlunparse(url)
 
 
@@ -507,7 +509,7 @@ class DocGrokPackage(DocGrok):
                 }
             result.append(subresult)
         return result
-        
+
 
     def getModuleInfos(self):
         """Get the modules inside a package.
@@ -545,7 +547,7 @@ class DocGrokModule(DocGrokPackage):
             filename = filename[:-1]
         return filename
 
-       
+
 class DocGrokClass(DocGrokPackage):
     """This doctor cares for classes.
     """
@@ -657,4 +659,3 @@ class DocGrokTextFile(DocGrok):
         content = file.read()
         file.close()
         return content.decode('utf-8')
-

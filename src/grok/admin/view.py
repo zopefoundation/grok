@@ -50,8 +50,9 @@ import z3c.flashmessage.interfaces
 
 
 grok.context(IRootFolder)
-grok.define_permission('grok.ManageApplications')
 
+class ManageApplications(grok.Permission):
+    grok.name('grok.ManageApplications')
 
 class Add(grok.View):
     """Add an application.
@@ -62,7 +63,7 @@ class Add(grok.View):
     def update(self, inspectapp=None, application=None):
         if inspectapp is not None:
             self.redirect(self.url("docgrok") + "/%s/index"%(application.replace('.','/'),))
-        return 
+        return
 
     def render(self, application, name, inspectapp=None):
         if name is None or name == "":
@@ -144,7 +145,7 @@ class Inspect(GAIAView):
             # we get a wrapped context: the meant object is wrapped
             # into a ZopeObjectInfo.
             obj = self.context.obj
-            
+
         self.ob_info = ZopeObjectInfo(obj)
         ob_info = self.ob_info
         self.show_private = show_private
@@ -157,7 +158,7 @@ class Inspect(GAIAView):
                   }
         bases = [getPathLinksForClass(x) for x in ob_info.getBases()]
         bases.sort()
-        
+
         ifaces = [getPathLinksForClass(x) for x in
                   ob_info.getProvidedInterfaces()]
         ifaces.sort()
@@ -184,7 +185,7 @@ class Inspect(GAIAView):
                     attr['interface'], root_url)
             attr['obj'] = getattr(obj, attr['name'], None)
             attr['docgrok_link'] = getItemLink(attr['name'], self.url(''))
-        attrs.sort(lambda x,y: x['name']>y['name']) 
+        attrs.sort(lambda x,y: x['name']>y['name'])
 
         seqitems = ob_info.getSequenceItems() or []
         for item in seqitems:
@@ -220,7 +221,7 @@ class Inspect(GAIAView):
             item['docgrok_link'] = getItemLink(item['key'], self.url(''))
         annotations.sort(lambda x,y: x['key']>y['key'])
 
-        
+
         self.info = {
             'name' : ob_info.getId() or u'<unnamed object>',
             'type' : getPathLinksForClass((getattr(obj,
@@ -256,7 +257,7 @@ class Inspect(GAIAView):
             'mappingitems' : mapitems,
             'annotations' : annotations
             }
-    
+
 
 class Index(GAIAView):
     """A redirector to the real frontpage."""
@@ -392,7 +393,7 @@ class Users(GAIAView):
         userfolder = pau[USERFOLDER_NAME]
         users = list(userfolder.search({'search':''}))
         return [userfolder.principalInfo(x) for x in users]
-        
+
 
     def update(self):
         self.principals = self.getPrincipals()
@@ -405,7 +406,7 @@ def getDottedPathDict(dotted_path):
     """
     if dotted_path is None:
         return {}
-    
+
     result = []
     part_path = ""
     for part in dotted_path.split('.'):
@@ -624,5 +625,3 @@ class DocGrokTextFileView(DocGrokView):
     def getPackagePathParts(self):
         return self.getPathParts(
             self.context.getPackagePath())
-
-

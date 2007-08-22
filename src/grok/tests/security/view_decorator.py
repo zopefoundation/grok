@@ -11,7 +11,8 @@ Using the @grok.require decorator in a view class is not allowed.
 import grok
 import zope.interface
 
-grok.define_permission('bogus.perm')
+class Bogus(grok.Permission):
+    grok.name('bogus.perm')
 
 class BogusView(grok.View):
     grok.context(zope.interface.Interface)

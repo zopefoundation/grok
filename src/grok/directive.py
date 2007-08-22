@@ -17,7 +17,8 @@
 from zope.interface.interfaces import IInterface
 
 from martian.error import GrokImportError
-from martian.directive import (MultipleTimesDirective, BaseTextDirective,
+from martian.directive import (OnceDirective,
+                               MultipleTimesDirective, BaseTextDirective,
                                SingleValue, SingleTextDirective,
                                MultipleTextDirective,
                                MarkerDirective,
@@ -47,7 +48,7 @@ class GlobalUtilityInfo(object):
         if provides is None:
             provides = util.class_annotation(factory, 'grok.provides', None)
         self.provides = provides
-        
+
         if name is u'':
             name = util.class_annotation(factory, 'grok.name', u'')
         self.name = name
@@ -93,6 +94,14 @@ class RequireDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
             return func
         return decorator
 
+class MultiValueOnceDirective(OnceDirective):
+
+    def check_arguments(self, *values):
+        pass
+
+    def value_factory(self, *args):
+        return args
+
 # Define grok directives
 name = SingleTextDirective('grok.name', ClassDirectiveContext())
 template = SingleTextDirective('grok.template', ClassDirectiveContext())
@@ -105,8 +114,9 @@ global_utility = GlobalUtilityDirective('grok.global_utility',
                                         ModuleDirectiveContext())
 local_utility = LocalUtilityDirective('grok.local_utility',
                                       ClassDirectiveContext())
-define_permission = MultipleTextDirective('grok.define_permission',
-                                          ModuleDirectiveContext())
 require = RequireDirective('grok.require', ClassDirectiveContext())
 site = InterfaceOrClassDirective('grok.site',
                                  ClassDirectiveContext())
+title = SingleTextDirective('grok.title', ClassDirectiveContext())
+permissions = MultiValueOnceDirective(
+    'grok.permissions', ClassDirectiveContext())

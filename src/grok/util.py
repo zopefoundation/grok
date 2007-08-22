@@ -55,7 +55,7 @@ def check_permission(factory, permission):
     if component.queryUtility(IPermission,
                               name=permission) is None:
        raise GrokError('Undefined permission %r in %r. Use '
-                       'grok.define_permission first.'
+                       'grok.Permission first.'
                        % (permission, factory), factory)
 
 def get_default_permission(factory):
