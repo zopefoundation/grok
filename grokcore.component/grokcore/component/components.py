@@ -11,8 +11,17 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Convenience imports
+"""Base classes for adapters, utlities, etc.
 """
-from grokcore.component.components import Adapter, MultiAdapter, GlobalUtility
-from grokcore.component.decorators import subscribe, adapter, implementer
+class Adapter(object):
 
+    def __init__(self, context):
+        self.context = context
+
+
+class MultiAdapter(object):
+    pass
+
+
+class GlobalUtility(object):
+    pass

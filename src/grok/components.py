@@ -75,21 +75,7 @@ class Application(Site):
     interface.implements(interfaces.IApplication)
 
 
-class Adapter(object):
-
-    def __init__(self, context):
-        self.context = context
-
-
-class GlobalUtility(object):
-    pass
-
-
 class LocalUtility(Model):
-    pass
-
-
-class MultiAdapter(object):
     pass
 
 

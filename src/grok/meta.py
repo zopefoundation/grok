@@ -46,7 +46,7 @@ from martian import util
 
 import grok
 from grok import components, formlib
-from grok.util import check_adapts, get_default_permission, make_checker
+from grok.util import get_default_permission, make_checker
 
 
 class ModelGrokker(martian.ClassGrokker):
@@ -64,46 +64,6 @@ class ContainerGrokker(ModelGrokker):
 
 class LocalUtilityGrokker(ModelGrokker):
     component_class = grok.LocalUtility
-
-
-class AdapterGrokker(martian.ClassGrokker):
-    component_class = grok.Adapter
-
-    def grok(self, name, factory, context, module_info, templates):
-        adapter_context = util.determine_class_context(factory, context)
-        provides = util.class_annotation(factory, 'grok.provides', None)
-        if provides is None:
-            util.check_implements_one(factory)
-        name = util.class_annotation(factory, 'grok.name', '')
-        component.provideAdapter(factory, adapts=(adapter_context,),
-                                 provides=provides,
-                                 name=name)
-        return True
-
-
-class MultiAdapterGrokker(martian.ClassGrokker):
-    component_class = grok.MultiAdapter
-
-    def grok(self, name, factory, context, module_info, templates):
-        provides = util.class_annotation(factory, 'grok.provides', None)
-        if provides is None:
-            util.check_implements_one(factory)
-        check_adapts(factory)
-        name = util.class_annotation(factory, 'grok.name', '')
-        component.provideAdapter(factory, provides=provides, name=name)
-        return True
-
-
-class GlobalUtilityGrokker(martian.ClassGrokker):
-    component_class = grok.GlobalUtility
-
-    def grok(self, name, factory, context, module_info, templates):
-        provides = util.class_annotation(factory, 'grok.provides', None)
-        if provides is None:
-            util.check_implements_one(factory)
-        name = util.class_annotation(factory, 'grok.name', '')
-        component.provideUtility(factory(), provides=provides, name=name)
-        return True
 
 
 class XMLRPCGrokker(martian.ClassGrokker):
@@ -284,34 +244,6 @@ class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
 
     def grok(self, name, module, context, module_info, templates):
         templates.findFilesystem(module_info)
-        return True
-
-
-class SubscriberGrokker(martian.GlobalGrokker):
-
-    def grok(self, name, module, context, module_info, templates):
-        subscribers = module_info.getAnnotation('grok.subscribers', [])
-
-        for factory, subscribed in subscribers:
-            component.provideHandler(factory, adapts=subscribed)
-            for iface in subscribed:
-                zope.component.interface.provideInterface('', iface)
-        return True
-
-
-class AdapterDecoratorGrokker(martian.GlobalGrokker):
-
-    def grok(self, name, module, context, module_info, templates):
-        implementers = module_info.getAnnotation('implementers', [])
-        for function in implementers:
-            interfaces = getattr(function, '__component_adapts__', None)
-            if interfaces is None:
-                # There's no explicit interfaces defined, so we assume the
-                # module context to be the thing adapted.
-                util.check_context(module_info.getModule(), context)
-                interfaces = (context, )
-            component.provideAdapter(
-                function, adapts=interfaces, provides=function.__implemented__)
         return True
 
 
