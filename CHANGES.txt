@@ -1,6 +1,17 @@
 Grok changes
 ************
 
+unreleased
+==========
+
+Feature changes
+---------------
+
+* Removed grok.define_permission in favor of the grok.Permission
+  component base class
+
+* Add the grok.Role component base class.
+
 0.10 (2007-08-21)
 =================
 
