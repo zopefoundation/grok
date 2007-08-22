@@ -27,12 +27,6 @@ from zope.security.interfaces import IPermission
 from martian.error import GrokError, GrokImportError
 from martian.util import class_annotation
 
-def check_adapts(class_):
-    if component.adaptedBy(class_) is None:
-        raise GrokError("%r must specify which contexts it adapts "
-                        "(use grok.adapts to specify)."
-                        % class_, class_)
-
 def make_checker(factory, view_factory, permission):
     """Make a checker for a view_factory associated with factory.
 
