@@ -1,8 +1,8 @@
 Grok changes
 ************
 
-unreleased
-==========
+0.11 (unreleased)
+=================
 
 Feature changes
 ---------------
