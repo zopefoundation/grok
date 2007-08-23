@@ -2,7 +2,7 @@
 Newbie Permissions Tutorial
 ===========================
 
-:Author: Luis De la Parra
+:Author: Luis De la Parra; Uli Fouquet; Jan-Wijbrand Kolman
 
 Intended Audience:
 
@@ -15,13 +15,12 @@ Intended Audience:
 Introduction
 -------------
 
-Zope3 and Grok come with authorization capabilities out of the box.
-While a vanilla Zope3 application protects all content by default and
-performs authorization checks on the content objects themselves, Grok
-allows access to everything unless you explicitly restrict it. The
-authorization checks here are done based on the ``Views`` used to
-access (display/manipulate) the content.
-
+Zope3 and Grok come with authorization capabilities out of the box.  While a
+vanilla Zope3 application protects all content by default and performs
+authorization checks on the content objects themselves, Grok allows access to
+everything unless you explicitly restrict it. The authorization checks here
+are done based on the ``Views`` used to access (display/manipulate) the
+content.
 
 Setup
 -----
@@ -46,9 +45,8 @@ Setup
          last_name  = ''
          email = ''
 
-
      class ViewContact(grok.View)
-         """Display Contact Info, without e-mail. 
+         """Display Contact Info, without e-mail.
 
          Anyone can use this view, even unauthenticated users
          over the internet
@@ -57,24 +55,27 @@ Setup
              contact = self.context
              return 'Contact: ' + contact.first_name + contact.last_name
 
-
 Defining Permissions and restricting access
 -------------------------------------------
 
 As all Views in Grok default to public access, anyone can use the
-``ViewContact``-view defined above. If you want to restrict access to
-a view, you have to explicitly protect it with a permission:
-
+``ViewContact``-view defined above. If you want to restrict access to a view,
+you have to explicitly protect it with a permission:
 
 .. code-block:: python
 
-     # Define Permissions. This can be any string, but it is
-     # strongly recommended to make them unique by prefixing
-     # them with the application name
-     grok.define_permission('mysite.ViewContacts')
-     grok.define_permission('mysite.AddContacts')
-     grok.define_permission('mysite.EditContact')
+     # Define Permissions. The grok.name can be any string, but it is strongly
+     # recommended to make them unique by prefixing them with the application
+     # name.
+     class ViewContacts(grok.Permission):
+         grok.name('mysite.ViewContacts')
+         grok.title('View Contacts') # optional
 
+     class AddContacts(grok.Permission):
+         grok.name('mysite.AddContacts')
+
+     class EditContacts(grok.Permission):
+         grok.name('mysite.EditContacts')
 
      class ViewContactComplete(grok.View)
          """Display Contact Info, including email.
@@ -90,32 +91,24 @@ a view, you have to explicitly protect it with a permission:
                                          contact.last_name,
                                          contact.email)
 
-*Note* The ``grok.define_permission()`` vanished from Grok *after*
-release 0.10. The current subversion copy of Grok does not provide
-it anymore. Instead you can now use the component base class
-``grok.Permission``. Roughly, it works like this:
+*Note* The ``grok.Permission`` component base class was introduced *after* the
+release 0.10. In earlier versions of Grok a permission was defined using a
+module level directive, like so:
 
 .. code-block:: python
 
-     class ViewContactsPermission(grok.Permission):
-         grok.name('mysite.ViewContacs')
-         grok.title('View Contacts') # optional
+     grok.define_permission('mysite.ViewContacts')
 
-
-If you are using ``grokproject`` this change currently does not affect
-your installation. In this case use ``grok.define_permission`` as
-described above.
-
-
+If you are using ``grokproject`` this change currently does not affect your
+installation. In this case use ``grok.define_permission`` as described above.
 
 Granting Permissions
 --------------------
 
-You can grant permissions to principals with a
-``PermissionManager``. For example, if all registered users should
-have permission to view contact details and to create new contacts,
-you could grant them the permissions when the user account is 
-created:
+You can grant permissions to principals with a ``PermissionManager``. For
+example, if all registered users should have permission to view contact
+details and to create new contacts, you could grant them the permissions when
+the user account is created:
 
 .. code-block:: python
 
@@ -151,15 +144,14 @@ created:
             'mysite.AddContacts',
             principals.prefix + username)
 
+Permissions are granted for the context for which the PermissionManager is
+created, and -- if not explicitly overridden -- all its children. The above
+example grants ``View`` and ``Add`` permissions for the complete site, unless
+a folder down in the hierarchy revokes the permission.
 
-Permissions are set for the context for which the PermissionManager is
-created, and -- if not explicitly overridden -- all its children. The
-above example grants ``View`` and ``Add`` permissions for the complete
-site, unless a folder down in the hierarchy revokes the permission.
-
-If you want users to be able to edit only their own ``ContactInfos``,
-you have to give them the ``Edit`` permission only within the context
-of the ``ContactInfo``-object itself
+If you want users to be able to edit only their own ``ContactInfos``, you have
+to give them the ``Edit`` permission only within the context of the
+``ContactInfo``-object itself
 
 .. code-block:: python
 
@@ -176,11 +168,11 @@ of the ``ContactInfo``-object itself
          grok.require('mysite.AddContacts')
 
          #automagically generate form fields
-         form_fields = grok.AutoFields(IContactInfo) 
+         form_fields = grok.AutoFields(IContactInfo)
 
          @grok.action('Create')
          def create(self, **kw):
-             # Create and add the ``ContactInfo`` to our context  
+             # Create and add the ``ContactInfo`` to our context
              # (normally a folder/container)
              contact = ContactInfo()
              self.applyData(contact, **kw)
@@ -194,14 +186,12 @@ of the ``ContactInfo``-object itself
                  self.request.principal.id)
              self.redirect(self.url(contact))
 
-
-
      class EditContact(grok.EditForm):
          """Edit a contact.
          """
 
          #only users with permission 'mysite.EditContacts' can use this
-         grok.require('mysite.EditContacts') 
+         grok.require('mysite.EditContacts')
 
          form_fields = grok.AutoFields(IContactInfo)
 
@@ -210,7 +200,6 @@ of the ``ContactInfo``-object itself
              self.applyData(self.context, **data)
              self.redirect(self.url(self.context))
 
-
 Checking Permissions
 --------------------
 
@@ -218,52 +207,39 @@ Checking Permissions
 code?  User Interfaces should not contain any links/actions which
 users cannot access / for which users don't have authorizations]
 
-
-
-
 Defining Roles
 --------------
 
-Permissions can be grouped together in ``Roles``, which makes granting all
-the permissions for a particular type of user much easier.
+Permissions can be grouped together in ``Roles``, which makes granting all the
+permissions for a particular type of user much easier. Defining roles is
+similar to defining permissions.
+
+As an example, let's group all permissions in two roles: one for normal site
+members, and one for administrators:
+
+.. code-block:: python
+
+     class MemberRole(grok.Role):
+         grok.name('mysite.Member')
+         grok.title('Contacts Member') # optional
+         grok.permissions(
+             'mysite.ViewContacts',
+             'mysite.AddContacts')
+
+     class AdministratorRole(grok.Role):
+         grok.name('mysite.Editor')
+         grok.title('Contacts Administrator') # optional
+         grok.permissions(
+             'mysite.ViewContacts',
+             'mysite.AddContacts',
+             'mysite.EditContacts')
+
+Now, if the context here is the site/application, users with the administrator
+role can edit all ContactInfos, regardless of who the creator is.
 
 .. code-block:: python
 
      from zope.app.securitypolicy.interfaces import IPrincipalRoleManager
-     from zope.app.securitypolicy.interfaces import IRolePermissionManager
-
-[FIXME: Roles have to be first defined / registered as a local
-Utility????]
-
-[FIXME: As of July 2007, there has been some discussion on the mailing
-list about simplifying role definitions. This section may be outdated]
-
-.. code-block:: python
-
-     role_man = IRolePermissionManager(grok.getSite())
-
-As an example, let's group all permissions in two roles: one for
-normal site members, and one for administrators:
-
-.. code-block:: python
-
-     role_man.grantPermissionToRole('mysite.ViewContacts', 'mysite.Member')
-     role_man.grantPermissionToRole('mysite.AddContacts', 'mysite.Member')
-
-     role_man.grantPermissionToRole('mysite.ViewContacts',
-                                    'mysite.Administrator')
-     role_man.grantPermissionToRole('mysite.AddContacts',
-                                    'mysite.Administrator')
-     role_man.grantPermissionToRole('mysite.EditContacts',
-                                    'mysite.Administrator')
-
-Now, if the context here is the site/application, users with the
-administrator role can edit all ContactInfos, regardless of who the
-creator is.
-
-.. code-block:: python
 
      role_man = IPrincipalRoleManager(context)
      role_man.assignRoleToPrincipal('mysite.Administrator', principalID)
-
-
