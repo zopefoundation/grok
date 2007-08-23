@@ -334,7 +334,7 @@ Gives a tuple of all interfaces provided by the object, not only the
 directly provided ones.
 
   >>> root_info.getProvidedInterfaces()
-  (<InterfaceClass zope.app.folder.interfaces.IFolder>, <InterfaceClass persistent.interfaces.IPersistent>, <InterfaceClass zope.app.component.interfaces.IPossibleSite>, <InterfaceClass zope.app.container.interfaces.IContained>)
+  (<InterfaceClass zope.app.folder.interfaces.IFolder>, <InterfaceClass persistent.interfaces.IPersistent>, <InterfaceClass zope.location.interfaces.IPossibleSite>, <InterfaceClass zope.app.container.interfaces.IContained>)
 
   >>> sweethome_info.getProvidedInterfaces()
   (<InterfaceClass zope.annotation.interfaces.IAttributeAnnotatable>, <InterfaceClass zope.app.container.interfaces.IContainer>, <InterfaceClass zope.app.container.interfaces.IContained>, <InterfaceClass persistent.interfaces.IPersistent>)
