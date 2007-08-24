@@ -1,5 +1,6 @@
 <configure    
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:grok="http://namespaces.zope.org/grok">
 
   <include package="zope.security" file="meta.zcml" />
@@ -27,6 +28,18 @@
 
   <securityPolicy
       component="zope.app.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
+
+  <adapter factory=".components.ModelTraverser" />
+  <adapter factory=".components.ContainerTraverser" />
+
+  <browser:defaultView
+      for=".components.Model"
+      name="index"
+      />
+  <browser:defaultView
+      for=".components.Container"
+      name="index"
+      />
 
   <!-- we register special IAbsoluteURL views on grok views so that
        can have them inspect __view_name__ instead of __name__.  

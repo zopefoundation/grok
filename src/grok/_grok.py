@@ -29,16 +29,6 @@ from grok import components, meta, templatereg
 
 _bootstrapped = False
 def bootstrap():
-    component.provideAdapter(components.ModelTraverser)
-    component.provideAdapter(components.ContainerTraverser)
-
-    # register the name 'index' as the default view name
-    component.provideAdapter('index',
-                             adapts=(grok.Model, IBrowserRequest),
-                             provides=IDefaultViewName)
-    component.provideAdapter('index',
-                             adapts=(grok.Container, IBrowserRequest),
-                             provides=IDefaultViewName)
     # register a subscriber for when grok.Sites are added to make them
     # into Zope 3 sites
     component.provideHandler(
