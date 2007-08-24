@@ -521,7 +521,7 @@ class DefineRoleGrokker(martian.ClassGrokker):
             raise GrokError(
                 "A role needs to have a dotted name for its id. Use "
                 "grok.name to specify one.", factory)
-        title = util.class_annotation(factory, 'grok.title', role_name)
+        title = unicode(util.class_annotation(factory, 'grok.title', role_name))
         component.provideUtility(Role(role_name, title=title), name=role_name)
 
         permissions = util.class_annotation(factory, 'grok.permissions', ())
