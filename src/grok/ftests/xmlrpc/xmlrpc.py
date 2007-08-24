@@ -1,6 +1,4 @@
 """
-  >>> import grok
-  >>> grok.grok('grok.ftests.xmlrpc.xmlrpc')
   >>> from grok.ftests.xmlrpc.xmlrpc import Mammoth
   >>> getRootFolder()["Manfred"] = Mammoth()
 

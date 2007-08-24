@@ -2,11 +2,8 @@
 Local Utilities can be registered on subclasses of grok.Site using
 grok.local_utility:
 
-  >>> import grok
   >>> from zope import component
   >>> from grok.ftests.utility.local_override import *
-
-  >>> grok.grok('grok.ftests.utility.local_override')
 
   >>> cave = SpikyCave()
   >>> getRootFolder()['cave'] = cave

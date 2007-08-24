@@ -3,9 +3,6 @@ Grok allows you to set up catalog indexes in your application with a
 special indexes declaration. Here we show what happens if you try
 to set up an index for an attribute that does not exist on the interface.
 
-  >>> import grok
-  >>> grok.grok('grok.ftests.catalog.indexes_nonexistent')
-
 Let's set up a site in which we manage a couple of objects::
 
   >>> from grok.ftests.catalog.indexes_nonexistent import Herd

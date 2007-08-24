@@ -2,9 +2,7 @@
 This is similar to catalog.py, except that the site uses a base class
 which also defines a local utility.
 
-  >>> import grok
   >>> from grok.ftests.catalog.setuporder import Mammoth, Herd
-  >>> grok.grok('grok.ftests.catalog.setuporder')
 
 Let's setup a site in which we manage a couple of objects:
 

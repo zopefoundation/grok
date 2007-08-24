@@ -2,10 +2,8 @@
 You cannot use local_utility with 'public' set to True if the site class
 isn't a container:
 
-  >>> import grok
   >>> from zope import component
   >>> from grok.ftests.utility.publicnoncontainer import *
-  >>> grok.grok('grok.ftests.utility.publicnoncontainer')
   Traceback (most recent call last):
     ...
   GrokError: Cannot set public to True with grok.local_utility as the site

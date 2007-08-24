@@ -2,11 +2,9 @@
 When you try to register multiple classes with the same (interface, name)
 combination multiple times using grok.local_utility, we expect an error:
 
-  >>> import grok
   >>> from zope import component
   >>> from grok.ftests.utility.multiple_class import *
 
-  >>> grok.grok('grok.ftests.utility.multiple_class')
   Traceback (most recent call last):
     ...
   GrokError: Conflicting local utility registration

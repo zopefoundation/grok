@@ -2,8 +2,6 @@
 Forms can implement an update() method that will be called before any
 form processing has happened:
 
-  >>> import grok
-  >>> grok.grok('grok.ftests.form.update')
   >>> from grok.ftests.form.update import Mammoth
   >>> getRootFolder()["manfred"] = Mammoth()
 

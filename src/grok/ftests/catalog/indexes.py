@@ -2,9 +2,6 @@
 Grok allows you to set up catalog indexes in your application with a
 special indexes declaration.
 
-  >>> import grok
-  >>> grok.grok('grok.ftests.catalog.indexes')
-
 Let's set up a site in which we manage a couple of objects::
 
   >>> from grok.ftests.catalog.indexes import Herd, Herd2, Mammoth

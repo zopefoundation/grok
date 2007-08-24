@@ -1,9 +1,6 @@
 """
 Views have a redirect() method to easily create redirects:
 
-  >>> import grok
-  >>> grok.grok('grok.ftests.url.redirect')
-
   >>> from grok.ftests.url.redirect import Mammoth
   >>> getRootFolder()['manfred'] = manfred = Mammoth()
 

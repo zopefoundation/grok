@@ -2,11 +2,9 @@
 When you call the grok.local_utility directive multiple times specifying
 the same (interface, name) combination, we expect an error:
 
-  >>> import grok
   >>> from zope import component
   >>> from grok.ftests.utility.multiple_directive import *
 
-  >>> grok.grok('grok.ftests.utility.multiple_directive')
   Traceback (most recent call last):
     ...
   GrokError: Conflicting local utility registration

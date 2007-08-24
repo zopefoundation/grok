@@ -1,7 +1,4 @@
 """
-  >>> import grok
-  >>> grok.grok('grok.ftests.security.xmlrpc')
-
   >>> from grok.ftests.xmlrpc_helper import ServerProxy
 
   >>> server = ServerProxy("http://localhost/")

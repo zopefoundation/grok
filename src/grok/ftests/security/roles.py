@@ -1,7 +1,4 @@
 """
-  >>> import grok
-  >>> grok.grok('grok.ftests.security.roles')
-
 Viewing a protected view with insufficient privileges will yield
 Unauthorized:
 

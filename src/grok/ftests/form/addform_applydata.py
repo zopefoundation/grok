@@ -3,9 +3,7 @@ We can use AddFrom.applyData to save changes to a newly created
 object.  The object doesn't yet need to have the attributes that are
 going to be set on it.
 
-  >>> import grok
   >>> from grok.ftests.form.addform_applydata import Zoo, Mammoth
-  >>> grok.grok('grok.ftests.form.addform_applydata')
   >>> getRootFolder()["zoo"] = Zoo()
 
   >>> from zope.testbrowser.testing import Browser

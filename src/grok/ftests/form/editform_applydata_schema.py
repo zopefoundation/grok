@@ -6,9 +6,7 @@ the object that need to be changed.
 This is essentially the same narrative as 'editform_applydata'. Here
 we test the whole procedure on fields from schemas:
 
-  >>> import grok
   >>> from grok.ftests.form.editform_applydata_schema import Mammoth
-  >>> grok.grok('grok.ftests.form.editform_applydata_schema')
   >>> getRootFolder()["manfred"] = Mammoth('Manfred the Mammoth', 'Really big')
 
   >>> from zope.testbrowser.testing import Browser

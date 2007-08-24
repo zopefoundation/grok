@@ -1,9 +1,6 @@
 """
 We now demonstrate the use of a SetIndex with Grok::
 
-  >>> import grok
-  >>> grok.grok('grok.ftests.catalog.indexes_set')
-
 Let's set up a site in which we manage a couple of objects::
 
   >>> from grok.ftests.catalog.indexes_set import Herd, Mammoth

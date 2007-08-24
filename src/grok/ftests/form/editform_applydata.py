@@ -3,9 +3,7 @@ A grok.EditForm uses applyData in update mode to save the form data on
 the object.  Update mode means that only those fields are changed on
 the object that need to be changed.
 
-  >>> import grok
   >>> from grok.ftests.form.editform_applydata import Mammoth
-  >>> grok.grok('grok.ftests.form.editform_applydata')
   >>> getRootFolder()["manfred"] = Mammoth('Manfred the Mammoth', 'Really big')
 
   >>> from zope.testbrowser.testing import Browser

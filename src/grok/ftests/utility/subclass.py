@@ -1,11 +1,8 @@
 """
 Subclassed sites inherit all local utilities of their base classes:
 
-  >>> import grok
   >>> from zope import component
   >>> from grok.ftests.utility.subclass import *
-
-  >>> grok.grok('grok.ftests.utility.subclass')
 
   >>> cave = BigCave()
   >>> getRootFolder()["cave"] = cave

@@ -4,8 +4,6 @@ There is a url function that can be imported from grok to determine the
 absolute URL of objects.
 
   >>> from grok import url
-  >>> import grok
-  >>> grok.grok('grok.ftests.url.url_function')
   
   >>> from grok.ftests.url.url_function import Herd, Mammoth
   >>> herd = Herd()
