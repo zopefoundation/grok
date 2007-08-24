@@ -41,6 +41,8 @@
       name="index"
       />
 
+  <subscriber handler=".components.addSiteHandler" />
+
   <!-- we register special IAbsoluteURL views on grok views so that
        can have them inspect __view_name__ instead of __name__.  
        __name__ is already used as the class name, and overriding it

@@ -26,8 +26,13 @@ While manfred and herd are possible sites, they are not yet sites;
   >>> ISite.providedBy(herd)
   False
   
-When a site is added to a container it will be initialized as a site (
-when the ObjectAddedEvent is fired):
+When a site is added to a container it will be initialized as a site
+(when the ObjectAddedEvent is fired for which we first need to
+register the subscriber):
+
+  >>> import zope.component
+  >>> import grok.components
+  >>> zope.component.provideHandler(grok.components.addSiteHandler)
 
   >>> nonsitecontainer['manfred'] = manfred
   >>> ISite.providedBy(manfred)

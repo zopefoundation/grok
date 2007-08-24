@@ -16,7 +16,6 @@
 from zope import component
 from zope.component.interfaces import IDefaultViewName
 from zope.publisher.interfaces.browser import IBrowserRequest
-from zope.app.component.site import LocalSiteManager
 
 import martian
 from martian import scan
@@ -29,23 +28,10 @@ from grok import components, meta, templatereg
 
 _bootstrapped = False
 def bootstrap():
-    # register a subscriber for when grok.Sites are added to make them
-    # into Zope 3 sites
-    component.provideHandler(addSiteHandler)
-
     # now grok the grokkers
     martian.grok_module(scan.module_info_from_module(meta), the_module_grokker)
     martian.grok_module(scan.module_info_from_module(grokcore.component.grokkers),
                         the_module_grokker)
-
-@component.adapter(grok.Site, grok.IObjectAddedEvent)
-def addSiteHandler(site, event):
-    sitemanager = LocalSiteManager(site)
-    # LocalSiteManager creates the 'default' folder in its __init__.
-    # It's not needed anymore in new versions of Zope 3, therefore we
-    # remove it
-    del sitemanager['default']
-    site.setSiteManager(sitemanager)
 
 # add a cleanup hook so that grok will bootstrap itself again whenever
 # the Component Architecture is torn down.
