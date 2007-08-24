@@ -31,14 +31,14 @@ _bootstrapped = False
 def bootstrap():
     # register a subscriber for when grok.Sites are added to make them
     # into Zope 3 sites
-    component.provideHandler(
-        addSiteHandler, adapts=(grok.Site, grok.IObjectAddedEvent))
+    component.provideHandler(addSiteHandler)
 
     # now grok the grokkers
     martian.grok_module(scan.module_info_from_module(meta), the_module_grokker)
     martian.grok_module(scan.module_info_from_module(grokcore.component.grokkers),
                         the_module_grokker)
 
+@component.adapter(grok.Site, grok.IObjectAddedEvent)
 def addSiteHandler(site, event):
     sitemanager = LocalSiteManager(site)
     # LocalSiteManager creates the 'default' folder in its __init__.
