@@ -4,22 +4,28 @@ Unauthorized:
 
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
+
   >>> browser.open("http://localhost/@@cavepainting")
   Traceback (most recent call last):
   HTTPError: HTTP Error 401: Unauthorized
+
   >>> browser.open("http://localhost/@@editcavepainting")
   Traceback (most recent call last):
   HTTPError: HTTP Error 401: Unauthorized
+
   >>> browser.open("http://localhost/@@erasecavepainting")
   Traceback (most recent call last):
   HTTPError: HTTP Error 401: Unauthorized
 
-When we log in (e.g. as a manager), we can access the views just fine:
+Let's now grant anonymous the PaintingOwner role locally (so that we
+don't have to modify the global setup).  Then we can access the views
+just fine:
 
-  >>> from zope.app.securitypolicy.principalrole import principalRoleManager
-  >>> principalRoleManager.assignRoleToPrincipal(
-  ...    'grok.PaintingOwner', 'zope.mgr')
-  >>> browser.addHeader('Authorization', 'Basic mgr:mgrpw')
+  >>> from zope.app.securitypolicy.interfaces import IPrincipalRoleManager
+  >>> root = getRootFolder()
+  >>> IPrincipalRoleManager(root).assignRoleToPrincipal(
+  ...    'grok.PaintingOwner', 'zope.anybody')
+
   >>> browser.open("http://localhost/@@cavepainting")
   >>> print browser.contents
   What a beautiful painting.
@@ -34,7 +40,7 @@ When we log in (e.g. as a manager), we can access the views just fine:
 
   >>> browser.open("http://localhost/@@approvecavepainting")
   Traceback (most recent call last):
-  HTTPError: HTTP Error 403: Forbidden
+  HTTPError: HTTP Error 401: Unauthorized
 """
 
 import grok
