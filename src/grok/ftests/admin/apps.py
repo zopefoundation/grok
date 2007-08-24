@@ -38,8 +38,8 @@ installed yet:
 
 We are able to add a mammoth manager...
 
-  >>> browser.getControl('Name your new app:',index=13).value = 'my-mammoth-manager'
-  >>> browser.getControl('Create',index=13).click()
+  >>> browser.getControl('Name your new app:', index=1).value = 'my-mammoth-manager'
+  >>> browser.getControl('Create', index=1).click()
 
   >>> print browser.contents
   <html xmlns="http://www.w3.org/1999/xhtml">
