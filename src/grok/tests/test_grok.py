@@ -2,9 +2,12 @@ import unittest
 from pkg_resources import resource_listdir
 from zope.testing import doctest, cleanup
 import zope.component.eventtesting
+import grok
 
 def setUpZope(test):
-    zope.component.eventtesting.setUp(test)
+    zope.component.eventtesting.setUp(test) 
+    grok.grok('grokcore.component.grokkers')
+    grok.grok('grok.meta')
 
 def cleanUpZope(test):
     cleanup.cleanUp()
