@@ -30,7 +30,7 @@ def check_adapts(class_):
 class AdapterGrokker(martian.ClassGrokker):
     component_class = Adapter
 
-    def grok(self, name, factory, context, module_info, templates):
+    def grok(self, name, factory, module_info, context=None, **kw):
         adapter_context = util.determine_class_context(factory, context)
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
@@ -45,7 +45,7 @@ class AdapterGrokker(martian.ClassGrokker):
 class MultiAdapterGrokker(martian.ClassGrokker):
     component_class = MultiAdapter
 
-    def grok(self, name, factory, context, module_info, templates):
+    def grok(self, name, factory, module_info, **kw):
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
             util.check_implements_one(factory)
@@ -58,7 +58,7 @@ class MultiAdapterGrokker(martian.ClassGrokker):
 class GlobalUtilityGrokker(martian.ClassGrokker):
     component_class = GlobalUtility
 
-    def grok(self, name, factory, context, module_info, templates):
+    def grok(self, name, factory, module_info, **kw):
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
             util.check_implements_one(factory)
@@ -69,7 +69,7 @@ class GlobalUtilityGrokker(martian.ClassGrokker):
 
 class SubscriberGrokker(martian.GlobalGrokker):
 
-    def grok(self, name, module, context, module_info, templates):
+    def grok(self, name, module, module_info, **kw):
         subscribers = module_info.getAnnotation('grok.subscribers', [])
 
         for factory, subscribed in subscribers:
@@ -81,7 +81,7 @@ class SubscriberGrokker(martian.GlobalGrokker):
 
 class AdapterDecoratorGrokker(martian.GlobalGrokker):
 
-    def grok(self, name, module, context, module_info, templates):
+    def grok(self, name, module, module_info, context=None, **kw):
         implementers = module_info.getAnnotation('implementers', [])
         for function in implementers:
             interfaces = getattr(function, '__component_adapts__', None)
