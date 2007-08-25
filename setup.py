@@ -38,6 +38,7 @@ setup(
     zip_safe=False,
     install_requires=['setuptools',
                       'martian',
+                      'grokcore.grok',
                       'grokcore.component',
                       'simplejson',
                       'pytz',
