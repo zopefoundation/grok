@@ -32,5 +32,6 @@ setup(
     install_requires=['setuptools',
                       'martian',
                       'zope.configuration',
+                      'zope.testing',
                       ],
 )

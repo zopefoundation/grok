@@ -40,13 +40,39 @@ from zope.app.catalog.interfaces import ICatalog
 
 from zope.exceptions.interfaces import DuplicationError
 
-import martian
+import martian.scan
 from martian.error import GrokError
 from martian import util
 
 import grok
-from grok import components, formlib
+from grok import components, formlib, templatereg
 from grok.util import get_default_permission, make_checker
+
+import grokcore.grok
+
+@grokcore.grok.addPrepareHook
+def prepare_grok(name, module, kw):
+    # XXX hardcoded in here which base classes are possible contexts
+    # this should be made extensible
+    possible_contexts = martian.scan_for_classes(module, [grok.Model,
+                                                          grok.Container])
+    module_info = martian.scan.module_info_from_module(module)
+    context = util.determine_module_context(module_info, possible_contexts)
+    kw['context'] = context
+
+    kw['templates'] = templatereg.TemplateRegistry()
+
+@grokcore.grok.addFinalizeHook
+def finalize_grok(name, module, kw):
+    module_info = kw['module_info']
+    templates = kw['templates']
+    unassociated = list(templates.listUnassociated())
+    if unassociated:
+        raise GrokError("Found the following unassociated template(s) when "
+                        "grokking %r: %s.  Define view classes inheriting "
+                        "from grok.View to enable the template(s)."
+                        % (module_info.dotted_name,
+                           ', '.join(unassociated)), module_info)
 
 
 class ModelGrokker(martian.ClassGrokker):

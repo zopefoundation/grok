@@ -16,8 +16,7 @@
 from zope import interface
 import zope.configuration.fields
 
-import grok
-
+import grokcore.grok
 
 class IGrokDirective(interface.Interface):
     """Grok a package or module."""
@@ -30,4 +29,8 @@ class IGrokDirective(interface.Interface):
 
 
 def grokDirective(_context, package):
-    grok.grok(package.__name__)
+    _context.action(
+        discriminator=('grok', package.__name__),
+        callable=grokcore.grok.grok,
+        args=(package.__name__,)
+        )
