@@ -6,7 +6,6 @@ indexes define the same names?
 
 Let's set up a site in which we manage a couple of objects::
 
-  >>> from grok.ftests.catalog.indexes_multiple_conflict import Herd
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   Traceback (most recent call last):

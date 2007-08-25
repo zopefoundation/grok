@@ -2,8 +2,6 @@
 If a form does not have a template, a simple default template is
 associated with them. Otherwise, the supplied template is used.
 
-  >>> from grok.ftests.form.templateform import Mammoth
-
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()
   >>> from zope import component

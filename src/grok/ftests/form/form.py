@@ -1,7 +1,6 @@
 """
 A grok.EditForm is a special grok.View that renders an edit form.
 
-  >>> from grok.ftests.form.form import Mammoth
   >>> getRootFolder()["manfred"] = Mammoth()
 
   >>> from zope.testbrowser.testing import Browser

@@ -2,7 +2,6 @@
 Apart from using the ``traverse`` method on a model, you can
 also create a separate traverser component:
 
-  >>> from grok.ftests.traversal.traverser import Herd
   >>> getRootFolder()["herd"] = Herd('The Big Mammoth Herd')
 
   >>> from zope.testbrowser.testing import Browser

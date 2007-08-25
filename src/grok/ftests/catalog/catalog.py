@@ -1,6 +1,4 @@
 """
-  >>> from grok.ftests.catalog.catalog import Mammoth, Herd
-
 Let's setup a site in which we manage a couple of objects:
 
   >>> herd = Herd()

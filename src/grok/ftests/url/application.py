@@ -2,7 +2,6 @@
 Views have an application_url() method to easily retrieve the url of the
 application::
 
-  >>> from grok.ftests.url.application import Cave, CaveMan
   >>> getRootFolder()['cave'] = cave = Cave()
   >>> cave['caveman'] = CaveMan()
 

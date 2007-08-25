@@ -5,7 +5,6 @@ grok.name.
 
 Let's set up a site in which we manage a couple of objects::
 
-  >>> from grok.ftests.catalog.indexes_name import Herd, Mammoth
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   >>> from zope.app.component.hooks import setSite

@@ -4,12 +4,10 @@ also specify the utility to be public. It will then be created in the container
 that is the site. The name the utility should have in the container can
 be controlled using name_in_container:
 
-  >>> from zope import component
-  >>> from grok.ftests.utility.public import *
-
   >>> cave = Cave()
   >>> getRootFolder()["cave"] = cave
 
+  >>> from zope import component
   >>> from zope.app.component.hooks import getSite, setSite
   >>> setSite(cave)
   >>> cave['fireplace'] is component.getUtility(IFireplace)

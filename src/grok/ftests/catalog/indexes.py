@@ -4,7 +4,6 @@ special indexes declaration.
 
 Let's set up a site in which we manage a couple of objects::
 
-  >>> from grok.ftests.catalog.indexes import Herd, Herd2, Mammoth
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   >>> from zope.app.component.hooks import setSite

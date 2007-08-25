@@ -5,7 +5,6 @@ absolute URL of objects.
 
   >>> from grok import url
   
-  >>> from grok.ftests.url.url_function import Herd, Mammoth
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   >>> manfred = Mammoth()

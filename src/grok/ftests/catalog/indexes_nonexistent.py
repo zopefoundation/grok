@@ -5,7 +5,6 @@ to set up an index for an attribute that does not exist on the interface.
 
 Let's set up a site in which we manage a couple of objects::
 
-  >>> from grok.ftests.catalog.indexes_nonexistent import Herd
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   Traceback (most recent call last):

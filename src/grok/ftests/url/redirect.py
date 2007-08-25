@@ -1,7 +1,6 @@
 """
 Views have a redirect() method to easily create redirects:
 
-  >>> from grok.ftests.url.redirect import Mammoth
   >>> getRootFolder()['manfred'] = manfred = Mammoth()
 
 Since the index view redirects to mammoth, we expect to see the URL

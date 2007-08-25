@@ -4,7 +4,6 @@ a grok.Form. When @grok.action is used, the default behaviour (the
 'Apply' action) is not available anymore, but it can triggered
 manually by calling self.applyData(object, data).
 
-  >>> from grok.ftests.form.actions import Mammoth
   >>> getRootFolder()["manfred"] = Mammoth()
 
   >>> from zope.testbrowser.testing import Browser

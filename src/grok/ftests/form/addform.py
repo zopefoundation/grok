@@ -1,7 +1,6 @@
 """
 We can use grok.AddForm to render an add form for objects:
 
-  >>> from grok.ftests.form.addform import Zoo, Mammoth
   >>> getRootFolder()["zoo"] = Zoo()
 
   >>> from zope.testbrowser.testing import Browser

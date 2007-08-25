@@ -2,7 +2,6 @@
 Forms can implement an update() method that will be called before any
 form processing has happened:
 
-  >>> from grok.ftests.form.update import Mammoth
   >>> getRootFolder()["manfred"] = Mammoth()
 
   >>> from zope.testbrowser.testing import Browser

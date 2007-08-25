@@ -2,7 +2,6 @@
 A traverser can set the __parent__ (and __name__) attributes itself,
 in which case Grok's traverser won't interfere:
 
-  >>> from grok.ftests.traversal.traverser_sets_parent import Herd
   >>> getRootFolder()["herd"] = Herd('The Big Mammoth Herd')
 
   >>> from zope.testbrowser.testing import Browser

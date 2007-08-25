@@ -2,7 +2,6 @@
 Thanks to Zope's event system, newly added objects are automatically
 catalogued, should a catalog be present.
 
-  >>> from grok.ftests.form.addform_catalog import Zoo, Mammoth
   >>> getRootFolder()["zoo"] = Zoo()
 
   >>> from zope.testbrowser.testing import Browser

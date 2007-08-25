@@ -1,5 +1,4 @@
 """
-  >>> from grok.ftests.xmlrpc.xmlrpc import Mammoth
   >>> getRootFolder()["Manfred"] = Mammoth()
 
   >>> from zope.app.testing.xmlrpc import ServerProxy

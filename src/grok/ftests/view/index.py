@@ -1,5 +1,4 @@
 """
-  >>> from grok.ftests.view.index import Mammoth
   >>> getRootFolder()["manfred"] = Mammoth()
 
 The default view name for a model is 'index':

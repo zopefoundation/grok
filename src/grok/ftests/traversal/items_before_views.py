@@ -4,7 +4,6 @@ behaviour falls back to basic container traversal if the 'traverse'
 method returns None. Normal behaviour also means that the standard
 Zope 3 paradigm"items before views" is supported in the fallback.
 
-  >>> from grok.ftests.traversal.items_before_views import Herd, Mammoth
   >>> getRootFolder()["herd"] = herd = Herd()
   >>> herd['manfred'] = Mammoth('Manfred')
   >>> herd['ellie'] = Mammoth('Ellie')

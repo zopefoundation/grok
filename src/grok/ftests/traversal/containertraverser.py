@@ -3,7 +3,6 @@ Containers can also have an explicit traverser associated with them.
 The behavior falls back to basic container traversal if the 'traverse'
 method returns None:
 
-  >>> from grok.ftests.traversal.containertraverser import Herd, Mammoth
   >>> getRootFolder()["herd"] = herd = Herd()
   >>> herd['manfred'] = Mammoth('Manfred')
   >>> herd['ellie'] = Mammoth('Ellie')
