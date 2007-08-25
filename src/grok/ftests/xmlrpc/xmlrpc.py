@@ -2,9 +2,9 @@
   >>> from grok.ftests.xmlrpc.xmlrpc import Mammoth
   >>> getRootFolder()["Manfred"] = Mammoth()
 
-  >>> from grok.ftests.xmlrpc_helper import ServerProxy
-
+  >>> from zope.app.testing.xmlrpc import ServerProxy
   >>> server = ServerProxy("http://localhost/")
+
   >>> server.Manfred.stomp()
   'Manfred stomped.'
   >>> server.Manfred.dance()

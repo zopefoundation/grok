@@ -1,6 +1,5 @@
 """
-  >>> from grok.ftests.xmlrpc_helper import ServerProxy
-
+  >>> from zope.app.testing.xmlrpc import ServerProxy
   >>> server = ServerProxy("http://localhost/")
   >>> mgr_server = ServerProxy("http://mgr:mgrpw@localhost/")
 
