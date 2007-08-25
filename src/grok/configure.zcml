@@ -25,6 +25,7 @@
   <include package="zope.app.catalog" />
   <include package="zope.app.renderer" />
   <include package="zope.app.session" />
+  <include package="grokcore.component" />
 
   <securityPolicy
       component="zope.app.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
@@ -84,6 +85,7 @@
       priority="11"
       />
 
+  <grok:grok package=".meta" />
   <grok:grok package=".admin" />
 
 </configure>
