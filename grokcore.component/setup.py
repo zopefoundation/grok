@@ -32,6 +32,7 @@ setup(
     zip_safe=False,
     install_requires=['setuptools',
                       'martian',
+                      'grokcore.grok',
                       'zope.component',
                       'zope.interface',
                       ],
