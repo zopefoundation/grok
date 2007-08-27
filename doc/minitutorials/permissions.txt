@@ -68,14 +68,16 @@ you have to explicitly protect it with a permission:
      # recommended to make them unique by prefixing them with the application
      # name.
      class ViewContacts(grok.Permission):
-         grok.name('mysite.ViewContacts')
-         grok.title('View Contacts') # optional
+         id = 'mysite.ViewContacts'
+         title = u'View Contacts' # optional
 
      class AddContacts(grok.Permission):
-         grok.name('mysite.AddContacts')
+         id = 'mysite.AddContacts'
+         title = u'Add Contacts'
 
      class EditContacts(grok.Permission):
-         grok.name('mysite.EditContacts')
+         id = 'mysite.EditContacts'
+         title = 'Edit Contacts'
 
      class ViewContactComplete(grok.View)
          """Display Contact Info, including email.
@@ -220,15 +222,15 @@ members, and one for administrators:
 .. code-block:: python
 
      class MemberRole(grok.Role):
-         grok.name('mysite.Member')
-         grok.title('Contacts Member') # optional
+         id = 'mysite.Member')
+         title = u'Contacts Member' # optional
          grok.permissions(
              'mysite.ViewContacts',
              'mysite.AddContacts')
 
      class AdministratorRole(grok.Role):
-         grok.name('mysite.Editor')
-         grok.title('Contacts Administrator') # optional
+         id = 'mysite.Editor'
+         title = u'Contacts Administrator' # optional
          grok.permissions(
              'mysite.ViewContacts',
              'mysite.AddContacts',

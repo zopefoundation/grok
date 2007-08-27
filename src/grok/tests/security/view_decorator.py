@@ -12,7 +12,8 @@ import grok
 import zope.interface
 
 class Bogus(grok.Permission):
-    grok.name('bogus.perm')
+    id = 'bogus.perm'
+    title = u'Bogus Permission'
 
 class BogusView(grok.View):
     grok.context(zope.interface.Interface)

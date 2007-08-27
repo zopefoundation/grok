@@ -38,6 +38,8 @@ from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.browser.absoluteurl import AbsoluteURL
 from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
 from zope.annotation.interfaces import IAttributeAnnotatable
+from zope.security.interfaces import IPermission
+from zope.app.securitypolicy.interfaces import IRole
 
 from zope.app.pagetemplate.engine import TrustedAppPT
 from zope.app.publisher.browser import getDefaultViewName
@@ -481,7 +483,7 @@ class IndexesClass(object):
 Indexes = IndexesClass('Indexes')
 
 class Permission(object):
-    pass
+    interface.implements(IPermission)
 
 class Role(object):
-    pass
+    interface.implements(IRole)

@@ -52,7 +52,8 @@ import z3c.flashmessage.interfaces
 grok.context(IRootFolder)
 
 class ManageApplications(grok.Permission):
-    grok.name('grok.ManageApplications')
+    id = 'grok.ManageApplications'
+    title = u'Grok Manage Applications'
 
 class Add(grok.View):
     """Add an application.

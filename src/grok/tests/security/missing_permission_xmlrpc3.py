@@ -16,7 +16,8 @@ import grok
 import zope.interface
 
 class Foo(grok.Permission):
-    grok.name('foo')
+    id = 'foo'
+    title = u'Foo'
 
 class MissingPermission(grok.XMLRPC):
     grok.context(zope.interface.Interface)

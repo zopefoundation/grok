@@ -44,20 +44,24 @@ import grok
 import zope.interface
 
 class View(grok.Permission):
-    grok.name('grok.ViewPainting')
+    id = 'grok.ViewPainting'
+    title = u'View Painting'
 
 class Edit(grok.Permission):
-    grok.name('grok.EditPainting')
+    id = 'grok.EditPainting'
+    title = u'Edit Painting'
 
 class Erase(grok.Permission):
-    grok.name('grok.ErasePainting')
+    id = 'grok.ErasePainting'
+    title = u'Erase Painting'
 
 class Approve(grok.Permission):
-    grok.name('grok.ApprovePainting')
+    id = 'grok.ApprovePainting'
+    title = u'Approve Painting'
 
 class PaintingOwner(grok.Role):
-    grok.name('grok.PaintingOwner')
-    grok.title('Painting Owner')
+    id = 'grok.PaintingOwner'
+    title = u'Painting Owner'
     grok.permissions(
         'grok.ViewPainting', 'grok.EditPainting', 'grok.ErasePainting')
 

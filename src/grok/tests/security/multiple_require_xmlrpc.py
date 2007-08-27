@@ -10,10 +10,12 @@ import grok
 import zope.interface
 
 class One(grok.Permission):
-    grok.name('permission.1')
+    id = 'permission.1'
+    title = u'First Permission'
 
 class Two(grok.Permission):
-    grok.name('permission.2')
+    id = 'permission.2'
+    title = u'Second Permission'
 
 class MultipleXMLRPC(grok.XMLRPC):
     grok.context(zope.interface.Interface)

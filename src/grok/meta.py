@@ -21,8 +21,6 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
-from zope.security.permission import Permission
-from zope.security.interfaces import IPermission
 from zope.app.securitypolicy.role import Role
 from zope.app.securitypolicy.rolepermission import rolePermissionManager
 
@@ -497,18 +495,8 @@ class DefinePermissionGrokker(martian.ClassGrokker):
     priority = 1500
 
     def grok(self, name, factory, context, module_info, templates):
-        permission_name = util.class_annotation(factory, 'grok.name', None)
-        if permission_name is None:
-            raise GrokError(
-                "A permission needs to have a dotted name for its id. Use "
-                "grok.name to specify one.", factory)
-        permission_name = unicode(permission_name)
-        title = unicode(
-            util.class_annotation(factory, 'grok.title', permission_name))
-        # TODO permission description
-        component.provideUtility(
-            Permission(permission_name, title=title),
-            name=permission_name)
+        permission = factory()
+        component.provideUtility(permission, name=permission.id)
         return True
 
 class DefineRoleGrokker(martian.ClassGrokker):
@@ -516,17 +504,11 @@ class DefineRoleGrokker(martian.ClassGrokker):
     priority = DefinePermissionGrokker.priority - 1
 
     def grok(self, name, factory, context, module_info, templates):
-        role_name = util.class_annotation(factory, 'grok.name', None)
-        if role_name is None:
-            raise GrokError(
-                "A role needs to have a dotted name for its id. Use "
-                "grok.name to specify one.", factory)
-        title = unicode(util.class_annotation(factory, 'grok.title', role_name))
-        component.provideUtility(Role(role_name, title=title), name=role_name)
-
+        role = factory()
+        component.provideUtility(role, name=role.id)
         permissions = util.class_annotation(factory, 'grok.permissions', ())
         for permission in permissions:
-            rolePermissionManager.grantPermissionToRole(permission, role_name)
+            rolePermissionManager.grantPermissionToRole(permission, role.id)
         return True
 
 class AnnotationGrokker(martian.ClassGrokker):

@@ -34,7 +34,8 @@ import grok
 import zope.interface
 
 class ViewPainting(grok.Permission):
-    grok.name('grok.ViewPainting')
+    id = 'grok.ViewPainting'
+    title = u'View Painting'
 
 class CavePainting(grok.View):
 

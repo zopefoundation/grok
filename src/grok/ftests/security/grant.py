@@ -24,7 +24,8 @@ and then take a look at them in Zope 3's grant view:
 import grok
 
 class ASCIIPermission(grok.Permission):
-    grok.name('grok.ascii-permission')
+    id = 'grok.ascii-permission'
+    title = u'ASCII Permission'
 
 # TODO Technically, it's absolutely possible to give permissions
 # non-ASCII names. However the way Zope 3's grant view uses widgets to
