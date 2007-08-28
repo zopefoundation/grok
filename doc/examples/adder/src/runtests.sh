@@ -1,1 +1,0 @@
- ./parts/instance/bin/test --path=/usr/local/Zope-3.3.1/lib/python --path=src `for i in eggs/*; do echo --path=$i; done` -s adder
