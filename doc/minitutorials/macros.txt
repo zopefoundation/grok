@@ -71,7 +71,7 @@ and the slots therein with::
 
     metal:define-slot=<slot-name> 
 
-Let's define a very plain page macro:
+Let's define a very plain page macro in ``app_templates/mymacros.pt``:
 
 .. code-block:: html
 
@@ -140,8 +140,8 @@ where the slot-name must be defined in the macro. Now, change
 
     <html metal:use-macro="context/@@mymacros/mypage">
       <body>
-        <!-- slot 'mybody' was defined in the macro above -->
-        <div metal:fill-slot="mybody">
+        <!-- slot 'mycontent' was defined in the macro above -->
+        <div metal:fill-slot="mycontent">
           My content from index.pt
         </div>
       </body>
