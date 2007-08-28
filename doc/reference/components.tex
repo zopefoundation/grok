@@ -226,6 +226,104 @@ home = IHome(cave, fireplace)
 
 \section{grok.PageTemplateFile}
 
+\section{grok.Permission}
+
+  \begin{classdesc*}{grok.Permission}
+    Base class to define a permission. Permissions are automatically
+    registered when a module is "grokked".
+
+  \begin{bf}Attributes:\end{bf}
+
+  \begin{itemize}
+    \item[\function{id(dotted_name)}] Required. Dotted name identifying this
+      permssion. Usually prefixed by an application specific prefix.
+
+    \item[\function{title(name)}] Required. Human readable title for this
+      permission. Must be a unicode string.
+
+    \item[\function{description(text)}] Optional. Human readable text
+      describing the use of this permssion.
+  \end{itemize}
+  \end{classdesc*}
+
+  \begin{bf}Example:\end{bf}
+
+  \begin{verbatim}
+import grok
+
+class AddPainting(grok.Permission):
+    id = 'cavepainter.AddPainting'
+    title = u'Cave Painter Add Painting'
+    description = (
+        u'The permission to add a new painting in the '
+        u'cave painter application')
+  \end{verbatim}
+
+  \begin{seealso}
+  See alos \class{grok.Role}.
+  \end{seealso}
+
+\section{grok.Role}
+
+  \begin{classdesc*}{grok.Role}
+    Base class to define a role. Roles are automatically registered when a
+    module is "grokked". A Role is a grouping of permissions.
+
+  \begin{bf}Attributes:\end{bf}
+
+  \begin{itemize}
+    \item[\function{id(dotted_name)}] Required. Dotted name identifying this
+      role. Usually prefixed by an application specific prefix.
+
+    \item[\function{title(name)}] Required. Human readable title for this
+      role. Must be a unicode string.
+
+    \item[\function{description(text)}] Optional. Human readable text
+      describing the use of this role.
+  \end{itemize}
+
+  \begin{bf}Directives:\end{bf}
+
+  \begin{itemize}
+    \item[\function{grok.permissions(*permission_ids)}] Optional. One or more
+      permission ids that compise this role. Permissions need to be defined
+      before using this directive.
+  \end{itemize}
+  \end{classdesc*}
+
+  \begin{bf}Example:\end{bf}
+
+  \begin{verbatim}
+import grok
+
+class AddPainting(grok.Permission):
+    id = 'cavepainter.AddPainting'
+    title = u'Cave Painter Add Painting'
+    description = (
+        u'The permission to add a new painting in the '
+        u'cave painter application')
+
+class EditPainting(grok.Permission):
+    id = 'cavepainter.EditPainting'
+    title = u'Cave Painter Edit Painting'
+    description = (
+        u'The permission to edit a existing painting in the '
+        u'cave painter application')
+
+class Painter(grok.Role):
+    id = 'cavepainter.Painter'
+    title = u'Cave Painter'
+    description = (
+        u'The Painter role in the Cave Painter application')'
+    grok.permissions(
+        'cavepainter.AddPainting', cavepainter.EditPainting')
+
+  \end{verbatim}
+
+  \begin{seealso}
+  The permissions need to be registered first before defining the role that uses these permissions. See \class{grok.Permission}.
+  \end{seealso}
+
 \section{\class{grok.Site}}
 
   Base class to define an site object. Site objects provide persistence and
