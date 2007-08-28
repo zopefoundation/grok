@@ -1,5 +1,0 @@
-- Add doctests and make them pass
-- Import the books from "demo/collection" automatically, via XML-RPC
-- Do some advanced queries, involving more than one attribute and one class
-- Update doc/searching.txt, enhance the text
-- Add some hurry.query code and examples to the tutorial
