@@ -3,12 +3,8 @@ Grok allows you to set up catalog indexes in your application with a
 special indexes declaration. We can specify the catalog name using
 grok.name.
 
-  >>> import grok
-  >>> grok.grok('grok.ftests.catalog.indexes_name')
-
 Let's set up a site in which we manage a couple of objects::
 
-  >>> from grok.ftests.catalog.indexes_name import Herd, Mammoth
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   >>> from zope.app.component.hooks import setSite

@@ -2,10 +2,6 @@
 """
 Views have a method that can be used to construct URLs:
 
-  >>> import grok
-  >>> grok.grok('grok.ftests.url.url')
-
-  >>> from grok.ftests.url.url import Herd, Mammoth
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   >>> manfred = Mammoth()

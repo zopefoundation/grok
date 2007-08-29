@@ -4,12 +4,8 @@ special indexes declaration. In fact, we have multiple grok.Indexes
 setting up more than one set of indexes in the same catalog. What if these
 indexes define the same names?
 
-  >>> import grok
-  >>> grok.grok('grok.ftests.catalog.indexes_multiple_conflict')
-
 Let's set up a site in which we manage a couple of objects::
 
-  >>> from grok.ftests.catalog.indexes_multiple_conflict import Herd
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   Traceback (most recent call last):

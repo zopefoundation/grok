@@ -1,9 +1,6 @@
 """
 Let's test whether require decorators work for json methods.
 
-  >>> import grok
-  >>> grok.grok('grok.ftests.security.json')
-  
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False

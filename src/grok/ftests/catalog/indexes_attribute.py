@@ -4,12 +4,8 @@ special indexes declaration. If you want to name the index differently
 from the attribute, you can do so, by passing an explicit `attribute`
 keyword argument to the field.
 
-  >>> import grok
-  >>> grok.grok('grok.ftests.catalog.indexes_attribute')
-
 Let's set up a site in which we manage a couple of objects::
 
-  >>> from grok.ftests.catalog.indexes_attribute import Herd, Mammoth
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
   >>> from zope.app.component.hooks import setSite

@@ -1,11 +1,7 @@
 # -*- coding: latin-1 -*-
 """
-We can define a few permissions with grok.Permission:
-
-  >>> import grok
-  >>> grok.grok('grok.ftests.security.grant')
-
-and then take a look at them in Zope 3's grant view:
+We can define a few permissions with grok.Permission and then take a
+look at them in Zope 3's grant view:
 
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()

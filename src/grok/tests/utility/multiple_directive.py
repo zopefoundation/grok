@@ -2,18 +2,14 @@
 When you call the grok.local_utility directive multiple times specifying
 the same (interface, name) combination, we expect an error:
 
-  >>> import grok
-  >>> from zope import component
-  >>> from grok.ftests.utility.multiple_directive import *
-
-  >>> grok.grok('grok.ftests.utility.multiple_directive')
+  >>> grok.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: Conflicting local utility registration
-  <class 'grok.ftests.utility.multiple_directive.Fireplace2'> in site
-  <class 'grok.ftests.utility.multiple_directive.Cave'>.
+  <class 'grok.tests.utility.multiple_directive.Fireplace2'> in site
+  <class 'grok.tests.utility.multiple_directive.Cave'>.
   Local utilities are registered multiple times for interface
-  <InterfaceClass grok.ftests.utility.multiple_directive.IFireplace> and
+  <InterfaceClass grok.tests.utility.multiple_directive.IFireplace> and
   name u''.  
 """
 import grok

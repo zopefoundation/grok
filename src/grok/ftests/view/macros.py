@@ -1,7 +1,4 @@
 """
-  >>> import grok
-  >>> from grok.ftests.view.macros import Mammoth
-  >>> grok.grok('grok.ftests.view.macros')
   >>> getRootFolder()["manfred"] = Mammoth()
 
   >>> from zope.testbrowser.testing import Browser

@@ -2,15 +2,10 @@
 Local Utilities can be registered on subclasses of grok.Site using
 grok.local_utility:
 
-  >>> import grok
-  >>> from zope import component
-  >>> from grok.ftests.utility.local import *
-
-  >>> grok.grok('grok.ftests.utility.local')
-
   >>> cave = Cave()
   >>> getRootFolder()["cave"] = cave
 
+  >>> from zope import component
   >>> from zope.app.component.hooks import getSite, setSite
   >>> setSite(cave)
   

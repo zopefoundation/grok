@@ -6,9 +6,6 @@ the object that need to be changed.
 This is essentially the same narrative as 'editform_applydata'. Here
 we test the whole procedure on fields defined on the model class:
 
-  >>> import grok
-  >>> from grok.ftests.form.editform_applydata_classfields import Mammoth
-  >>> grok.grok('grok.ftests.form.editform_applydata_classfields')
   >>> getRootFolder()["manfred"] = mammoth = Mammoth()
   >>> mammoth.name = 'Manfred the Mammoth'
   >>> mammoth.size = 'Really big'

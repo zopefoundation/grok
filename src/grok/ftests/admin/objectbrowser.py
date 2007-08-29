@@ -13,9 +13,6 @@
 ##############################################################################
 """
 
-  >>> import grok
-  >>> grok.grok('grok.ftests.admin.objectbrowser')
-
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
   >>> browser.addHeader('Authorization', 'Basic mgr:mgrpw')

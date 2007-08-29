@@ -20,6 +20,12 @@ Restructuring
   grokkers can depend on components that are set up using regular ZCML
   (e.g. checking for a permission that's defined in ZCML).
 
+* Changed the way grok's functional tests are set up.  Instead of each
+  test case doing its own test setup, it is now done once by the
+  ftesting layer.  This avoids ordering problems when some ftests
+  would influence the environment of other ftests that were run later
+  in time.
+
 0.10 (2007-08-21)
 =================
 

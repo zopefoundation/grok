@@ -2,9 +2,6 @@
 Models can determine how they want to be traversed by
 implementing a 'traverse' method:
 
-  >>> import grok
-  >>> from grok.ftests.traversal.modeltraverse import Herd
-  >>> grok.grok('grok.ftests.traversal.modeltraverse')
   >>> getRootFolder()["herd"] = Herd('The Big Mammoth Herd')
 
   >>> from zope.testbrowser.testing import Browser
