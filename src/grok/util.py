@@ -16,7 +16,7 @@
 
 import urllib
 
-import zope.location.interfaces
+import zope.location.location
 from zope import component
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
@@ -95,7 +95,5 @@ def safely_locate_maybe(obj, parent, name):
     """
     if getattr(obj, '__parent__', None) is not None:
         return obj
-    if zope.location.interfaces.ILocation.providedBy(obj):
-        zope.location.locate(obj, parent, name)
-        return obj
-    return zope.location.LocationProxy(obj, parent, name)
+    # This either sets __parent__ or wraps 'obj' in a LocationProxy
+    return zope.location.location.located(obj, parent, name)
