@@ -18,6 +18,7 @@ def tearDown(test):
     FunctionalTestSetup().tearDown()
 
 checker = renormalizing.RENormalizing([
+    # Accommodate to exception wrapping in newer versions of mechanize
     (re.compile(r'httperror_seek_wrapper:', re.M), 'HTTPError:'),
     ])
 
