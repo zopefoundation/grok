@@ -11,7 +11,8 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Views for grok admin UI"""
+"""Views for the grok admin UI"""
+
 import grok
 import os
 import inspect
@@ -25,6 +26,9 @@ from grok.admin.docgrok import DocGrokClass, DocGrokInterface, getItemLink
 from grok.admin.objectinfo import ZopeObjectInfo
 from grok.admin.utilities import getPathLinksForObject, getPathLinksForClass
 from grok.admin.utilities import getPathLinksForDottedName, getParentURL
+
+from ZODB.broken import Broken
+from BTrees.OOBTree import OOBTree
 
 import zope.component
 from zope.interface import Interface
@@ -43,6 +47,7 @@ from zope.app.apidoc.codemodule.zcml import ZCMLFile
 from zope.app.folder.interfaces import IRootFolder
 from zope.app.security.interfaces import ILogout, IAuthentication
 from zope.app.security.interfaces import IUnauthenticatedPrincipal
+from zope.exceptions import DuplicationError
 from zope.proxy import removeAllProxies
 from zope.tal.taldefs import attrEscape
 
@@ -69,10 +74,18 @@ class Add(grok.View):
         if name is None or name == "":
             self.redirect(self.url(self.context))
             return
+        if name is None or name == "":
+            self.redirect(self.url(self.context))
+            return
         app = zope.component.getUtility(grok.interfaces.IApplication,
                                         name=application)
-        self.context[name] = app()
-        self.flash(u'Added %s `%s`.' % (application, name))
+        try:
+            self.context[name] = app()
+            self.flash(u'Added %s `%s`.' % (application, name))
+        except DuplicationError:
+            self.flash(
+                u'Name `%s` already in use. Please choose another name.' % (
+                name,))
         self.redirect(self.url(self.context))
 
 
@@ -86,11 +99,34 @@ class Delete(grok.View):
         if items is None:
             self.redirect(self.url(self.context))
             return
+        msg = u''
         if not isinstance(items, list):
             items = [items]
         for name in items:
-            del self.context[name]
-            self.flash(u'Application %s was successfully deleted.' % (name,))
+            try:
+                del self.context[name]
+                msg = (u'%sApplication `%s` was successfully '
+                       u'deleted.\n' % (msg, name))
+            except AttributeError:
+                # Object is broken.. Try it the hard way...
+                # TODO: Try to repair before deleting.
+                obj = self.context[name]
+                if not hasattr(self.context, 'data'):
+                    msg = (
+                        u'%sCould not delete application `%s`: no '
+                        u'`data` attribute found.\n' % (msg, name))
+                    continue
+                if not isinstance(self.context.data, OOBTree):
+                    msg = (
+                        u'%sCould not delete application `%s`: no '
+                        u'`data` is not a BTree.\n' % (msg, name))
+                    continue
+                self.context.data.pop(name)
+                self.context.data._p_changed = True
+                msg = (u'%sBroken application `%s` was successfully '
+                       u'deleted.\n' % (msg, name))
+
+        self.flash(msg)
         self.redirect(self.url(self.context))
 
 
@@ -121,7 +157,7 @@ class GAIAView(grok.View):
         return not IUnauthenticatedPrincipal.providedBy(self.request.principal)
 
 
-class Macros(GAIAView):
+class GrokAdminMacros(GAIAView):
     """Provides the o-wrap layout."""
 
     grok.context(Interface)
@@ -275,7 +311,9 @@ class Index(GAIAView):
 
 
 class Applications(GAIAView):
-    """View for application management."""
+    """View for application management.
+
+    """
 
     grok.name('applications')
     grok.require('grok.ManageApplications')
@@ -288,15 +326,30 @@ class Applications(GAIAView):
         return result
 
     def update(self):
+        from ZODB import broken
+
+        from zope.app.broken.broken import IBroken
+
+        # Available apps...
         apps = zope.component.getAllUtilitiesRegisteredFor(
             grok.interfaces.IApplication)
-        inst_apps = [x for x in self.context.values()
-                     if hasattr(x, '__class__') and x.__class__ in apps]
         self.applications = (
-          {'name': "%s.%s" % (x.__module__, x.__name__),
-           'docurl':("%s.%s" % (x.__module__, x.__name__)).replace('.', '/')}
-          for x in apps)
+            {'name': "%s.%s" % (x.__module__, x.__name__),
+             'docurl':("%s.%s" % (x.__module__, x.__name__)).replace('.', '/')}
+            for x in apps)
+
+        # Installed apps...
+        inst_apps = [x for x in self.context.values()
+                     if hasattr(x, '__class__') and x.__class__ in apps
+                     and not issubclass(x.__class__, Broken)]
+        inst_apps.sort(lambda x, y: cmp(x.__name__, y.__name__))
         self.installed_applications = inst_apps
+
+        # Broken apps...
+        broken_apps = [{'obj':y, 'name':x} for x,y in self.context.items()
+                       if isinstance(y, Broken)]
+        broken_apps.sort(lambda x, y: cmp(x['name'], y['name']))
+        self.broken_applications = broken_apps
 
 
 class AdminMessageSource(grok.GlobalUtility):
@@ -521,12 +574,14 @@ class DocGrokView(GAIAView):
                 entry['isfunction'] = True
                 if hasattr(obj, 'getSignature'):
                     entry['signature'] = obj.getSignature()
-            elif (isinstance(obj,Module) and
+            elif (isinstance(obj, Module) and
                   os.path.basename(obj.getFileName()) in
                     ['__init.py__', '__init__.pyc', '__init__.pyo']):
                 entry['ispackage'] = True
-            elif isinstance(obj,Module):
+            elif isinstance(obj, Module):
                 entry['ismodule'] = True
+            elif isinstance(obj, InterfaceClass):
+                entry['isinterface'] = True
             entries.append(entry)
 
         entries.sort(lambda x, y: cmp(x['name'], y['name']))

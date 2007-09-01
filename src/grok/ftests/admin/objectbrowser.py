@@ -134,14 +134,3 @@ Now the attributes and properties. The root folder got an attribute
 
 
 """
-
-import grok
-
-class MammothManager(grok.Application, grok.Container):
-    """A mammoth manager"""
-    pass
-
-class Index(grok.View):#
-
-    def render(self):
-        return u"Let's manage some mammoths!"

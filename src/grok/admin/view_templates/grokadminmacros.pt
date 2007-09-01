@@ -7,13 +7,18 @@
       >grok administration interface</title>
     <link metal:define-slot="header"
       rel="stylesheet" type="text/css" href="static/grok.css"
+      tal:on-error="nothing"
       tal:attributes="href view/static/grok.css" />
     <metal:block define-slot="extrahead">
     </metal:block>
   </head>
 
   <body>
-    <div>
+    <div tal:condition="not:exists: view/root_url">
+      This template (grokadminmacros.pt in grok.admin) must be called
+      from a view with defined root_url.
+    </div>
+    <div tal:condition="exists: view/root_url">
       <div id="banner">
         <a href="/" id="logo">
           <img alt="Grok" src="images/grok-admin.jpg" height="40"

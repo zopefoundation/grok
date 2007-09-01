@@ -1,4 +1,4 @@
-<html metal:use-macro="view/app_root/@@macros/gaia-page">
+<html metal:use-macro="view/app_root/@@grokadminmacros/gaia-page">
   <head>
     <title>DocGrokPackage page title</title>
   </head>

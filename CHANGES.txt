@@ -12,6 +12,13 @@ Feature changes
 
 * Add the grok.Role component base class.
 
+* The admin UI now displays and offers deletion of broken objects.
+
+Bug fixes
+---------
+
+* The admin UI now shows interfaces in modules.
+
 Restructuring
 -------------
 

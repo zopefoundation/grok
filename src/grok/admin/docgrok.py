@@ -59,6 +59,7 @@ grok.context(IRootFolder)
 class ManageApplications(grok.Permission):
     grok.name('grok.ManageApplications')
 
+
 def find_filepath(dotted_path):
     """Find the filepath for a dotted name.
 
@@ -492,7 +493,11 @@ class DocGrokPackage(DocGrok):
         ob = resolve(self.path)
         filename = ob.__file__
         module_info = ModuleInfo(filename, self.path)
-        infos = module_info.getSubModuleInfos()
+        try:
+            infos = module_info.getSubModuleInfos(exclude_tests=False)
+        except TypeError:
+            # Another version of martian.scan is installed
+            infos = module_info.getSubModuleInfos()
         if filter_func is not None:
             infos = filter(filter_func, infos)
         result = []
