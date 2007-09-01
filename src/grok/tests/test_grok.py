@@ -1,6 +1,7 @@
+import re
 import unittest
 from pkg_resources import resource_listdir
-from zope.testing import doctest, cleanup
+from zope.testing import doctest, cleanup, renormalizing
 import zope.component.eventtesting
 
 def setUpZope(test):
@@ -8,6 +9,14 @@ def setUpZope(test):
 
 def cleanUpZope(test):
     cleanup.cleanUp()
+
+checker = renormalizing.RENormalizing([
+    # str(Exception) has changed from Python 2.4 to 2.5 (due to
+    # Exception now being a new-style class).  This changes the way
+    # exceptions appear in traceback printouts.
+    (re.compile(r"ConfigurationExecutionError: <class '([\w.]+)'>:"),
+                r'ConfigurationExecutionError: \1:'),
+    ])
 
 def suiteFromPackage(name):
     files = resource_listdir(__name__, name)
@@ -24,6 +33,7 @@ def suiteFromPackage(name):
         test = doctest.DocTestSuite(dottedname,
                                     setUp=setUpZope,
                                     tearDown=cleanUpZope,
+                                    checker=checker,
                                     optionflags=doctest.ELLIPSIS+
                                     doctest.NORMALIZE_WHITESPACE)
 
