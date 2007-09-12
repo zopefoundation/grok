@@ -319,7 +319,7 @@ class Applications(GAIAView):
     grok.require('grok.ManageApplications')
 
     def getDocOfApp(self, apppath, headonly = True):
-        doctor = docgrok.handle(apppath)
+        doctor = docgrok.docgrok_handle(apppath)
         result = doctor.getDoc(headonly)
         if result is None:
             result = ""

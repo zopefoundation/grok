@@ -47,7 +47,7 @@ from zope.app.apidoc.utilities import isReferencable
 import grok.interfaces
 from grok.interfaces import IApplication
 from martian.scan import is_package, ModuleInfo
-from martian import InstanceGrokker, ModuleGrokker
+from martian import ClassGrokker, ModuleGrokker
 from grok.admin.objectinfo import ZopeObjectInfo
 
 # This is the name under which the docgrok object-browser can be
@@ -95,111 +95,127 @@ def find_filepath(dotted_path):
                 return filepath_to_check
     return None
 
+class DocGrokHandler(object):
+    """A handler for DocGrok objects.
 
-def handle_module(dotted_path, ob=None):
-    """Determine, whether the given path/obj references a Python module.
-    """
-    if ob is None:
-        try:
-            ob = resolve(dotted_path)
-        except ImportError:
-            return None
-    if not hasattr(ob, '__file__'):
-        return None
-    if not is_package(os.path.dirname(ob.__file__)):
-        return None
-    if os.path.basename(ob.__file__) in ['__init__.py',
-                                         '__init__.pyc',
-                                         '__init__.pyo']:
-        return None
-    return DocGrokModule(dotted_path)
+    The solely purpose of DocGrokHandlers is to determine, whether a
+    given dotted path denotes a special type of object. If so, it
+    should pass back an appropriate DocGrok object.
 
-def handle_package(dotted_path, ob=None):
-    """Determine, whether the given path/obj references a Python package.
+    In plain English: DocGrokHandlers find a doctor for any object.
+
+    All we expect a DocGrokHandler to support, is a method
+    ``getDoctor``, which takes a dotted path (and optional the object
+    denoted by this path), to deliver an appropriate doctor or
+    ``None``.
     """
-    if ob is None:
-        try:
-            ob = resolve(dotted_path)
-        except ImportError:
-            return None
-    if not hasattr(ob, '__file__'):
-        return None
-    if not is_package(os.path.dirname(ob.__file__)):
-        return None
-    if os.path.basename(ob.__file__) not in ['__init__.py',
+    def getDoctor(self, dotted_path, obj=None):
+        """The default docfinder cannot serve.
+        """
+        return
+
+
+class DocGrokModuleHandler(DocGrokHandler):
+    def getDoctor(self, dotted_path, obj=None):
+        """Find a doctor for modules or None, if the dotted_path does
+        not denote a module.
+        """
+        if obj is None:
+            try:
+                obj = resolve(dotted_path)
+            except ImportError:
+                return
+        if not hasattr(obj, '__file__'):
+            return
+        if not is_package(os.path.dirname(obj.__file__)):
+            return
+        if os.path.basename(obj.__file__) in ['__init__.py',
                                              '__init__.pyc',
                                              '__init__.pyo']:
-        return None
-    return DocGrokPackage(dotted_path)
+            return
+        return DocGrokModule(dotted_path)
 
-def handle_interface(dotted_path, ob=None):
-    """Determine, whether the given path/obj references an interface.
-    """
-    if ob is None:
+
+class DocGrokPackageHandler(DocGrokHandler):
+    def getDoctor(self, dotted_path, obj=None):
+        """Determine, whether the given path/obj references a Python
+        package.
+        """
+        if obj is None:
+            try:
+                obj = resolve(dotted_path)
+            except ImportError:
+                return
+        if not hasattr(obj, '__file__'):
+            return
+        if not is_package(os.path.dirname(obj.__file__)):
+            return
+        if os.path.basename(obj.__file__) not in ['__init__.py',
+                                                 '__init__.pyc',
+                                                 '__init__.pyo']:
+            return
+        return DocGrokPackage(dotted_path)
+
+
+class DocGrokInterfaceHandler(DocGrokHandler):
+    def getDoctor(self, dotted_path, obj=None):
+        """Determine, whether the given path/obj references an interface.
+        """
+        if obj is None:
+            try:
+                obj = resolve(dotted_path)
+            except ImportError:
+                return
+        if not isinstance(
+            removeAllProxies(obj), InterfaceClass):
+            return
+        return DocGrokInterface(dotted_path)
+
+
+class DocGrokClassHandler(DocGrokHandler):
+    def getDoctor(self, dotted_path, obj=None):
+        """Determine, whether the given path/obj references a Python class.
+        """
+        if obj is None:
+            try:
+                obj = resolve(dotted_path)
+            except ImportError:
+                return
+        if not isinstance(obj, (types.ClassType, type)):
+            return
+        return DocGrokClass(dotted_path)
+
+
+class DocGrokGrokApplicationHandler(DocGrokHandler):
+    def getDoctor(self, dotted_path, obj=None):
+        """Determine, whether the given path/obj references a Grok application.
+        """
+        if obj is None:
+            try:
+                obj = resolve(dotted_path)
+            except ImportError:
+                None
         try:
-            ob = resolve(dotted_path)
-        except ImportError:
-            return None
-    if not isinstance(
-        removeAllProxies(ob), InterfaceClass):
-        return None
-    return DocGrokInterface(dotted_path)
-
-def handle_class(dotted_path, ob=None):
-    """Determine, whether the given path/obj references a Python class.
-    """
-    if ob is None:
-        try:
-            ob = resolve(dotted_path)
-        except ImportError:
-            return None
-    if not isinstance(ob, (types.ClassType, type)):
-        return None
-    return DocGrokClass(dotted_path)
-
-def handle_grokapplication(dotted_path, ob=None):
-    """Determine, whether the given path/obj references a Grok application.
-    """
-    if ob is None:
-        try:
-            ob = resolve(dotted_path)
-        except ImportError:
-            None
-    try:
-        if not IApplication.implementedBy(ob):
-            return None
-    except TypeError:
-        return None
-    return DocGrokGrokApplication(dotted_path)
-
-def handle_textfile(dotted_path, ob=None):
-    if ob is not None:
-        # Textfiles that are objects, are not text files.
-        return None
-    if os.path.splitext(dotted_path)[1] != u'.txt':
-        return None
-    return DocGrokTextFile(dotted_path)
-
-# The docgroks registry.
-#
-# We register 'manually', because the handlers
-# are defined in the same module.
-docgrok_handlers = [
-    { 'name' : 'module',
-      'handler' : handle_module },
-    { 'name' : 'package',
-      'handler' : handle_package },
-    { 'name' : 'interface',
-      'handler' : handle_interface },
-    { 'name' : 'grokapplication',
-      'handler' : handle_grokapplication },
-    { 'name' : 'class',
-      'handler' : handle_class },
-    { 'name' : 'textfile',
-      'handler' : handle_textfile}]
+            if not IApplication.implementedBy(obj):
+                return
+        except TypeError:
+            return
+        return DocGrokGrokApplication(dotted_path)
 
 
-def handle(dotted_path):
+class DocGrokTextFileHandler(DocGrokHandler):
+    def getDoctor(self, dotted_path, obj=None):
+        """Determine whether the dotted_path denotes a textfile.
+        """
+        if obj is not None:
+            # Textfiles that are objects, are not text files.
+            return
+        if os.path.splitext(dotted_path)[1] != u'.txt':
+            return
+        return DocGrokTextFile(dotted_path)
+
+
+def docgrok_handle(dotted_path):
     """Find a doctor specialized for certain things.
     """
     try:
@@ -208,28 +224,35 @@ def handle(dotted_path):
         # There is no object of that name. Give back 404.
         # TODO: Do something more intelligent, offer a search.
         if not find_filepath(dotted_path):
-            return None
+            return
         ob = None
     except:
-        return None
+        return
 
     for handler in docgrok_handlers:
-        spec_handler = handler['handler']
-        doc_grok = spec_handler(dotted_path, ob)
+        if type(handler) is not type({}):
+            continue
+        if 'docgrok_handler' not in handler.keys():
+            continue
+        spec_handler = handler['docgrok_handler']()
+        if not isinstance(spec_handler, DocGrokHandler):
+            continue
+        doc_grok = spec_handler.getDoctor(dotted_path, ob)
         if doc_grok is None:
             continue
         return doc_grok
+    # No special doctor could be found.
     return DocGrok(dotted_path)
 
 def getInterfaceInfo(iface):
     if iface is None:
-        return None
+        return
     path = getPythonPath(iface)
     return {'path': path,
             'url': isReferencable(path) and path or None}
 
 
-class DocGrokGrokker(InstanceGrokker):
+class DocGrokGrokker(ClassGrokker):
     """A grokker that groks DocGroks.
 
     This grokker can help to 'plugin' different docgroks in an easy
@@ -249,8 +272,8 @@ class DocGrokGrokker(InstanceGrokker):
 
       >>> from grok.admin import docgrok
 
-    Then we get create an (empty) 'ModuleGrokker'. 'ModuleGrokkers'
-    can grok whole modules. ::
+    Then we create an (empty) 'ModuleGrokker'. 'ModuleGrokkers' can
+    grok whole modules. ::
 
       >>> from martian import ModuleGrokker
       >>> module_grokker = ModuleGrokker()
@@ -258,75 +281,26 @@ class DocGrokGrokker(InstanceGrokker):
     Then we register the 'docgrok_grokker', which should contain some
     base handlers for modules, classes, etc. by default::
 
-      >>> module_grokker.register(docgrok.docgrok_grokker)
+      >>> module_grokker.register(docgrok.docgrok_handler_grokker)
 
-    The 'docgrok_grokker' is an instance of 'DocGrokGrokker'::
+    The 'docgrok_handler_grokker' is an instance of 'DocGrokGrokker'::
 
       >>> from grok.admin.docgrok import DocGrokGrokker
-      >>> isinstance(docgrok.docgrok_grokker, DocGrokGrokker)
+      >>> isinstance(docgrok.docgrok_handler_grokker, DocGrokGrokker)
       True
-
-    Now imagine, you have your own DocGroks for special things, for
-    example for a class 'Mammoth'. You might have derived this class
-    from DocGrok (or a subclass thereof), but this is not a
-    requirement. Note however, that other programmers might expect
-    your DocGroks to be compatible in a certain manner, so it surely
-    is a good idea to derive your GrokDocs from the original one.
-
-    Let's assume, your DocGrokMammoth is defined in a module called
-    'mammoth'::
-
-      >>> from grok.admin.docgrok import DocGrok
-      >>> class mammoth(FakeModule):
-      ...   class Mammoth(object):
-      ...     pass
-      ...
-      ...   class MammothDocGrok(DocGrok):
-      ...     def isMammoth(self):
-      ...       return True
-      ...
-      ...   def handle_mammoths(dotted_path,ob=None):
-      ...     if not isinstance(ob, Mammoth):
-      ...       return None
-      ...     return MammothDocGrok(dotted_path)
-
-    This is a simple DocGrok ('MammothDocGrok') accompanied by a
-    thing, it is representing (class 'Mammoth') and a handler
-    function, which decides, whether a given dotted path denotes a
-    Mammoth or not. The FakeModule class is a workaround to emulate
-    modules in doctests. Just think of watching a module, when you see
-    a FakeModule class.
-
-    Now we want to register this new DocGrok with the 'global
-    machinery'. Easy::
-
-      >>> module_grokker.grok('mammoth_grokker', mammoth)
-      True
-
-    Now the 'handle_mammoths' function is considered to deliver a
-    valid DocGrok, whenever it is asked. Every time, someone asks the
-    docgroks 'handle()' function for a suitable docgrok for things
-    that happen to be Mammoths, a DocGrokMammoth will be served.
-
-    Even the default docgrok viewer that comes with the grok package
-    in the admin interface, now will deliver your special views for
-    mammoths (if you defined one; otherwise the default 'DocGrok'
-    template will be used to show mammoth information).
-
-    TODO: Show how to make a docgrok view.
 
     That's it.
 
     """
-    component_class = types.FunctionType
+    component_class = DocGrokHandler
 
     def grok(self, name, obj, **kw):
-        if not name.startswith('handle_'):
-            return False
-        if name in [x['name'] for x in docgrok_handlers]:
-            return False
+        if not issubclass(obj, DocGrokHandler):
+            return
+        if not hasattr(obj, 'getDoctor'):
+            return
         docgrok_handlers.insert(0, {'name':name,
-                                     'handler':obj})
+                                    'docgrok_handler':obj})
         return True
 
 
@@ -365,9 +339,9 @@ class DocGrok(grok.Model):
             self.apidoc, "getDocString"):
             text = self.apidoc.getDocString()
         else:
-            return None
+            return
         if text is None:
-            return None
+            return
         lines = text.strip().split('\n')
         if len(lines) and heading_only:
             # Find first empty line to separate heading from trailing text.
@@ -398,12 +372,12 @@ class DocGrok(grok.Model):
         else:
             newpath = '.'.join([self.path, patient])
 
-        doctor = handle(newpath)
+        doctor = docgrok_handle(newpath)
 
         if doctor is None:
             # There is nothing of that name. Give back 404.
             # XXX Do something more intelligent, offer a search.
-            return None
+            return
         doctor.__parent__ = self
         doctor.__name__ = patient
         doctor._traversal_root = self._traversal_root
@@ -461,7 +435,7 @@ class DocGrokTraverser(grok.Traverser):
             doctor.__name__ = 'docgrok'
             doctor._traversal_root = doctor
             return doctor
-        return None
+        return
 
 
 class DocGrokPackage(DocGrok):
@@ -566,7 +540,7 @@ class DocGrokClass(DocGrokPackage):
 
     def getFilePath(self):
         if not hasattr(self.module, "__file__"):
-            return None
+            return
         filename = self.module.__file__
         if filename.endswith('o') or filename.endswith('c'):
             filename = filename[:-1]
@@ -629,7 +603,7 @@ class DocGrokInterface(DocGrokClass):
 
     def getFilePath(self):
         if not hasattr(self.module, "__file__"):
-            return None
+            return
         filename = self.module.__file__
         if filename.endswith('o') or filename.endswith('c'):
             filename = filename[:-1]
@@ -664,3 +638,21 @@ class DocGrokTextFile(DocGrok):
         content = file.read()
         file.close()
         return content.decode('utf-8')
+
+# The docgroks registry.
+#
+# We register 'manually', because the handlers
+# are defined in the same module.
+docgrok_handlers = []
+
+docgrok_handler_grokker = DocGrokGrokker()
+docgrok_handler_grokker.grok('module', DocGrokModuleHandler)
+docgrok_handler_grokker.grok('package', DocGrokPackageHandler)
+docgrok_handler_grokker.grok('interface', DocGrokInterfaceHandler)
+docgrok_handler_grokker.grok('class', DocGrokClassHandler)
+docgrok_handler_grokker.grok('grokapplication',
+                             DocGrokGrokApplicationHandler)
+docgrok_handler_grokker.grok('textfile', DocGrokTextFileHandler)
+docgrok_handlers_grokker = ModuleGrokker()
+docgrok_handlers_grokker.register(docgrok_handler_grokker)
+

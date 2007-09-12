@@ -19,6 +19,8 @@ Bug fixes
 
 * The admin UI now shows interfaces in modules.
 
+* `handle...` is not a special function name any more.
+
 Restructuring
 -------------
 

@@ -124,11 +124,11 @@ Getting the right specialist directly
 
 Often we don't want to visit the base doctor, but a specialist
 directly. But how can we tell, what specialist we need? Easy. We use
-the function ``handle()`` which delivers us a doctor, who
+the function ``docgrok_handle()`` which delivers us a doctor, who
 can tell us more:
 
-    >>> from grok.admin.docgrok import handle
-    >>> thedoc = handle('grok.admin.docgrok')
+    >>> from grok.admin.docgrok import docgrok_handle
+    >>> thedoc = docgrok_handle('grok.admin.docgrok')
     >>> thedoc
     <grok.admin.docgrok.DocGrokModule ...>
 
@@ -139,7 +139,7 @@ appropriate for the kind of thing specified by a dotted path.
 
 We can, for example ask for a different doc like this:
 
-    >>> thedoc = handle('grok.admin.docgrok.DocGrok')
+    >>> thedoc = docgrok_handle('grok.admin.docgrok.DocGrok')
     >>> thedoc
     <grok.admin.docgrok.DocGrokClass ...>
 
@@ -259,19 +259,15 @@ classes and implement at least three different interfaces. It's
 completely up to you.
 
 To choose, which API elements your docgrok is able to handle, you have
-to define a handler function. This is what we want to do next.
+to define a handler class. This is what we want to do next.
 
 
-Create a handler
-++++++++++++++++
+Create a handler and register your new docgrok
+++++++++++++++++++++++++++++++++++++++++++++++
 
-XXX: to be written.
-
-
-Register your new DocGrok
-+++++++++++++++++++++++++
-
-XXX: to be written.
+Those steps are described in the ftests for the docgrok module in
+grok.ftests.admin.docgrok. There you can also find examples, how to
+create own docgrok documentation (see the lower parts of the file).
 
 
 The Specialists
