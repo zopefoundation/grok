@@ -27,27 +27,6 @@ def Fields(*args, **kw):
     fields.sort(key=lambda field: field.order)
     return form.Fields(*(args + tuple(fields)), **kw)
 
-def get_context_schema_fields(context):
-    """Get the schema fields for a context object.
-    """
-    fields = []
-    fields_class = getattr(context, 'fields', None)
-    # bail out if there is no fields attribute at all
-    if fields_class is None:
-        return fields
-    # bail out if there's a fields attribute but it isn't an old-style class
-    if type(fields_class) != types.ClassType:
-        return fields
-    # get the fields from the class
-    for name in dir(fields_class):
-        field = getattr(fields_class, name)
-        if IField.providedBy(field):
-            if not getattr(field, '__name__', None):
-                field.__name__ = name
-            fields.append(field)
-    fields.sort(key=lambda field: field.order)
-    return fields
-
 def get_auto_fields(context):
     """Get the form fields for context.
     """
@@ -57,8 +36,7 @@ def get_auto_fields(context):
     # if we have a non-interface context,
     # we're autogenerating them from any model-specific
     # fields along with any schemas defined by the context
-    fields = form.Fields(*get_context_schema_fields(context))
-    fields += form.Fields(*most_specialized_interfaces(context))
+    fields = form.Fields(*most_specialized_interfaces(context))
     # we pull in this field by default, but we don't want it in our form
     fields = fields.omit('__name__')
     return fields

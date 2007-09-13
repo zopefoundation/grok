@@ -45,11 +45,17 @@ Save again without any changes:
 """
 import grok
 from zope import schema
+from zope.interface import Interface, implements
+
+class IMammoth(Interface):
+    name = schema.TextLine(title=u"Name")
+    size = schema.TextLine(title=u"Size", default=u"Quite normal")
 
 class Mammoth(grok.Model):
-    class fields:
-        name = schema.TextLine(title=u"Name")
-        size = schema.TextLine(title=u"Size")
+    implements(IMammoth)
+    
+    name = None
+    size = None
 
 class Edit(grok.EditForm):
     @grok.action("Apply")

@@ -49,23 +49,6 @@ from grok import components, formlib
 from grok.util import check_adapts, get_default_permission, make_checker
 
 
-class ModelGrokker(martian.ClassGrokker):
-    component_class = grok.Model
-
-    def grok(self, name, factory, context, module_info, templates):
-        for field in formlib.get_context_schema_fields(factory):
-            setattr(factory, field.__name__, field.default)
-        return True
-
-
-class ContainerGrokker(ModelGrokker):
-    component_class = grok.Container
-
-
-class LocalUtilityGrokker(ModelGrokker):
-    component_class = grok.LocalUtility
-
-
 class AdapterGrokker(martian.ClassGrokker):
     component_class = grok.Adapter
 
