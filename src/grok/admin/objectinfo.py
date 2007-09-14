@@ -81,7 +81,7 @@ class ObjectInfo(grok.Model):
         """
         path = getattr(self.obj, '__file__', None)
         if path is None:
-            return None
+            return
         return inspect.getmoduleinfo(path)
 
     def getmodulename(self):
@@ -93,7 +93,7 @@ class ObjectInfo(grok.Model):
         """
         path = getattr(self.obj, '__file__', None)
         if path is None:
-            return None
+            return
         return inspect.getmodulename(path)
 
     def ismodule(self):
@@ -224,7 +224,7 @@ class ObjectInfo(grok.Model):
 
         """
         if isContainingEvilRegExpChars(str(self.obj)):
-            return None
+            return
         return inspect.getcomments(self.obj)
 
     def getfile(self):
@@ -286,7 +286,7 @@ class ObjectInfo(grok.Model):
         their string representation.
         """
         if isContainingEvilRegExpChars(str(self.obj)):
-            return None
+            return
 
         try:
             return inspect.getsource(self.obj)
@@ -358,7 +358,7 @@ class ZopeObjectInfo(ObjectInfo):
 
     def getTypeLink(self, obj_type):
         if obj_type is types.NoneType:
-            return None
+            return
         path = utilities.getPythonPath(obj_type)
         return path.replace('.', '/')
 
@@ -586,18 +586,12 @@ class AnnotationsTraverser(grok.Traverser):
 
     def traverse(self,path):
         namespace = 'anno'
-        print "TRAVERSE", path
         if path.startswith(namespace):
             name = path[len(namespace):]
             naked = removeSecurityProxy(self.context)
             annotations = IAnnotations(naked)
-            print annotations.items()
-            #obj = name and annotations[name] or annotations
-            #obj = path and annotations[name] or annotations
             obj = ObjectInfo("Hello")
             if not IPhysicallyLocatable(obj, False):
-                #obj = LocationProxy(
-                #    obj, self.context, namespace + name)
                 obj = LocationProxy(
                     obj, self.context, 'anno' + name)
             return obj
