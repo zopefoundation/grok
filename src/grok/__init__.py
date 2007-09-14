@@ -13,7 +13,7 @@
 ##############################################################################
 """Grok
 """
-
+__version__ = "ksmith"
 from zope.interface import implements
 from zope.component import adapts
 from zope.event import notify
@@ -36,9 +36,10 @@ from grok.components import Site, GlobalUtility, LocalUtility, Annotation
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Permission, Role
+from grok.components import Skin, ILayer
 from grok.directive import (context, name, title, template, templatedir,
                             provides, baseclass, global_utility, local_utility,
-                            permissions, require, site)
+                            permissions, require, site, layer)
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import grok_component
 from grok._grok import SubscribeDecorator as subscribe
