@@ -17,8 +17,6 @@ import sys
 import martian.scan
 
 from zope import component
-from zope.component.interfaces import IDefaultViewName
-from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.testing.cleanup import addCleanUp
 
 
