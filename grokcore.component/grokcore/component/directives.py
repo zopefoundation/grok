@@ -11,8 +11,16 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Convenience imports
+"""Essential directives that are needed for the most basic component
+registrations
 """
-from grokcore.component.components import Adapter, MultiAdapter, GlobalUtility
-from grokcore.component.decorators import subscribe, adapter, implementer
-from grokcore.component.directives import context, name, provides
+from martian.directive import SingleTextDirective
+from martian.directive import InterfaceDirective
+from martian.directive import InterfaceOrClassDirective
+from martian.directive import ClassDirectiveContext
+from martian.directive import ClassOrModuleDirectiveContext
+
+name = SingleTextDirective('grok.name', ClassDirectiveContext())
+context = InterfaceOrClassDirective('grok.context',
+                                    ClassOrModuleDirectiveContext())
+provides = InterfaceDirective('grok.provides', ClassDirectiveContext())

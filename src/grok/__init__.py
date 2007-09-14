@@ -36,8 +36,8 @@ from grok.components import Site, LocalUtility, Annotation
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Permission, Role
-from grok.directive import (context, name, title, template, templatedir,
-                            provides, baseclass, global_utility, local_utility,
+from grok.directive import (title, template, templatedir, baseclass,
+                            global_utility, local_utility,
                             permissions, require, site)
 from grok.formlib import action, AutoFields, Fields
 from grok.util import url
@@ -45,6 +45,7 @@ from grok.util import url
 from grokcore.grok import grok, grok_component
 from grokcore.component import Adapter, MultiAdapter, GlobalUtility
 from grokcore.component import subscribe, adapter, implementer
+from grokcore.component import context, name, provides
 from martian.error import GrokError, GrokImportError
 
 # Our __init__ provides the grok API directly so using 'import grok' is enough.

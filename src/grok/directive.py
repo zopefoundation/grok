@@ -103,12 +103,8 @@ class MultiValueOnceDirective(OnceDirective):
         return args
 
 # Define grok directives
-name = SingleTextDirective('grok.name', ClassDirectiveContext())
 template = SingleTextDirective('grok.template', ClassDirectiveContext())
-context = InterfaceOrClassDirective('grok.context',
-                                    ClassOrModuleDirectiveContext())
 templatedir = SingleTextDirective('grok.templatedir', ModuleDirectiveContext())
-provides = InterfaceDirective('grok.provides', ClassDirectiveContext())
 baseclass = MarkerDirective('grok.baseclass', ClassDirectiveContext())
 global_utility = GlobalUtilityDirective('grok.global_utility',
                                         ModuleDirectiveContext())
