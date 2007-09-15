@@ -36,7 +36,7 @@ from grok.components import Site, GlobalUtility, LocalUtility, Annotation
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Permission, Role
-from grok.components import Skin, ILayer
+from grok.components import Skin, IGrokLayer
 from grok.directive import (context, name, title, template, templatedir,
                             provides, baseclass, global_utility, local_utility,
                             permissions, require, site, layer)

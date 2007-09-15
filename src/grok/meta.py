@@ -661,7 +661,7 @@ class IndexesSetupSubscriber(object):
 
 
 class ILayerGrokker(martian.ClassGrokker):
-    component_class = grok.ILayer
+    component_class = grok.IGrokLayer
 
 
 class SkinGrokker(martian.ClassGrokker):

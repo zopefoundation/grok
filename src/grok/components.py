@@ -487,7 +487,7 @@ class Permission(object):
 class Role(object):
     pass
 
-class ILayer(interface.Interface):
+class IGrokLayer(interface.Interface):
     pass
 
 class Skin(object):
