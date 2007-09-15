@@ -6,7 +6,7 @@ Grok changes
 
 Feature changes
 ---------------
-* Integrated skins and layers. grok.layer, grok.Layer, grok.Skin 
+* Integrated skins and layers. grok.layer, grok.IGrokLayer, grok.Skin 
 
 * Removed grok.define_permission in favor of the grok.Permission
   component base class
