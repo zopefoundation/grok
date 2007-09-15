@@ -24,7 +24,7 @@ open('doc.txt', 'w').write(long_description)
 
 setup(
     name='grok',
-    version='0.10',
+    version='0.11dev',
     author='Grok Team',
     author_email='grok-dev@zope.org',
     url='http://grok.zope.org',
@@ -32,6 +32,13 @@ setup(
     description='Grok: Now even cavemen can use Zope 3!',
     long_description=long_description,
     license='ZPL',
+    classifiers=['Environment :: Web Environment',
+                 'Intended Audience :: Developers',
+                 'License :: OSI Approved :: Zope Public License',
+                 'Programming Language :: Python',
+                 'Framework :: Zope3',
+                 ],
+
     packages=find_packages('src'),
     package_dir = {'': 'src'},
     include_package_data = True,
