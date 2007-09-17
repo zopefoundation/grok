@@ -653,11 +653,10 @@ class IndexesSetupSubscriber(object):
 
 
 class I18nRegisterTranslationGrokker(martian.GlobalGrokker):
-    component_class = grok.i18n.RegisterTranslationsDirective
+    component_class = grok.i18n.localesdirDirective
     
     def grok(self, name, factory, context, module_info, templates):
-        dirslist = module_info.getAnnotation(
-            'grok.i18n.registerTranslations', [])
+        dirslist = module_info.getAnnotation('grok.localesdir', [])
         set_default = False
         if not dirslist:
             # This is the default, if a module does not declare a
@@ -680,8 +679,8 @@ class I18nRegisterTranslationGrokker(martian.GlobalGrokker):
                     return False
                 else:
                     raise GrokError(
-                        "Directory %r declared in %r as locales directory "
-                        "for translations does not exist." % (
+                        "localesdir: directory %r declared in %r as "
+                        "locales directory does not exist." % (
                         localedir, module_info.dotted_name),
                         None)
             grok.i18n.registerTranslationsDirectory(abs_path)

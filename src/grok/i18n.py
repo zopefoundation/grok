@@ -30,12 +30,11 @@ from martian.directive import MultipleTextDirective, ModuleDirectiveContext
 
 DEFAULT_LOCALES_DIR = 'locales'
 
-class RegisterTranslationsDirective(MultipleTextDirective):
+class localesdirDirective(MultipleTextDirective):
     def check_arguments(self, directory=DEFAULT_LOCALES_DIR):
         if directory is None:
             raise GrokImportError(u"You must specify a locales directory "
-                                  u"when using "
-                                  u"grok.i18n.registerTranslations()"
+                                  u"when using grok.localesdir()"
                                   )
 
     def value_factory(self, *args, **kw):
@@ -82,6 +81,5 @@ def registerTranslationsDirectory(directory):
     return
 
 
-registerTranslations = RegisterTranslationsDirective(
-    'grok.i18n.registerTranslations',
-    ModuleDirectiveContext())
+localesdir = localesdirDirective('grok.localesdir',
+                                 ModuleDirectiveContext())

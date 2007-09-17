@@ -12,5 +12,5 @@
 #
 ##############################################################################
 import grok
-grok.i18n.registerTranslations('customlocales')
+grok.localesdir('customlocales')
 

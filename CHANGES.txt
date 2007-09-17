@@ -14,7 +14,7 @@ Feature changes
 
 * The admin UI now displays and offers deletion of broken objects.
 
-* Add grok.i18n.registerTranslations directive.
+* Add grok.localesdir directive.
 
 Bug fixes
 ---------

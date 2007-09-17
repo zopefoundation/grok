@@ -20,7 +20,7 @@ raised:
   >>> grok.grok('grok.tests.i18n.i18nillegallocales_fixture')
   Traceback (most recent call last):
    ...
-  GrokError: Directory 'land-of-oz' declared in 'grok.tests.i18n.i18nillegallocales_fixture' as locales directory for translations does not exist.
+  GrokError: localesdir: directory 'land-of-oz' declared in 'grok.tests.i18n.i18nillegallocales_fixture' as locales directory does not exist.
 
 """
 

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 ==============================
-grok.i18n.registerTranslations
+grok.localesdir
 ==============================
 
 With Grok a set of translations can be provided by using
@@ -28,7 +28,7 @@ If no translatios directory is given, `locales` will serve as
 default value.
 
 The default locales dir, is also searched for translations, if no
-explicit call to ``registerTranslations`` was done. This means, that
+explicit call to ``localesdir`` was done. This means, that
 if you do not specify a locales directory in a module and a locales
 directory with translations exist, this directory will be registered
 and the translations therein are provided.
@@ -88,8 +88,10 @@ from zope.i18nmessageid import MessageFactory
 _ = MessageFactory('mammoth')
 
 # Here we register the local translations dir using the default value
-# ('locales').
-grok.i18n.registerTranslations()
+# ('locales'). This is not neccessary, because the 'locales' dir would
+# be searched by default for translations. But calling it explicitly,
+# we provoke complains about missing directories.
+grok.localesdir()
 
 class I18nSavannah(grok.Application, grok.Container):
     """A place for mammoths.

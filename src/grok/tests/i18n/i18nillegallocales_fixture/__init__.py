@@ -12,4 +12,4 @@
 #
 ##############################################################################
 import grok
-grok.i18n.registerTranslations('land-of-oz')
+grok.localesdir('land-of-oz')

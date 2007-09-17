@@ -213,10 +213,10 @@ grok.define_permission('cave.enter')
         foobar
         \end{funcdesc}
 
-    \section{\function{grok.i18n.registerTranslations} -- register a
+    \section{\function{grok.localesdir} -- register a
       locales directory}
 
-        \begin{funcdesc}{grok.registerTranslations}{directory}
+        \begin{funcdesc}{grok.localesdir}{directory}
           A module-level directive, which can be used to register
           a locales directory. It is a Python based equivalent to the
           ZCML directive \code{i18n:registerTranslations}.
@@ -231,12 +231,12 @@ grok.define_permission('cave.enter')
 
           A \class{GlobalGrokker} is called for every module in a
           grokked package. If a module does not provide a
-          \function{registerTranslations} directive, then
-          \code{locales} is assumed as default value and tried to be
+          \function{grok.localesdir} directive, then
+          \code{'locales'} is assumed as default value and tried to be
           registered.
 
           This means especially, that if you do no explicit call to
-          \function{registerTranslations}, but a local directory with
+          \function{localesdir}, but a local directory with
           name \code{locales} and translations exists, then this
           directory will be registered.
 
@@ -247,9 +247,13 @@ grok.define_permission('cave.enter')
           The following example registers a local \code{locales}
           directory as a source for translations:
 
+          If this code resides in a location \code{/foo/bar.py}, then
+          Zope will look for translations in \code{/foo/locales}. The
+          example is a short form for the following:
+
           \begin{verbatim}
 import grok
-grok.i18n.registerTranslations()
+grok.localesdir()
           \end{verbatim}
 
           If this code resides in a location \code{/foo/bar.py}, then
@@ -258,16 +262,21 @@ grok.i18n.registerTranslations()
 
           \begin{verbatim}
 import grok
-grok.i18n.registerTranslations('locales')
+grok.localesdir('locales')
           \end{verbatim}
+
+          This is the explicit form of the implicit behaviour, if no
+          \function{grok.localesdir} is defined explicitly. Different
+          to the default behaviour, grok will complain about a
+          non-exisiting \code{locales} directory.
 
           You can, given that the given directories exist, declare
           several locale-directories, which will all be parsed:
 
           \begin{verbatim}
 import grok
-grok.i18n.registerTranslations('savannah')
-grok.i18n.registerTranslations('landofoz')
+grok.localesdir('savannah')
+grok.localesdir('landofoz')
           \end{verbatim}
          
 
