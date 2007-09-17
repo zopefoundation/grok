@@ -843,7 +843,7 @@ I ought to show you how the above would be accomplished:
              n = Natural(int(key))
              return zope.location.location.located(n, self, key)
          else:
-             raise IndexError
+             raise KeyError
  
  class NaturalIndex(grok.View):
      grok.context(Natural)
