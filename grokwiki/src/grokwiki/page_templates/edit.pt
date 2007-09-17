@@ -1,0 +1,10 @@
+<html metal:use-macro="context/@@layout/main">
+    <div metal:fill-slot="content">
+        <h1>Edit &raquo;<span tal:replace="context/__name__">WikiPage</span>&laquo;</h1>
+
+        <form tal:attributes="action view/url" method="POST">
+        <textarea name="wikidata" tal:content="context/text" cols="80" rows="20"/><br/>
+        <input type="submit" value="Update"/>
+        </form>
+    </div>
+</html>

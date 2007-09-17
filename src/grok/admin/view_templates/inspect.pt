@@ -1,0 +1,216 @@
+<html metal:use-macro="context/@@grokadminmacros/gaia-page">
+  <div metal:fill-slot="content">
+    <h1>
+      <span tal:content="view/info/name" />
+      <span tal:content="structure view/info/obj_link" />
+    </h1>
+
+    <div class="docgrok-entry">
+      <div class="emph" 
+	   tal:content="structure view/info/doc" />
+    </div>
+
+    <div>
+      <form method="post" action="">
+	<p>
+	  <input type="checkbox" name="show_private"
+		 id="show_private"
+		 tal:attributes="checked view/show_private"/>
+	  <label for="show_private">Show private attributes</label>
+	  <input type="submit" value="update" />
+	</p>
+      </form>
+    </div>
+
+    <div class="docgrok-entry">
+      <h2 class="docgrok-description">
+	Parent:
+      </h2>
+      <div class="docgrok-annotation1">
+	<div tal:define="parent view/info/parent/obj"
+	     tal:condition="parent"
+	     i18n:translate="">
+	  <a href=""
+	     i18n:name="parent"
+	     tal:attributes="href view/info/parent/obj_link">
+	    <span tal:replace="parent/zope:name"
+		  tal:condition="parent/zope:name" />
+	    <span tal:condition="not: parent/zope:name"
+		  i18n:translate="">&lt;unnamed object&gt;</span></a>
+	  <span tal:content="structure view/info/parent/class_link" />
+	</div>
+
+      </div>
+
+      <div class="docgrok-entry"
+	   tal:condition="not: view/info/parent/obj">
+	<div class="docgrok-annotation1">
+	  No parent object
+	</div>
+      </div>
+    </div>
+
+    <div class="docgrok-entry">
+      <h2 class="docgrok-description">
+	Base classes:
+      </h2>
+      <div class="docgrok-annotation1"
+	   tal:repeat="klass view/info/bases">
+	<span tal:content="structure klass">Class</span>
+      </div>
+    </div>
+    
+    <div class="docgrok-entry">
+      <h2 class="docgrok-description">
+	Interfaces provided:
+      </h2>
+      <div class="docgrok-annotation1"
+	   tal:repeat="iface view/info/interfaces">
+	<span tal:content="structure iface">Interface</span>
+      </div>
+    </div>
+
+    <div class="docgrok-entry">
+      <h2 class="docgrok-description">
+	Attributes and Properties:
+      </h2>
+      <h3 class="docgrok-description">
+	Attributes
+      </h3>
+      <div class="docgrok-annotation1"
+	   tal:repeat="attr view/info/attributes">
+        <span class="emph">
+	  <span tal:content="attr/name">Name</span>
+	</span>
+	
+	<div class="docgrok-annotation1">
+	  <div>
+	    type: <span tal:content="structure python: attr['type']">
+	    Type</span>
+	  </div>
+	  <div>
+	    value: 
+	    <span tal:condition="attr/value_linkable">
+	      <a href=""
+		 tal:attributes="href attr/docgrok_link"
+		 tal:content="attr/value">Value</a>
+	    </span>
+	    <span tal:condition="not: attr/value_linkable"
+		  tal:content="attr/value">Value</span>
+	  </div>
+	  <div tal:condition="attr/interface">
+	    interface: <span tal:content="structure attr/interface">
+	    Interface
+	  </span>
+	  </div>
+	</div>
+      </div>
+
+
+      <h3 class="docgrok-description">
+	Mappings
+      </h3>
+      <div class="docgrok-annotation1"
+	   tal:repeat="item view/info/mappingitems">
+	<span class="emph"
+	      tal:content="item/key"> 
+	  mapping-key
+	</span>
+	<div class="docgrok-annotation1">
+	  <div>
+	    type: <span tal:content="structure python: item['value_type']">
+	    Type</span>
+	  </div>
+	  <div>
+	    value:
+	    <span tal:condition="item/value_linkable">
+	      <a href=""
+		 tal:attributes="href item/docgrok_link"
+		 tal:content="item/value">Value</a>
+	    </span>
+	    <span tal:condition="not:item/value_linkable"
+		  tal:content="item/value" />
+	  </div>
+	</div>
+      </div>
+
+      <h3 class="docgrok-description">
+	Sequences
+      </h3>
+      <div class="docgrok-annotation1"
+	   tal:repeat="item view/info/sequenceitems">
+	<span class="emph"
+	      tal:content="item/index"> 
+	  sequence-index
+	</span>
+	<div class="docgrok-annotation1">
+	  <div>
+	    type: <span tal:content="structure python: item['value_type']">
+	    Type</span>
+	  </div>
+	  <div>
+	    value:
+	    <span tal:condition="item/value_linkable">
+	      <a href=""
+		 tal:attributes="href item/docgrok_link"
+		 tal:content="item/value">Value</a>
+	    </span>
+	    <span tal:condition="not:item/value_linkable"
+		  tal:content="item/value" />
+	  </div>
+	</div>
+      </div>
+
+      <h3 class="docgrok-description">
+	Annotations
+      </h3>
+      <div class="docgrok-annotation1"
+	   tal:repeat="item view/info/annotations">
+	<span class="emph"
+	      tal:content="item/key">
+	  annotation-key
+	</span>
+	<div class="docgrok-annotation1">
+	  <div>
+	    type: <span tal:content="structure item/value_type">
+	    Type</span>
+	  </div>
+	  <div>
+	    value:
+	    <span tal:condition="item/value_linkable">
+	      <a href=""
+		 tal:attributes="href item/docgrok_link"
+		 tal:content="item/value">value</a>
+	    </span>
+	    <span tal:condition="not: item/value_linkable"
+		  tal:content="item/value" />
+	  </div>
+	</div>
+	<p></p>
+      </div>
+    </div>
+
+    <div class="docgrok-entry">
+      <h2 class="docgrok-description">
+	Methods:
+      </h2>
+      <div class="docgrok-annotation1"
+	   tal:repeat="method view/info/methods">
+	<span tal:content="method/name"
+	      class="emph"
+	      >method</span><span tal:content="method/signature"
+	                          class="emph"
+	      >method</span>
+	<div tal:condition="method/doc"
+	     tal:content="structure method/doc">Method documentation</div>
+	<div class="docgrok-annotation1"
+	     tal:condition="method/interface">
+	  interface: <span tal:content="structure method/interface">interface</span>
+	</div>
+	<p></p>
+      </div>
+    </div>
+
+  </div>
+  <div metal:fill-slot="footer">asda</div>
+</html>

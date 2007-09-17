@@ -1,0 +1,47 @@
+================
+Grok Mini-HowTos
+================
+
+.. image:: /resources/evencaveman.jpg
+   :alt: Now even cavemen can use Zope3
+   :class: right
+
+These mini-tutorials have been contributed by members of the Grok community.
+
+* `Newbie Search Tutorial </minitutorials/searching.html>`_:
+
+  Grok supports the vanilla indexing services available in Zope 3
+  straight out of the box. The catalog uses developer-defined indexes
+  for searching. In other words, you have to define the indexes you
+  want to use to search you objects before you perform the actual
+  search.
+
+  Author: Sebastian Ware
+
+* `Macros With Grok </minitutorials/macros.html>`_:
+
+  Macros are a way to define a chunk of presentation in one template,
+  and share it in others. Changes to the macro are immediately
+  reflected in all templates, that use it.
+
+  Author: Uli Fouquet
+
+* `XMLRPC With Grok </minitutorials/xmlrpc.html>`_:
+
+  XMLRPC (http://xmlrpc.com) is a spec and a set of implementations
+  that allow software running on disparate operating systems, running in
+  different environments to make procedure calls over the Internet.
+
+  Author: Kushal Das
+
+Buildout
+========
+
+Buildout is a python-based configuration-driven build tool for working with
+eggs.
+
+* `Buildout Tutorial </minitutorials/buildout.html>`_:
+
+  This is Jim Fulton's tutorial for using `buildout
+  <http://www.python.org/pypi/zc.buildout>`_ The original text document is
+  available at http://svn.zope.org/zc.buildout/trunk/doc/tutorial.txt.

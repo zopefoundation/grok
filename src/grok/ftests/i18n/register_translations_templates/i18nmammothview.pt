@@ -1,0 +1,9 @@
+<html xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="mammoth">
+
+  <head />
+  <body>
+    <div i18n:translate="">mammoth</div>
+    <div tal:replace="view/context/getName" />
+  </body>
+</html>

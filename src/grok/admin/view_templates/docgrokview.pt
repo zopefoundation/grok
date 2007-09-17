@@ -1,0 +1,129 @@
+<html metal:use-macro="view/app_root/@@grokadminmacros/gaia-page">
+  <head>
+    <title>DocGrok page title</title>
+  </head>
+  <body>
+    <div metal:fill-slot="content">
+      <div tal:condition="not:view/getPathParts"> 
+	<h1 >
+	  Welcome to DocGrok...
+	</h1>
+	<div class="emph">
+	  DocGrok is Grok's run-time documentation system.
+
+	</div>
+
+	<h2>
+	  DocGrok Package Browser
+	</h2>
+
+	<div class="docgrok-annotation1">
+	  <p>
+	    Use the package browser to browse the locally installed
+	    Python packages, their classes, members and included text
+	    documentation. You can, for example,...
+	  </p>
+	  <div class="docgrok-annotation1">
+	    <div>
+	      <a href=""
+		 class="emph"
+		 tal:attributes="href string:${view/root_url}/docgrok/zope">
+	      browse the zope package</a>
+	    </div>
+	    <div>
+	      <a href=""
+		 class="emph"
+		 tal:attributes="href string:${view/root_url}/docgrok/grok">
+	      browse the grok package</a>
+	    </div>
+	  </div>
+	  <p>
+	    See
+	    <a href=""
+	       class="emph"
+	       tal:attributes="href string: 
+			      ${view/root_url}/docgrok/grok/admin/docgrok.txt">
+	      docgrok documentation</a> to learn more
+	      about this feature of Grok.
+	  </p>
+	</div>
+
+	<h2>
+	  DocGrok Object Browser
+	</h2>
+
+	<div class="docgrok-annotation1">
+	  <p>
+	    The DocGrok object browser supports discovering of objects
+	    available in the runtime system. You can for example
+	    examine the
+	  </p>
+	  <div class="docgrok-annotation1">
+	    <div>
+	      <a href=""
+		 class="emph"
+		 tal:attributes="href string:${view/root_url}/@@inspect.html">
+	      ZODB root folder</a>
+	    </div>
+	  </div>
+          <p>
+	    See <a href="" class="emph"
+	    tal:attributes="href string:
+	    ${view/root_url}/docgrok/grok/admin/inspect.txt">object
+	    browsers documentation</a> to learn more about this
+	    feature of Grok.
+	  </p>
+	</div>
+
+	<h2>
+	  External Documentation
+	</h2>
+
+	<div class="docgrok-annotation1">
+	  <p>
+	    Grok has the privilege to be supported by a very vivid
+	    community, which is contributing also documentation and
+	    help. To get you started with Grok, it is highly
+	    recommended first to do the <a class="emph"
+	    href="http://grok.zope.org/tutorial.html">Grok
+	    Tutorial</a>.  Afterwards you might find the special <a
+	    class="emph"
+	    href="http://grok.zope.org/minitutorials/index.html">Grok
+	    HOWTOs</a> of value for your work.
+	  </p>
+	  <p>
+	    If you need some more personal advice or want to get
+	    involved into Grok core development, have a look at the <a
+	    class="emph"
+	    href="http://mail.zope.org/mailman/listinfo/grok-dev">Grok-dev
+	    Mailinglist</a>. The Grok's headquarter is <a class="emph"
+	    href="http://grok.zope.org/">Grok's Home Page</a>.
+	  </p>
+	  GROK SAY: Have fun!
+	</div>
+      </div>
+
+      <div tal:condition="view/getPathParts">
+	<h1>
+
+	  DocGrok Documentation for
+	  <span class="docgrok-pathvalue">
+	    <span tal:repeat="part view/getPathParts"><a href=""
+							 tal:attributes="href string:${view/root_url}${part/url}"
+							 tal:content="part/name">part</a></span>
+	  </span> 
+	</h1>
+	<div class="Content">
+	  <h2>Path</h2>
+	  <div tal:content="context/path">
+	    path.to.some.element
+	  </div>
+	  <div class="description1">
+	    The python path of this element.
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div metal:fill-slot="footer">asda</div>
+  </body>
+</html>

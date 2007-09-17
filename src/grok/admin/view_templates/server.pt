@@ -1,0 +1,66 @@
+<html metal:use-macro="context/@@grokadminmacros/gaia-page">
+  <div metal:fill-slot="content">
+    <h1>Manage your Zope 3 instance</h1>
+
+    <form method="post" action=""
+      tal:attributes="action string:${context/@@absolute_url}/server">
+      <fieldset>
+      <p>
+        <legend>Manage server process</legend>
+        <input type="submit" name="restart" class="button" value="Restart Zope 3" />
+        <input type="submit" name="shutdown" class="button" value="Stop Zope 3" />
+        after <input type="text" name="time" value="0" size="4" /> seconds
+      </p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Admin message</legend>
+
+        <p>Lets you display an administrative message on all pages.<br />
+
+        <input
+          type="text"
+          name="admin_message"
+          tal:attributes="value view/current_message/message|nothing"
+          />
+
+        <input type="hidden" name="submitted" value="true"/>
+        <input type="submit" name="save_message" class="button" value="Save"/>
+
+	</p>
+      </fieldset>
+      <span class="header">Server process info</span>
+      <div id="server-processes">
+      <dl tal:define="ri view/runtime_info">
+          <dt class="emph">Uptime:</dt>
+          <dd tal:content="ri/Uptime">unknown</dd>
+          <dt class="emph">System platform:</dt>
+          <dd tal:content="ri/SystemPlatform">unknown</dd>
+          <dt class="emph">Zope version:</dt>
+          <dd tal:content="ri/ZopeVersion">unknown</dd>
+          <dt class="emph">Python version:</dt>
+          <dd tal:content="ri/PythonVersion">unknown</dd>
+          <dt class="emph">Command line:</dt>
+          <dd tal:content="ri/CommandLine">unknown</dd>
+          <dt class="emph">Preferred encoding:</dt>
+          <dd tal:content="ri/PreferredEncoding">unknown</dd>
+          <dt class="emph">File system encoding:</dt>
+          <dd tal:content="ri/FileSystemEncoding">unknown</dd>
+          <dt class="emph">Process ID:</dt>
+          <dd tal:content="ri/ProcessId">unknown</dd>
+          <dt class="emph">Python path:</dt>
+          <dd>
+            <ul>
+            <tal:block tal:repeat="path ri/PythonPath">
+              <li tal:content="path">unknown</li>
+            </tal:block>
+            </ul>
+          </dd>
+      </dl>
+      </div>
+
+    </form>
+
+  </div>
+
+</html>

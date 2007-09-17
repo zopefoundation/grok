@@ -1,0 +1,46 @@
+##############################################################################
+#
+# Copyright (c) 2003-2004 Zope Corporation and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
+msgid ""
+msgstr ""
+"Project-Id-Version: Development/Unknown\n"
+"POT-Creation-Date: Fri Sep 14 12:14:56 2007\n"
+"PO-Revision-Date: 2007-09-14 14:23+0100\n"
+"Last-Translator: Uli Fouquet <uli@gnufix.de>\n"
+"Language-Team: Zope 3 Developers <zope3-dev@zope.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: zope/app/locales/extract.py\n"
+
+#: src/grok/admin/mammoth.py:45
+msgid "Manfred"
+msgstr "Manni"
+
+#. Default: "This mammoth is called: ${name}"
+#: src/grok/admin/mammoth.py:48
+msgid "mammoth-is-called"
+msgstr "Dieses Mammut wird ${name} genannt."
+
+#: src/grok/admin/mammoth_templates/mammothview.pt:5
+msgid "mammoth"
+msgstr "Mammut"
+
+#: src/grok/admin/view_templates/inspect.pt:38
+msgid "&lt;unnamed object&gt;"
+msgstr "&lt;unbennantes Objekt&gt;"
+
+#: src/grok/admin/view_templates/inspect.pt:40
+msgid "${parent} <span>${DYNAMIC_CONTENT}</span>"
+msgstr "${parent} <span>${DYNAMIC_CONTENT}</span>"
+

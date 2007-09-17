@@ -1,0 +1,74 @@
+<configure    
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:grok="http://namespaces.zope.org/grok">
+
+  <include package="zope.security" file="meta.zcml" />
+  <include package="zope.i18n" file="meta.zcml" />
+  <include package="zope.app.securitypolicy" file="meta.zcml" />
+  <include package="zope.app.zcmlfiles" file="meta.zcml" />
+  <include package="grok" file="meta.zcml" />
+
+  <include package="zope.annotation" />
+  <include package="zope.copypastemove" />
+  <include package="zope.formlib" />
+  <include package="zope.i18n.locales" />
+  <include package="zope.publisher" />
+  <include package="zope.size" />
+  <include package="zope.traversing" />
+  <include package="zope.traversing.browser" />
+  <include package="zope.app.zcmlfiles" />
+  <include package="zope.app.securitypolicy" />
+  <include package="zope.app.authentication" />
+  <include package="zope.app.intid" />
+  <include package="zope.app.keyreference" />
+  <include package="zope.app.catalog" />
+  <include package="zope.app.renderer" />
+  <include package="zope.app.session" />
+
+  <securityPolicy
+      component="zope.app.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
+
+  <!-- we register special IAbsoluteURL views on grok views so that
+       can have them inspect __view_name__ instead of __name__.  
+       __name__ is already used as the class name, and overriding it
+       may make error messages more confusing.  -->
+
+  <view
+      for=".interfaces.IGrokView"
+      name="absolute_url"
+      factory=".components.GrokViewAbsoluteURL"
+      type="zope.publisher.interfaces.http.IHTTPRequest"
+      permission="zope.Public"
+      allowed_interface="zope.traversing.browser.interfaces.IAbsoluteURL"
+      />
+
+  <view
+      for=".interfaces.IGrokView"
+      factory=".components.GrokViewAbsoluteURL"
+      type="zope.publisher.interfaces.http.IHTTPRequest"
+      permission="zope.Public"
+      provides="zope.traversing.browser.interfaces.IAbsoluteURL"
+      />
+
+  <!-- this overrides Zope 3's publication factories because they have
+       the same name; we also need to change the priority because of
+       the ZCML discriminator -->
+  <publisher
+      name="XMLRPC"
+      factory=".publication.GrokXMLRPCFactory"
+      methods="POST"
+      mimetypes="text/xml"
+      priority="21"
+      />
+
+  <publisher
+      name="BROWSER"
+      factory=".publication.GrokBrowserFactory"
+      methods="GET POST HEAD"
+      mimetypes="*"
+      priority="11"
+      />
+
+  <grok:grok package=".admin" />
+
+</configure>

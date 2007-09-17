@@ -1,0 +1,8 @@
+<html>
+<head>
+</head>
+<body>
+  <h2>Entry <span tal:replace="python:context.__name__"></span></h2>
+  <p tal:content="python:context.text"></p>
+</body>
+</html>

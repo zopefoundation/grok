@@ -1,0 +1,9 @@
+<html>
+<body>
+We store the following texts:
+<ul>
+  <li tal:repeat="text python:context.list" tal:content="text"></li>
+</ul>
+<a tal:attributes="href python:view.url('edit')">Add a text</a>
+</body>
+</html>

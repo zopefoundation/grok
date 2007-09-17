@@ -1,0 +1,14 @@
+<html metal:use-macro="context/@@grokadminmacros/gaia-page">
+  <div metal:fill-slot="content">
+    <h1></h1>
+    <div class="logo">
+      <a href="context/@@appsindex"
+	 tal:attributes="href string:${context/@@absolute_url}/applications">
+	<img alt="Image of Grok relaxing..."
+	     src="grok-relax.jpg"
+	     tal:attributes="src view/static/grok-relax.png" />
+      </a>
+    </div>
+  </div>
+  <div metal:fill-slot="footer">asda</div>
+</html>

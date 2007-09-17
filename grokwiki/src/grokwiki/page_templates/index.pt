@@ -1,0 +1,10 @@
+<html metal:use-macro="context/@@layout/main">
+    <div metal:fill-slot="content">
+        <h1 tal:content="context/__name__">WikiPage</h1>
+
+        <div tal:content="structure view/rendered_text" class="wikicontent">
+        </div>
+
+        <p><a tal:attributes="href python:view.url('edit')">Edit this page</a></p>
+    </div>
+</html>

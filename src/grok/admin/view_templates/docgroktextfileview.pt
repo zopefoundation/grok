@@ -1,0 +1,37 @@
+<html metal:use-macro="view/app_root/@@grokadminmacros/gaia-page">
+  <head>
+    <title>DocGrok page title</title>
+  </head>
+  <body>
+    <div metal:fill-slot="content">
+
+      <div class="docgrok-sourceheader">
+	<h1>
+	  <span class="docgrok-pathvalue"
+		tal:content="view/context/filename">
+	    filename.txt
+	  </span>
+	  (Text file in
+	  <span class="docgrok-pathvalue">
+	    <span tal:repeat="part view/getPackagePathParts"><a href=""
+							 tal:attributes="href string:${view/root_url}${part/url}"
+							 tal:content="part/name">part</a></span>
+	  </span>) 
+	</h1>
+	<div class="docgrok-entry">
+	  <span class="docgrok-description1">File path:</span>
+
+	  <span class="docgrok-pathvalue"
+		tal:content="view/context/getFilePath"
+		>
+	    /home/uli/blah...
+	  </span>
+	</div>
+      </div>
+      <div class="docgrok-sourcetext" 
+	   tal:content="structure view/getContent">
+      </div>
+    </div>
+    <div metal:fill-slot="footer"></div>
+  </body>
+</html>

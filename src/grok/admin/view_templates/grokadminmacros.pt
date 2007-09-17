@@ -1,0 +1,107 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      i18n:domain="zope"
+      metal:define-macro="gaia-page">
+  <head>
+    <title
+      metal:define-slot="title"
+      >grok administration interface</title>
+    <link metal:define-slot="header"
+      rel="stylesheet" type="text/css" href="static/grok.css"
+      tal:on-error="nothing"
+      tal:attributes="href view/static/grok.css" />
+    <metal:block define-slot="extrahead">
+    </metal:block>
+  </head>
+
+  <body>
+    <div tal:condition="not:exists: view/root_url">
+      This template (grokadminmacros.pt in grok.admin) must be called
+      from a view with defined root_url.
+    </div>
+    <div tal:condition="exists: view/root_url">
+      <div id="banner">
+        <a href="/" id="logo">
+          <img alt="Grok" src="images/grok-admin.jpg" height="40"
+            tal:attributes="src view/static/grok-admin.jpg" />
+        </a>
+      </div>
+
+      <div id="logout" metal:define-macro="logged_user">
+	<span tal:condition="view/is_authenticated">
+	  <span i18n:translate="">User:
+	  <span tal:replace="request/principal/title"
+		i18n:name="user_title">User</span>
+	  </span>
+	</span>
+      </div>
+
+      <div id="breadcrumbs">
+        <div id="banner-shadow">
+          &nbsp;
+        </div>
+      </div>
+      <div id="fireplace">
+        <img alt="grok_relax_image" src="images/grok-relax5.gif"
+          tal:attributes="src view/static/grok-relax5.gif" />
+      </div>
+      <div id="menu-links" 
+	   metal:define-slot="menu-links"
+	   tal:define="currview python:view.url()">
+        <span class="menu-link-inactive"
+          tal:define="target string:${view/root_url}/applications">
+          <a href="applications"
+            tal:condition="python: target != currview"
+            tal:attributes="href target"
+            >Applications</a>
+          <span class="emph"
+            tal:condition="python: target == currview">
+            Applications
+          </span>
+        </span>
+        &nbsp;&nbsp;
+        <span class="menu-link-inactive"
+          tal:define="target string:${view/root_url}/server"
+          >
+          <a href="z3index"
+            tal:condition="python: target != currview"
+            tal:attributes="href target"
+            >Server Control</a>
+          <span class="emph"
+            tal:condition="python: target == currview">
+            Server Control
+          </span>
+        </span>
+<!--
+        &nbsp;&nbsp;
+        <a href=""
+          tal:attributes="href view/root_url">Debug</a>
+-->
+        &nbsp;&nbsp;
+        <a href=""
+          tal:attributes="href string:${view/root_url}/docgrok/">
+          <span tal:attributes="class python:view.in_docgrok() and 'emph'"
+            >Documentation</span>
+        </a>
+      </div>
+
+        <div id="content">
+
+          <div id="messages" tal:content="structure context/@@messages" />
+
+          <div metal:define-slot="content">
+
+            <h1>Welcome to Grok!</h1>
+
+            <div>
+              Your friendly and easy way to Zope 3.
+            </div>
+
+          </div>
+          <div>
+            <p id="footer-copyright">&copy; Copyright 2007, The Zope Foundation<br />Design inspired by Sebastian Ware</p>
+          </div>
+        </div>
+
+    </div>
+  </body>
+</html>

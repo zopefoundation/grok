@@ -1,0 +1,24 @@
+body {
+    font-family: Helvetica, Arial, sans;
+}
+
+.wikicontent {
+    margin:1em;
+    background-color:#EEEEEE;
+    border:1px solid #999999;
+    padding:1em;
+}
+
+#footer {
+    font-size:70%;
+    color:#999999;
+}
+
+#messages li {
+    border: 1px solid #999;
+    background-color:#EEE;
+    padding:0.25em 0.5em;
+    list-style-type: none;
+    margin-left:-1.5em;
+    margin-right:1em;
+}
