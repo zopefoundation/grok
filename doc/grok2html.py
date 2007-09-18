@@ -35,6 +35,7 @@ class ReStructuredTextToHTMLRenderer:
                         self.content,
                         writer=writer,
                         settings_overrides=settings_overrides,)
+        codecs.decode(html, 'utf_8')
         return html
 
 class RestFile(object):
