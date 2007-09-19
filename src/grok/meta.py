@@ -193,11 +193,9 @@ class ViewGrokker(martian.ClassGrokker):
                 raise GrokError("View %r has no associated template or "
                                 "'render' method." % factory, factory)
 
-        # grab layer, if there is one
-        view_layer = util.class_annotation(factory, 'grok.layer',
-                                           None) or module_info.getAnnotation('grok.layer',
-                                               None) or IDefaultBrowserLayer
-
+        # grab layer from class or module
+        view_layer = determine_class_directive('grok.layer', factory, module_info, default=IDefaultBrowserLayer)
+        
         view_name = util.class_annotation(factory, 'grok.name',
                                           factory_name)
         # __view_name__ is needed to support IAbsoluteURL on views
@@ -669,9 +667,17 @@ class SkinGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, context, module_info, templates):
 
-        layer = util.class_annotation(factory, 'grok.layer',
-                                      None) or module_info.getAnnotation('grok.layer',
-                                      None) or IBrowserRequest
+        layer = determine_class_directive('grok.layer', factory, module_info, default=IBrowserRequest)
         name = grok.util.class_annotation(factory, 'grok.name', factory.__name__.lower())
         zope.component.interface.provideInterface(name, layer, IBrowserSkinType)
         return True
+
+
+def determine_class_directive(directive_name, factory, module_info, default=None):
+    directive = util.class_annotation(factory, directive_name, None)
+    if directive is None:
+        directive = module_info.getAnnotation(directive_name, None)
+    if directive is not None:
+        return directive
+    else:
+        return default

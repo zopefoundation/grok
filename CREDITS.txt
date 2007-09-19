@@ -27,6 +27,8 @@ CREDITS
 
 * Wim Boucqaert (admin interface layout improvements)
 
+* Kevin M. Smith (skins and layers support)
+
 * ME GROK (team mascot)
 
 Thank you
