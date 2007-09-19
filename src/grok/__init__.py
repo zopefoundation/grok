@@ -13,7 +13,7 @@
 ##############################################################################
 """Grok
 """
-__version__ = "ksmith"
+
 from zope.interface import implements
 from zope.component import adapts
 from zope.event import notify
