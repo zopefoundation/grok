@@ -19,7 +19,8 @@ import zope.component.interface
 from zope import interface, component
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
-                                               IBrowserPublisher)
+                                               IBrowserPublisher,
+                                               IBrowserSkinType)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.security.permission import Permission
 from zope.security.interfaces import IPermission
@@ -142,6 +143,7 @@ class ViewGrokker(martian.ClassGrokker):
     component_class = grok.View
 
     def grok(self, name, factory, context, module_info, templates):
+
         view_context = util.determine_class_context(factory, context)
 
         factory.module_info = module_info
@@ -191,12 +193,15 @@ class ViewGrokker(martian.ClassGrokker):
                 raise GrokError("View %r has no associated template or "
                                 "'render' method." % factory, factory)
 
+        # grab layer from class or module
+        view_layer = determine_class_directive('grok.layer', factory, module_info, default=IDefaultBrowserLayer)
+        
         view_name = util.class_annotation(factory, 'grok.name',
                                           factory_name)
         # __view_name__ is needed to support IAbsoluteURL on views
         factory.__view_name__ = view_name
         component.provideAdapter(factory,
-                                 adapts=(view_context, IDefaultBrowserLayer),
+                                 adapts=(view_context, view_layer),
                                  provides=interface.Interface,
                                  name=view_name)
 
@@ -631,6 +636,7 @@ class IndexesSetupSubscriber(object):
         """Create the catalog if needed and return it.
 
         If the catalog already exists, return that.
+
         """
         catalog = zope.component.queryUtility(
             ICatalog, name=self.catalog_name, context=site, default=None)
@@ -650,3 +656,28 @@ class IndexesSetupSubscriber(object):
         intids = IntIds()
         setupUtility(site, intids, IIntIds)
         return intids
+
+
+class ILayerGrokker(martian.ClassGrokker):
+    component_class = grok.IGrokLayer
+
+
+class SkinGrokker(martian.ClassGrokker):
+    component_class = grok.Skin
+
+    def grok(self, name, factory, context, module_info, templates):
+
+        layer = determine_class_directive('grok.layer', factory, module_info, default=IBrowserRequest)
+        name = grok.util.class_annotation(factory, 'grok.name', factory.__name__.lower())
+        zope.component.interface.provideInterface(name, layer, IBrowserSkinType)
+        return True
+
+
+def determine_class_directive(directive_name, factory, module_info, default=None):
+    directive = util.class_annotation(factory, directive_name, None)
+    if directive is None:
+        directive = module_info.getAnnotation(directive_name, None)
+    if directive is not None:
+        return directive
+    else:
+        return default

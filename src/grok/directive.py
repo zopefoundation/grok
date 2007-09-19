@@ -120,3 +120,5 @@ site = InterfaceOrClassDirective('grok.site',
 title = SingleTextDirective('grok.title', ClassDirectiveContext())
 permissions = MultiValueOnceDirective(
     'grok.permissions', ClassDirectiveContext())
+layer = InterfaceOrClassDirective('grok.layer',
+                           ClassOrModuleDirectiveContext())

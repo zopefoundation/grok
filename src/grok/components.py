@@ -30,6 +30,7 @@ from zope.lifecycleevent import ObjectModifiedEvent
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import (IBrowserPublisher,
+                                               IDefaultBrowserLayer,
                                                IBrowserRequest)
 from zope.publisher.publish import mapply
 from zope.pagetemplate import pagetemplate, pagetemplatefile
@@ -484,4 +485,10 @@ class Permission(object):
     pass
 
 class Role(object):
+    pass
+
+class IGrokLayer(interface.Interface):
+    pass
+
+class Skin(object):
     pass
