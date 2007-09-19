@@ -658,10 +658,6 @@ class IndexesSetupSubscriber(object):
         return intids
 
 
-class ILayerGrokker(martian.ClassGrokker):
-    component_class = grok.IGrokLayer
-
-
 class SkinGrokker(martian.ClassGrokker):
     component_class = grok.Skin
 
