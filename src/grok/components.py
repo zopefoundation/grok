@@ -27,6 +27,8 @@ from zope import schema
 from zope import event
 from zope.interface.common import idatetime
 from zope.lifecycleevent import ObjectModifiedEvent
+from zope.security.permission import Permission
+from zope.app.securitypolicy.role import Role
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import (IBrowserPublisher,
@@ -481,10 +483,10 @@ class IndexesClass(object):
 
 Indexes = IndexesClass('Indexes')
 
-class Permission(object):
+class Permission(Permission):
     pass
 
-class Role(object):
+class Role(Role):
     pass
 
 class IGrokLayer(interface.Interface):
