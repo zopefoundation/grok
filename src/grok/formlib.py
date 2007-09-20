@@ -33,9 +33,8 @@ def get_auto_fields(context):
     # for an interface context, we generate them from that interface
     if IInterface.providedBy(context):
         return form.Fields(context)
-    # if we have a non-interface context,
-    # we're autogenerating them from any model-specific
-    # fields along with any schemas defined by the context
+    # if we have a non-interface context, we're autogenerating them
+    # from  any schemas defined by the context
     fields = form.Fields(*most_specialized_interfaces(context))
     # we pull in this field by default, but we don't want it in our form
     fields = fields.omit('__name__')
