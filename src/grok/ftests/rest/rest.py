@@ -52,7 +52,7 @@ allowed) error::
   >>> response = http_call('POST', 'http://localhost/++rest++b/app')
   Traceback (most recent call last):
     ...
-  MethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...>,
+  GrokMethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...>,
   <zope.publisher.browser.BrowserRequest instance URL=http://localhost/++rest++b/app/@@POST>
 
 DELETE is also not defined, so we also expect a 405 error::
@@ -60,7 +60,7 @@ DELETE is also not defined, so we also expect a 405 error::
   >>> response = http_call('DELETE', 'http://localhost/++rest++b/app')
   Traceback (most recent call last):
     ...
-  MethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...>,
+  GrokMethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...>,
   <zope.publisher.http.HTTPRequest instance URL=http://localhost/++rest++b/app>
 
 Let's examine protocol c where no method is allowed::
@@ -68,38 +68,38 @@ Let's examine protocol c where no method is allowed::
   >>> response = http_call('GET', 'http://localhost/++rest++c/app')
   Traceback (most recent call last):
     ...
-  MethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
+  GrokMethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
   >>> response = http_call('POST', 'http://localhost/++rest++c/app')
   Traceback (most recent call last):
     ...
-  MethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
+  GrokMethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
   >>> response = http_call('PUT', 'http://localhost/++rest++c/app')
   Traceback (most recent call last):
     ...
-  MethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
+  GrokMethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
   >>> response = http_call('DELETE', 'http://localhost/++rest++c/app')
   Traceback (most recent call last):
     ...
-  MethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
+  GrokMethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
 
 Let's examine the default protocol d, where nothing should work as well::
 
   >>> response = http_call('GET', 'http://localhost/++rest++d/app')
   Traceback (most recent call last):
     ...
-  MethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
+  GrokMethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
   >>> response = http_call('POST', 'http://localhost/++rest++d/app')
   Traceback (most recent call last):
     ...
-  MethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
+  GrokMethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
   >>> response = http_call('PUT', 'http://localhost/++rest++d/app')
   Traceback (most recent call last):
     ...
-  MethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
+  GrokMethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
   >>> response = http_call('DELETE', 'http://localhost/++rest++d/app')
   Traceback (most recent call last):
     ...
-  MethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
+  GrokMethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
   
 We have added support for GET for the ``alpha`` subobject only, in
 the default rest layer::
@@ -113,18 +113,49 @@ But not for POST::
   >>> response = http_call('POST', 'http://localhost/++rest++d/app/alpha')
   Traceback (most recent call last):
     ...
-  MethodNotAllowed: <grok.ftests.rest.rest.MyContent object at ...
+  GrokMethodNotAllowed: <grok.ftests.rest.rest.MyContent object at ...
 
+According to the HTTP spec, in case of a 405 Method Not Allowed error,
+the response MUST include an Allow header containing a list of valid
+methods for the requested resource::
+
+  >>> print http('POST /++rest++b/app HTTP/1.1')
+  HTTP/1. 405 Method Not Allowed
+  Allow: GET, PUT
+  Content-Length: 18
+  Content-Type: text/plain
+  <BLANKLINE>
+  Method Not Allowed
+
+  >>> print http('DELETE /++rest++b/app HTTP/1.1')
+  HTTP/1. 405 Method Not Allowed
+  Allow: GET, PUT
+  Content-Length: 18
+  <BLANKLINE>
+  Method Not Allowed
+  
+  >>> print http('POST /++rest++c/app HTTP/1.1')
+  HTTP/1. 405 Method Not Allowed
+  Allow: 
+  Content-Length: 18
+  Content-Type: text/plain
+  <BLANKLINE>
+  Method Not Allowed
+  
 Todo:
 
 * MethodNotAllowed error URLs for GET and POST have @@GET and @@POST
   attached. Not pretty.
 
-* Security tests.
+* Support for OPTIONS, HEAD, other methods?
 
-* According to HTTP spec: 405 Method Not Allowed:
-  The response MUST include an Allow header containing a list of valid
-  methods for the requested resource.
+* Content-Type header is there for GET/POST, but not for PUT/DELETE...
+
+* MethodNotAllowed doesn't work correctly if the method is completely
+  unrecognized, such as FROG instead of POST. It falls back on the default
+  MethodNotAllowed then, instead of GrokMethodNotAllowed.
+  
+* Security tests.
 """
 
 import grok

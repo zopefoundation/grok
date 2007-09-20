@@ -192,19 +192,21 @@ class XMLRPC(object):
     pass
 
 
+class GrokMethodNotAllowed(MethodNotAllowed):
+    pass
+
 class REST(object):
     def GET(self):
-        raise MethodNotAllowed(self.context, self.request)
+        raise GrokMethodNotAllowed(self.context, self.request)
     
     def POST(self):
-        raise MethodNotAllowed(self.context, self.request)
-
+        raise GrokMethodNotAllowed(self.context, self.request)
+    
     def PUT(self):
-        raise MethodNotAllowed(self.context, self.request)
+        raise GrokMethodNotAllowed(self.context, self.request)
     
     def DELETE(self):
-        raise MethodNotAllowed(self.context, self.request)
-
+        raise GrokMethodNotAllowed(self.context, self.request)
 
 class JSON(BrowserPage):
 

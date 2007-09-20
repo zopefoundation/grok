@@ -149,11 +149,18 @@ class RESTGrokker(martian.ClassGrokker):
                                                default=grok.IRESTLayer)
 
         for method in methods:
+            # determine if the method is not allowed (it's the same
+            # as the method on the superclass)
+            is_not_allowed_method = (method.im_func is
+                                     getattr(grok.REST,
+                                             method.__name__).im_func)
+
             # Make sure that the class inherits RestPublisher, so that the
             # views have a location
             method_view = type(
                 factory.__name__, (factory, RestPublisher),
-                {'__call__': method}
+                {'__call__': method,
+                 'is_not_allowed': is_not_allowed_method }
                 )
 
             component.provideAdapter(
