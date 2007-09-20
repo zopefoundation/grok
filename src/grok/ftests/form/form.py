@@ -28,11 +28,18 @@ grok.DisplayForm renders a display form:
 """
 import grok
 from zope import schema
+from zope.interface import Interface, implements
+from zope.schema.fieldproperty import FieldProperty
+
+class IMammoth(Interface):
+    name = schema.TextLine(title=u"Name")
+    size = schema.TextLine(title=u"Size", default=u"Quite normal")
 
 class Mammoth(grok.Model):
-    class fields:
-        name = schema.TextLine(title=u"Name")
-        size = schema.TextLine(title=u"Size")
+    implements(IMammoth)
+    
+    name = FieldProperty(IMammoth['name'])    
+    size = FieldProperty(IMammoth['size'])    
 
 class Edit(grok.EditForm):
     pass

@@ -27,14 +27,17 @@ also use the ``applyData`` method to store the data on the object.
 """
 import grok
 from zope import schema
+from zope.interface import Interface, implements
 
 class Zoo(grok.Container):
     pass
 
+class IMammoth(Interface):
+    name = schema.TextLine(title=u"Name")
+    size = schema.TextLine(title=u"Size", default=u"Quite normal")
+
 class Mammoth(grok.Model):
-    class fields:
-        name = schema.TextLine(title=u"Name")
-        size = schema.TextLine(title=u"Size")
+    implements(IMammoth)
 
     def __init__(self, name='', size=''):
         self.name = name

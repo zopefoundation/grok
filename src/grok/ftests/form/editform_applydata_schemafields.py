@@ -3,8 +3,9 @@ A grok.EditForm uses applyData in update mode to save the form data on
 the object.  Update mode means that only those fields are changed on
 the object that need to be changed.
 
-This is essentially the same narrative as 'editform_applydata'. Here
-we test the whole procedure on fields defined on the model class:
+This is essentially the same narrative as 'editform_applydata'. Here we
+test the whole procedure on fields on the interface implemented by the
+model class:
 
   >>> getRootFolder()["manfred"] = mammoth = Mammoth()
   >>> mammoth.name = 'Manfred the Mammoth'
@@ -54,13 +55,15 @@ And finally let's change both fields:
 """
 import grok
 from zope import schema
+from zope.interface import Interface, implements
 
+class IMammoth(Interface):
+    name = schema.TextLine(title=u"Name")
+    size = schema.TextLine(title=u"Size", default=u"Quite normal")
 
 class Mammoth(grok.Model):
-    class fields:
-        name = schema.TextLine(title=u"Name")
-        size = schema.TextLine(title=u"Size")
-
+    implements(IMammoth)
+    
 class Edit(grok.EditForm):
     pass
 
