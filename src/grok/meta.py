@@ -48,7 +48,7 @@ from martian import util
 import grok
 from grok import components, formlib
 from grok.util import check_adapts, get_default_permission, make_checker
-from grok.rest import IDefaultRestLayer, IRestSkinType
+from grok.rest import IRESTSkinType
 
 class AdapterGrokker(martian.ClassGrokker):
     component_class = grok.Adapter
@@ -146,7 +146,7 @@ class RESTGrokker(martian.ClassGrokker):
         # grab layer from class or module
         view_layer = determine_class_directive('grok.layer', factory,
                                                module_info,
-                                               default=IDefaultRestLayer)
+                                               default=grok.IRESTLayer)
 
         for method in methods:
             # Make sure that the class inherits RestPublisher, so that the
@@ -225,7 +225,9 @@ class ViewGrokker(martian.ClassGrokker):
                                 "'render' method." % factory, factory)
 
         # grab layer from class or module
-        view_layer = determine_class_directive('grok.layer', factory, module_info, default=IDefaultBrowserLayer)
+        view_layer = determine_class_directive('grok.layer',
+                                               factory, module_info,
+                                               default=IDefaultBrowserLayer)
 
         view_name = util.class_annotation(factory, 'grok.name',
                                           factory_name)
@@ -716,7 +718,7 @@ class RESTProtocolGrokker(martian.ClassGrokker):
         name = grok.util.class_annotation(factory, 'grok.name',
                                           factory.__name__.lower())
         zope.component.interface.provideInterface(name, layer,
-                                                  IRestSkinType)
+                                                  IRESTSkinType)
         return True
     
 def determine_class_directive(directive_name, factory, module_info,

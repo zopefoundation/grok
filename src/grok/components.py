@@ -51,6 +51,7 @@ from zope.app.container.btree import BTreeContainer
 from zope.app.container.contained import Contained
 from zope.app.container.interfaces import IReadContainer
 from zope.app.component.site import SiteManagerContainer
+from zope.app.publication.http import MethodNotAllowed
 
 import z3c.flashmessage.interfaces
 
@@ -192,7 +193,17 @@ class XMLRPC(object):
 
 
 class REST(object):
-    pass
+    def GET(self):
+        raise MethodNotAllowed(self.context, self.request)
+    
+    def POST(self):
+        raise MethodNotAllowed(self.context, self.request)
+
+    def PUT(self):
+        raise MethodNotAllowed(self.context, self.request)
+    
+    def DELETE(self):
+        raise MethodNotAllowed(self.context, self.request)
 
 
 class JSON(BrowserPage):

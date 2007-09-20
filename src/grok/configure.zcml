@@ -76,6 +76,9 @@
       priority="11"
       />
 
+  <!-- need to grok this for some basic REST support -->
+  <grok:grok package=".rest" />
+
   <grok:grok package=".admin" />
 
 </configure>

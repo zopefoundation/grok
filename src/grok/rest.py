@@ -1,20 +1,20 @@
+import grok
+
 from zope.traversing.namespace import skin
+from zope.interface import Interface
 from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IBrowserRequest
+from zope.publisher.interfaces.http import IHTTPRequest
+from zope.app.publication.http import MethodNotAllowed
 
-class IDefaultRestLayer(IBrowserRequest):
-    pass
-
-class IRestSkinType(IInterface):
+class IRESTSkinType(IInterface):
     """Skin for REST requests.
     """
-
-class rest_skin(skin):
-    skin_type = IRestSkinType
-
-    #def traverse(self, name, ignored):
-    #    import pdb; pdb.set_trace()
-    #    return super(rest_skin, self).traverse(name, ignored)
     
+class rest_skin(skin):
+    skin_type = IRESTSkinType
 
-        
+class DefaultRest(grok.REST):
+    grok.context(Interface)
+    grok.layer(grok.IRESTLayer)
+    
