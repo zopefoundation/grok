@@ -36,6 +36,8 @@ class IGrokBaseClasses(interface.Interface):
     LocalUtility = interface.Attribute("Base class for local utilities.")
     View = interface.Attribute("Base class for browser views.")
     XMLRPC = interface.Attribute("Base class for XML-RPC methods.")
+    JSON = interface.Attribute("Base class for JSON methods.")
+    REST = interface.Attribute("Base class for REST views.")
     Traverser = interface.Attribute("Base class for custom traversers.")
     Form = interface.Attribute("Base class for forms.")
     AddForm = interface.Attribute("Base class for add forms.")

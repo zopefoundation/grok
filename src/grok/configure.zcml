@@ -50,6 +50,13 @@
       provides="zope.traversing.browser.interfaces.IAbsoluteURL"
       />
 
+  <!-- we register a ++rest++ traversal namespace -->
+  <view
+    name="rest" type="zope.publisher.interfaces.browser.IHTTPRequest"
+    provides="zope.traversing.interfaces.ITraversable" for="*"
+    factory=".rest.rest_skin"
+    />
+
   <!-- this overrides Zope 3's publication factories because they have
        the same name; we also need to change the priority because of
        the ZCML discriminator -->

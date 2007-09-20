@@ -191,6 +191,10 @@ class XMLRPC(object):
     pass
 
 
+class REST(object):
+    pass
+
+
 class JSON(BrowserPage):
 
     def __call__(self):
@@ -278,6 +282,12 @@ class Traverser(object):
         self.request = request
 
     def browserDefault(self, request):
+        # if we have a RESTful request, we will handle
+        # GET, POST and HEAD differently (PUT and DELETE are handled already
+        # but not on the BrowserRequest layer but the HTTPRequest layer)
+        if IRESTLayer.providedBy(request):
+            view_uri = '@@%s' % request.method
+            return self.context, (view_uri,)
         view_name = getDefaultViewName(self.context, request)
         view_uri = "@@%s" % view_name
         return self.context, (view_uri,)
@@ -492,5 +502,11 @@ class Role(Role):
 class IGrokLayer(interface.Interface):
     pass
 
+class IRESTLayer(interface.Interface):
+    pass
+
 class Skin(object):
+    pass
+
+class RESTProtocol(object):
     pass

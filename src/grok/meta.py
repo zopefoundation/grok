@@ -16,6 +16,7 @@
 import os
 
 import zope.component.interface
+import zope.location
 from zope import interface, component
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
@@ -47,7 +48,7 @@ from martian import util
 import grok
 from grok import components, formlib
 from grok.util import check_adapts, get_default_permission, make_checker
-
+from grok.rest import IDefaultRestLayer, IRestSkinType
 
 class AdapterGrokker(martian.ClassGrokker):
     component_class = grok.Adapter
@@ -120,6 +121,54 @@ class XMLRPCGrokker(martian.ClassGrokker):
             make_checker(factory, method_view, permission)
         return True
 
+class RestPublisher(zope.location.Location):
+    interface.implements(IBrowserPublisher)
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.__parent__ = self.context
+        
+    def browserDefault(self, request):
+        return self, ()
+    
+class RESTGrokker(martian.ClassGrokker):
+    component_class = grok.REST
+    
+    def grok(self, name, factory, context, module_info, templates):
+        view_context = util.determine_class_context(factory, context)
+        # XXX We should really not make __FOO__ methods available to
+        # the outside -- need to discuss how to restrict such things.
+        methods = util.methods_from_class(factory)
+
+        default_permission = get_default_permission(factory)
+
+        # grab layer from class or module
+        view_layer = determine_class_directive('grok.layer', factory,
+                                               module_info,
+                                               default=IDefaultRestLayer)
+
+        for method in methods:
+            # Make sure that the class inherits RestPublisher, so that the
+            # views have a location
+            method_view = type(
+                factory.__name__, (factory, RestPublisher),
+                {'__call__': method}
+                )
+
+            component.provideAdapter(
+                method_view, (view_context, view_layer),
+                interface.Interface,
+                name=method.__name__)
+
+            # Protect method_view with either the permission that was
+            # set on the method, the default permission from the class
+            # level or zope.Public.
+            permission = getattr(method, '__grok_require__',
+                                 default_permission)
+            make_checker(factory, method_view, permission)
+        return True
+    
 
 class ViewGrokker(martian.ClassGrokker):
     component_class = grok.View
@@ -650,14 +699,28 @@ class SkinGrokker(martian.ClassGrokker):
     component_class = grok.Skin
 
     def grok(self, name, factory, context, module_info, templates):
-
-        layer = determine_class_directive('grok.layer', factory, module_info, default=IBrowserRequest)
-        name = grok.util.class_annotation(factory, 'grok.name', factory.__name__.lower())
-        zope.component.interface.provideInterface(name, layer, IBrowserSkinType)
+        layer = determine_class_directive('grok.layer', factory,
+                                          module_info, default=IBrowserRequest)
+        name = grok.util.class_annotation(factory, 'grok.name',
+                                          factory.__name__.lower())
+        zope.component.interface.provideInterface(name, layer,
+                                                  IBrowserSkinType)
         return True
 
+class RESTProtocolGrokker(martian.ClassGrokker):
+    component_class = grok.RESTProtocol
 
-def determine_class_directive(directive_name, factory, module_info, default=None):
+    def grok(self, name, factory, context, module_info, templates):
+        layer = determine_class_directive('grok.layer', factory,
+                                          module_info, default=IBrowserRequest)
+        name = grok.util.class_annotation(factory, 'grok.name',
+                                          factory.__name__.lower())
+        zope.component.interface.provideInterface(name, layer,
+                                                  IRestSkinType)
+        return True
+    
+def determine_class_directive(directive_name, factory, module_info,
+                              default=None):
     directive = util.class_annotation(factory, directive_name, None)
     if directive is None:
         directive = module_info.getAnnotation(directive_name, None)
