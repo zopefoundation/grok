@@ -15,6 +15,10 @@ Feature changes
 
 * The admin UI now displays and offers deletion of broken objects.
 
+* Removed support for defining model schemas using an inner class with the
+  special name 'fields'. This was abandoned in favor the usual Zope 3 way of
+  defining schemas in interfaces and implementing them in our Grok models.
+
 Bug fixes
 ---------
 
