@@ -27,6 +27,9 @@ Bug fixes
 
 * `handle...` is not a special function name any more.
 
+* Views no longer need a custom AbsoluteURL to determine their URL,
+  since each instance now properly gets a __name__ attribute.
+
 Restructuring
 -------------
 
