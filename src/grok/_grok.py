@@ -136,6 +136,7 @@ class SubscribeDecorator:
         if subscribers is None:
             frame.f_locals['__grok_subscribers__'] = subscribers = []
         subscribers.append((function, self.subscribed))
+        return function
 
 from zope.component._declaration import adapter as _adapter
 class adapter(_adapter):
