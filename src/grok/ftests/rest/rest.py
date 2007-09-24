@@ -53,7 +53,7 @@ allowed) error::
   Traceback (most recent call last):
     ...
   GrokMethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...>,
-  <zope.publisher.browser.BrowserRequest instance URL=http://localhost/++rest++b/app/@@POST>
+  <zope.publisher.browser.BrowserRequest instance URL=http://localhost/++rest++b/app>
 
 DELETE is also not defined, so we also expect a 405 error::
 
@@ -143,9 +143,6 @@ methods for the requested resource::
   Method Not Allowed
   
 Todo:
-
-* MethodNotAllowed error URLs for GET and POST have @@GET and @@POST
-  attached. Not pretty.
 
 * Support for OPTIONS, HEAD, other methods?
 

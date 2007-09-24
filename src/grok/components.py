@@ -299,8 +299,10 @@ class Traverser(object):
         # GET, POST and HEAD differently (PUT and DELETE are handled already
         # but not on the BrowserRequest layer but the HTTPRequest layer)
         if IRESTLayer.providedBy(request):
-            view_uri = '@@%s' % request.method
-            return self.context, (view_uri,)
+            rest_view = component.getMultiAdapter(
+                (self.context, self.request),
+                name=request.method)
+            return rest_view, ()
         view_name = getDefaultViewName(self.context, request)
         view_uri = "@@%s" % view_name
         return self.context, (view_uri,)
