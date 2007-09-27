@@ -20,8 +20,6 @@ long_description = (
     '********\n'
     )
 
-open('doc.txt', 'w').write(long_description)
-
 setup(
     name='grok',
     version='0.11dev',
