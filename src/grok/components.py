@@ -123,13 +123,7 @@ class View(BrowserPage):
         return mapply(self.render, (), self.request)
 
     def _render_template(self):
-        namespace = self.template.pt_getContext()
-        namespace['request'] = self.request
-        namespace['view'] = self
-        namespace['context'] = self.context
-        # XXX need to check whether we really want to put None here if missing
-        namespace['static'] = self.static
-        return self.template.pt_render(namespace)
+        return self.template._render_template(self)
 
     def __getitem__(self, key):
         if getattr(self.template, 'macros', None) is None:
@@ -226,6 +220,16 @@ class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
 
     def _factory_init(self, factory):
         factory.macros = self.macros
+        
+    def _render_template(self, view):
+        namespace = self.pt_getContext()
+        namespace['request'] = view.request
+        namespace['view'] = view
+        namespace['context'] = view.context
+        # XXX need to check whether we really want to put None here if missing
+        namespace['static'] = view.static
+        return self.pt_render(namespace)
+    
 
 class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
                        pagetemplatefile.PageTemplateFile):
@@ -244,6 +248,15 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
     
     def _factory_init(self, factory):
         factory.macros = self.macros
+
+    def _render_template(self, view):
+        namespace = self.pt_getContext()
+        namespace['request'] = view.request
+        namespace['view'] = view
+        namespace['context'] = view.context
+        # XXX need to check whether we really want to put None here if missing
+        namespace['static'] = view.static
+        return self.pt_render(namespace)
 
 class GenshiMarkupTemplate(GrokPageTemplate):
 
@@ -268,12 +281,13 @@ class GenshiMarkupTemplate(GrokPageTemplate):
     def _factory_init(self, factory):
         pass
     
-    # XXX Ugly temporary ZPT emulation
-    def pt_getContext(self):
-        return {}
-
-    # XXX Ugly temporary ZPT emulation
-    def pt_render(self, namespace):
+    def _render_template(self, view):
+        namespace = {}
+        namespace['request'] = view.request
+        namespace['view'] = view
+        namespace['context'] = view.context
+        # XXX need to check whether we really want to put None here if missing
+        namespace['static'] = view.static
         return self(namespace)
 
     
