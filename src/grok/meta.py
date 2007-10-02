@@ -169,6 +169,7 @@ class ViewGrokker(martian.ClassGrokker):
 
             templates.markAssociated(template_name)
             factory.template = template
+            template._factory_init(factory)
         else:
             if not getattr(factory, 'render', None):
                 # we do not accept a view without any way to render it
@@ -201,6 +202,9 @@ class ViewGrokker(martian.ClassGrokker):
                                 'for XML-RPC methods.'
                                 % (method.__name__, factory), factory)
         return True
+
+def view__getitem__(self, key):
+    return self.template.macros[key]
 
 
 class JSONGrokker(martian.ClassGrokker):

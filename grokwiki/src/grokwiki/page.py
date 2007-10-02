@@ -57,3 +57,6 @@ class Edit(grok.View):
         self.context.update(text)
         self.flash('Saved.')
         self.redirect(self.url(self.context))
+
+class Food(grok.View):
+    pass

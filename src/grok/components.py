@@ -20,6 +20,7 @@ import datetime
 import warnings
 import pytz
 import simplejson
+import genshi.template
 
 from zope import component
 from zope import interface
@@ -131,9 +132,16 @@ class View(BrowserPage):
         return self.template.pt_render(namespace)
 
     def __getitem__(self, key):
-        # XXX give nice error message if template is None
+        if getattr(self.template, 'macros', None) is None:
+            raise AttributeError("View has no item %s" % key)
+        # When this deprecation is done with, this whole __getitem__ can 
+        # be removed.
+        warnings.warn("Calling macros directly on the view is deprecated. "
+                      "Please use view/@@viewname/macros/macroname\n"
+                      "View %r, macro %s" % (self, key),
+                      DeprecationWarning)
         return self.template.macros[key]
-
+    
     def url(self, obj=None, name=None):
         # if the first argument is a string, that's the name. There should
         # be no second argument
@@ -216,6 +224,8 @@ class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
         # PageTemplate cannot be subclassed
         self.__grok_module__ = martian.util.caller_module()
 
+    def _factory_init(self, factory):
+        factory.macros = self.macros
 
 class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
                        pagetemplatefile.PageTemplateFile):
@@ -232,8 +242,8 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
         # PageTemplateFile cannot be subclassed
         self.__grok_module__ = martian.util.caller_module()
     
-
-import genshi.template
+    def _factory_init(self, factory):
+        factory.macros = self.macros
 
 class GenshiMarkupTemplate(GrokPageTemplate):
 
@@ -254,6 +264,9 @@ class GenshiMarkupTemplate(GrokPageTemplate):
     def __call__(self, namespace):
         stream = self._template.generate(**namespace)
         return stream.render('xhtml')
+    
+    def _factory_init(self, factory):
+        pass
     
     # XXX Ugly temporary ZPT emulation
     def pt_getContext(self):

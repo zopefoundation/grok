@@ -1,4 +1,4 @@
-<html metal:use-macro="context/@@grokadminmacros/gaia-page">
+<html metal:use-macro="context/@@grokadminmacros/macros/gaia-page">
   <div metal:fill-slot="content">
     <h1>
       <span tal:content="view/info/name" />
