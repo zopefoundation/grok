@@ -45,6 +45,7 @@ setup(
                       'martian',
                       'simplejson',
                       'pytz',
+                      'Genshi',
                       'ZODB3 == 3.8.0b2',
                       'zope.annotation',
                       'zope.app.apidoc',

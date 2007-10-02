@@ -187,6 +187,9 @@ class JSON(BrowserPage):
 
 
 class GrokPageTemplate(object):
+    
+    __grok_name__ = ''
+    __grok_location__ = ''
 
     def __repr__(self):
         return '<%s template in %s>' % (self.__grok_name__,
@@ -230,6 +233,37 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
         self.__grok_module__ = martian.util.caller_module()
     
 
+import genshi.template
+
+class GenshiMarkupTemplate(GrokPageTemplate):
+
+    interface.implements(interfaces.ITemplateFile)
+    
+    def __init__(self, filename=None, _prefix=None, html=None):
+        if ((html is not None and filename is not None) or
+            (html is None and filename is None)):
+            raise AssertionError("You must pass either html or filename but not both.")
+        
+        if html is not None:
+            self._template = genshi.template.MarkupTemplate(html)
+        else:
+            loader = genshi.template.TemplateLoader(_prefix)
+            self._template = loader.load(filename)
+            
+    
+    def __call__(self, namespace):
+        stream = self._template.generate(**namespace)
+        return stream.render('xhtml')
+    
+    # XXX Ugly temporary ZPT emulation
+    def pt_getContext(self):
+        return {}
+
+    # XXX Ugly temporary ZPT emulation
+    def pt_render(self, namespace):
+        return self(namespace)
+
+    
 class DirectoryResource(directoryresource.DirectoryResource):
     # We subclass this, because we want to override the default factories for
     # the resources so that .pt and .html do not get created as page

@@ -79,7 +79,15 @@ class PageTemplateFileFactory(grok.GlobalUtility):
     grok.implements(grok.interfaces.ITemplateFactory)
     grok.name('pt')
     
-    
     def __call__(self, filename, _prefix=None):
         return grok.components.PageTemplateFile(filename, _prefix)
+
+
+class GenshiMarkupTemplateFileFactory(grok.GlobalUtility):
+    
+    grok.implements(grok.interfaces.ITemplateFactory)
+    grok.name('gmt')
+    
+    def __call__(self, filename, _prefix=None):
+        return grok.components.GenshiMarkupTemplate(filename, _prefix)
     
