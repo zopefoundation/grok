@@ -1,0 +1,4 @@
+- replace caveman examples with more realistic ones when possible
+
+- document the conventional (or default) behaviour when directives are not spelled out
+
