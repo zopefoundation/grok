@@ -72,13 +72,16 @@ def resetBootstrap():
 from zope.testing.cleanup import addCleanUp
 addCleanUp(resetBootstrap)
 
+def skip_tests(name):
+    return name in ['tests', 'ftests']
 
 def do_grok(dotted_name):
     global _bootstrapped
     if not _bootstrapped:
         bootstrap()
         _bootstrapped = True
-    martian.grok_dotted_name(dotted_name, the_module_grokker)
+    martian.grok_dotted_name(
+        dotted_name, the_module_grokker, exclude_filter=skip_tests)
 
 def grok_component(name, component,
                    context=None, module_info=None, templates=None):
@@ -88,7 +91,8 @@ def grok_component(name, component,
                                   templates=templates)
 
 def prepare_grok(name, module, kw):
-    module_info = scan.module_info_from_module(module)
+    module_info = scan.module_info_from_module(
+        module, exclude_filter=skip_tests)
 
     # XXX hardcoded in here which base classes are possible contexts
     # this should be made extensible
