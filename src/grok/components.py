@@ -216,6 +216,8 @@ class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
 
 class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
                        pagetemplatefile.PageTemplateFile):
+    
+    interface.implements(interfaces.ITemplateFile)
 
     def __init__(self, filename, _prefix=None):
         _prefix = self.get_path_from_prefix(_prefix)
@@ -226,7 +228,7 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
         # XXX unfortunately using caller_module means that
         # PageTemplateFile cannot be subclassed
         self.__grok_module__ = martian.util.caller_module()
-
+    
 
 class DirectoryResource(directoryresource.DirectoryResource):
     # We subclass this, because we want to override the default factories for

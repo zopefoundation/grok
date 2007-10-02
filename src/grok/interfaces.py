@@ -429,3 +429,20 @@ class IIndexDefinition(interface.Interface):
         Use name for index name and attribute to index. Set up
         index for interface or class context.
         """
+
+class ITemplateFactory(interface.Interface):
+    """Utility that generated templates. One per template type/extension"""
+    
+    def __call__(self, filename, _prefix=None):
+        """Creates an ITemplateFile
+        
+        _prefix is the directory the file is located in
+        """
+
+class ITemplateFile(interface.Interface):
+    """Template objects created from files
+    """
+    
+    def __call__(self, args, request):
+        """Renders the template. Args is a tuple of arguments."""
+        

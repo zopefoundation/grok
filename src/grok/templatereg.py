@@ -1,6 +1,7 @@
 from martian.error import GrokError
 
 import os
+import zope.component
 import grok
 import warnings
 
@@ -34,7 +35,16 @@ class TemplateRegistry(object):
             if template_file.startswith('.') or template_file.endswith('~'):
                 continue
 
-            if not template_file.endswith('.pt'):
+            #import pdb
+            #pdb.set_trace()
+
+            template_name, extension = os.path.splitext(template_file)
+            extension = extension[1:] # Get rid of the leading dot.
+            template_factory = zope.component.queryUtility(
+                grok.interfaces.ITemplateFactory,
+                name=extension)
+                
+            if template_factory is None:
                 # Warning when importing files. This should be
                 # allowed because people may be using editors that generate
                 # '.bak' files and such.
@@ -43,21 +53,33 @@ class TemplateRegistry(object):
                               (template_file, template_dir), UserWarning, 2)
                 continue
 
-            template_name = template_file[:-3] # cut off .pt
-            template = grok.PageTemplateFile(template_file, template_dir)
-            template_path = os.path.join(template_dir, template_file)
-            template._annotateGrokInfo(template_name, template_path)
-
             inline_template = self.get(template_name)
             if inline_template:
                 raise GrokError("Conflicting templates found for name '%s' "
-                                "in module %r, both inline and in template "
-                                "directory '%s'."
+                                "in module %r, either inline and in template "
+                                "directory '%s', or two templates with the "
+                                "same name and different extensions."
                                 % (template_name, module_info.getModule(),
                                    template_dir), inline_template)
+
+            template = template_factory(template_file, template_dir)
+            template_path = os.path.join(template_dir, template_file)
+            template._annotateGrokInfo(template_name, template_path)
+
             self.register(template_name, template)
 
     def listUnassociated(self):
         for name, entry in self._reg.iteritems():
             if not entry['associated']:
                 yield name
+
+
+class PageTemplateFileFactory(grok.GlobalUtility):
+    
+    grok.implements(grok.interfaces.ITemplateFactory)
+    grok.name('pt')
+    
+    
+    def __call__(self, filename, _prefix=None):
+        return grok.components.PageTemplateFile(filename, _prefix)
+    

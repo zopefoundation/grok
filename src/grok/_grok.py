@@ -31,7 +31,7 @@ from martian.util import frame_is_module, determine_module_context
 
 import grok
 
-from grok import components, meta
+from grok import components, meta, templatereg
 from grok import templatereg
 
 _bootstrapped = False
@@ -53,6 +53,7 @@ def bootstrap():
 
     # now grok the grokkers
     martian.grok_module(scan.module_info_from_module(meta), the_module_grokker)
+    martian.grok_module(scan.module_info_from_module(templatereg), the_module_grokker)
 
 def addSiteHandler(site, event):
     sitemanager = LocalSiteManager(site)
