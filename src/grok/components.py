@@ -25,7 +25,7 @@ from zope import component
 from zope import interface
 from zope.interface.common import idatetime
 from zope.security.permission import Permission
-from zope.securitypolicy.role import Role
+from zope.app.securitypolicy.role import Role
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import (IBrowserPublisher,

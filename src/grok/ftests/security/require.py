@@ -10,7 +10,7 @@ Unauthorized:
 
 When we log in (e.g. as a manager), we can access the view just fine:
 
-  >>> from zope.securitypolicy.rolepermission import rolePermissionManager
+  >>> from zope.app.securitypolicy.rolepermission import rolePermissionManager
   >>> rolePermissionManager.grantPermissionToRole('grok.ViewPainting',
   ...                                             'zope.Manager')
   >>> browser.addHeader('Authorization', 'Basic mgr:mgrpw')

@@ -23,8 +23,8 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserSkinType)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.security.permission import Permission
-from zope.securitypolicy.role import Role
-from zope.securitypolicy.rolepermission import rolePermissionManager
+from zope.app.securitypolicy.role import Role
+from zope.app.securitypolicy.rolepermission import rolePermissionManager
 
 from zope.annotation.interfaces import IAnnotations
 

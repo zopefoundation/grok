@@ -21,7 +21,7 @@ Let's now grant anonymous the PaintingOwner role locally (so that we
 don't have to modify the global setup).  Then we can access the views
 just fine:
 
-  >>> from zope.securitypolicy.interfaces import IPrincipalRoleManager
+  >>> from zope.app.securitypolicy.interfaces import IPrincipalRoleManager
   >>> root = getRootFolder()
   >>> IPrincipalRoleManager(root).assignRoleToPrincipal(
   ...    'grok.PaintingOwner', 'zope.anybody')
