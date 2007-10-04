@@ -233,14 +233,13 @@ class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
 
     def _factory_init(self, factory):
         factory.macros = self.macros
+
+    def getDefaultVariables(self):
+        return {}
         
-    def _render_template(self, view):
+    def render_template(self, view):
         namespace = self.pt_getContext()
-        namespace['request'] = view.request
-        namespace['view'] = view
-        namespace['context'] = view.context
-        # XXX need to check whether we really want to put None here if missing
-        namespace['static'] = view.static
+        namespace.update(view.getDefaultVariables())        
         return self.pt_render(namespace)
     
 
@@ -262,13 +261,12 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
     def _factory_init(self, factory):
         factory.macros = self.macros
 
-    def _render_template(self, view):
+    def getDefaultVariables(self):
+        return {}
+    
+    def render_template(self, view):
         namespace = self.pt_getContext()
-        namespace['request'] = view.request
-        namespace['view'] = view
-        namespace['context'] = view.context
-        # XXX need to check whether we really want to put None here if missing
-        namespace['static'] = view.static
+        namespace.update(view.getDefaultVariables())
         return self.pt_render(namespace)
 
     
