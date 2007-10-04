@@ -122,7 +122,19 @@ class View(BrowserPage):
         return mapply(self.render, (), self.request)
 
     def _render_template(self):
-        return self.template._render_template(self)
+        return self.template.render_template(self)
+
+    def getDefaultVariables(self):
+        namespace = {}
+        namespace['request'] = self.request
+        namespace['view'] = self
+        namespace['context'] = self.context
+        # XXX need to check whether we really want to put None here if missing
+        namespace['static'] = self.static
+        return namespace
+
+    def getTemplateVariables(self):
+        return {}
 
     def __getitem__(self, key):
         if getattr(self.template, 'macros', None) is None:
