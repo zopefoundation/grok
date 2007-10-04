@@ -125,12 +125,14 @@ class View(BrowserPage):
         return self.template.render_template(self)
 
     def getDefaultVariables(self):
+        # XXX Martijn wants this to be on a template language specific utility. /regebro
         namespace = {}
         namespace['request'] = self.request
         namespace['view'] = self
         namespace['context'] = self.context
         # XXX need to check whether we really want to put None here if missing
         namespace['static'] = self.static
+        namespace.update(self.template.getDefaultVariables())
         return namespace
 
     def getTemplateVariables(self):
