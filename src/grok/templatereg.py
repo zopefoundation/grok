@@ -35,9 +35,6 @@ class TemplateRegistry(object):
             if template_file.startswith('.') or template_file.endswith('~'):
                 continue
 
-            #import pdb
-            #pdb.set_trace()
-
             template_name, extension = os.path.splitext(template_file)
             extension = extension[1:] # Get rid of the leading dot.
             template_factory = zope.component.queryUtility(
@@ -82,12 +79,3 @@ class PageTemplateFileFactory(grok.GlobalUtility):
     def __call__(self, filename, _prefix=None):
         return grok.components.PageTemplateFile(filename, _prefix)
 
-
-class GenshiMarkupTemplateFileFactory(grok.GlobalUtility):
-    
-    grok.implements(grok.interfaces.ITemplateFactory)
-    grok.name('gmt')
-    
-    def __call__(self, filename, _prefix=None):
-        return grok.components.GenshiMarkupTemplate(filename, _prefix)
-    

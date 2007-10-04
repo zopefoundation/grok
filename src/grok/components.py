@@ -20,7 +20,6 @@ import datetime
 import warnings
 import pytz
 import simplejson
-import genshi.template
 
 from zope import component
 from zope import interface
@@ -257,38 +256,6 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
         # XXX need to check whether we really want to put None here if missing
         namespace['static'] = view.static
         return self.pt_render(namespace)
-
-class GenshiMarkupTemplate(GrokPageTemplate):
-
-    interface.implements(interfaces.ITemplateFile)
-    
-    def __init__(self, filename=None, _prefix=None, html=None):
-        if ((html is not None and filename is not None) or
-            (html is None and filename is None)):
-            raise AssertionError("You must pass either html or filename but not both.")
-        
-        if html is not None:
-            self._template = genshi.template.MarkupTemplate(html)
-        else:
-            loader = genshi.template.TemplateLoader(_prefix)
-            self._template = loader.load(filename)
-            
-    
-    def __call__(self, namespace):
-        stream = self._template.generate(**namespace)
-        return stream.render('xhtml')
-    
-    def _factory_init(self, factory):
-        pass
-    
-    def _render_template(self, view):
-        namespace = {}
-        namespace['request'] = view.request
-        namespace['view'] = view
-        namespace['context'] = view.context
-        # XXX need to check whether we really want to put None here if missing
-        namespace['static'] = view.static
-        return self(namespace)
 
     
 class DirectoryResource(directoryresource.DirectoryResource):
