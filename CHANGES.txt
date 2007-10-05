@@ -48,7 +48,7 @@ Restructuring
   - The View is now completely template-language agnostic, which makes it 
     easy to hook in new page template languages.
   
-  - There are now new interfaces (ITemplateFile and ITemplateFileFactory)
+  - There are now new interfaces (ITemplate and ITemplateFileFactory)
     used when you implement support for a new templating language.
 
 * The <grok:grok /> ZCML directive now emits a configuration action

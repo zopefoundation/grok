@@ -444,13 +444,10 @@ class ITemplateFile(interface.Interface):
     """Template objects created from files
     """
     
-    def __call__(args, request):
-        """Renders the template. Args is a tuple of arguments."""
-
     def _factory_init(factory):
         """Template language specific initializations on the view factory."""
     
-    def getDefaultVariables():
+    def default_namespace():
         """Returns a dictionary of template language specific variables."""
     
     def render_template(view):

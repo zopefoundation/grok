@@ -124,18 +124,19 @@ class View(BrowserPage):
     def _render_template(self):
         return self.template.render_template(self)
 
-    def getDefaultVariables(self):
-        # XXX Martijn wants this to be on a template language specific utility. /regebro
+    def default_namespace(self):
         namespace = {}
         namespace['request'] = self.request
         namespace['view'] = self
         namespace['context'] = self.context
         # XXX need to check whether we really want to put None here if missing
         namespace['static'] = self.static
-        namespace.update(self.template.getDefaultVariables())
+        
+        # Get template langage specific defaults:
+        namespace.update(self.template.default_namespace())
         return namespace
 
-    def getTemplateVariables(self):
+    def extra_namespace(self):
         return {}
 
     def __getitem__(self, key):
@@ -214,6 +215,12 @@ class GrokPageTemplate(object):
         self.__grok_name__ = name
         self.__grok_location__ = location
 
+    def _factory_init(self, factory):
+        pass
+
+    def default_namespace(self):
+        return {}
+
 
 class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
     expand = 0
@@ -234,14 +241,14 @@ class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
     def _factory_init(self, factory):
         factory.macros = self.macros
 
-    def getDefaultVariables(self):
-        return {}
-        
+    def default_namespace(self):
+        return self.pt_getContext()
+
     def render_template(self, view):
-        namespace = self.pt_getContext()
-        namespace.update(view.getDefaultVariables())        
+        namespace = view.default_namespace()
+        namespace.update(view.extra_namespace())
         return self.pt_render(namespace)
-    
+
 
 class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
                        pagetemplatefile.PageTemplateFile):
@@ -261,12 +268,12 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
     def _factory_init(self, factory):
         factory.macros = self.macros
 
-    def getDefaultVariables(self):
-        return {}
-    
+    def default_namespace(self):
+        return self.pt_getContext()
+
     def render_template(self, view):
-        namespace = self.pt_getContext()
-        namespace.update(view.getDefaultVariables())
+        namespace = view.default_namespace()
+        namespace.update(view.extra_namespace())
         return self.pt_render(namespace)
 
     

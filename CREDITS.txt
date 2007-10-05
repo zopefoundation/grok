@@ -29,6 +29,10 @@ CREDITS
 
 * Kevin M. Smith (skins and layers support)
 
+* Lennart Regebro (template pluggablility)
+
+* Guido Westdorp (template pluggablility)
+
 * ME GROK (team mascot)
 
 Thank you
