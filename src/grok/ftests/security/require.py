@@ -9,7 +9,8 @@ Unauthorized:
   >>> browser = Browser()
   >>> browser.open("http://localhost/@@cavepainting")
   Traceback (most recent call last):
-  HTTPError: HTTP Error 401: Unauthorized
+  ...
+  httperror_seek_wrapper: HTTP Error 401: Unauthorized
 
 When we log in (e.g. as a manager), we can access the view just fine:
 

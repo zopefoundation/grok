@@ -2,7 +2,7 @@
 Object Infos
 ============
 
-Retrieve information about objects. 
+Retrieve information about objects.
 
 ObjectInfos are used by the Grok object browser to retrieve the data
 displayed in the ``inspect.html`` view. See inspect.txt to learn more
@@ -31,7 +31,7 @@ Now create an object. Meet Manfred:
 
 An ObjectInfo's job is it, to find out as much as possible about
 Manfred. We create an ObjectInfo by giving the object to examine as
-parameter: 
+parameter:
 
   >>> from grok.admin.objectinfo import ObjectInfo
   >>> info = ObjectInfo(manfred)
@@ -334,7 +334,7 @@ Gives a tuple of all interfaces provided by the object, not only the
 directly provided ones.
 
   >>> root_info.getProvidedInterfaces()
-  (<InterfaceClass zope.app.folder.interfaces.IFolder>, <InterfaceClass persistent.interfaces.IPersistent>, <InterfaceClass zope.app.component.interfaces.IPossibleSite>, <InterfaceClass zope.app.container.interfaces.IContained>)
+  (<InterfaceClass zope.app.folder.interfaces.IFolder>, <InterfaceClass persistent.interfaces.IPersistent>, <InterfaceClass zope.location.interfaces.IPossibleSite>, <InterfaceClass zope.app.container.interfaces.IContained>)
 
   >>> sweethome_info.getProvidedInterfaces()
   (<InterfaceClass zope.annotation.interfaces.IAttributeAnnotatable>, <InterfaceClass zope.app.container.interfaces.IContainer>, <InterfaceClass zope.app.container.interfaces.IContained>, <InterfaceClass persistent.interfaces.IPersistent>)
@@ -370,13 +370,13 @@ ones, because some private attributes can be of interest, when
 debugging happens.
 
 Attributes are given as an iterator over dicts, each dict containing
-the keys 
+the keys
 
 - ``name``: name of attribute.
 
 - ``value``: value of attribute as string.
 
-- ``value_linkable``: 
+- ``value_linkable``:
 
   a boolean indicating, whether the attribute is reachable directly,
   for instance calling a special URL. Linkable values can be examined
@@ -397,7 +397,7 @@ the keys
   or ``None``.
 
 - ``read_perm`` and ``write_perm``: permissions to read/write the
-  attribute. 
+  attribute.
 
 To get the attributes as a list, you can use ``list()`` as shown
 below.
@@ -413,7 +413,7 @@ There should be a ``data`` attribute available:
   True
 
 And the ``data`` attribute should have eight entries (as described
-above): 
+above):
 
   >>> data_attr = [x for x in attrs if x['name'] == 'data'][0]
   >>> len(data_attr)
@@ -448,7 +448,7 @@ Is there an interface this attribute was defined in?
   True
 
 There are no special permissions defined to read or write the 'data'
-attribute. 
+attribute.
 
   >>> data_attr['read_perm'] is None
   True
@@ -465,7 +465,7 @@ methods, also the 'private' ones, because some private attributes can
 be of interest, when debugging happens.
 
 Methods are given as an iterator over dicts, each dict containing
-the keys 
+the keys
 
 - ``name``: the name of the method.
 
@@ -477,7 +477,7 @@ the keys
   any).
 
 - ``read_perm`` and ``write_perm``: permissions to read/write the
-  method. 
+  method.
 
 We first get the methods of the root object. Because ``getMethods``
 returns an iterable, we form a list, using ``list()``:

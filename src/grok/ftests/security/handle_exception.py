@@ -10,7 +10,8 @@ that we don't hit this:
   >>> browser = Browser()
   >>> browser.open("http://localhost/@@cave")
   Traceback (most recent call last):
-  HTTPError: HTTP Error 500: Internal Server Error
+  ...
+  httperror_seek_wrapper: HTTP Error 500: Internal Server Error
   >>> browser.contents
   "It's gone!"
 
