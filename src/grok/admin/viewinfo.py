@@ -14,31 +14,58 @@
 """
 """
 
-from zope.interface import Interface, providedBy
+from zope.interface import Interface, providedBy, alsoProvides
 from zope import component
 from zope.publisher.browser import BrowserRequest
-
+from zope.publisher.interfaces.browser import (IBrowserSkinType,
+                                               IDefaultBrowserLayer)
+                                               
 import grok
 
 class IViewInfo(Interface):
 
-    def getViews():
-        """Return a list of views available on the context.
+    def getViews(layer=None):
+        """Get the views for context object.
+
+        Optional layer argument retrieves views registered for this layer.
+
+        Returns iterator (view name, view factory) tuples.
         """
 
 
+    def getAllViews():
+        """Get all views for context objects, for any layer that is in a skin.
+
+        Returns iterator of (skin name, (skin) layer, view name,
+        view factory) tuples.
+
+        The default layer will be returned with u'' as the skin name.
+        """
+        
 class ViewInfo(grok.Adapter):
     """Determine views for contexts.
     """
     grok.provides(IViewInfo)
     grok.context(Interface)
 
-    def getViews(self):
-        """Return a list of tuples with a view name and a view
-        factory.
-        """
+    def getViews(self, layer=None):
         request = BrowserRequest(None, {})
+        if layer is not None:
+            alsoProvides(request, layer)
         sm = component.getSiteManager()
-        return sm.adapters.lookupAll(map(providedBy, (self.context, request)),
-                              Interface)
+        return sm.adapters.lookupAll(
+            map(providedBy, (self.context, request)),
+            Interface)
         
+    def getAllViews(self):
+        for skin_name, layer in getSkins():
+            for view_name, factory in self.getViews(layer):
+                yield skin_name, layer, view_name, factory
+        for view_name, factory in self.getViews(IDefaultBrowserLayer):
+            yield u'', IDefaultBrowserLayer, view_name, factory 
+            
+def getSkins():
+    """Get all the skins registered in the system.
+    """
+    return component.getUtilitiesFor(IBrowserSkinType)
+

@@ -26,7 +26,7 @@ We create an instance of the mammoth:
 
    >>> manfred = Mammoth()
 
-Using ViewInfo we can ask for all the views for our particular
+Using ``ViewInfo`` we can ask for all the views for our particular
 mammoth.
 
    >>> from grok.admin.viewinfo import ViewInfo
@@ -35,7 +35,7 @@ mammoth.
    [(u'index', <class 'MammothIndex'>)]
 
 Let's create another view `simple` and register it for the base
-interface (Interface):
+interface (``Interface``):
 
    >>> class SimpleView(grok.View):
    ...     pass
@@ -44,27 +44,99 @@ interface (Interface):
    ...                                              IBrowserRequest),
    ...                          provides=Interface, name=u'simple')
 
-When we call getViews() again, it should return both views, since any
-object provides Interface (so our Mammoth instance should too):
+When we call ``getViews()`` again, it should return both views, since
+any object provides ``Interface`` (so our ``Mammoth`` instance should
+too):
 
    >>> sorted(list(info.getViews()))
    [(u'index', <class 'MammothIndex'>), (u'simple', <class 'SimpleView'>)]
 
 Because we really want to get all views for an object, we also want
-views defined in other layers and skins, not only the default one. We
-define a layer:
+views defined in other layers, not only the default one. We define a
+layer:
 
    >>> from zope.publisher.interfaces.browser import (IBrowserPage,
    ...                                                IDefaultBrowserLayer)
-   >>> class IMammothSkin(IDefaultBrowserLayer):
-   ...     """Skin for a mammoth."""
+   >>> class ITestLayer(IDefaultBrowserLayer):
+   ...     pass
 
-and register it:
+and register SimpleView again for this layer::
 
    >>> component.provideAdapter(SimpleView,
-   ...                          adapts=(Mammoth, IMammothSkin),
+   ...                          adapts=(Mammoth, ITestLayer),
    ...                          provides=IBrowserPage,
-   ...                          name=u'index.html')
+   ...                          name=u'simple2')
+
+When we check the views, it won't show up::
+
    >>> sorted(list(info.getViews()))
+   [(u'index', <class 'MammothIndex'>), (u'simple', <class 'SimpleView'>)]
 
+Instead, we need to list the views for this layer in particular. Since
+we already have some views registered on the request, we get those as
+well, as these are registered for all layers::
 
+   >>> sorted(list(info.getViews(ITestLayer)))
+   [(u'index', <class 'MammothIndex'>), 
+    (u'simple', <class 'SimpleView'>), 
+    (u'simple2', <class 'SimpleView'>)]
+
+In order to get *all* views registered for an object, we first need to
+know which layers exist in the system. In order to get all the layers
+that are in use, we retrieve all registered skins.
+
+When we don't have any skins registered yet, we don't find any::
+
+   >>> from grok.admin.viewinfo import getSkins
+   >>> sorted(list(getSkins()))
+   []
+
+Let's create and grok a skin now::
+
+   >>> class OurSkin(grok.Skin):
+   ...    grok.name('ourskin')
+   ...    grok.layer(ITestLayer)
+
+To grok the skin, we first need to grok the skin grokker itself::
+
+   >>> from grok.meta import SkinGrokker
+   >>> grok.grok_component('SkinGrokker', SkinGrokker)
+   True
+
+Now we can actually grok the skin::
+
+   >>> grok.grok_component('OurSkin', OurSkin) 
+   True
+
+We should now see this skin::
+
+   >>> sorted(list(getSkins()))
+   [(u'ourskin', <InterfaceClass __builtin__.ITestLayer>)]
+
+We have a method ``getAllViews`` which gives the views registered on
+all skins for a particular context object (with possible
+duplicates). Besides those views defined on skins, we also return
+those views defined on IDefaultBrowserLayer::
+
+   >>> from pprint import pprint
+   >>> pprint(sorted(list(info.getAllViews())))
+   [(u'',
+     <InterfaceClass zope.publisher.interfaces.browser.IDefaultBrowserLayer>,
+     u'index',
+     <class 'MammothIndex'>),
+    (u'',
+     <InterfaceClass zope.publisher.interfaces.browser.IDefaultBrowserLayer>,
+     u'simple',
+     <class 'SimpleView'>),
+    (u'ourskin',
+     <InterfaceClass __builtin__.ITestLayer>,
+     u'index',
+     <class 'MammothIndex'>),
+    (u'ourskin',
+     <InterfaceClass __builtin__.ITestLayer>,
+     u'simple',
+     <class 'SimpleView'>),
+    (u'ourskin',
+     <InterfaceClass __builtin__.ITestLayer>,
+     u'simple2',
+     <class 'SimpleView'>)]
