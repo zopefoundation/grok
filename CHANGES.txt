@@ -10,6 +10,10 @@ Feature changes
 * Grok now supports hooking in new template languages without much work.
   See Restructuring below for more info.
 
+* Accessing a template macro via context/@@the_view/the_template is now 
+  deprecated for the standard ZPT story of using 
+  context/@@the_view/macro/the_template.
+
 * There is now a grok.direct() directive that can be used on GlobalUtilities
   to mark that the class provides the utility interface directly and need 
   no instantiation.
