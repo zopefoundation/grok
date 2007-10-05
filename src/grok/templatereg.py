@@ -38,7 +38,7 @@ class TemplateRegistry(object):
             template_name, extension = os.path.splitext(template_file)
             extension = extension[1:] # Get rid of the leading dot.
             template_factory = zope.component.queryUtility(
-                grok.interfaces.ITemplateFactory,
+                grok.interfaces.ITemplateFileFactory,
                 name=extension)
                 
             if template_factory is None:
@@ -73,7 +73,7 @@ class TemplateRegistry(object):
 
 class PageTemplateFileFactory(grok.GlobalUtility):
     
-    grok.implements(grok.interfaces.ITemplateFactory)
+    grok.implements(grok.interfaces.ITemplateFileFactory)
     grok.name('pt')
     
     def __call__(self, filename, _prefix=None):

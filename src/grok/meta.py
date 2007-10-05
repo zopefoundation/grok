@@ -85,7 +85,10 @@ class GlobalUtilityGrokker(martian.ClassGrokker):
         if provides is None:
             util.check_implements_one(factory)
         name = util.class_annotation(factory, 'grok.name', '')
-        component.provideUtility(factory(), provides=provides, name=name)
+        direct = util.class_annotation(factory, 'grok.direct', False)
+        if not direct:
+            factory = factory()
+        component.provideUtility(factory, provides=provides, name=name)
         return True
 
 

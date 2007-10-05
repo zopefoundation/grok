@@ -430,10 +430,11 @@ class IIndexDefinition(interface.Interface):
         index for interface or class context.
         """
 
-class ITemplateFactory(interface.Interface):
-    """Utility that generated templates. One per template type/extension"""
+class ITemplateFileFactory(interface.Interface):
+    """Utility that generates templates from files in template directories. 
+    """
     
-    def __call__(self, filename, _prefix=None):
+    def __call__(filename, _prefix=None):
         """Creates an ITemplateFile
         
         _prefix is the directory the file is located in
@@ -443,6 +444,15 @@ class ITemplateFile(interface.Interface):
     """Template objects created from files
     """
     
-    def __call__(self, args, request):
+    def __call__(args, request):
         """Renders the template. Args is a tuple of arguments."""
+
+    def _factory_init(factory):
+        """Template language specific initializations on the view."""
+    
+    def getDefaultVariables():
+        """Returns a dictionary of template language specific variables."""
+    
+    def render_template(view):
+        """Renders the template"""
         
