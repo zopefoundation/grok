@@ -29,6 +29,8 @@ CREDITS
 
 * Kevin M. Smith (skins and layers support)
 
+* Luciano Ramalho
+
 * ME GROK (team mascot)
 
 Thank you
