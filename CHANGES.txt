@@ -9,7 +9,6 @@ Feature changes
 
 * There is now a grok.direct() directive that can be used on GlobalUtilities to 
   mark that the class provides the utility directly and need no instantiation.
-  (XXX no test written yet /regebro)
   
 * Integrated skins and layers. grok.layer, grok.IGrokLayer, grok.Skin 
 
