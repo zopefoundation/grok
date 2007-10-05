@@ -7,8 +7,12 @@ Grok changes
 Feature changes
 ---------------
 
-* There is now a grok.direct() directive that can be used on GlobalUtilities to 
-  mark that the class provides the utility directly and need no instantiation.
+* Grok now supports hooking in new template languages without much work.
+  See Restructuring below for more info.
+
+* There is now a grok.direct() directive that can be used on GlobalUtilities
+  to mark that the class provides the utility interface directly and need 
+  no instantiation.
   
 * Integrated skins and layers. grok.layer, grok.IGrokLayer, grok.Skin 
 
@@ -36,11 +40,16 @@ Bug fixes
 Restructuring
 -------------
 
-* All objects based on GrokPageTemplate is now grokked, instead of having
-  separate grokkers for each type of template.
+* The new pluggable template language support includes some restructuring:
 
-* The View is now completely template-language agnostic, which makes it 
-  easy to hook in new page template languages.
+  - All objects based on GrokPageTemplate is now grokked, instead of having
+    separate grokkers for each type of template.
+
+  - The View is now completely template-language agnostic, which makes it 
+    easy to hook in new page template languages.
+  
+  - There are now new interfaces (ITemplateFile and ITemplateFileFactory)
+    used when you implement support for a new templating language.
 
 * The <grok:grok /> ZCML directive now emits a configuration action
   instead of grokking right away at XML parsing time.  That way

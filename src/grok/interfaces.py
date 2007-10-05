@@ -448,7 +448,7 @@ class ITemplateFile(interface.Interface):
         """Renders the template. Args is a tuple of arguments."""
 
     def _factory_init(factory):
-        """Template language specific initializations on the view."""
+        """Template language specific initializations on the view factory."""
     
     def getDefaultVariables():
         """Returns a dictionary of template language specific variables."""
