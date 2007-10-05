@@ -1,0 +1,70 @@
+=====================================
+Determining views for context objects
+=====================================
+
+Let's start with a simple object:
+   
+   >>> class Mammoth(object):
+   ...     pass
+
+We define a view:
+
+   >>> import grok
+   >>> class MammothIndex(grok.View):
+   ...     pass
+
+We provide this view directly for our mammoth.
+
+   >>> from zope import component
+   >>> from zope.interface import Interface
+   >>> from zope.publisher.interfaces.browser import IBrowserRequest
+   >>> component.provideAdapter(MammothIndex, adapts=(Mammoth, IBrowserRequest),
+   ...                          provides=Interface, name=u'index')
+
+
+We create an instance of the mammoth:
+
+   >>> manfred = Mammoth()
+
+Using ViewInfo we can ask for all the views for our particular
+mammoth.
+
+   >>> from grok.admin.viewinfo import ViewInfo
+   >>> info = ViewInfo(manfred)
+   >>> list(info.getViews())
+   [(u'index', <class 'MammothIndex'>)]
+
+Let's create another view `simple` and register it for the base
+interface (Interface):
+
+   >>> class SimpleView(grok.View):
+   ...     pass
+
+   >>> component.provideAdapter(SimpleView, adapts=(Interface, 
+   ...                                              IBrowserRequest),
+   ...                          provides=Interface, name=u'simple')
+
+When we call getViews() again, it should return both views, since any
+object provides Interface (so our Mammoth instance should too):
+
+   >>> sorted(list(info.getViews()))
+   [(u'index', <class 'MammothIndex'>), (u'simple', <class 'SimpleView'>)]
+
+Because we really want to get all views for an object, we also want
+views defined in other layers and skins, not only the default one. We
+define a layer:
+
+   >>> from zope.publisher.interfaces.browser import (IBrowserPage,
+   ...                                                IDefaultBrowserLayer)
+   >>> class IMammothSkin(IDefaultBrowserLayer):
+   ...     """Skin for a mammoth."""
+
+and register it:
+
+   >>> component.provideAdapter(SimpleView,
+   ...                          adapts=(Mammoth, IMammothSkin),
+   ...                          provides=IBrowserPage,
+   ...                          name=u'index.html')
+   >>> sorted(list(info.getViews()))
+
+
