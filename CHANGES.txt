@@ -33,6 +33,12 @@ Bug fixes
 Restructuring
 -------------
 
+* All objects based on GrokPageTemplate is now grokked, instead of having
+  separate grokkers for each type of template.
+
+* The View is now completely template-language agnostic, which makes it 
+  easy to hook in new page template languages.
+
 * The <grok:grok /> ZCML directive now emits a configuration action
   instead of grokking right away at XML parsing time.  That way
   grokkers can depend on components that are set up using regular ZCML

@@ -254,17 +254,12 @@ class ModulePageTemplateGrokker(martian.InstanceGrokker):
     # use the templates
     priority = 1000
 
-    component_class = grok.PageTemplate
+    component_class = grok.components.GrokPageTemplate
 
     def grok(self, name, instance, context, module_info, templates):
         templates.register(name, instance)
         instance._annotateGrokInfo(name, module_info.dotted_name)
         return True
-
-
-class ModulePageTemplateFileGrokker(ModulePageTemplateGrokker):
-    priority = 1000
-    component_class = grok.PageTemplateFile
 
 
 class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
