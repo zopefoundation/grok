@@ -31,7 +31,7 @@ CREDITS
 
 * Lennart Regebro (template pluggablility)
 
-* Guido Westdorp (template pluggablility)
+* Guido Wesdorp (template pluggablility)
 
 * ME GROK (team mascot)
 
