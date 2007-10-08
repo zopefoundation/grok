@@ -6,10 +6,10 @@ Plugging in new template languages
 
 Introduction
 ------------
-Grok uses the same Zope Page Templates as default templating language, since
-this is the default of Zope 3. Of course you can use whatever templating
-language you want in Grok, but to get the automatic association between
-template objects/files and views you need to do a little bit of extra work.
+Grok uses Zope Page Templates as default templating language, since this is
+the default of Zope 3. Of course you can use whatever templating language you
+want in Grok, but to get the automatic association between template
+objects/files and views you need to do a little bit of extra work.
 
 Inline templates
 ----------------
@@ -122,6 +122,8 @@ You also need to tell Grok that the class should be a direct global utility by
 subclassing from grok.GlobalUtility, and annotating it with a grok.direct()
 annotation. Lastly you need to choose an extension for your template files,
 and set the grok.name to that extension:
+
+.. code-block:: python
 
     class MyPageTemplateFile(grok.components.GrokPageTemplate):
     
