@@ -81,7 +81,9 @@ def do_grok(dotted_name, config):
         bootstrap()
         _bootstrapped = True
     martian.grok_dotted_name(
-        dotted_name, the_module_grokker, exclude_filter=skip_tests, config=config)
+        dotted_name, the_module_grokker, exclude_filter=skip_tests,
+        config=config
+        )
 
 def grok_component(name, component,
                    context=None, module_info=None, templates=None):
@@ -107,19 +109,13 @@ def prepare_grok(name, module, kw):
                                                           grok.Container])
     context = determine_module_context(module_info, possible_contexts)
 
-    if kw.has_key('config'):
-        config = kw['config']
-        del kw['config']
-    else:
-        config = None
-    info =  GrokkingInfo(context=context, config=config, 
-        module_info=module_info, templates=templatereg.TemplateRegistry())
-    kw['info'] = info
+    kw['context'] = context
+    kw['module_info'] = module_info
+    kw['templates'] = templatereg.TemplateRegistry()
 
 def finalize_grok(name, module, kw):
-    info =  kw['info']
-    module_info = info.module_info
-    templates = info.templates
+    module_info = kw['module_info']
+    templates = kw['templates']
     unassociated = list(templates.listUnassociated())
     if unassociated:
         raise GrokError("Found the following unassociated template(s) when "
