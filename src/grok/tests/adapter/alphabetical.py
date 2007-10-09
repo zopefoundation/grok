@@ -1,7 +1,7 @@
 """
 Grok does not depend on the alphabetical order:
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
 
   >>> cave = ZCave()
   >>> home = IHome(cave)

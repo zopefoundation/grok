@@ -1,7 +1,7 @@
 """
 Views without a context cannot be grokked:
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: No module-level context for

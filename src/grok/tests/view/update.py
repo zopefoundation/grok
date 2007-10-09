@@ -3,7 +3,7 @@ Before a view is rendered, the update() method is executed. It can be
 used e. g. to execute side effects or set up data for use in the
 template.
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
 
 We need to set up a default ITraversable adapter so that TALES
 expressions can resolve paths:

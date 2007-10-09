@@ -1,7 +1,7 @@
 """
 Global utilities can be created by subclassing grok.GlobalUtility:
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
   >>> from zope import component
 
   >>> normal_club = component.getUtility(IClub)

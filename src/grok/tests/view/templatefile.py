@@ -1,6 +1,6 @@
 """
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
 
 View with an associated PageTemplate that is referred to using
 ``grok.template``:

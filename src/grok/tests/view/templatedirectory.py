@@ -1,7 +1,7 @@
 """
 You can explicitly specify the template directory using grok.templatedir on module level:
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
 
   >>> manfred = Mammoth()
   >>> from zope.publisher.browser import TestRequest

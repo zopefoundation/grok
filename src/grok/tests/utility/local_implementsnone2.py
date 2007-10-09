@@ -1,5 +1,5 @@
 """
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: Cannot determine which interface to use for utility registration of

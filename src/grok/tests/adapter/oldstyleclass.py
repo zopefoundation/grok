@@ -1,7 +1,7 @@
 """
 Old-style classes are also supported:
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
 
   >>> cave = Cave()
   >>> home = IHome(cave)

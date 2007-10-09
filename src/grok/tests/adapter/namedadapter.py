@@ -1,7 +1,7 @@
 """
 You can register a named adapter by using grok.name:
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
 
   >>> cave = Cave()
   >>> home = IHome(cave)

@@ -2,7 +2,7 @@
 You can also specify interfaces instead of classes with
 `grok.context` (module-level):
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
 
   >>> cave = Cave()
   >>> home = IHome(cave)

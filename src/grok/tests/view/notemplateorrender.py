@@ -1,7 +1,7 @@
 """
 Views either need an associated template or a ``render`` method:
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: View <class 'grok.tests.view.notemplateorrender.CavePainting'>
