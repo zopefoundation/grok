@@ -75,13 +75,13 @@ addCleanUp(resetBootstrap)
 def skip_tests(name):
     return name in ['tests', 'ftests']
 
-def do_grok(dotted_name):
+def do_grok(dotted_name, config):
     global _bootstrapped
     if not _bootstrapped:
         bootstrap()
         _bootstrapped = True
     martian.grok_dotted_name(
-        dotted_name, the_module_grokker, exclude_filter=skip_tests)
+        dotted_name, the_module_grokker, exclude_filter=skip_tests, config=config)
 
 def grok_component(name, component,
                    context=None, module_info=None, templates=None):
@@ -89,6 +89,13 @@ def grok_component(name, component,
                                   context=context,
                                   module_info=module_info,
                                   templates=templates)
+
+class GrokkingInfo(object):
+    def __init__(self, config, context, module_info, templates):
+        self.config = config
+        self.context = context
+        self.module_info = module_info
+        self.templates = templates
 
 def prepare_grok(name, module, kw):
     module_info = scan.module_info_from_module(
@@ -100,13 +107,19 @@ def prepare_grok(name, module, kw):
                                                           grok.Container])
     context = determine_module_context(module_info, possible_contexts)
 
-    kw['context'] = context
-    kw['module_info'] = module_info
-    kw['templates'] = templatereg.TemplateRegistry()
+    if kw.has_key('config'):
+        config = kw['config']
+        del kw['config']
+    else:
+        config = None
+    info =  GrokkingInfo(context=context, config=config, 
+        module_info=module_info, templates=templatereg.TemplateRegistry())
+    kw['info'] = info
 
 def finalize_grok(name, module, kw):
-    module_info = kw['module_info']
-    templates = kw['templates']
+    info =  kw['info']
+    module_info = info.module_info
+    templates = info.templates
     unassociated = list(templates.listUnassociated())
     if unassociated:
         raise GrokError("Found the following unassociated template(s) when "

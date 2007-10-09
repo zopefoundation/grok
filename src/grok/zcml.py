@@ -30,8 +30,5 @@ class IGrokDirective(interface.Interface):
 
 
 def grokDirective(_context, package):
-    _context.action(
-        discriminator=('grok', package.__name__),
-        callable=grok.grok,
-        args=(package.__name__,)
-        )
+    grok.grok(package.__name__, config=_context)
+
