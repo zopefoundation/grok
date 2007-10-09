@@ -4,8 +4,7 @@ Multiple calls of grok.require in one class are not allowed.
   >>> grok.tests.grok(__name__)
   Traceback (most recent call last):
     ...
-  ConfigurationExecutionError: martian.error.GrokError: grok.require was called multiple times in <class 'grok.tests.security.multiple_require.MultipleView'>. It may only be set once for a class.
-  ...
+  GrokError: grok.require was called multiple times in <class 'grok.tests.security.multiple_require.MultipleView'>. It may only be set once for a class.
 
 """
 import grok

@@ -72,7 +72,6 @@ def get_default_permission(factory):
                         % factory, factory)
 
     result = permissions[0]
-    check_permission(factory, result)
     return result
 
 def url(request, obj, name=None):

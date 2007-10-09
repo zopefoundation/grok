@@ -1,4 +1,4 @@
-##############################################################################
+ ##############################################################################
 #
 # Copyright (c) 2006-2007 Zope Corporation and Contributors.
 # All Rights Reserved.
@@ -57,15 +57,11 @@ class AdapterGrokker(martian.ClassGrokker):
         if provides is None:
             util.check_implements_one(factory)
         name = util.class_annotation(factory, 'grok.name', '')
+
         config.action( 
-            discriminator=('grokadapter', adapter_context, provides, name),
+            discriminator=('adapter', adapter_context, provides, name),
             callable=component.provideAdapter,
-            args=(factory,),
-            kw=dict(
-                    adapts=(adapter_context,),
-                    provides=provides,
-                    name=name
-                   )
+            args=(factory, (adapter_context,), provides, name),
             )
         return True
 
@@ -79,13 +75,9 @@ class MultiAdapterGrokker(martian.ClassGrokker):
         check_adapts(factory)
         name = util.class_annotation(factory, 'grok.name', '')
         config.action(
-            discriminator=('grokmultiadapter', provides, name),
+            discriminator=('adapter', provides, name),
             callable=component.provideAdapter,
-            args=(factory,),
-            kw=dict(
-                    provides=provides,
-                    name=name
-                   )
+            args=(factory, None, provides, name),
             )
         return True
 
@@ -99,13 +91,9 @@ class GlobalUtilityGrokker(martian.ClassGrokker):
             util.check_implements_one(factory)
         name = util.class_annotation(factory, 'grok.name', '')
         config.action(
-            discriminator=('grokglobalutility', provides, name),
+            discriminator=('utility', provides, name),
             callable=component.provideUtility,
-            args=(factory(),),
-            kw=dict(
-                    provides=provides,
-                    name=name
-                   )
+            args=(factory(), provides, name),
             )
         return True
 
@@ -214,25 +202,19 @@ class ViewGrokker(martian.ClassGrokker):
         factory.__view_name__ = view_name
         adapts = (view_context, view_layer)
         config.action(
-            discriminator=('grokview', adapts, view_name),
-            callable=setupView,
-            args=(factory,),
-            kw=dict(
-                    provides=interface.Interface,
-                    adapts=adapts,
-                    name=view_name
-                   )
+            discriminator=('adapter', adapts, interface.Interface, view_name),
+            callable=component.provideAdapter,
+            args=(factory, adapts, interface.Interface, view_name),
             )
-        
+
+        permission = get_default_permission(factory)
+        config.action(
+            discriminator=('protectName', factory, '__call__'),
+            callable=make_checker,
+            args=(factory, factory, permission),
+            )
+
         return True
-
-def setupView(factory, provides, adapts, name):
-    component.provideAdapter(factory, provides=provides,
-        adapts=adapts, name=name)
-    # protect view, public by default
-    default_permission = get_default_permission(factory)
-    make_checker(factory, factory, default_permission)
-
 
 
 class JSONGrokker(martian.ClassGrokker):
