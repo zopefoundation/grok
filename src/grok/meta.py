@@ -74,6 +74,7 @@ class MultiAdapterGrokker(martian.ClassGrokker):
             util.check_implements_one(factory)
         check_adapts(factory)
         name = util.class_annotation(factory, 'grok.name', '')
+
         config.action(
             discriminator=('adapter', provides, name),
             callable=component.provideAdapter,
@@ -90,6 +91,7 @@ class GlobalUtilityGrokker(martian.ClassGrokker):
         if provides is None:
             util.check_implements_one(factory)
         name = util.class_annotation(factory, 'grok.name', '')
+
         config.action(
             discriminator=('utility', provides, name),
             callable=component.provideUtility,
@@ -201,6 +203,7 @@ class ViewGrokker(martian.ClassGrokker):
         # __view_name__ is needed to support IAbsoluteURL on views
         factory.__view_name__ = view_name
         adapts = (view_context, view_layer)
+
         config.action(
             discriminator=('adapter', adapts, interface.Interface, view_name),
             callable=component.provideAdapter,
@@ -434,6 +437,7 @@ class SiteGrokker(martian.ClassGrokker):
         # store infos on site class
         factory.__grok_utilities_to_install__ = overridden_infos
         adapts = (factory, grok.IObjectAddedEvent)
+
         config.action( 
             discriminator=None,
             callable=component.provideHandler,
@@ -513,6 +517,7 @@ class PermissionGrokker(martian.ClassGrokker):
             id,
             unicode(util.class_annotation(factory, 'grok.title', id)),
             unicode(util.class_annotation(factory, 'grok.description', '')))
+
         config.action( 
             discriminator=('utility', IPermission, name),
             callable=component.provideUtility,
@@ -538,6 +543,7 @@ class RoleGrokker(martian.ClassGrokker):
             id,
             unicode(util.class_annotation(factory, 'grok.title', id)),
             unicode(util.class_annotation(factory, 'grok.description', '')))
+
         config.action( 
             discriminator=('utility', IRole, name),
             callable=component.provideUtility,
