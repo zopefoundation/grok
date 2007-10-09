@@ -4,9 +4,9 @@ before it can be used in @grok.require().
 
   >>> grok.tests.grok(__name__)
   Traceback (most recent call last):
-  GrokError: Undefined permission 'doesnt.exist' in <class
-  'grok.tests.security.missing_permission_xmlrpc2.MissingPermission'>. Use
-  grok.Permission first.
+  ...
+  ConfigurationExecutionError: martian.error.GrokError: Undefined permission 'doesnt.exist' in <class 'grok.tests.security.missing_permission_xmlrpc2.MissingPermission'>. Use grok.Permission first.
+  ...
 
 """
 

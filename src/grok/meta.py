@@ -74,9 +74,10 @@ class MultiAdapterGrokker(martian.ClassGrokker):
             util.check_implements_one(factory)
         check_adapts(factory)
         name = util.class_annotation(factory, 'grok.name', '')
+        for_ = component.adaptedBy(factory)
 
         config.action(
-            discriminator=('adapter', provides, name),
+            discriminator=('adapter', for_, provides, name),
             callable=component.provideAdapter,
             args=(factory, None, provides, name),
             )
@@ -118,17 +119,26 @@ class XMLRPCGrokker(martian.ClassGrokker):
                 factory.__name__, (factory, MethodPublisher),
                 {'__call__': method}
                 )
-            component.provideAdapter(
-                method_view, (view_context, IXMLRPCRequest),
-                interface.Interface,
-                name=method.__name__)
+            adapts = (view_context, IXMLRPCRequest)
+            name = method.__name__
+
+            config.action(
+                discriminator=('adapter', adapts, interface.Interface, name),
+                callable=component.provideAdapter,
+                args=(method_view, adapts, interface.Interface, name),
+                )
 
             # Protect method_view with either the permission that was
             # set on the method, the default permission from the class
             # level or zope.Public.
             permission = getattr(method, '__grok_require__',
                                  default_permission)
-            make_checker(factory, method_view, permission)
+
+            config.action(
+                discriminator=('protectName', method_view, '__call__'),
+                callable=make_checker,
+                args=(factory, method_view, permission),
+                )
         return True
 
 
