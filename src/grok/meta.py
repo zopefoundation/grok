@@ -1,4 +1,4 @@
- ##############################################################################
+##############################################################################
 #
 # Copyright (c) 2006-2007 Zope Corporation and Contributors.
 # All Rights Reserved.
@@ -22,7 +22,7 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserPublisher,
                                                IBrowserSkinType)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
-from zope.security.permission import Permission
+from zope.security.interfaces import IPermission
 from zope.app.securitypolicy.role import Role
 from zope.app.securitypolicy.rolepermission import rolePermissionManager
 
@@ -435,12 +435,9 @@ class SiteGrokker(martian.ClassGrokker):
         factory.__grok_utilities_to_install__ = overridden_infos
         adapts = (factory, grok.IObjectAddedEvent)
         config.action( 
-            discriminator=('groksubscriber', adapts),
+            discriminator=None,
             callable=component.provideHandler,
-            args=(localUtilityRegistrationSubscriber,),
-            kw=dict(
-                    adapts=adapts,
-                   )
+            args=(localUtilityRegistrationSubscriber, adapts),
             )
         return True
 
@@ -499,7 +496,7 @@ def setupUtility(site, utility, provides, name=u'',
     site_manager.registerUtility(utility, provided=provides,
                                  name=name)
 
-class DefinePermissionGrokker(martian.ClassGrokker):
+class PermissionGrokker(martian.ClassGrokker):
     component_class = grok.Permission
     priority = 1500
 
@@ -517,19 +514,16 @@ class DefinePermissionGrokker(martian.ClassGrokker):
             unicode(util.class_annotation(factory, 'grok.title', id)),
             unicode(util.class_annotation(factory, 'grok.description', '')))
         config.action( 
-            discriminator=('grokpermission', name),
+            discriminator=('utility', IPermission, name),
             callable=component.provideUtility,
-            args=(permission,),
-            kw=dict(
-                    name=id
-                   ),
-            order = self.priority
+            args=(permission, IPermission, id),
+            order=self.priority
             )
         return True
 
-class DefineRoleGrokker(martian.ClassGrokker):
+class RoleGrokker(martian.ClassGrokker):
     component_class = grok.Role
-    priority = DefinePermissionGrokker.priority - 1
+    priority = PermissionGrokker.priority - 1
 
     def grok(self, name, factory, module_info, config, **kw):
         id = util.class_annotation(factory, 'grok.name', None)
@@ -545,21 +539,19 @@ class DefineRoleGrokker(martian.ClassGrokker):
             unicode(util.class_annotation(factory, 'grok.title', id)),
             unicode(util.class_annotation(factory, 'grok.description', '')))
         config.action( 
-            discriminator=('grokpermission', name),
-            callable=setupRole,
-            args=(factory, role),
-            kw=dict(
-                    name=id
-                   ),
-            order = self.priority
+            discriminator=('utility', IRole, name),
+            callable=component.provideUtility,
+            args=(role, IRole, id),
             )
-        return True
 
-def setupRole(factory, role, name):
-        component.provideUtility(role, name=name)
         permissions = util.class_annotation(factory, 'grok.permissions', ())
         for permission in permissions:
-            rolePermissionManager.grantPermissionToRole(permission, id)
+            config.action(
+                discriminator=('grantPermissionToRole', permission, id),
+                callable=rolePermissionManager.grantPermissionToRole,
+                args=(permission, id),
+                )
+        return True
 
 class AnnotationGrokker(martian.ClassGrokker):
     component_class = grok.Annotation
