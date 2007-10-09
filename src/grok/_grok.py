@@ -14,8 +14,6 @@
 """Grok
 """
 import os
-import sys
-import types
 
 from zope import component
 from zope import interface
@@ -26,8 +24,8 @@ from zope.app.component.site import LocalSiteManager
 
 import martian
 from martian import scan
-from martian.error import GrokError, GrokImportError
-from martian.util import frame_is_module, determine_module_context
+from martian.error import GrokError
+from martian.util import determine_module_context
 
 import grok
 
@@ -128,52 +126,3 @@ the_multi_grokker = martian.MetaMultiGrokker()
 the_module_grokker = martian.ModuleGrokker(the_multi_grokker,
                                            prepare=prepare_grok,
                                            finalize=finalize_grok)
-
-# decorators
-class SubscribeDecorator:
-
-    def __init__(self, *args):
-        self.subscribed = args
-
-    def __call__(self, function):
-        frame = sys._getframe(1)
-        if not frame_is_module(frame):
-            raise GrokImportError("@grok.subscribe can only be used on module "
-                                  "level.")
-
-        if not self.subscribed:
-            raise GrokImportError("@grok.subscribe requires at least one "
-                                  "argument.")
-
-        subscribers = frame.f_locals.get('__grok_subscribers__', None)
-        if subscribers is None:
-            frame.f_locals['__grok_subscribers__'] = subscribers = []
-        subscribers.append((function, self.subscribed))
-        return function
-
-from zope.component._declaration import adapter as _adapter
-class adapter(_adapter):
-
-    def __init__(self, *interfaces):
-        # Override the z.c.adapter decorator to force sanity checking
-        # and have better error reporting.
-        if not interfaces:
-            raise GrokImportError(
-                "@grok.adapter requires at least one argument.")
-        if type(interfaces[0]) is types.FunctionType:
-            raise GrokImportError(
-                "@grok.adapter requires at least one argument.")
-        self.interfaces = interfaces
-
-from zope.interface.declarations import implementer as _implementer
-class implementer(_implementer):
-
-    def __call__(self, ob):
-        # XXX we do not have function grokkers (yet) so we put the annotation
-        # on the module.
-        frame = sys._getframe(1)
-        implementers = frame.f_locals.get('__implementers__', None)
-        if implementers is None:
-            frame.f_locals['__implementers__'] = implementers = []
-        implementers.append(ob)
-        return _implementer.__call__(self, ob)
