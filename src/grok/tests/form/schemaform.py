@@ -1,7 +1,7 @@
 """
 A grok.Model may implement one or more interfaces that are schemas:
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
   >>> manfred = Mammoth()
   >>> print manfred.name
   None

@@ -2,7 +2,7 @@
 Forms cannot define a render method. Here we show the case where the
 EditForm has no explicit template associated with it:
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
   Traceback (most recent call last):
   ...
   GrokError: It is not allowed to specify a custom 'render' method for

@@ -1,5 +1,5 @@
 """
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
   >>> from zope import component
   >>> from zope.annotation.attribute import AttributeAnnotations
   >>> component.provideAdapter(AttributeAnnotations)

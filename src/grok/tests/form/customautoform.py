@@ -2,7 +2,7 @@
 A form view can have a custom form_fields but reusing those fields that
 were deduced automatically, using grok.AutoFields:
 
-  >>> grok.grok(__name__)
+  >>> grok.tests.grok(__name__)
 
 We only expect a single field to be present in the form, as we omitted 'size':
 

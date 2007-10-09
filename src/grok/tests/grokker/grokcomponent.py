@@ -3,7 +3,7 @@
 Let's first grok the meta module to define some basic grokkers::
 
   >>> import grok
-  >>> grok.grok('grok.meta')
+  >>> grok.tests.grok('grok.meta')
   
 It is possible to grok an individual component. Let's define an adapter::
 
@@ -18,7 +18,7 @@ It is possible to grok an individual component. Let's define an adapter::
 
 To grok this adapter, you can simply write this::
 
-  >>> grok.grok_component('MyAdapter', MyAdapter)
+  >>> grok.tests.grok_component('MyAdapter', MyAdapter)
   True
 
 We can now use the adapter::
@@ -40,14 +40,14 @@ an extra argument however::
 This adapter does not supply its own context. Trying to do what we did
 before will therefore fail::
 
-  >>> grok.grok_component('SecondAdapter', SecondAdapter)
+  >>> grok.tests.grok_component('SecondAdapter', SecondAdapter)
   Traceback (most recent call last):
     ...
   GrokError: No module-level context for <class 'grok.tests.grokker.grokcomponent.SecondAdapter'>, please use grok.context.
 
 So we need to supply the context ourselves::
 
-  >>> grok.grok_component('SecondAdapter', SecondAdapter, context=SomeClass)
+  >>> grok.tests.grok_component('SecondAdapter', SecondAdapter, context=SomeClass)
   True
 
 Now we can use the SecondAdapter as well::

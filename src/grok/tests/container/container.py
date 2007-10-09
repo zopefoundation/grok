@@ -4,7 +4,7 @@ The grok.Container is a a model that is also a container.  It has a
 dictionary API. It in fact stores its information in a BTree so
 you can store a lot of items in a scalable way.
 
-    >>> grok.grok(__name__)
+    >>> grok.tests.grok(__name__)
 
     >>> from zope.app.container.interfaces import IContainer
     >>> bag = BoneBag()

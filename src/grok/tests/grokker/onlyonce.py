@@ -9,7 +9,7 @@ the module containing the grokkers (e.g. meta.py).
 We do it manually now::
 
   >>> import grok
-  >>> grok.grok('grok.tests.grokker.onlyonce_fixture._meta')
+  >>> grok.tests.grok('grok.tests.grokker.onlyonce_fixture._meta')
 
 This _meta.py module then will be grokked again during 'normal' grok time. Grok
 will not re-register the grokkers as this could have unwanted side-effects. It
@@ -21,7 +21,7 @@ picked up in alphabetical order.
 
 To simulate this, we grok the whole package::
 
-  >>> grok.grok('grok.tests.grokker.onlyonce_fixture')
+  >>> grok.tests.grok('grok.tests.grokker.onlyonce_fixture')
   alpha
 
 """

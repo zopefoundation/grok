@@ -3,7 +3,7 @@ We make sure we indeed have a view for BoneBag; this way we know it's
 registered as the default context object:
 
 
-    >>> grok.grok(__name__)
+    >>> grok.tests.grok(__name__)
     >>> bag = BoneBag()
     >>> from zope import component
     >>> from zope.publisher.browser import TestRequest
