@@ -25,12 +25,9 @@ from zope.app.component.site import LocalSiteManager
 import martian
 from martian import scan
 from martian.error import GrokError
-from martian.util import determine_module_context
 
 import grok
-
 from grok import components, meta
-from grok import templatereg
 
 _bootstrapped = False
 def bootstrap():
@@ -100,20 +97,15 @@ class GrokkingInfo(object):
 def prepare_grok(name, module, kw):
     module_info = scan.module_info_from_module(
         module, exclude_filter=skip_tests)
-
-    # XXX hardcoded in here which base classes are possible contexts
-    # this should be made extensible
-    possible_contexts = martian.scan_for_classes(module, [grok.Model,
-                                                          grok.Container])
-    context = determine_module_context(module_info, possible_contexts)
-
-    kw['context'] = context
     kw['module_info'] = module_info
-    kw['templates'] = templatereg.TemplateRegistry()
 
 def finalize_grok(name, module, kw):
     module_info = kw['module_info']
-    templates = kw['templates']
+
+    # XXX find a better way to associate arbitrary data with module_info
+    templates = getattr(module_info, 'templates', None)
+    if templates is None:
+        return
     unassociated = list(templates.listUnassociated())
     if unassociated:
         raise GrokError("Found the following unassociated template(s) when "
