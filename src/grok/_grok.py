@@ -87,13 +87,6 @@ def grok_component(name, component,
                                   module_info=module_info,
                                   templates=templates)
 
-class GrokkingInfo(object):
-    def __init__(self, config, context, module_info, templates):
-        self.config = config
-        self.context = context
-        self.module_info = module_info
-        self.templates = templates
-
 def prepare_grok(name, module, kw):
     module_info = scan.module_info_from_module(
         module, exclude_filter=skip_tests)
