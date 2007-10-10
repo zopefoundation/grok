@@ -15,7 +15,7 @@ long_description = (
 
 setup(
     name='grok',
-    version='0.10',
+    version='0.10.1-dev',
     author='Grok Team',
     author_email='grok-dev@zope.org',
     url='http://grok.zope.org',
@@ -31,7 +31,7 @@ setup(
                       'martian',
                       'simplejson',
                       'pytz',
-                      'ZODB3 == 3.8.0b2',
+                      'ZODB3',
                       'zope.annotation',
                       'zope.app.apidoc',
                       'zope.app.applicationcontrol',
