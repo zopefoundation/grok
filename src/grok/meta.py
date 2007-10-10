@@ -373,9 +373,18 @@ class SubscriberGrokker(martian.GlobalGrokker):
         subscribers = module_info.getAnnotation('grok.subscribers', [])
 
         for factory, subscribed in subscribers:
-            component.provideHandler(factory, adapts=subscribed)
+            config.action( 
+                discriminator=None,
+                callable=component.provideHandler,
+                args=(factory, subscribed),
+                )
+
             for iface in subscribed:
-                zope.component.interface.provideInterface('', iface)
+                config.action(
+                    discriminator=None,
+                    callable=zope.component.interface.provideInterface,
+                    args=('', iface)
+                    )
         return True
 
 
