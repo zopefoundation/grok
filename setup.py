@@ -1,13 +1,6 @@
 from setuptools import setup, find_packages
 import os
 
-# some of the dependencies containing C code have been hardcoded to
-# make sure we only depend on versions for which there is a windows
-# binary. In some cases this means we rely on an earlier version than the
-# latest/greatest version as no Windows binary has been released for it yet.
-# in some cases we also need to do this for non-binary dependencies, as
-# more recent versions rely on versions for which no binary eggs exist.
-
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
