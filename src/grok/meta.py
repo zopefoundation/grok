@@ -338,7 +338,7 @@ class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
     # already grokked for error reporting
     priority = 999
 
-    def grok(self, name, module, module_info, config):
+    def grok(self, name, module, module_info, config, **kw):
         templates = module_info.getAnnotation('grok.templates', None)
         if templates is None:
             return False
