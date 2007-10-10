@@ -80,13 +80,6 @@ def do_grok(dotted_name, config):
         config=config
         )
 
-def grok_component(name, component,
-                   context=None, module_info=None, templates=None):
-    return the_multi_grokker.grok(name, component,
-                                  context=context,
-                                  module_info=module_info,
-                                  templates=templates)
-
 def prepare_grok(name, module, kw):
     module_info = scan.module_info_from_module(
         module, exclude_filter=skip_tests)
