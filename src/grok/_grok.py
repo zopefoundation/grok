@@ -20,6 +20,7 @@ from zope import interface
 
 from zope.component.interfaces import IDefaultViewName
 from zope.publisher.interfaces.browser import IBrowserRequest
+from zope.configuration.config import ConfigurationMachine
 from zope.app.component.site import LocalSiteManager
 
 import martian
@@ -79,6 +80,26 @@ def do_grok(dotted_name, config):
         dotted_name, the_module_grokker, exclude_filter=skip_tests,
         config=config
         )
+
+def grok_component(name, component,
+                   context=None, module_info=None, templates=None):
+    if module_info is None:
+        obj_module = getattr(component, '__grok_module__', None)
+        if obj_module is None:
+            obj_module = getattr(component, '__module__', None)
+        module_info = scan.module_info_from_dotted_name(obj_module)
+
+    module = module_info.getModule()
+    if context is not None:
+        module.__grok_context__ = context
+    if templates is not None:
+        module.__grok_templates__ = templates
+    config = ConfigurationMachine()
+    result = the_multi_grokker.grok(name, component,
+                                    module_info=module_info,
+                                    config=config)
+    config.execute_actions()    
+    return result
 
 the_multi_grokker = martian.MetaMultiGrokker()
 the_module_grokker = martian.ModuleGrokker(the_multi_grokker)
