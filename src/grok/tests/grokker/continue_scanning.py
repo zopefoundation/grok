@@ -28,14 +28,14 @@ class AlphaGrokker(grok.ClassGrokker):
     component_class = Alpha
     priority = 1 # we need to go before BetaGrokker
 
-    def grok(self, name, factory, context, module_info, templates):
+    def grok(self, name, factory, module_info, config, **kw):
         print "alpha"
         return True
 
 class BetaGrokker(grok.ClassGrokker):
     component_class = Beta
 
-    def grok(self, name, factory, context, module_info, templates):
+    def grok(self, name, factory, module_info, config, **kw):
         print "beta"
         return True
     
