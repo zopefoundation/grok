@@ -1,14 +1,19 @@
 Grok changes
 ************
 
-0.10.1 (unreleased)
+0.10.1 (2007-10-10)
 ===================
 
 Bug fixes
 ---------
 
 * buildout.cfg extends versions.cfg to pin down the versions of the
-  dependency tree.
+  dependency tree. This should avoid the situation where we release
+  Grok, some dependency changes, and Grok breaks as a result. In
+  conjunction with this we will also be releasing a new version of
+  grokproject that will use this version infrastructure by default.
+
+  For more information about this change, see:
 
 0.10 (2007-08-21)
 =================
