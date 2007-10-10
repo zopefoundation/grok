@@ -13,8 +13,6 @@ long_description = (
     '********\n'
     )
 
-open('doc.txt', 'w').write(long_description)
-
 setup(
     name='grok',
     version='0.10',
@@ -41,11 +39,10 @@ setup(
                       'zope.app.authentication',
                       'zope.app.catalog',
                       'zope.app.component',
-                      'zope.app.container == 3.5.0.a1',
+                      'zope.app.container',
                       'zope.app.folder',
                       'zope.app.intid',
-                      # not binary, but needed for ZODB 3.8.0b2
-                      'zope.app.keyreference == 3.4.0a1',
+                      'zope.app.keyreference',
                       'zope.app.pagetemplate',
                       'zope.app.publication',
                       'zope.app.publisher',
@@ -63,17 +60,17 @@ setup(
                       'zope.formlib',
                       'zope.hookable',
                       'zope.i18nmessageid',
-                      'zope.interface == 3.4.0',
+                      'zope.interface',
                       'zope.lifecycleevent',
                       'zope.pagetemplate',
-                      'zope.proxy == 3.4.0',
+                      'zope.proxy',
                       'zope.publisher',
                       'zope.schema',
-                      'zope.security == 3.4.0b5',
+                      'zope.security',
                       'zope.testing',
                       'zope.traversing',
                       'zope.testbrowser',
                       'zc.catalog',
-                      'z3c.flashmessage >=1.0b1',
+                      'z3c.flashmessage',
                       ],
 )
