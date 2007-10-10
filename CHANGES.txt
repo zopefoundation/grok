@@ -7,7 +7,7 @@ Grok changes
 Feature changes
 ---------------
 
-* Integrated skins and layers. grok.layer, grok.IGrokLayer, grok.Skin 
+* Integrated skins and layers. grok.layer, grok.IGrokLayer, grok.Skin
 
 * Removed grok.define_permission in favor of the grok.Permission
   component base class
@@ -29,6 +29,9 @@ Bug fixes
 
 * Views no longer need a custom AbsoluteURL to determine their URL,
   since each instance now properly gets a __name__ attribute.
+
+* buildout.cfg extends versions.cfg to pin down the versions of the
+  dependency tree.
 
 Restructuring
 -------------
@@ -61,7 +64,7 @@ Feature changes
 
 Bug fixes
 ---------
- 
+
 * A fix in Martian where multiple grok.Model or grok.Container classes
   could result in something being found as a context twice.
 
