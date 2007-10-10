@@ -57,7 +57,7 @@ class ContextGrokker(martian.GlobalGrokker):
         possible_contexts = martian.scan_for_classes(module, [grok.Model,
                                                               grok.Container])
         context = util.determine_module_context(module_info, possible_contexts)
-        module_info.context = context
+        module.__grok_context__ = context
         return True
 
 
@@ -65,7 +65,7 @@ class AdapterGrokker(martian.ClassGrokker):
     component_class = grok.Adapter
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.context
+        context = module_info.getAnnotation('grok.context', None)
         adapter_context = util.determine_class_context(factory, context)
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
@@ -119,7 +119,7 @@ class XMLRPCGrokker(martian.ClassGrokker):
     component_class = grok.XMLRPC
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.context
+        context = module_info.getAnnotation('grok.context', None)
         view_context = util.determine_class_context(factory, context)
         # XXX We should really not make __FOO__ methods available to
         # the outside -- need to discuss how to restrict such things.
@@ -161,7 +161,7 @@ class ViewGrokker(martian.ClassGrokker):
     component_class = grok.View
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.context
+        context = module_info.getAnnotation('grok.context', None)
         view_context = util.determine_class_context(factory, context)
 
         factory.module_info = module_info
@@ -182,8 +182,10 @@ class ViewGrokker(martian.ClassGrokker):
         # find templates
         template_name = util.class_annotation(factory, 'grok.template',
                                               factory_name)
-        templates = module_info.templates
-        template = templates.get(template_name)
+        template = None
+        templates = module_info.getAnnotation('grok.templates', None)
+        if templates is not None:
+            template = templates.get(template_name)
 
         if factory_name != template_name:
             # grok.template is being used
@@ -251,7 +253,7 @@ class JSONGrokker(martian.ClassGrokker):
     component_class = grok.JSON
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.context
+        context = module_info.getAnnotation('grok.context', None)
         view_context = util.determine_class_context(factory, context)
         methods = util.methods_from_class(factory)
 
@@ -292,7 +294,7 @@ class TraverserGrokker(martian.ClassGrokker):
     component_class = grok.Traverser
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.context
+        context = module_info.getAnnotation('grok.context', None)
         factory_context = util.determine_class_context(factory, context)
         component.provideAdapter(factory,
                                  adapts=(factory_context, IBrowserRequest),
@@ -306,7 +308,7 @@ class TemplateGrokker(martian.GlobalGrokker):
     priority = 1001
 
     def grok(self, name, module, module_info, config, **kw):
-        module_info.templates = templatereg.TemplateRegistry()
+        module.__grok_templates__ = templatereg.TemplateRegistry()
         return True
 
 
@@ -318,7 +320,10 @@ class ModulePageTemplateGrokker(martian.InstanceGrokker):
     component_class = grok.PageTemplate
 
     def grok(self, name, instance, module_info, config, **kw):
-        module_info.templates.register(name, instance)
+        templates = module_info.getAnnotation('grok.templates', None)
+        if templates is None:
+            return False
+        templates.register(name, instance)
         instance._annotateGrokInfo(name, module_info.dotted_name)
         return True
 
@@ -334,7 +339,10 @@ class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
     priority = 999
 
     def grok(self, name, module, module_info, config):
-        module_info.templates.findFilesystem(module_info)
+        templates = module_info.getAnnotation('grok.templates', None)
+        if templates is None:
+            return False
+        templates.findFilesystem(module_info)
         return True
 
 
@@ -353,7 +361,7 @@ class SubscriberGrokker(martian.GlobalGrokker):
 class AdapterDecoratorGrokker(martian.GlobalGrokker):
 
     def grok(self, name, module, module_info, config, **kw):
-        context = module_info.context
+        context = module_info.getAnnotation('grok.context', None)
         implementers = module_info.getAnnotation('implementers', [])
         for function in implementers:
             interfaces = getattr(function, '__component_adapts__', None)
@@ -611,7 +619,7 @@ class AnnotationGrokker(martian.ClassGrokker):
     component_class = grok.Annotation
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.context
+        context = module_info.getAnnotation('grok.context', None)
         adapter_context = util.determine_class_context(factory, context)
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
@@ -663,7 +671,6 @@ class IndexesGrokker(martian.InstanceGrokker):
     component_class = components.IndexesClass
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.context
         site = util.class_annotation(factory, 'grok.site', None)
         if site is None:
             raise GrokError("No site specified for grok.Indexes "
@@ -673,6 +680,7 @@ class IndexesGrokker(martian.InstanceGrokker):
         indexes = util.class_annotation(factory, 'grok.indexes', None)
         if indexes is None:
             return False
+        context = module_info.getAnnotation('grok.context', None)
         context = util.determine_class_context(factory, context)
         catalog_name = util.class_annotation(factory, 'grok.name', u'')
         zope.component.provideHandler(

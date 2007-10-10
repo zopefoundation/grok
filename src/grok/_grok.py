@@ -101,9 +101,7 @@ def prepare_grok(name, module, kw):
 
 def finalize_grok(name, module, kw):
     module_info = kw['module_info']
-
-    # XXX find a better way to associate arbitrary data with module_info
-    templates = getattr(module_info, 'templates', None)
+    templates = module_info.getAnnotation('grok.templates', None)
     if templates is None:
         return
     unassociated = list(templates.listUnassociated())
