@@ -4,9 +4,8 @@ before it can be used in grok.require() in an JSON class.
 
   >>> grok.tests.grok(__name__)
   Traceback (most recent call last):
-  GrokError: Undefined permission 'doesnt.exist' in <class
-  'grok.tests.security.missing_permission_json.MissingPermission'>. Use
-  grok.Permission first.
+  ConfigurationExecutionError: martian.error.GrokError: Undefined permission 'doesnt.exist' in <class 'grok.tests.security.missing_permission_json.MissingPermission'>. Use grok.Permission first.
+  ...
 
 """
 
