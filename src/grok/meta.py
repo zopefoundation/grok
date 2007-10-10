@@ -346,6 +346,23 @@ class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
         return True
 
 
+class UnassociatedTemplatesGrokker(martian.GlobalGrokker):
+    priority = -1001
+
+    def grok(self, name, module, module_info, config, **kw):
+        templates = module_info.getAnnotation('grok.templates', None)
+        if templates is None:
+            return False
+        unassociated = list(templates.listUnassociated())
+        if unassociated:
+            raise GrokError("Found the following unassociated template(s) when "
+                            "grokking %r: %s.  Define view classes inheriting "
+                            "from grok.View to enable the template(s)."
+                            % (module_info.dotted_name,
+                               ', '.join(unassociated)), module_info)
+        return True
+
+
 class SubscriberGrokker(martian.GlobalGrokker):
 
     def grok(self, name, module, module_info, config, **kw):

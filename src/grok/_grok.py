@@ -92,20 +92,6 @@ def prepare_grok(name, module, kw):
         module, exclude_filter=skip_tests)
     kw['module_info'] = module_info
 
-def finalize_grok(name, module, kw):
-    module_info = kw['module_info']
-    templates = module_info.getAnnotation('grok.templates', None)
-    if templates is None:
-        return
-    unassociated = list(templates.listUnassociated())
-    if unassociated:
-        raise GrokError("Found the following unassociated template(s) when "
-                        "grokking %r: %s.  Define view classes inheriting "
-                        "from grok.View to enable the template(s)."
-                        % (module_info.dotted_name,
-                           ', '.join(unassociated)), module_info)
-
 the_multi_grokker = martian.MetaMultiGrokker()
 the_module_grokker = martian.ModuleGrokker(the_multi_grokker,
-                                           prepare=prepare_grok,
-                                           finalize=finalize_grok)
+                                           prepare=prepare_grok)
