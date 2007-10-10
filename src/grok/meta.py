@@ -400,8 +400,12 @@ class AdapterDecoratorGrokker(martian.GlobalGrokker):
                 # module context to be the thing adapted.
                 util.check_context(module_info.getModule(), context)
                 interfaces = (context, )
-            component.provideAdapter(
-                function, adapts=interfaces, provides=function.__implemented__)
+            
+            config.action( 
+                discriminator=('adapter', interfaces, function.__implemented__),
+                callable=component.provideAdapter,
+                args=(function, interfaces, function.__implemented__),
+                )
         return True
 
 
