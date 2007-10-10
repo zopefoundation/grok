@@ -296,9 +296,13 @@ class TraverserGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, config, **kw):
         context = module_info.getAnnotation('grok.context', None)
         factory_context = util.determine_class_context(factory, context)
-        component.provideAdapter(factory,
-                                 adapts=(factory_context, IBrowserRequest),
-                                 provides=IBrowserPublisher)
+        adapts = (factory_context, IBrowserRequest)
+
+        config.action(
+            discriminator=('adapter', adapts, IBrowserPublisher, ''),
+            callable=component.provideAdapter,
+            args=(factory, adapts, IBrowserPublisher),
+            )            
         return True
 
 
