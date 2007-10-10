@@ -80,11 +80,5 @@ def do_grok(dotted_name, config):
         config=config
         )
 
-def prepare_grok(name, module, kw):
-    module_info = scan.module_info_from_module(
-        module, exclude_filter=skip_tests)
-    kw['module_info'] = module_info
-
 the_multi_grokker = martian.MetaMultiGrokker()
-the_module_grokker = martian.ModuleGrokker(the_multi_grokker,
-                                           prepare=prepare_grok)
+the_module_grokker = martian.ModuleGrokker(the_multi_grokker)
