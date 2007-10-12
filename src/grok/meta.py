@@ -47,6 +47,7 @@ from martian import util
 import grok
 from grok import components, formlib, templatereg
 from grok.util import check_adapts, get_default_permission, make_checker
+from grok.util import determine_class_directive
 
 
 class ContextGrokker(martian.GlobalGrokker):
@@ -779,17 +780,9 @@ class SkinGrokker(martian.ClassGrokker):
     component_class = grok.Skin
 
     def grok(self, name, factory, module_info, config, **kw):
-        layer = determine_class_directive('grok.layer', factory, module_info, default=IBrowserRequest)
-        name = grok.util.class_annotation(factory, 'grok.name', factory.__name__.lower())
+        layer = determine_class_directive('grok.layer', factory, module_info,
+                                          default=IBrowserRequest)
+        name = grok.util.class_annotation(factory, 'grok.name',
+                                          factory.__name__.lower())
         zope.component.interface.provideInterface(name, layer, IBrowserSkinType)
         return True
-
-
-def determine_class_directive(directive_name, factory, module_info, default=None):
-    directive = util.class_annotation(factory, directive_name, None)
-    if directive is None:
-        directive = module_info.getAnnotation(directive_name, None)
-    if directive is not None:
-        return directive
-    else:
-        return default

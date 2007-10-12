@@ -96,3 +96,12 @@ def safely_locate_maybe(obj, parent, name):
         return obj
     # This either sets __parent__ or wraps 'obj' in a LocationProxy
     return zope.location.location.located(obj, parent, name)
+
+def determine_class_directive(directive_name, factory, module_info,
+                              default=None):
+    directive = class_annotation(factory, directive_name, None)
+    if directive is None:
+        directive = module_info.getAnnotation(directive_name, None)
+    if directive is not None:
+        return directive
+    return default
