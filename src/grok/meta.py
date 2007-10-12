@@ -685,7 +685,11 @@ class AnnotationGrokker(martian.ClassGrokker):
             contained_result = contained(result, context, key)
             return contained_result
 
-        component.provideAdapter(getAnnotation)
+        config.action(
+            discriminator=('adapter', adapter_context, provides, ''),
+            callable=component.provideAdapter,
+            args=(getAnnotation,),
+            )
         return True
 
 
@@ -695,10 +699,13 @@ class ApplicationGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, module_info, config, **kw):
         # XXX fail loudly if the same application name is used twice.
-        zope.component.provideUtility(factory,
-                                      provides=grok.interfaces.IApplication,
-                                      name='%s.%s' % (module_info.dotted_name,
-                                                      name))
+        provides = grok.interfaces.IApplication
+        name = '%s.%s' % (module_info.dotted_name, name)
+        config.action(
+            discriminator=('utility', provides, name),
+            callable=component.provideUtility,
+            args=(factory, provides, name),
+            )
         return True
 
 
@@ -718,15 +725,20 @@ class IndexesGrokker(martian.InstanceGrokker):
         context = module_info.getAnnotation('grok.context', None)
         context = util.determine_class_context(factory, context)
         catalog_name = util.class_annotation(factory, 'grok.name', u'')
-        zope.component.provideHandler(
-            IndexesSetupSubscriber(catalog_name, indexes,
-                                   context, module_info),
-            adapts=(site,
-                    grok.IObjectAddedEvent))
+
+        subscriber = IndexesSetupSubscriber(catalog_name, indexes,
+                                            context, module_info)
+        subscribed = (site, grok.IObjectAddedEvent)
+        config.action( 
+            discriminator=None,
+            callable=component.provideHandler,
+            args=(subscriber, subscribed),
+            )
         return True
 
 
 class IndexesSetupSubscriber(object):
+
     def __init__(self, catalog_name, indexes, context, module_info):
         self.catalog_name = catalog_name
         self.indexes = indexes
@@ -784,5 +796,10 @@ class SkinGrokker(martian.ClassGrokker):
                                           default=IBrowserRequest)
         name = grok.util.class_annotation(factory, 'grok.name',
                                           factory.__name__.lower())
-        zope.component.interface.provideInterface(name, layer, IBrowserSkinType)
+
+        config.action(
+            discriminator=None,
+            callable=zope.component.interface.provideInterface,
+            args=(name, layer, IBrowserSkinType)
+            )
         return True
