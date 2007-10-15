@@ -76,6 +76,14 @@
       priority="11"
       />
 
+  <publisher
+      name="HTTP"
+      factory=".publication.GrokHTTPFactory"
+      methods="*"
+      mimetypes="*"
+      priority="1"
+      />
+
   <!-- need to grok this for some basic REST support -->
   <grok:grok package=".rest" />
 

@@ -128,9 +128,10 @@ class RestPublisher(zope.location.Location):
         self.context = context
         self.request = request
         self.__parent__ = self.context
-        
-    def browserDefault(self, request):
-        return self, ()
+
+    # XXX evidently not necessary?
+    #def browserDefault(self, request):
+    #    return self, ()
     
 class RESTGrokker(martian.ClassGrokker):
     component_class = grok.REST

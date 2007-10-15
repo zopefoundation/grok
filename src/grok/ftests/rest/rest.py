@@ -141,18 +141,52 @@ methods for the requested resource::
   Content-Type: text/plain
   <BLANKLINE>
   Method Not Allowed
-  
+
+We can also try this with a completely made-up request method, like FROG::
+
+  >>> print http('FROG /++rest++b/app HTTP/1.1')
+  HTTP/1. 405 Method Not Allowed
+  Allow: GET, PUT
+  Content-Length: 18
+  <BLANKLINE>
+  Method Not Allowed
+
+Let's now see whether security works properly with REST. GET should
+be public::
+
+  >>> print http('GET /++rest++e/app/alpha HTTP/1.1')
+  HTTP/1. 200 Ok
+  Content-Length: 4
+  Content-Type: text/plain
+  <BLANKLINE>
+  GET3
+
+POST, PUT and DELETE however are not public::
+
+  >>> print http('POST /++rest++e/app/alpha HTTP/1.1')
+  HTTP/1. 401 Unauthorized
+  Content-Length: 0
+  Content-Type: text/plain
+  WWW-Authenticate: basic realm="Zope"
+  <BLANKLINE>
+
+  >>> print http('PUT /++rest++e/app/alpha HTTP/1.1')
+  HTTP/1. 401 Unauthorized
+  Content-Length: 0
+  WWW-Authenticate: basic realm="Zope"
+  <BLANKLINE>
+
+  >>> print http('DELETE /++rest++e/app/alpha HTTP/1.1')
+  HTTP/1. 401 Unauthorized
+  Content-Length: 0
+  WWW-Authenticate: basic realm="Zope"
+  <BLANKLINE>
+
 Todo:
 
 * Support for OPTIONS, HEAD, other methods?
 
 * Content-Type header is there for GET/POST, but not for PUT/DELETE...
-
-* MethodNotAllowed doesn't work correctly if the method is completely
-  unrecognized, such as FROG instead of POST. It falls back on the default
-  MethodNotAllowed then, instead of GrokMethodNotAllowed.
-  
-* Security tests.
 """
 
 import grok
@@ -172,6 +206,9 @@ class LayerB(grok.IRESTLayer):
 class LayerC(grok.IRESTLayer):
     pass
 
+class LayerSecurity(grok.IRESTLayer):
+    pass
+
 class A(grok.RESTProtocol):
     grok.layer(LayerA)
 
@@ -184,6 +221,9 @@ class C(grok.RESTProtocol):
 class D(grok.RESTProtocol):
     grok.layer(grok.IRESTLayer)
 
+class E(grok.RESTProtocol):
+    grok.layer(LayerSecurity)
+    
 class ARest(grok.REST):
     grok.layer(LayerA)
     grok.context(MyApp)
@@ -219,3 +259,24 @@ class DRest(grok.REST):
     
     def GET(self):
         return "GET2"
+
+class SecurityRest(grok.REST):
+    grok.context(MyContent)
+    grok.layer(LayerSecurity)
+    
+    @grok.require('zope.Public')
+    def GET(self):
+        return "GET3"
+
+    @grok.require('zope.ManageContent')
+    def POST(self):
+        return "POST3"
+
+    @grok.require('zope.ManageContent')
+    def PUT(self):
+        return "PUT3"
+
+    @grok.require('zope.ManageContent')
+    def DELETE(self):
+        return "DELETE3"
+    
