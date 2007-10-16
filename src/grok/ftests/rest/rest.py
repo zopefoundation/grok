@@ -182,6 +182,31 @@ POST, PUT and DELETE however are not public::
   WWW-Authenticate: basic realm="Zope"
   <BLANKLINE>
 
+Normally when we POST or PUT a request, we expect some content. This
+content is sent along as the request body. In the normal case for POST
+we tend to retrieve this information from a web form (request.form),
+but with REST often the POST body contains a description of an
+entirely new resource, similar to what is contained in a PUT body. We
+therefore need to have some easy way to get to this information. The 'body'
+attribute on the REST view contains the uploaded data::
+
+  >>> print http_call('POST', 'http://localhost/++rest++f/app/alpha',
+  ...                 'this is the POST body')
+  HTTP/1.1 200 Ok
+  Content-Length: 21
+  Content-Type: text/plain
+  <BLANKLINE>
+  this is the POST body
+
+This works with PUT as well::
+
+  >>> print http_call('PUT', 'http://localhost/++rest++f/app/alpha',
+  ...                 'this is the PUT body')
+  HTTP/1.1 200 Ok
+  Content-Length: 20
+  <BLANKLINE>
+  this is the PUT body
+
 Todo:
 
 * Support for OPTIONS, HEAD, other methods?
@@ -209,6 +234,9 @@ class LayerC(grok.IRESTLayer):
 class LayerSecurity(grok.IRESTLayer):
     pass
 
+class LayerContent(grok.IRESTLayer):
+    pass
+
 class A(grok.RESTProtocol):
     grok.layer(LayerA)
 
@@ -223,6 +251,9 @@ class D(grok.RESTProtocol):
 
 class E(grok.RESTProtocol):
     grok.layer(LayerSecurity)
+
+class F(grok.RESTProtocol):
+    grok.layer(LayerContent)
     
 class ARest(grok.REST):
     grok.layer(LayerA)
@@ -279,4 +310,14 @@ class SecurityRest(grok.REST):
     @grok.require('zope.ManageContent')
     def DELETE(self):
         return "DELETE3"
+    
+class BodyTest(grok.REST):
+    grok.context(MyContent)
+    grok.layer(LayerContent)
+
+    def POST(self):
+        return self.body
+
+    def PUT(self):
+        return self.body
     

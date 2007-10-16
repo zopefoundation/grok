@@ -196,6 +196,13 @@ class GrokMethodNotAllowed(MethodNotAllowed):
     pass
 
 class REST(object):
+    interface.implements(interfaces.IREST)
+    
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.body = request.bodyStream.getCacheStream().read()
+    
     def GET(self):
         raise GrokMethodNotAllowed(self.context, self.request)
     

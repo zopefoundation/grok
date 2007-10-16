@@ -413,6 +413,14 @@ class IGrokForm(IGrokView):
         doesn't have to update an object, the dictionary is empty.
         """
 
+class IREST(interface.Interface):
+    context = interface.Attribute("Object that the REST handler presents.")
+
+    request = interface.Attribute("Request that REST handler was looked"
+                                  "up with.")
+    
+    body = interface.Attribute(
+        """The text of the request body.""")
 
 class IApplication(interface.Interface):
     """Marker-interface for grok application factories.
