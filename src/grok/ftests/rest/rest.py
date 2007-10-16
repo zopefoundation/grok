@@ -207,6 +207,33 @@ This works with PUT as well::
   <BLANKLINE>
   this is the PUT body
 
+Opening up the publication for REST doesn't mean we can just delete
+random objects without access:
+
+  >>> print http('DELETE /app HTTP/1.1')
+  HTTP/1. 500 Internal Server Error
+  Content-Length: 127
+  Content-Type: text/html;charset=utf-8
+  <BLANKLINE>
+  <html><head><title>ForbiddenAttribute</title></head>
+  <body><h2>ForbiddenAttribute</h2>
+  A server error occurred.
+  </body></html>
+  <BLANKLINE>
+
+  >>> print http('DELETE /app/alpha HTTP/1.1')
+  HTTP/1. 500 Internal Server Error
+  Content-Length: 127
+  Content-Type: text/html;charset=utf-8
+  <BLANKLINE>
+  <html><head><title>ForbiddenAttribute</title></head>
+  <body><h2>ForbiddenAttribute</h2>
+  A server error occurred.
+  </body></html>
+  <BLANKLINE>
+  
+XXX shouldn't this really give a FORBIDDEN response?
+
 Todo:
 
 * Support for OPTIONS, HEAD, other methods?
