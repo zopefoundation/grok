@@ -19,10 +19,10 @@ import zope.component.interface
 from zope import interface, component
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
-                                               IBrowserPublisher)
+                                               IBrowserPublisher,
+                                               IBrowserSkinType)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.security.permission import Permission
-from zope.security.interfaces import IPermission
 from zope.app.securitypolicy.role import Role
 from zope.app.securitypolicy.rolepermission import rolePermissionManager
 
@@ -47,23 +47,6 @@ from martian import util
 import grok
 from grok import components, formlib
 from grok.util import check_adapts, get_default_permission, make_checker
-
-
-class ModelGrokker(martian.ClassGrokker):
-    component_class = grok.Model
-
-    def grok(self, name, factory, context, module_info, templates):
-        for field in formlib.get_context_schema_fields(factory):
-            setattr(factory, field.__name__, field.default)
-        return True
-
-
-class ContainerGrokker(ModelGrokker):
-    component_class = grok.Container
-
-
-class LocalUtilityGrokker(ModelGrokker):
-    component_class = grok.LocalUtility
 
 
 class AdapterGrokker(martian.ClassGrokker):
@@ -142,6 +125,7 @@ class ViewGrokker(martian.ClassGrokker):
     component_class = grok.View
 
     def grok(self, name, factory, context, module_info, templates):
+
         view_context = util.determine_class_context(factory, context)
 
         factory.module_info = module_info
@@ -191,12 +175,15 @@ class ViewGrokker(martian.ClassGrokker):
                 raise GrokError("View %r has no associated template or "
                                 "'render' method." % factory, factory)
 
+        # grab layer from class or module
+        view_layer = determine_class_directive('grok.layer', factory, module_info, default=IDefaultBrowserLayer)
+
         view_name = util.class_annotation(factory, 'grok.name',
                                           factory_name)
         # __view_name__ is needed to support IAbsoluteURL on views
         factory.__view_name__ = view_name
         component.provideAdapter(factory,
-                                 adapts=(view_context, IDefaultBrowserLayer),
+                                 adapts=(view_context, view_layer),
                                  provides=interface.Interface,
                                  name=view_name)
 
@@ -497,18 +484,19 @@ class DefinePermissionGrokker(martian.ClassGrokker):
     priority = 1500
 
     def grok(self, name, factory, context, module_info, templates):
-        permission_name = util.class_annotation(factory, 'grok.name', None)
-        if permission_name is None:
+        id = util.class_annotation(factory, 'grok.name', None)
+        if id is None:
             raise GrokError(
                 "A permission needs to have a dotted name for its id. Use "
                 "grok.name to specify one.", factory)
-        permission_name = unicode(permission_name)
-        title = unicode(
-            util.class_annotation(factory, 'grok.title', permission_name))
-        # TODO permission description
-        component.provideUtility(
-            Permission(permission_name, title=title),
-            name=permission_name)
+        # We can safely convert to unicode, since the directives make sure
+        # it is either unicode already or ASCII.
+        id = unicode(id)
+        permission = factory(
+            id,
+            unicode(util.class_annotation(factory, 'grok.title', id)),
+            unicode(util.class_annotation(factory, 'grok.description', '')))
+        component.provideUtility(permission, name=id)
         return True
 
 class DefineRoleGrokker(martian.ClassGrokker):
@@ -516,17 +504,22 @@ class DefineRoleGrokker(martian.ClassGrokker):
     priority = DefinePermissionGrokker.priority - 1
 
     def grok(self, name, factory, context, module_info, templates):
-        role_name = util.class_annotation(factory, 'grok.name', None)
-        if role_name is None:
+        id = util.class_annotation(factory, 'grok.name', None)
+        if id is None:
             raise GrokError(
                 "A role needs to have a dotted name for its id. Use "
                 "grok.name to specify one.", factory)
-        title = unicode(util.class_annotation(factory, 'grok.title', role_name))
-        component.provideUtility(Role(role_name, title=title), name=role_name)
-
+        # We can safely convert to unicode, since the directives makes sure
+        # it is either unicode already or ASCII.
+        id = unicode(id)
+        role = factory(
+            id,
+            unicode(util.class_annotation(factory, 'grok.title', id)),
+            unicode(util.class_annotation(factory, 'grok.description', '')))
+        component.provideUtility(role, name=id)
         permissions = util.class_annotation(factory, 'grok.permissions', ())
         for permission in permissions:
-            rolePermissionManager.grantPermissionToRole(permission, role_name)
+            rolePermissionManager.grantPermissionToRole(permission, id)
         return True
 
 class AnnotationGrokker(martian.ClassGrokker):
@@ -631,6 +624,7 @@ class IndexesSetupSubscriber(object):
         """Create the catalog if needed and return it.
 
         If the catalog already exists, return that.
+
         """
         catalog = zope.component.queryUtility(
             ICatalog, name=self.catalog_name, context=site, default=None)
@@ -685,3 +679,25 @@ class I18nRegisterTranslationGrokker(martian.GlobalGrokker):
                         None)
             grok.i18n.registerTranslationsDirectory(abs_path)
         return True
+
+
+class SkinGrokker(martian.ClassGrokker):
+    component_class = grok.Skin
+
+    def grok(self, name, factory, context, module_info, templates):
+
+        layer = determine_class_directive('grok.layer', factory, module_info, default=IBrowserRequest)
+        name = grok.util.class_annotation(factory, 'grok.name', factory.__name__.lower())
+        zope.component.interface.provideInterface(name, layer, IBrowserSkinType)
+        return True
+
+
+def determine_class_directive(directive_name, factory, module_info, default=None):
+    directive = util.class_annotation(factory, directive_name, None)
+    if directive is None:
+        directive = module_info.getAnnotation(directive_name, None)
+    if directive is not None:
+        return directive
+    else:
+        return default
+

@@ -7,6 +7,8 @@ Grok changes
 Feature changes
 ---------------
 
+* Integrated skins and layers. grok.layer, grok.IGrokLayer, grok.Skin
+
 * Removed grok.define_permission in favor of the grok.Permission
   component base class
 
@@ -16,12 +18,22 @@ Feature changes
 
 * Add grok.localesdir directive.
 
+* Removed support for defining model schemas using an inner class with the
+  special name 'fields'. This was abandoned in favor the usual Zope 3 way of
+  defining schemas in interfaces and implementing them in our Grok models.
+
 Bug fixes
 ---------
 
 * The admin UI now shows interfaces in modules.
 
 * `handle...` is not a special function name any more.
+
+* Views no longer need a custom AbsoluteURL to determine their URL,
+  since each instance now properly gets a __name__ attribute.
+
+* buildout.cfg extends versions.cfg to pin down the versions of the
+  dependency tree.
 
 Restructuring
 -------------
@@ -54,7 +66,7 @@ Feature changes
 
 Bug fixes
 ---------
- 
+
 * A fix in Martian where multiple grok.Model or grok.Container classes
   could result in something being found as a context twice.
 

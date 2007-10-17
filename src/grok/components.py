@@ -23,10 +23,9 @@ import simplejson
 
 from zope import component
 from zope import interface
-from zope import schema
-from zope import event
 from zope.interface.common import idatetime
-from zope.lifecycleevent import ObjectModifiedEvent
+from zope.security.permission import Permission
+from zope.app.securitypolicy.role import Role
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import (IBrowserPublisher,
@@ -34,9 +33,6 @@ from zope.publisher.interfaces.browser import (IBrowserPublisher,
 from zope.publisher.publish import mapply
 from zope.pagetemplate import pagetemplate, pagetemplatefile
 from zope.formlib import form
-from zope.traversing.browser.interfaces import IAbsoluteURL
-from zope.traversing.browser.absoluteurl import AbsoluteURL
-from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
 from zope.annotation.interfaces import IAttributeAnnotatable
 
 from zope.app.pagetemplate.engine import TrustedAppPT
@@ -102,6 +98,7 @@ class View(BrowserPage):
 
     def __init__(self, context, request):
         super(View, self).__init__(context, request)
+        self.__name__ = self.__view_name__
         self.static = component.queryAdapter(
             self.request,
             interface.Interface,
@@ -174,14 +171,6 @@ class View(BrowserPage):
         source = component.getUtility(
             z3c.flashmessage.interfaces.IMessageSource, name='session')
         source.send(message, type)
-
-
-class GrokViewAbsoluteURL(AbsoluteURL):
-
-    def _getContextName(self, context):
-        return getattr(context, '__view_name__', None)
-    # XXX breadcrumbs method on AbsoluteURL breaks as it does not use
-    # _getContextName to get to the name of the view. What does breadcrumbs do?
 
 
 class XMLRPC(object):
@@ -480,8 +469,14 @@ class IndexesClass(object):
 
 Indexes = IndexesClass('Indexes')
 
-class Permission(object):
+class Permission(Permission):
     pass
 
-class Role(object):
+class Role(Role):
+    pass
+
+class IGrokLayer(interface.Interface):
+    pass
+
+class Skin(object):
     pass

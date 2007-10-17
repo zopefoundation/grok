@@ -42,6 +42,8 @@ class IGrokBaseClasses(interface.Interface):
     EditForm = interface.Attribute("Base class for edit forms.")
     DisplayForm = interface.Attribute("Base class for display forms.")
     Indexes = interface.Attribute("Base class for catalog index definitions.")
+    Layer = interface.Attribute("Base interface for layers.")
+    Skin = interface.Attribute("Base class for skin.")
 
 
 class IGrokErrors(interface.Interface):
@@ -73,6 +75,17 @@ class IGrokDirectives(interface.Interface):
 
     def name(name):
         """Declare the name of a view or adapter/multi-adapter.
+
+        This directive can only be used on class level."""
+
+    def layer(layer):
+        """Declare the layer for the view.
+
+        This directive acts as a contraint on the 'request' of
+        grok.View. This directive can only be used on class level."""
+
+    def skin(skin):
+        """Declare this layer as a named skin.
 
         This directive can only be used on class level."""
 

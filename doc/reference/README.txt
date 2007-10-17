@@ -2,42 +2,37 @@
 The grok reference manual
 =========================
 
-The manual is written using LaTeX with support for the Python documentation
-markup. The tex sources can be compiled to HTML and PDF. To build the manual,
-you need the 'mkhowto' script from a recent Python source distribution.
+NOTE: The Grok reference manual is in the process of being migrated to a
+RestructuredText infrastructure.
 
-Build the HTML
---------------
+How to build HTML documentation from ReST files
+-----------------------------------------------
 
-Compiling the sources into HTML::
+The toolchain to generate HTML from the ReST files in this directory
+is currently also under construction.
 
-  $ mkhowto --html reference.tex
+A current snapshot of the toolchain can be retrieved from the
+jasper-docgroktools branch of the grok svn repository.
 
-The directory 'reference/' keeps all files required to display the manual after
-that call and can be put on a static webserver.
+   $ svn co http://svn.zope.org/grok/branches/jasper-grokdoctool \
+               grokdoctool
 
-Build the PDF
--------------
+Then change into the checked out directory::
 
-The file 'reference.pdf' will contain the PDF version of the manual after this
-call::
+   $ cd grokdoctool
 
-  $ mkhowto --pdf reference.tex
+and follow the advices given in README.txt.
 
-Installing prerequisites on Debian and Ubuntu systems
------------------------------------------------------
+Note, that you need development files for libxml2 and libxslt to
+install lxml correctly. Debian/Ubuntu users can get the correct files,
+using
 
-On recent Debian and Ubuntu systems, the following packages provide the
-required toolset for compiling the sources.
+   $ apt-get install libxml2-dev libxslt-dev
 
-The basic LaTeX infrastructure::
+After generating the grokdoctool, you can run it with the source
+directory of the restructured text files as argument:
 
-  $ sudo apt-get install tetex-base tetex-bin tetex-extra latex2html
+   $ bin/grokdoctool <path-to-the-rest-files-dir>
 
-The python-dev package provides the mkhowto script::
-
-  $ sudo apt-get install python2.4-dev
-
-This script will be located in::
-
-  /usr/lib/python2.4/doc/tools/mkhowto
+This procedure is subject to changes. The format of the reference
+documentation (ReST) is not.

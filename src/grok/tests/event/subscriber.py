@@ -8,6 +8,12 @@ You can subscribe to events using the @grok.subscribe decorator:
   ['Manfred']
   >>> mammoths2
   ['Manfred']
+  
+The decorated event handling function can also be called directly:  
+  
+  >>> mammothAdded(Mammoth('Max'),None)
+  >>> mammoths
+  ['Manfred', 'Max']
 
 """
 import grok

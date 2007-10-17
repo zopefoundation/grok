@@ -35,6 +35,7 @@ class ReStructuredTextToHTMLRenderer:
                         self.content,
                         writer=writer,
                         settings_overrides=settings_overrides,)
+        html = codecs.decode(html, 'utf_8')
         return html
 
 class RestFile(object):
@@ -181,6 +182,9 @@ def main(argv=None):
     rest_files.append(RestFile('permissions', 
                               os.path.join(source_dir, 'minitutorials', 'permissions.txt'),
                               os.path.join(www_dir, 'minitutorials', 'permissions.html')))
+    rest_files.append(RestFile('transient-objects', 
+                              os.path.join(source_dir, 'minitutorials', 'transient-objects.txt'),
+                              os.path.join(www_dir, 'minitutorials', 'transient-objects.html')))
     rest_files.append(RestFile('zc.buildout', 
                   'http://svn.zope.org/*checkout*/zc.buildout/trunk/doc/tutorial.txt',
                   os.path.join(www_dir, 'minitutorials', 'buildout.html')))

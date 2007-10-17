@@ -45,9 +45,15 @@ be filled with values from the request (such as form values):
 import grok
 from zope import schema
 
+from zope.interface import Interface, implements
+
+class IMammoth(Interface):
+    name = schema.TextLine(title=u"Name")
+
 class Mammoth(grok.Model):
-    class fields:
-        name = schema.TextLine(title=u"Name", default=u'Manfred')
+    implements(IMammoth)
+    
+    name = u'Manfred'
 
 class Index(grok.View):
 

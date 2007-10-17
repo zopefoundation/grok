@@ -25,6 +25,13 @@ to get productive with Grok.
 
 .. _Zope 3: http://wiki.zope.org/zope3
 
+Grok News
+---------
+
+2007-09-24:
+  The first week of October (1-5 October) we are having the `Grok Neanderthal
+  Sprint <http://wiki.zope.org/grok/NeanderthalerSprint/>`_ in Cologne, Germany.
+  This sprint is generously sponsored by `GfU Cyrus <http://www.gfu.net/>`_.
 
 Who is Grok?
 ------------
