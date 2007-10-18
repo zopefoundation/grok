@@ -473,14 +473,14 @@ Uncategorized directives
 
    A module-level directive, which can be used to register
    a locales directory. It is a Python based equivalent to the ZCML
-   directive \code{i18n:registerTranslations}.
+   directive ``i18n:registerTranslations``.
 
    If no value is given, the default `locales` is taken.
 
    The directory must exist in the path given relative to the package
    wherein the directive was used.
 
-   The directive takes at most one parameter and can be used several
+   The directive takes exactly one parameter and can be used several
    times per module.
 
    A :class:`GlobalGrokker` is called for every module in a grokked
