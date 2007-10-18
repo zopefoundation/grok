@@ -91,7 +91,7 @@ _ = MessageFactory('mammoth')
 # ('locales'). This is not neccessary, because the 'locales' dir would
 # be searched by default for translations. But calling it explicitly,
 # we provoke complains about missing directories.
-grok.localesdir()
+grok.localesdir('locales')
 
 class I18nSavannah(grok.Application, grok.Container):
     """A place for mammoths.

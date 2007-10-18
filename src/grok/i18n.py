@@ -28,21 +28,6 @@ from zope.i18n.interfaces import ITranslationDomain
 from martian.error import GrokImportError
 from martian.directive import MultipleTextDirective, ModuleDirectiveContext
 
-DEFAULT_LOCALES_DIR = 'locales'
-
-class localesdirDirective(MultipleTextDirective):
-    def check_arguments(self, directory=DEFAULT_LOCALES_DIR):
-        if directory is None:
-            raise GrokImportError(u"You must specify a locales directory "
-                                  u"when using grok.localesdir()"
-                                  )
-
-    def value_factory(self, *args, **kw):
-        if len(args) == 0:
-            # The default dir. Should we really provide it?
-            return DEFAULT_LOCALES_DIR
-        return args
-
 
 def registerTranslationsDirectory(directory):
     """A replacement for the ZCML registerTranslations directive.
@@ -81,5 +66,5 @@ def registerTranslationsDirectory(directory):
     return
 
 
-localesdir = localesdirDirective('grok.localesdir',
+localesdir = MultipleTextDirective('grok.localesdir',
                                  ModuleDirectiveContext())
