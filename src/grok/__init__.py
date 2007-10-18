@@ -39,8 +39,7 @@ from grok.components import Permission, Role
 from grok.components import Skin, IGrokLayer
 from grok.directive import (context, name, title, template, templatedir,
                             provides, baseclass, global_utility, local_utility,
-                            permissions, require, site, layer)
-from grok.i18n import localesdir
+                            permissions, require, site, layer, localesdir)
 from grok._grok import do_grok as grok  # Avoid name clash within _grok
 from grok._grok import grok_component
 from grok._grok import SubscribeDecorator as subscribe

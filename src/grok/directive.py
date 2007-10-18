@@ -122,3 +122,5 @@ permissions = MultiValueOnceDirective(
     'grok.permissions', ClassDirectiveContext())
 layer = InterfaceOrClassDirective('grok.layer',
                            ClassOrModuleDirectiveContext())
+localesdir = MultipleTextDirective('grok.localesdir',
+                                 ModuleDirectiveContext())

@@ -25,9 +25,6 @@ from zope.i18n.testmessagecatalog import TestMessageCatalog
 from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.interfaces import ITranslationDomain
 
-from martian.error import GrokImportError
-from martian.directive import MultipleTextDirective, ModuleDirectiveContext
-
 
 def registerTranslationsDirectory(directory):
     """A replacement for the ZCML registerTranslations directive.
@@ -65,6 +62,3 @@ def registerTranslationsDirectory(directory):
         provideUtility(domain, ITranslationDomain, name)
     return
 
-
-localesdir = MultipleTextDirective('grok.localesdir',
-                                 ModuleDirectiveContext())

@@ -47,6 +47,7 @@ from martian import util
 import grok
 from grok import components, formlib
 from grok.util import check_adapts, get_default_permission, make_checker
+from grok.i18n import registerTranslationsDirectory
 
 
 class AdapterGrokker(martian.ClassGrokker):
