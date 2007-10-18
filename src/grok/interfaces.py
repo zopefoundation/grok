@@ -101,6 +101,17 @@ class IGrokDirectives(interface.Interface):
         of the directory.  This can be overridden using
         ``templatedir``."""
 
+    def localesdir(directory):
+        """Register translations in a directory.
+
+        By default, grok will look for a directory ``locales`` in the
+        package of a module and - if found - try to register
+        translations in it.
+
+        The name of the directory or additional directories can be
+        declared using ``localesdir``.
+        """
+
     def provides(interface):
         """Explicitly specify with which interface a component will be
         looked up."""
