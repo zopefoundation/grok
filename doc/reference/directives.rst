@@ -466,6 +466,64 @@ When not specified, Grok will look template files in a diretory named `<module>_
 Uncategorized directives
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+:func:`grok.localesdir`
+=======================
+
+.. function:: grok.localesdir(directory)
+
+   A module-level directive, which can be used to register
+   a locales directory. It is a Python based equivalent to the ZCML
+   directive \code{i18n:registerTranslations}.
+
+   If no value is given, the default `locales` is taken.
+
+   The directory must exist in the path given relative to the package
+   wherein the directive was used.
+
+   The directive takes at most one parameter and can be used several
+   times per module.
+
+   A :class:`GlobalGrokker` is called for every module in a grokked
+   package. If a module does not provide a :func:`grok.localesdir`
+   directive, then ``locales`` is assumed as default value and tried
+   to be registered.
+
+   This means especially, that if you do no explicit call to
+   :func:`grok.localesdir`, but a local directory with name
+   ``locales`` and translations exists, then this directory will be
+   registered automatically.
+
+   You can avoid this behaviour by declaring a different locales
+   directory in every module of your package(s) which also might be
+   empty.
+
+   The following example registers a local ``locales`` directory as a
+   source for translations (if it exists)::
+
+      import grok
+
+   If this code resides in a location ``/foo/bar.py``, then Zope will
+   look for translations in ``/foo/locales``, but will not complain,
+   if the directory does not exist or does not contain
+   translations. The example is a short form for the following::
+
+      import grok
+      grok.localesdir('locales')
+
+   whith the difference, that in this case a missing ``locales``
+   directory will lead to a failure message on startup.
+
+   You can, given that the given directories exist, declare several
+   locales-directories, which will all be registered::
+
+      import grok
+      grok.localesdir('savannah')
+      grok.localesdir('landofoz')
+
+   In this case, a directory called ``locales`` will not be searched
+   for translations, but ``savannah`` and ``landofoz``.   
+
+
 :func:`grok.site`
 =================
 
@@ -481,3 +539,4 @@ A class level directive used in `grok.Indexes` sub-classes to define in which lo
 	    grok.context(IMammoth)
 
 	    name = index.Field()
+
