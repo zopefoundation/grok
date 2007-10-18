@@ -13,7 +13,7 @@
 ##############################################################################
 """Grok utility functions.
 """
-
+import os
 import urllib
 
 import zope.location.location
@@ -23,6 +23,11 @@ from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
 
 from zope.security.checker import NamesChecker, defineChecker
 from zope.security.interfaces import IPermission
+
+from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
+from zope.i18n.testmessagecatalog import TestMessageCatalog
+from zope.i18n.translationdomain import TranslationDomain
+from zope.i18n.interfaces import ITranslationDomain
 
 from martian.error import GrokError, GrokImportError
 from martian.util import class_annotation
@@ -97,3 +102,40 @@ def safely_locate_maybe(obj, parent, name):
         return obj
     # This either sets __parent__ or wraps 'obj' in a LocationProxy
     return zope.location.location.located(obj, parent, name)
+
+def register_translations_directory(directory):
+    """A replacement for the ZCML registerTranslations directive.
+
+    Basically, this is the same code as in zope.i18n.zcml, but it
+    calls ``provideUtility()`` directly.
+    """
+    path = os.path.normpath(directory)
+    domains = {}
+
+    # Gettext has the domain-specific catalogs inside the language directory,
+    # which is exactly the opposite as we need it. So create a dictionary that
+    # reverses the nesting.
+    for language in os.listdir(path):
+        lc_messages_path = os.path.join(path, language, 'LC_MESSAGES')
+        if os.path.isdir(lc_messages_path):
+            for domain_file in os.listdir(lc_messages_path):
+                if domain_file.endswith('.mo'):
+                    domain_path = os.path.join(lc_messages_path, domain_file)
+                    domain = domain_file[:-3]
+                    if not domain in domains:
+                        domains[domain] = {}
+                    domains[domain][language] = domain_path
+
+    # Now create TranslationDomain objects and add them as utilities
+    for name, langs in domains.items():
+        domain = TranslationDomain(name)
+
+        for lang, file in langs.items():
+            domain.addCatalog(GettextMessageCatalog(lang, name, file))
+
+        # make sure we have a TEST catalog for each domain:
+        domain.addCatalog(TestMessageCatalog(name))
+        # TODO: We might do some permissions checking before.
+        component.provideUtility(domain, ITranslationDomain, name)
+    return
+
