@@ -647,35 +647,26 @@ class IndexesSetupSubscriber(object):
 
 
 class I18nRegisterTranslationGrokker(martian.GlobalGrokker):
-    component_class = grok.i18n.localesdirDirective
     
     def grok(self, name, factory, context, module_info, templates):
         dirslist = module_info.getAnnotation('grok.localesdir', [])
-        set_default = False
+        set_default = not dirslist
         if not dirslist:
-            # This is the default, if a module does not declare a
-            # locales dir.
-            dirslist = [grok.i18n.DEFAULT_LOCALES_DIR]
-            set_default = True
-        if not isinstance(dirslist, type([])):
-            dirslist = [dirslist]
-        for localedir in dirslist:
-            if isinstance(localedir, type(())):
-                localedir = localedir[0]
-            abs_path = module_info.getResourcePath(localedir)
+            # No localesdir explicitly declared in this module. Set a
+            # default value.
+            dirslist.append('locales')
+        for localesdir in dirslist:
+            abs_path = module_info.getResourcePath(localesdir)
             if not os.path.isdir(abs_path):
                 if set_default:
                     # We silently ignore non-existing locale dirs,
-                    # because we automatically set a default and
-                    # cannot expect everybody to make use of this
-                    # default locales dir. Maybe we should fail here
-                    # loudly.
+                    # if their path was not set explicitly.
                     return False
                 else:
                     raise GrokError(
                         "localesdir: directory %r declared in %r as "
                         "locales directory does not exist." % (
-                        localedir, module_info.dotted_name),
+                        localesdir, module_info.dotted_name),
                         None)
             grok.i18n.registerTranslationsDirectory(abs_path)
         return True
