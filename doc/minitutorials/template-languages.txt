@@ -41,7 +41,9 @@ grok.interfaces.ITemplateFile. Here is an example:
             return namespace
     
         def render(self, view):
-            return self._template.render(**self.namespace(view))
+            namespace = self.namespace(view)
+            namespace.update(view.namespace())        
+            return self._template.render(**namespace)
 
 In the __init__ method of a typical template you pass in what should be
 rendered. This is usually HTML, but can equally well be XML or text, or

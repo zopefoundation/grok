@@ -125,7 +125,7 @@ class View(BrowserPage):
         return self.template.render(self)
 
     def namespace(self):
-        return self.template.namespace()        
+        return {}
 
     def __getitem__(self, key):
         if getattr(self.template, 'macros', None) is None:
@@ -242,7 +242,9 @@ class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
         return namespace
 
     def render(self, view):
-        return self.pt_render(self.namespace(view))
+        namespace = self.namespace(view)
+        namespace.update(view.namespace())
+        return self.pt_render(namespace)
 
 
 class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
