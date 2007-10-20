@@ -27,40 +27,50 @@ grok.interfaces.ITemplateFile. Here is an example:
             self._template = MyTemplate(html)
             self.__grok_module__ = martian.util.caller_module()
 
-        def _factory_init(self, factory):
+        def _initFactory(self, factory):
             pass
     
-        def default_namespace(self):
-            return {}
+        def namespace(self, view):
+            namespace = {}
+            namespace['request'] = view.request
+            namespace['view'] = view
+            namespace['context'] = view.context
+            # XXX need to check whether we really want to put None here if missing
+            namespace['static'] = view.static
+            
+            return namespace
     
-        def render_template(self, view):
-            namespace = self.getDefaultVariables()
-            namespace.update(view.getTemplateVariables())
-            return self._template.render(**namespace)
+        def render(self, view):
+            return self._template.render(**self.namespace(view))
 
 In the __init__ method of a typical template you pass in what should be
 rendered. This is usually HTML, but can equally well be XML or text, or
-whatever your template renders. Note the line setting self.__grok_module__.
-This is necessary to support inline templates.
+whatever your template renders. Note the line setting
+self.__grok_module__.This is necessary to support inline templates.
 
-The _factory_init method is a call made when setting up views (when the server
+The _initFactory method is a call made when setting up views (when the server
 starts). Basically, you can here initialize the view in ways needed to your
 template language. For example, Zope Page Templates set the macro attribute on
 the view class, so that you can access ZPT macros with the standard syntax of
 "context/@@viewname/macros/themacro". Most likely your class doesn't need to
 do anything here.
 
-The default_namespace method should return a dictionary with variables that
-should be included in the namespace that is specific for your template
-language. By default 'context', 'view', 'request' and 'static' is made
-available by the view. Your language might want to use some more. 
+The namespace method should return a dictionary with variables that should be
+included in the namespace that is specific for your template language. Common
+variables is 'context', 'view', 'request' and 'static', which is what the
+default is if you don't override this method. Your language might want to use
+more or fewer, depending on how the language works. For example, a template
+language like Kid or Templess that doesn't have object attribute access would
+have no use of any of these variables, and instead you need to in each view
+override the namespace() method to pass in exactly the values needed. If your
+template language has attribute access you probably don't need to override
+this method at all.
 
-Lastly, the render_template is the method normally used to render a template
-attached to a view. Here you do whatever necessary to render your template.
-This is usually to call view.default_namespace() and then update the namespace
-with the result of the view-specific "extra_namespace", to let the view add
-more variables to the namespace, and also override the defaults. The above
-example is a reasonable startingpoint for most cases.
+Lastly, render() is the method normally used to render a template attached to
+a view. Here you do whatever necessary to render your template. This is
+usually to call view.namespace() and pass that into the method that renders
+the template. The above example is for Genshi, and something similar would
+probably be used for your template language too.
 
 With this class finished you can create an inline template, like this:
 
@@ -87,15 +97,13 @@ that it loads the template from a file instead:
             self._template = MyTemplate(file.read())
             self.__grok_module__ = martian.util.caller_module()
     
-        def render_template(self, view):
-            namespace = self.getDefaultVariables()
-            namespace.update(view.getTemplateVariables())
-            return self._template.render(**namespace)
+        def render(self, view):
+            return self._template.render(**self.namespace(view))
 
-Here _factory_init and default_namespace is left out, as GrokPaeTemplate
-alredy has them as defaults. The __init__ now takes two parameters, filename
-and _prefix, which is the directory in which the file resides. Although there
-is no requirement that these are the parameters used it is a good idea, since
+Here _initFactory() and namespace() is left out, as GrokPageTemplate alredy
+has them as defaults. The __init__ now takes two parameters, filename and
+_prefix, which is the directory in which the file resides. Although there is
+no requirement that these are the parameters used it is a good idea, since
 that makes the next step easier.
 
 Now you can use this filebase template:
@@ -137,10 +145,8 @@ and set the grok.name to that extension:
             self._template = MyTemplate(file.read())
             self.__grok_module__ = martian.util.caller_module()
     
-        def render_template(self, view):
-            namespace = self.getDefaultVariables()
-            namespace.update(view.getTemplateVariables())
-            return self._template.render(**namespace)
+        def render(self, view):
+            return self._template.render(**self.namespace(view))
 
 When your module gets grokked, Grok will now pick up on the MyPageTemplateFile
 class, register it as a global utility for templates with the '.mtl' extension

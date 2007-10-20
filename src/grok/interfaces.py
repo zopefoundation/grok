@@ -444,12 +444,12 @@ class ITemplateFile(interface.Interface):
     """Template objects created from files
     """
     
-    def _factory_init(factory):
+    def _initFactory(factory):
         """Template language specific initializations on the view factory."""
     
-    def default_namespace():
+    def namespace():
         """Returns a dictionary of template language specific variables."""
     
-    def render_template(view):
+    def render(view):
         """Renders the template"""
         

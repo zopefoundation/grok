@@ -172,7 +172,7 @@ class ViewGrokker(martian.ClassGrokker):
 
             templates.markAssociated(template_name)
             factory.template = template
-            template._factory_init(factory)
+            template._initFactory(factory)
         else:
             if not getattr(factory, 'render', None):
                 # we do not accept a view without any way to render it

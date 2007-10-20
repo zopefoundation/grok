@@ -122,22 +122,10 @@ class View(BrowserPage):
         return mapply(self.render, (), self.request)
 
     def _render_template(self):
-        return self.template.render_template(self)
+        return self.template.render(self)
 
-    def default_namespace(self):
-        namespace = {}
-        namespace['request'] = self.request
-        namespace['view'] = self
-        namespace['context'] = self.context
-        # XXX need to check whether we really want to put None here if missing
-        namespace['static'] = self.static
-        
-        # Get template langage specific defaults:
-        namespace.update(self.template.default_namespace())
-        return namespace
-
-    def extra_namespace(self):
-        return {}
+    def namespace(self):
+        return self.template.namespace()        
 
     def __getitem__(self, key):
         if getattr(self.template, 'macros', None) is None:
@@ -215,11 +203,18 @@ class GrokPageTemplate(object):
         self.__grok_name__ = name
         self.__grok_location__ = location
 
-    def _factory_init(self, factory):
+    def _initFactory(self, factory):
         pass
 
-    def default_namespace(self):
-        return {}
+    def namespace(self, view):
+        namespace = {}
+        namespace['request'] = view.request
+        namespace['view'] = view
+        namespace['context'] = view.context
+        # XXX need to check whether we really want to put None here if missing
+        namespace['static'] = view.static
+        
+        return namespace
 
 
 class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
@@ -238,16 +233,16 @@ class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
         # PageTemplate cannot be subclassed
         self.__grok_module__ = martian.util.caller_module()
 
-    def _factory_init(self, factory):
+    def _initFactory(self, factory):
         factory.macros = self.macros
 
-    def default_namespace(self):
-        return self.pt_getContext()
+    def namespace(self, view):
+        namespace = GrokPageTemplate.namespace(self, view)
+        namespace.update(self.pt_getContext())
+        return namespace
 
-    def render_template(self, view):
-        namespace = view.default_namespace()
-        namespace.update(view.extra_namespace())
-        return self.pt_render(namespace)
+    def render(self, view):
+        return self.pt_render(self.namespace(view))
 
 
 class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
@@ -265,16 +260,16 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
         # PageTemplateFile cannot be subclassed
         self.__grok_module__ = martian.util.caller_module()
     
-    def _factory_init(self, factory):
+    def _initFactory(self, factory):
         factory.macros = self.macros
 
-    def default_namespace(self):
-        return self.pt_getContext()
+    def namespace(self, view):
+        namespace = GrokPageTemplate.namespace(self, view)
+        namespace.update(self.pt_getContext())
+        return namespace
 
-    def render_template(self, view):
-        namespace = view.default_namespace()
-        namespace.update(view.extra_namespace())
-        return self.pt_render(namespace)
+    def render(self, view):
+        return self.pt_render(self.namespace(view))
 
     
 class DirectoryResource(directoryresource.DirectoryResource):
