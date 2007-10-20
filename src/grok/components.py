@@ -271,7 +271,9 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
         return namespace
 
     def render(self, view):
-        return self.pt_render(self.namespace(view))
+        namespace = self.namespace(view)
+        namespace.update(view.namespace())
+        return self.pt_render(namespace)
 
     
 class DirectoryResource(directoryresource.DirectoryResource):
