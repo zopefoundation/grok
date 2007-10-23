@@ -23,6 +23,9 @@ Feature changes
 Bug fixes
 ---------
 
+* Remove zc.recipe.egg, zc.recipe.filestorage, zc.recipe.testrunner,
+  zc.zope3recipes from version requirements.
+
 * The admin UI now shows interfaces in modules.
 
 * `handle...` is not a special function name any more.
