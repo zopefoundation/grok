@@ -4,7 +4,13 @@ Grok changes
 0.10.2 (unreleased)
 ===================
 
-* ...
+Bug fixes
+---------
+
+* Remove zc.recipe.egg, zc.recipe.filestorage, zc.recipe.testrunner,
+  zc.zope3recipes from version requirements.
+
+* Require zope.app.error = 3.5.1
 
 0.10.1 (2007-10-10)
 ===================
