@@ -28,6 +28,13 @@
   <securityPolicy
       component="zope.app.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
 
+  <!-- we register a ++rest++ traversal namespace -->
+  <view
+    name="rest" type="zope.publisher.interfaces.browser.IHTTPRequest"
+    provides="zope.traversing.interfaces.ITraversable" for="*"
+    factory=".rest.rest_skin"
+    />
+
   <!-- this overrides Zope 3's publication factories because they have
        the same name; we also need to change the priority because of
        the ZCML discriminator -->
@@ -46,6 +53,17 @@
       mimetypes="*"
       priority="11"
       />
+
+  <publisher
+      name="HTTP"
+      factory=".publication.GrokHTTPFactory"
+      methods="*"
+      mimetypes="*"
+      priority="1"
+      />
+
+  <!-- need to grok this for some basic REST support -->
+  <grok:grok package=".rest" />
 
   <grok:grok package=".admin" />
 

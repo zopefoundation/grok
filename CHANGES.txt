@@ -20,6 +20,9 @@ Feature changes
   special name 'fields'. This was abandoned in favor the usual Zope 3 way of
   defining schemas in interfaces and implementing them in our Grok models.
 
+* Integrated REST support. See doc/minitutorials/rest.txt for usage
+  information.
+
 Bug fixes
 ---------
 

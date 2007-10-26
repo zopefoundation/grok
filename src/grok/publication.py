@@ -14,14 +14,18 @@
 """Grok publication objects
 """
 
+from grok.components import GrokMethodNotAllowed
+
+from zope import component
 from zope.security.proxy import removeSecurityProxy
 from zope.security.checker import selectChecker
+from zope.publisher.publish import mapply
 
-from zope.app.publication.http import BaseHTTPPublication
+from zope.app.publication.http import BaseHTTPPublication, HTTPPublication
 from zope.app.publication.browser import BrowserPublication
 from zope.app.publication.requestpublicationfactories import \
-     BrowserFactory, XMLRPCFactory
-
+     BrowserFactory, XMLRPCFactory, HTTPFactory
+from zope.app.http.interfaces import IHTTPException
 
 class ZopePublicationSansProxy(object):
 
@@ -59,9 +63,28 @@ class GrokBrowserFactory(BrowserFactory):
 class GrokXMLRPCPublication(ZopePublicationSansProxy, BaseHTTPPublication):
     pass
 
-
 class GrokXMLRPCFactory(XMLRPCFactory):
 
     def __call__(self):
         request, publication = super(GrokXMLRPCFactory, self).__call__()
         return request, GrokXMLRPCPublication
+
+
+class GrokHTTPPublication(ZopePublicationSansProxy, HTTPPublication):
+   def callObject(self, request, ob):
+       orig = ob
+       if not IHTTPException.providedBy(ob):
+           ob = component.queryMultiAdapter((ob, request),
+                                            name=request.method)
+           checker = selectChecker(ob)
+           if checker is not None:
+               checker.check(ob, '__call__')
+           ob = getattr(ob, request.method, None)
+           if ob is None:
+               raise GrokMethodNotAllowed(orig, request)
+       return mapply(ob, request.getPositionalArguments(), request)
+
+class GrokHTTPFactory(HTTPFactory):
+    def __call__(self):
+        request, publication = super(GrokHTTPFactory, self).__call__()
+        return request, GrokHTTPPublication

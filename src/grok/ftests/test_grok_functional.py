@@ -22,6 +22,25 @@ checker = renormalizing.RENormalizing([
     (re.compile(r'httperror_seek_wrapper:', re.M), 'HTTPError:'),
     ])
 
+def http_call(method, path, data=None, **kw):
+    """Function to help make RESTful calls.
+
+    method - HTTP method to use
+    path - testbrowser style path
+    data - (body) data to submit
+    kw - any request parameters
+    """
+    
+    if path.startswith('http://localhost'):
+        path = path[len('http://localhost'):]
+    request_string = '%s %s HTTP/1.1\n' % (method, path)
+    for key, value in kw.items():
+        request_string += '%s: %s\n' % (key, value)
+    if data is not None:
+        request_string += '\r\n'
+        request_string += data
+    return HTTPCaller()(request_string, handle_errors=False)
+
 def suiteFromPackage(name):
     files = resource_listdir(__name__, name)
     suite = unittest.TestSuite()
@@ -36,6 +55,7 @@ def suiteFromPackage(name):
             dottedname, setUp=setUp, tearDown=tearDown,
             checker=checker,
             extraglobs=dict(http=HTTPCaller(),
+                            http_call=http_call,
                             getRootFolder=getRootFolder,
                             sync=sync),
             optionflags=(doctest.ELLIPSIS+
@@ -49,8 +69,8 @@ def suiteFromPackage(name):
 
 def test_suite():
     suite = unittest.TestSuite()
-    for name in ['view', 'staticdir', 'xmlrpc', 'traversal', 'form', 'url',
-                 'security', 'utility', 'catalog', 'admin']:
+    for name in ['view', 'staticdir', 'xmlrpc', 'rest', 'traversal',
+                 'form', 'url', 'security', 'utility', 'catalog', 'admin']:
         suite.addTest(suiteFromPackage(name))
     return suite
 

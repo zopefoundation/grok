@@ -36,6 +36,8 @@ class IGrokBaseClasses(interface.Interface):
     LocalUtility = interface.Attribute("Base class for local utilities.")
     View = interface.Attribute("Base class for browser views.")
     XMLRPC = interface.Attribute("Base class for XML-RPC methods.")
+    JSON = interface.Attribute("Base class for JSON methods.")
+    REST = interface.Attribute("Base class for REST views.")
     Traverser = interface.Attribute("Base class for custom traversers.")
     Form = interface.Attribute("Base class for forms.")
     AddForm = interface.Attribute("Base class for add forms.")
@@ -411,6 +413,14 @@ class IGrokForm(IGrokView):
         doesn't have to update an object, the dictionary is empty.
         """
 
+class IREST(interface.Interface):
+    context = interface.Attribute("Object that the REST handler presents.")
+
+    request = interface.Attribute("Request that REST handler was looked"
+                                  "up with.")
+    
+    body = interface.Attribute(
+        """The text of the request body.""")
 
 class IApplication(interface.Interface):
     """Marker-interface for grok application factories.

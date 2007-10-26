@@ -44,6 +44,7 @@ from zope.app.container.btree import BTreeContainer
 from zope.app.container.contained import Contained
 from zope.app.container.interfaces import IReadContainer
 from zope.app.component.site import SiteManagerContainer
+from zope.app.publication.http import MethodNotAllowed
 
 import z3c.flashmessage.interfaces
 
@@ -177,6 +178,29 @@ class XMLRPC(object):
     pass
 
 
+class GrokMethodNotAllowed(MethodNotAllowed):
+    pass
+
+class REST(object):
+    interface.implements(interfaces.IREST)
+    
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.body = request.bodyStream.getCacheStream().read()
+    
+    def GET(self):
+        raise GrokMethodNotAllowed(self.context, self.request)
+    
+    def POST(self):
+        raise GrokMethodNotAllowed(self.context, self.request)
+    
+    def PUT(self):
+        raise GrokMethodNotAllowed(self.context, self.request)
+    
+    def DELETE(self):
+        raise GrokMethodNotAllowed(self.context, self.request)
+
 class JSON(BrowserPage):
 
     def __call__(self):
@@ -264,6 +288,14 @@ class Traverser(object):
         self.request = request
 
     def browserDefault(self, request):
+        # if we have a RESTful request, we will handle
+        # GET, POST and HEAD differently (PUT and DELETE are handled already
+        # but not on the BrowserRequest layer but the HTTPRequest layer)
+        if IRESTLayer.providedBy(request):
+            rest_view = component.getMultiAdapter(
+                (self.context, self.request),
+                name=request.method)
+            return rest_view, ()
         view_name = getDefaultViewName(self.context, request)
         view_uri = "@@%s" % view_name
         return self.context, (view_uri,)
@@ -478,5 +510,11 @@ class Role(Role):
 class IGrokLayer(interface.Interface):
     pass
 
+class IRESTLayer(interface.Interface):
+    pass
+
 class Skin(object):
+    pass
+
+class RESTProtocol(object):
     pass
