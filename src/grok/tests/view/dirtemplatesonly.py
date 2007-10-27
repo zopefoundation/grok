@@ -6,7 +6,7 @@ A template directory may only contain recognized template files:
   >>> warnings.warn = warn
 
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
     From tests.py's showwarning():
     ... UserWarning: File 'invalid.txt' has an unrecognized extension in directory '...dirtemplatesonly_templates'...
     

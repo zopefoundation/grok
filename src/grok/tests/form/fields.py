@@ -2,7 +2,7 @@
 A grok.Fields can receive keyword parameters with schema fields. These
 should be avaible in the definition order.
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
 
   >>> from zope import component
   >>> from zope.publisher.browser import TestRequest

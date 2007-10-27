@@ -2,7 +2,7 @@
 A site can be created by mixing in grok.Site into a grok.Model or
 grok.Container.
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
 
   >>> from zope import interface
   >>> from zope.app.component.interfaces import IPossibleSite, ISite

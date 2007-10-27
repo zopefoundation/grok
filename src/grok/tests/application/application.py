@@ -3,7 +3,7 @@
 After grokking a module that defines an application, the application factory is
 available as a utility::
 
-    >>> grok.tests.grok(__name__)
+    >>> grok.testing.grok(__name__)
     >>> import zope.component
     >>> import grok.interfaces
     >>> calendar_app = zope.component.getUtility(grok.interfaces.IApplication,

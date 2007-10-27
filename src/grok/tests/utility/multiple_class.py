@@ -2,7 +2,7 @@
 When you try to register multiple classes with the same (interface, name)
 combination multiple times using grok.local_utility, we expect an error:
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: Conflicting local utility registration

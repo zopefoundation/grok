@@ -6,12 +6,12 @@ priorities:
 - BetaGrokker with priority 1
 - GammaGrokker with priority -1
 
-    >>> grok.tests.grok(__name__)
+    >>> grok.testing.grok(__name__)
 
 We grok a module that implements subclasses for Alpha, Beta, and Gamma and our
 grokkers get executed in the order of priority (highest first)::
 
-    >>> grok.tests.grok('grok.tests.grokker.priority_fixture')
+    >>> grok.testing.grok('grok.tests.grokker.priority_fixture')
     beta
     alpha
     gamma

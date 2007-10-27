@@ -2,7 +2,7 @@
 Templates that are not associated with a view class will provoke an
 error:
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
   ...
   GrokError: Found the following unassociated template(s) when grokking

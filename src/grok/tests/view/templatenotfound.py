@@ -2,7 +2,7 @@
 This should fail because ``grok.template`` points to a non-existing
 template:
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: View <class 'grok.tests.view.templatenotfound.Painting'>

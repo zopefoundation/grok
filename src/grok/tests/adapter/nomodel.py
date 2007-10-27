@@ -1,7 +1,7 @@
 """
 If no model can be found in the module, we get an error:
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: No module-level context for

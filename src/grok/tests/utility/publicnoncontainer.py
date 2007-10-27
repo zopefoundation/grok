@@ -2,7 +2,7 @@
 You cannot use local_utility with 'public' set to True if the site class
 isn't a container:
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: Cannot set public to True with grok.local_utility as the site

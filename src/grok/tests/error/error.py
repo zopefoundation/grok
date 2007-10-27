@@ -3,7 +3,7 @@
 We expect this grok to fail, and give 
 
   >>> try:
-  ...     grok.tests.grok(__name__)
+  ...     grok.testing.grok(__name__)
   ... except grok.GrokError, error:
   ...     pass
   >>> error.component

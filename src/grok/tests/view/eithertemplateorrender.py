@@ -1,7 +1,7 @@
 """
 Only one, either a template, or render() can be specified:
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: Multiple possible ways to render view

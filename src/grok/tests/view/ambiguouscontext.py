@@ -1,7 +1,7 @@
 """
 Templates with ambiguous context cannot be grokked:
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: Multiple possible contexts for

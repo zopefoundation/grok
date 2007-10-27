@@ -3,7 +3,7 @@ An annotations class must implement either exactly one interface, or
 it should cspecify which of the many implemented interfaces it should
 be registered for.  Ambiguities lead to errors:
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
   GrokError: <class
   'grok.tests.annotation.implementsmany.MammothAnnotations'> is

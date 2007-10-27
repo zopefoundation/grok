@@ -2,7 +2,7 @@
 A View may either have an associated template or a render-method. Here
 we check that this also works for templates in a template-directory:
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: Multiple possible ways to render view

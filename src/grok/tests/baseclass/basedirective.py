@@ -3,7 +3,7 @@ The baseclass directive can be used to mark something a base class. Of course
 subclasses shouldn't inherit this otherwise there is no way to turn them
 into non-base classes.
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
 
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()

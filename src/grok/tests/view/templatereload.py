@@ -2,7 +2,7 @@
 Filesystem-based templates, once grokked, can be changed.  The change
 will automatically be picked up, reloading Zope is not necessary.
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   >>> from zope.component import getMultiAdapter
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()

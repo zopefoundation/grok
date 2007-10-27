@@ -2,7 +2,7 @@
 Subclasses of grok.GlobalUtility that implement more than one interface must
 specify which interface to use for the registration:
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: <class 'grok.tests.utility.implementsmany2.Club'> is implementing

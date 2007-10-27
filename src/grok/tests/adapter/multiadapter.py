@@ -3,7 +3,7 @@ Multi-Adapters are supported by subclassing grok.MultiAdapter, giving
 multiple arguments to grok.adapts, and supplying a matching
 __init__():
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
 
   >>> cave = Cave()
   >>> fireplace = Fireplace()

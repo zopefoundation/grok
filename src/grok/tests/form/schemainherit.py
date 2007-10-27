@@ -1,7 +1,7 @@
 """
 A grok.Model may implement a schema that inherits from another one:
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   >>> manfred = Mammoth()
 
   >>> from zope import component

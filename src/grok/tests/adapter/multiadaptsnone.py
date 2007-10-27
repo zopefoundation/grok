@@ -1,7 +1,7 @@
 """
 Subclasses of grok.MultiAdapter must declare what they adapt, using grok.adapts:
 
-  >>> grok.tests.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: <class 'grok.tests.adapter.multiadaptsnone.Home'> must specify
