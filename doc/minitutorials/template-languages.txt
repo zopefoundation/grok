@@ -95,7 +95,7 @@ that it loads the template from a file instead:
     class MyPageTemplateFile(grok.components.GrokPageTemplate):
 
         def __init__(self, filename, _prefix=None):
-            file = open(os.path.join(_prefix, filename)
+            file = open(os.path.join(_prefix, filename))
             self._template = MyTemplate(file.read())
             self.__grok_module__ = martian.util.caller_module()
     
@@ -115,7 +115,7 @@ Now you can use this filebase template:
     class AView(grok.View):
         pass
         
-    aview = MyTemplateFile('lasceuax.html', '.')
+    aview = MyPageTemplateFile('lasceuax.html', '.')
 
 
 Templates in the _templates directory
