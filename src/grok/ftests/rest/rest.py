@@ -244,8 +244,51 @@ random objects without access:
   A server error occurred.
   </body></html>
   <BLANKLINE>
-  
+
 XXX shouldn't this really give a FORBIDDEN response?
+
+Let's add another two pieces of content, one for which a REST view is
+declared on the IFoo interface, and another one where this is also the
+case, but a more specific REST view is declared on the class itself::
+
+  >>> root['app']['one'] = MyInterfaceContent()
+  >>> root['app']['two'] = MyNoInterfaceContent()
+
+We should get a different result for the GET request::
+
+  >>> response = http_call('GET', 'http://localhost/++rest++g/app/one')
+  >>> print response.getBody()
+  GET interface registered
+  >>> response = http_call('GET', 'http://localhost/++rest++g/app/two')
+  >>> print response.getBody()
+  GET directly registered
+
+We should also get a different result for the PUT request::
+
+  >>> response = http_call('PUT', 'http://localhost/++rest++g/app/one')
+  >>> print response.getBody()
+  PUT interface registered
+  >>> response = http_call('PUT', 'http://localhost/++rest++g/app/two')
+  >>> print response.getBody()
+  PUT directly registered
+  
+We expect POST and DELETE to be the same on both. For the directly
+registered object (two) it should fall back to the interface as there
+is none more specifically declared::
+
+  >>> response = http_call('POST', 'http://localhost/++rest++g/app/one')
+  >>> print response.getBody()
+  POST interface registered
+  >>> response = http_call('POST', 'http://localhost/++rest++g/app/two')
+  >>> print response.getBody()
+  POST interface registered
+
+  >>> response = http_call('DELETE', 'http://localhost/++rest++g/app/one')
+  >>> print response.getBody()
+  DELETE interface registered
+  >>> response = http_call('DELETE', 'http://localhost/++rest++g/app/two')
+  >>> print response.getBody()
+  DELETE interface registered
 
 Todo:
 
@@ -255,13 +298,17 @@ Todo:
 """
 
 import grok
+from zope.interface import Interface
+
+class IFoo(Interface):
+    pass
 
 class MyApp(grok.Container, grok.Application):
     pass
 
 class MyContent(grok.Model):
     pass
-
+    
 class LayerA(grok.IRESTLayer):
     pass
 
@@ -275,6 +322,9 @@ class LayerSecurity(grok.IRESTLayer):
     pass
 
 class LayerContent(grok.IRESTLayer):
+    pass
+
+class LayerInterface(grok.IRESTLayer):
     pass
 
 class A(grok.RESTProtocol):
@@ -294,6 +344,9 @@ class E(grok.RESTProtocol):
 
 class F(grok.RESTProtocol):
     grok.layer(LayerContent)
+
+class G(grok.RESTProtocol):
+    grok.layer(LayerInterface)
     
 class ARest(grok.REST):
     grok.layer(LayerA)
@@ -360,4 +413,36 @@ class BodyTest(grok.REST):
 
     def PUT(self):
         return self.body
+
+class MyInterfaceContent(grok.Model):
+    grok.implements(IFoo)
+
+class MyNoInterfaceContent(grok.Model):
+    grok.implements(IFoo)
+
+class InterfaceRest(grok.REST):
+    grok.context(IFoo)
+    grok.layer(LayerInterface)
     
+    def GET(self):
+        return "GET interface registered"
+
+    def POST(self):
+        return "POST interface registered"
+
+    def PUT(self):
+        return "PUT interface registered"
+
+    def DELETE(self):
+        return "DELETE interface registered"
+
+class NoInterfaceRest(grok.REST):
+    grok.context(MyNoInterfaceContent)
+    grok.layer(LayerInterface)
+    
+    def GET(self):
+        return "GET directly registered"
+
+    def PUT(self):
+        return "PUT directly registered"
+

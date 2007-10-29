@@ -14,7 +14,7 @@
 """Grok publication objects
 """
 
-from grok.components import GrokMethodNotAllowed
+from grok.rest import GrokMethodNotAllowed
 
 from zope import component
 from zope.security.proxy import removeSecurityProxy

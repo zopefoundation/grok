@@ -44,7 +44,6 @@ from zope.app.container.btree import BTreeContainer
 from zope.app.container.contained import Contained
 from zope.app.container.interfaces import IReadContainer
 from zope.app.component.site import SiteManagerContainer
-from zope.app.publication.http import MethodNotAllowed
 
 import z3c.flashmessage.interfaces
 
@@ -93,6 +92,11 @@ class MultiAdapter(object):
 class Annotation(persistent.Persistent):
     pass
 
+
+class ViewBase(object):
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
 
 class View(BrowserPage):
     interface.implements(interfaces.IGrokView)
@@ -177,10 +181,6 @@ class View(BrowserPage):
 class XMLRPC(object):
     pass
 
-
-class GrokMethodNotAllowed(MethodNotAllowed):
-    pass
-
 class REST(object):
     interface.implements(interfaces.IREST)
     
@@ -188,18 +188,22 @@ class REST(object):
         self.context = context
         self.request = request
         self.body = request.bodyStream.getCacheStream().read()
+
+    @property
+    def response(self):
+        return self.request.response
     
-    def GET(self):
-        raise GrokMethodNotAllowed(self.context, self.request)
+##     def GET(self):
+##         raise GrokMethodNotAllowed(self.context, self.request)
     
-    def POST(self):
-        raise GrokMethodNotAllowed(self.context, self.request)
+##     def POST(self):
+##         raise GrokMethodNotAllowed(self.context, self.request)
     
-    def PUT(self):
-        raise GrokMethodNotAllowed(self.context, self.request)
+##     def PUT(self):
+##         raise GrokMethodNotAllowed(self.context, self.request)
     
-    def DELETE(self):
-        raise GrokMethodNotAllowed(self.context, self.request)
+##     def DELETE(self):
+##         raise GrokMethodNotAllowed(self.context, self.request)
 
 class JSON(BrowserPage):
 

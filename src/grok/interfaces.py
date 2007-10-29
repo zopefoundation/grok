@@ -16,6 +16,7 @@
 from zope import interface, schema
 from zope.publisher.interfaces.browser import IBrowserPage
 from zope.formlib.interfaces import reConstraint
+from zope.interface.interfaces import IInterface
 
 class IGrokBaseClasses(interface.Interface):
     ClassGrokker = interface.Attribute("Base class to define a class "
@@ -252,6 +253,7 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
         """grok-specific action decorator.
         """
 
+    IRESTSkinType = interface.Attribute('The REST skin type')
 
 class IGrokView(IBrowserPage):
     """Grok views all provide this interface."""
@@ -439,3 +441,7 @@ class IIndexDefinition(interface.Interface):
         Use name for index name and attribute to index. Set up
         index for interface or class context.
         """
+
+class IRESTSkinType(IInterface):
+    """Skin type for REST requests.
+    """

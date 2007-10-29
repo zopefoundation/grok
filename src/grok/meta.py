@@ -16,7 +16,6 @@
 import os
 
 import zope.component.interface
-import zope.location
 from zope import interface, component
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
@@ -48,7 +47,8 @@ from martian import util
 import grok
 from grok import components, formlib
 from grok.util import check_adapts, get_default_permission, make_checker
-from grok.rest import IRESTSkinType
+from grok.rest import RestPublisher
+from grok.interfaces import IRESTSkinType
 
 class AdapterGrokker(martian.ClassGrokker):
     component_class = grok.Adapter
@@ -121,14 +121,6 @@ class XMLRPCGrokker(martian.ClassGrokker):
             make_checker(factory, method_view, permission)
         return True
 
-class RestPublisher(zope.location.Location):
-    interface.implements(IBrowserPublisher)
-
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-        self.__parent__ = self.context
-    
 class RESTGrokker(martian.ClassGrokker):
     component_class = grok.REST
     
@@ -144,20 +136,13 @@ class RESTGrokker(martian.ClassGrokker):
         view_layer = determine_class_directive('grok.layer', factory,
                                                module_info,
                                                default=grok.IRESTLayer)
-
+        
         for method in methods:
-            # determine if the method is not allowed (it's the same
-            # as the method on the superclass)
-            is_not_allowed_method = (method.im_func is
-                                     getattr(grok.REST,
-                                             method.__name__).im_func)
-
             # Make sure that the class inherits RestPublisher, so that the
             # views have a location
             method_view = type(
                 factory.__name__, (factory, RestPublisher),
-                {'__call__': method,
-                 'is_not_allowed': is_not_allowed_method }
+                {'__call__': method }
                 )
 
             component.provideAdapter(

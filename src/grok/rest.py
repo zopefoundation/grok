@@ -6,13 +6,23 @@ from zope.traversing.namespace import skin
 from zope.interface import Interface
 from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IBrowserRequest
+from zope.publisher.interfaces.browser import IBrowserPublisher
 from zope.publisher.interfaces.http import IHTTPRequest
+from zope.app.publication.http import MethodNotAllowed
+import zope.location
 
-from grok.components import GrokMethodNotAllowed
+from grok.interfaces import IRESTSkinType
 
-class IRESTSkinType(IInterface):
-    """Skin for REST requests.
-    """
+class RestPublisher(zope.location.Location):
+    grok.implements(IBrowserPublisher)
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.__parent__ = self.context
+
+class GrokMethodNotAllowed(MethodNotAllowed):
+    pass
 
 class MethodNotAllowedView(grok.MultiAdapter):
     grok.adapts(GrokMethodNotAllowed, IHTTPRequest)
@@ -30,8 +40,10 @@ class MethodNotAllowedView(grok.MultiAdapter):
             view = component.queryMultiAdapter(
                 (self.error.object, self.error.request),
                 name=method)
-            if view is not None and not view.is_not_allowed:
-                allow.append(method)
+            if view is not None:
+                is_not_allowed = getattr(view, 'is_not_allowed', False)
+                if not is_not_allowed:
+                    allow.append(method)
         allow.sort()
         return allow
     
@@ -46,3 +58,27 @@ class rest_skin(skin):
 class DefaultRest(grok.REST):
     grok.context(Interface)
     grok.layer(grok.IRESTLayer)
+
+class NotAllowedREST(grok.REST):
+    """These are registered for everything by default to cause the correct
+    errors.
+
+    Any more specific REST view overrides this.
+    """
+    grok.layer(grok.IRESTLayer)
+    grok.context(Interface)
+
+    is_not_allowed = True
+    
+    def GET(self):
+        raise GrokMethodNotAllowed(self.context, self.request)
+            
+    def POST(self):
+        raise GrokMethodNotAllowed(self.context, self.request)
+            
+    def PUT(self):
+        raise GrokMethodNotAllowed(self.context, self.request)
+    
+    def DELETE(self):
+        raise GrokMethodNotAllowed(self.context, self.request)
+            
