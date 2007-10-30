@@ -12,7 +12,7 @@ Feature changes
 
 * Removed ``grok.define_permission`` in favor of the
   ``grok.Permission`` component base class.  You should now subclass
-  this base class to define roles.
+  this base class to define permissions.
 
 * Added the ``grok.Role`` component base class to define roles.
 
