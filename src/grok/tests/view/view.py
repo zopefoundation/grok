@@ -1,6 +1,6 @@
 """
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
 
 We should find the ``cavepainting`` view for a mammoth:
 

@@ -1,7 +1,7 @@
 """
 Multiple calls of grok.require in one class are not allowed.
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
      ...
   GrokError: grok.require was called multiple times in <class 'grok.tests.security.multiple_require_xmlrpc.MultipleXMLRPC'>. It may only be set once for a class.

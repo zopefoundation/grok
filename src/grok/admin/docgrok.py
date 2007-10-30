@@ -55,10 +55,6 @@ DOCGROK_ITEM_NAMESPACE = 'docgrok-obj'
 
 grok.context(IRootFolder)
 
-class ManageApplications(grok.Permission):
-    grok.name('grok.ManageApplications')
-
-
 def find_filepath(dotted_path):
     """Find the filepath for a dotted name.
 

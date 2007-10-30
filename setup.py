@@ -35,7 +35,7 @@ setup(
     include_package_data = True,
     zip_safe=False,
     install_requires=['setuptools',
-                      'martian',
+                      'martian >= 0.9.1',
                       'simplejson',
                       'pytz',
                       'ZODB3',

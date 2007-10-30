@@ -43,11 +43,12 @@ from grok.interfaces import IRESTSkinType
 from grok.directive import (context, name, title, template, templatedir,
                             provides, baseclass, global_utility, local_utility,
                             permissions, require, site, layer)
-from grok._grok import do_grok as grok  # Avoid name clash within _grok
-from grok._grok import grok_component
-from grok._grok import SubscribeDecorator as subscribe
-from grok._grok import adapter, implementer
+from grok.decorators import subscribe, adapter, implementer
 from martian.error import GrokError, GrokImportError
+
+# BBB These two functions are meant for test fixtures and should be
+# imported from grok.testing, not from grok.
+from grok.testing import grok, grok_component
 
 from grok.formlib import action, AutoFields, Fields
 from grok.util import url

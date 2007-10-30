@@ -3,7 +3,7 @@ A grok.EditForm is a special grok.View that renders an edit form.
 
   >>> from zope import component
   >>> from zope.publisher.browser import TestRequest
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
   >>> manfred = Mammoth()
 
   >>> request = TestRequest()

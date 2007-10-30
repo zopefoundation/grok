@@ -1,7 +1,7 @@
 """
 Explicit module-level context in case of multiple models:
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
 
   >>> cave = Cave()
   >>> home = IHome(cave)

@@ -2,7 +2,7 @@
 Subclasses of grok.Adapter and grok.MultiAdapter must implement exactly one
 interface:
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: <class 'grok.tests.adapter.implementsnonemulti.Home'> must

@@ -42,8 +42,9 @@ from zope.app.publisher.browser.pagetemplateresource import \
     PageTemplateResourceFactory
 from zope.app.container.btree import BTreeContainer
 from zope.app.container.contained import Contained
-from zope.app.container.interfaces import IReadContainer
+from zope.app.container.interfaces import IReadContainer, IObjectAddedEvent
 from zope.app.component.site import SiteManagerContainer
+from zope.app.component.site import LocalSiteManager
 
 import z3c.flashmessage.interfaces
 
@@ -64,6 +65,15 @@ class Container(BTreeContainer):
 
 class Site(SiteManagerContainer):
     pass
+
+@component.adapter(Site, IObjectAddedEvent)
+def addSiteHandler(site, event):
+    sitemanager = LocalSiteManager(site)
+    # LocalSiteManager creates the 'default' folder in its __init__.
+    # It's not needed anymore in new versions of Zope 3, therefore we
+    # remove it
+    del sitemanager['default']
+    site.setSiteManager(sitemanager)
 
 
 class Application(Site):

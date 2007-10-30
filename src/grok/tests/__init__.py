@@ -1,1 +1,1 @@
-# this is a package
+# make this directory a package

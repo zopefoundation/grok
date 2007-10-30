@@ -3,7 +3,7 @@ A base class of something that can be a context (such as a model) can
 function as a module-level context, and thus can have views associated
 with it.
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
 
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()

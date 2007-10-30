@@ -1,5 +1,6 @@
 <configure    
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:grok="http://namespaces.zope.org/grok">
 
   <include package="zope.security" file="meta.zcml" />
@@ -28,12 +29,27 @@
   <securityPolicy
       component="zope.app.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
 
+  <adapter factory=".components.ModelTraverser" />
+  <adapter factory=".components.ContainerTraverser" />
+
+  <browser:defaultView
+      for=".components.Model"
+      name="index"
+      />
+  <browser:defaultView
+      for=".components.Container"
+      name="index"
+      />
+
+  <subscriber handler=".components.addSiteHandler" />
+
   <!-- we register a ++rest++ traversal namespace -->
-  <view
-    name="rest" type="zope.publisher.interfaces.browser.IHTTPRequest"
-    provides="zope.traversing.interfaces.ITraversable" for="*"
-    factory=".rest.rest_skin"
-    />
+  <adapter
+      factory=".rest.rest_skin"
+      for="* zope.publisher.interfaces.browser.IHTTPRequest"
+      provides="zope.traversing.interfaces.ITraversable"
+      name="rest"
+      />
 
   <!-- this overrides Zope 3's publication factories because they have
        the same name; we also need to change the priority because of

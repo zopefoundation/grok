@@ -5,7 +5,7 @@ One way to indicate that something is a base class is by postfixing the
 classname with 'Base'. Another way is to use the 'grok.baseclass' directive
 on the class itself.
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
 
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()

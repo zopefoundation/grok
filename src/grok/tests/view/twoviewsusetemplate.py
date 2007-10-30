@@ -1,7 +1,7 @@
 """
 A template can be used by multiple views at the same time:
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
 
   >>> manfred = Mammoth()
   >>> from zope.publisher.browser import TestRequest

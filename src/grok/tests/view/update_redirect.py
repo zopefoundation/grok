@@ -2,7 +2,7 @@
 When a view's update() method redirects somewhere else, the template
 is not executed subsequently.
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
 
   >>> manfred = Mammoth()
   >>> from zope.publisher.browser import TestRequest

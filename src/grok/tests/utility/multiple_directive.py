@@ -2,7 +2,7 @@
 When you call the grok.local_utility directive multiple times specifying
 the same (interface, name) combination, we expect an error:
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: Conflicting local utility registration

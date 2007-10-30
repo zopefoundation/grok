@@ -2,7 +2,7 @@
 A form view can completely override which fields are displayed by setting
 form_fields manually:
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
 
 We only expect a single field to be present in the form, as we omitted 'size':
 

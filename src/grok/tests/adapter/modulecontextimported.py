@@ -1,7 +1,7 @@
 """
 Explicit module-level context for an imported model:
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
 
   >>> cave = Cave()
   >>> painting = IPainting(cave)

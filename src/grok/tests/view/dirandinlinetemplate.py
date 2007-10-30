@@ -2,7 +2,7 @@
 If multiple templates can be found, one in the module and one in the
 template directory, there is an error:
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: Conflicting templates found for name 'cavepainting' in module

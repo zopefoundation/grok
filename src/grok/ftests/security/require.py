@@ -4,7 +4,7 @@ Unauthorized:
 
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
-  >>> browser.open("http://localhost/@@cavepainting")
+  >>> browser.open("http://localhost/@@painting")
   Traceback (most recent call last):
   HTTPError: HTTP Error 401: Unauthorized
 
@@ -15,7 +15,7 @@ When we log in (e.g. as a manager), we can access the view just fine:
   ...                                             'zope.Manager')
   >>> browser.addHeader('Authorization', 'Basic mgr:mgrpw')
   >>> browser.handleErrors = False
-  >>> browser.open("http://localhost/@@cavepainting")
+  >>> browser.open("http://localhost/@@painting")
   >>> print browser.contents
   What a beautiful painting.
 
@@ -33,7 +33,7 @@ import zope.interface
 class ViewPainting(grok.Permission):
     grok.name('grok.ViewPainting')
 
-class CavePainting(grok.View):
+class Painting(grok.View):
 
     grok.context(zope.interface.Interface)
     grok.require('grok.ViewPainting')

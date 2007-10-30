@@ -1,7 +1,7 @@
 """
 Multiple models lead to ambiguity:
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   GrokError: Multiple possible contexts for

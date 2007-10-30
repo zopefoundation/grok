@@ -2,8 +2,6 @@
 A site can be created by mixing in grok.Site into a grok.Model or
 grok.Container.
 
-  >>> grok.grok(__name__)
-
   >>> from zope import interface
   >>> from zope.app.component.interfaces import IPossibleSite, ISite
   >>> manfred = Mammoth()
@@ -26,8 +24,8 @@ While manfred and herd are possible sites, they are not yet sites;
   >>> ISite.providedBy(herd)
   False
   
-When a site is added to a container it will be initialized as a site (
-when the ObjectAddedEvent is fired):
+When a site is added to a container it will be initialized as a site
+(when the ObjectAddedEvent is fired):
 
   >>> nonsitecontainer['manfred'] = manfred
   >>> ISite.providedBy(manfred)

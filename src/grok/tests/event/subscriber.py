@@ -1,7 +1,7 @@
 """
 You can subscribe to events using the @grok.subscribe decorator:
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
   >>> manfred = Mammoth('Manfred')
   >>> grok.notify(grok.ObjectCreatedEvent(manfred))
   >>> mammoths
