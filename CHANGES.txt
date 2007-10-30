@@ -7,18 +7,21 @@ Grok changes
 Feature changes
 ---------------
 
-* Integrated skins and layers. grok.layer, grok.IGrokLayer, grok.Skin
+* Integrated skins and layers: ``grok.layer``, ``grok.IGrokLayer``,
+  ``grok.Skin``.
 
-* Removed grok.define_permission in favor of the grok.Permission
-  component base class
+* Removed ``grok.define_permission`` in favor of the
+  ``grok.Permission`` component base class.  You should now subclass
+  this base class to define roles.
 
-* Add the grok.Role component base class.
+* Added the ``grok.Role`` component base class to define roles.
 
 * The admin UI now displays and offers deletion of broken objects.
 
-* Removed support for defining model schemas using an inner class with the
-  special name 'fields'. This was abandoned in favor the usual Zope 3 way of
-  defining schemas in interfaces and implementing them in our Grok models.
+* Removed support for defining model schemas using an inner class with
+  the special name ``fields``. This was abandoned in favor the usual
+  Zope 3 way of defining schemas in interfaces and implementing them
+  in our Grok models.
 
 * Integrated REST support. See doc/minitutorials/rest.txt for usage
   information.
@@ -31,10 +34,11 @@ Bug fixes
 
 * The admin UI now shows interfaces in modules.
 
-* `handle...` is not a special function name any more.
+* ``handle...`` is not a special function name anymore.
 
-* Views no longer need a custom AbsoluteURL to determine their URL,
-  since each instance now properly gets a __name__ attribute.
+* Views no longer need a custom ``AbsoluteURL`` view to determine
+  their URL, since each instance now properly gets a ``__name__``
+  attribute.
 
 * buildout.cfg extends versions.cfg to pin down the versions of the
   dependency tree.
@@ -42,8 +46,8 @@ Bug fixes
 Restructuring
 -------------
 
-* The <grok:grok /> ZCML directive now emits a configuration action
-  instead of grokking right away at XML parsing time.  That way
+* The ``<grok:grok />`` ZCML directive now emits a configuration
+  action instead of grokking right away at XML parsing time.  That way
   grokkers can depend on components that are set up using regular ZCML
   (e.g. checking for a permission that's defined in ZCML).
 
@@ -74,7 +78,7 @@ Bug fixes
 * A fix in Martian where multiple grok.Model or grok.Container classes
   could result in something being found as a context twice.
 
-0.9 series (early 2007 until july 2007)
+0.9 series (early 2007 until July 2007)
 =======================================
 
 Feature changes
@@ -82,10 +86,10 @@ Feature changes
 
 Grok was released in "continuous release" mode from SVN during this period.
 
-0.1 series (september 2006 until early 2007)
+0.1 series (September 2006 until early 2007)
 ============================================
 
 Feature changes
 ---------------
 
-Grok was created in september 2006.
+Grok was created in September 2006.
