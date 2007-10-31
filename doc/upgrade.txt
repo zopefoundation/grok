@@ -39,13 +39,13 @@ Upgrading to 0.11
   should now be doing this::
 
     config.action(
-        descriminator=('somecomponent', name),
+        discriminator=('somecomponent', name),
         callable=registerSomeComponent,
         args=(name,)
         )
 
-  The descriminator should be chosen so that registrations with the
-  same descriminator conflict (in the above example, if somebody tried
+  The discriminator should be chosen so that registrations with the
+  same discriminator conflict (in the above example, if somebody tried
   to register two different components under the same name, you'd get
   a conflict).
 
