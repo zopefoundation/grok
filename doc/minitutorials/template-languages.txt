@@ -11,111 +11,48 @@ the default of Zope 3. Of course you can use whatever templating language you
 want in Grok, but to get the automatic association between template
 objects/files and views you need to do a little bit of extra work.
 
+
 Inline templates
 ----------------
 "Inline" templates are templates where the template code is written inside the
 python class. To get the automatic association to a view class, you need to
-write a class that subclasses from grok.components.GrokPageTemplate, so it
-will be picked up by the template grokkers. It also needs to implement
-grok.interfaces.ITemplateFile. Here is an example:
+write a class that subclasses from grok.components.GrokPageTemplate. There are 
+however some methods you need to override, namely the fromFile and fromString
+factory methods, and the render method.
+
+Here is an example of a minimal page template integration:
 
 .. code-block:: python
 
-    class MyPageTemplate(grok.components.GrokPageTemplate):
+class MyPageTemplate(grok.components.GrokPageTemplate):
 
-        def __init__(self, html):
-            self._template = MyTemplate(html)
-            self.__grok_module__ = martian.util.caller_module()
+    def fromTemplate(self, template):
+        return MyTemplate(template)
 
-        def _initFactory(self, factory):
-            pass
-    
-        def namespace(self, view):
-            namespace = {}
-            namespace['request'] = view.request
-            namespace['view'] = view
-            namespace['context'] = view.context
-            # XXX need to check whether we really want to put None here if missing
-            namespace['static'] = view.static
-            
-            return namespace
-    
-        def render(self, view):
-            namespace = self.namespace(view)
-            namespace.update(view.namespace())        
-            return self._template.render(**namespace)
+    def fromFile(self, filename, _prefix=None):
+        file = open(os.path.join(_prefix, filename))
+        return MyTemplate(file.read())
 
-In the __init__ method of a typical template you pass in what should be
-rendered. This is usually HTML, but can equally well be XML or text, or
-whatever your template renders. Note the line setting
-self.__grok_module__.This is necessary to support inline templates.
-
-The _initFactory method is a call made when setting up views (when the server
-starts). Basically, you can here initialize the view in ways needed to your
-template language. For example, Zope Page Templates set the macro attribute on
-the view class, so that you can access ZPT macros with the standard syntax of
-"context/@@viewname/macros/themacro". Most likely your class doesn't need to
-do anything here.
-
-The namespace method should return a dictionary with variables that should be
-included in the namespace that is specific for your template language. Common
-variables is 'context', 'view', 'request' and 'static', which is what the
-default is if you don't override this method. Your language might want to use
-more or fewer, depending on how the language works. For example, a template
-language like Kid or Templess that doesn't have object attribute access would
-have no use of any of these variables, and instead you need to in each view
-override the namespace() method to pass in exactly the values needed. If your
-template language has attribute access you probably don't need to override
-this method at all.
-
-Lastly, render() is the method normally used to render a template attached to
-a view. Here you do whatever necessary to render your template. This is
-usually to call view.namespace() and pass that into the method that renders
-the template. The above example is for Genshi, and something similar would
-probably be used for your template language too.
+    def render(self, view):
+        return self.getTemplate().render(**self.getNamespace(view))
 
 With this class finished you can create an inline template, like this:
 
 .. code-block:: python
 
-    class AView(grok.View):
-        pass
-        
-    aview = MyPageTemplate('<html><body>Some text</body></html>')
+>>> class AView(grok.View):
+>>>     pass
+>>>     
+>>> aview = MyPageTemplate('<html><body>Some text</body></html>')
 
-
-File templates
---------------
-Mostly you want your templates to reside on disk. To do this you need a
-file template class. It looks and works as the template class above, except
-that it loads the template from a file instead:
+And also you can create a filebase template, inline:
 
 .. code-block:: python
 
-    class MyPageTemplateFile(grok.components.GrokPageTemplate):
-
-        def __init__(self, filename, _prefix=None):
-            file = open(os.path.join(_prefix, filename))
-            self._template = MyTemplate(file.read())
-            self.__grok_module__ = martian.util.caller_module()
-    
-        def render(self, view):
-            return self._template.render(**self.namespace(view))
-
-Here _initFactory() and namespace() is left out, as GrokPageTemplate alredy
-has them as defaults. The __init__ now takes two parameters, filename and
-_prefix, which is the directory in which the file resides. Although there is
-no requirement that these are the parameters used it is a good idea, since
-that makes the next step easier.
-
-Now you can use this filebase template:
-
-.. code-block:: python
-
-    class AView(grok.View):
-        pass
-        
-    aview = MyPageTemplateFile('lasceuax.html', '.')
+>>> class AView(grok.View):
+>>>     pass
+>>>     
+>>> aview = MyTemplateFile('lasceuax.html')
 
 
 Templates in the _templates directory
@@ -124,34 +61,21 @@ Templates in the _templates directory
 The most common usecase is however to place the templates in the views
 template directory. To do that, a global utility that generates
 MyPageTemplates from the filenames found is needed. That utility needs to
-implement the ITemplateFileFactory interface. The easiest way of doing this is
-to let your template file class implement it directly, by having the above
-filename and _prefix parameters in the __init__ call and tell the component
-architecture that the class provides the interface with a classProvides call.
-You also need to tell Grok that the class should be a direct global utility by
-subclassing from grok.GlobalUtility, and annotating it with a grok.direct()
-annotation. Lastly you need to choose an extension for your template files,
-and set the grok.name to that extension:
+implement the ITemplateFileFactory interface. 
 
 .. code-block:: python
 
-    class MyPageTemplateFile(grok.components.GrokPageTemplate):
-    
-        zope.interface.implements(grok.interfaces.ITemplateFile)
-        zope.interface.classProvides(grok.interfaces.ITemplateFileFactory)
-        grok.name('mtl')
-        grok.direct()
+class MyPageTemplateFactory(grok.GlobalUtility):
 
-        def __init__(self, filename, _prefix=None):
-            file = open(os.path.join(_prefix, filename)
-            self._template = MyTemplate(file.read())
-            self.__grok_module__ = martian.util.caller_module()
-    
-        def render(self, view):
-            return self._template.render(**self.namespace(view))
+    grok.implements(grok.interfaces.ITemplateFileFactory)
+    grok.name('mtl')
 
-When your module gets grokked, Grok will now pick up on the MyPageTemplateFile
-class, register it as a global utility for templates with the '.mtl' extension
-and you can start creating .mtl files in the template directory for your class.
+    def __call__(self, filename, _prefix=None):
+        return MyPageTemplate(filename=filename, _prefix=_prefix)
 
-Have fun!
+When your module gets grokked, Grok will now pick up on the
+MyPageTemplateFactory class, register it as a global utility for templates
+with the '.mtl' extension and you can start creating .mtl files in the
+template directory for your class.
+
+That's all you need! Have fun!

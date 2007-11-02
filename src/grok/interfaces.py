@@ -435,21 +435,18 @@ class ITemplateFileFactory(interface.Interface):
     """
     
     def __call__(filename, _prefix=None):
-        """Creates an ITemplateFile
+        """Creates an ITemplate from a file
         
         _prefix is the directory the file is located in
         """
 
-class ITemplateFile(interface.Interface):
-    """Template objects created from files
+class ITemplate(interface.Interface):
+    """Template objects
     """
     
     def _initFactory(factory):
         """Template language specific initializations on the view factory."""
-    
-    def namespace():
-        """Returns a dictionary of template language specific variables."""
-    
+        
     def render(view):
         """Renders the template"""
         

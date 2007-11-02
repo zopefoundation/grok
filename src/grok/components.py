@@ -13,6 +13,7 @@
 ##############################################################################
 """Grok components"""
 
+import sys
 import os
 import persistent
 import urllib
@@ -190,8 +191,11 @@ class JSON(BrowserPage):
         return simplejson.dumps(method_result)
 
 
-class GrokPageTemplate(object):
+class BasePageTemplate(object):
+    """Any sort of page template"""
     
+    interface.implements(interfaces.ITemplate)
+
     __grok_name__ = ''
     __grok_location__ = ''
 
@@ -216,8 +220,62 @@ class GrokPageTemplate(object):
         
         return namespace
 
+class GrokPageTemplate(BasePageTemplate):
+    """A slightly more advanced page template
+    
+    This provides most of what a page template needs and is a good base for
+    writing your own page template"""
+    
+    def __init__(self, template=None, filename=None, _prefix=None):
 
-class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
+        # __grok_module__ is needed to make defined_locally() return True for
+        # inline templates
+        # XXX unfortunately using caller_module means that care must be taken
+        # when GrokPageTemplate is subclassed.
+        self.__grok_module__ = martian.util.caller_module()
+        
+        if not (template is None) ^ (filename is None):
+            raise AssertionError("You must pass in template or filename, but not both.")
+        
+        if template:
+            self._template = self.fromTemplate(template)
+        else:
+            if _prefix is None:
+                module = sys.modules[self.__grok_module__]
+                _prefix = os.path.dirname(module.__file__)
+            self._template = self.fromFile(filename, _prefix)
+
+    def __repr__(self):
+        return '<%s template in %s>' % (self.__grok_name__,
+                                        self.__grok_location__)
+    
+    def _annotateGrokInfo(self, name, location):
+        self.__grok_name__ = name
+        self.__grok_location__ = location
+
+    def _initFactory(self, factory):
+        pass
+
+    def namespace(self, view):
+        namespace = {}
+        namespace['request'] = view.request
+        namespace['view'] = view
+        namespace['context'] = view.context
+        # XXX need to check whether we really want to put None here if missing
+        namespace['static'] = view.static
+        
+        return namespace
+    
+    def getNamespace(self, view):
+        namespace = self.namespace(view)
+        namespace.update(view.namespace())
+        return namespace
+    
+    def getTemplate(self):
+        return self._template
+
+
+class PageTemplate(BasePageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
     expand = 0
 
     def __init__(self, template):
@@ -237,7 +295,7 @@ class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
         factory.macros = self.macros
 
     def namespace(self, view):
-        namespace = GrokPageTemplate.namespace(self, view)
+        namespace = BasePageTemplate.namespace(self, view)
         namespace.update(self.pt_getContext())
         return namespace
 
@@ -247,11 +305,9 @@ class PageTemplate(GrokPageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
         return self.pt_render(namespace)
 
 
-class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
+class PageTemplateFile(BasePageTemplate, TrustedAppPT,
                        pagetemplatefile.PageTemplateFile):
     
-    interface.implements(interfaces.ITemplateFile)
-
     def __init__(self, filename, _prefix=None):
         _prefix = self.get_path_from_prefix(_prefix)
         super(PageTemplateFile, self).__init__(filename, _prefix)
@@ -266,7 +322,7 @@ class PageTemplateFile(GrokPageTemplate, TrustedAppPT,
         factory.macros = self.macros
 
     def namespace(self, view):
-        namespace = GrokPageTemplate.namespace(self, view)
+        namespace = BasePageTemplate.namespace(self, view)
         namespace.update(self.pt_getContext())
         return namespace
 

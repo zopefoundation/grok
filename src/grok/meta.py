@@ -80,6 +80,10 @@ class MultiAdapterGrokker(martian.ClassGrokker):
 class GlobalUtilityGrokker(martian.ClassGrokker):
     component_class = grok.GlobalUtility
 
+    # This needs to happen before the FilesystemPageTemplateGrokker grokker 
+    # happens, since it relies on the ITemplateFileFactoris being grokked.
+    priority = 1100
+    
     def grok(self, name, factory, context, module_info, templates):
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
@@ -257,7 +261,7 @@ class ModulePageTemplateGrokker(martian.InstanceGrokker):
     # use the templates
     priority = 1000
 
-    component_class = grok.components.GrokPageTemplate
+    component_class = grok.components.BasePageTemplate
 
     def grok(self, name, instance, context, module_info, templates):
         templates.register(name, instance)
