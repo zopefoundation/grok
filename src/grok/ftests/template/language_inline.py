@@ -26,7 +26,7 @@ class PercentTemplate(object):
     def render(self, **namespace):
         return self.text % namespace
 
-class PercentPageTemplate(grok.components.GrokPageTemplate):
+class PercentPageTemplate(grok.components.GrokTemplate):
     """Glue class suggested by doc/minitutorials/template-languages.txt."""
     def __init__(self, html):
         self._template = PercentTemplate(html)

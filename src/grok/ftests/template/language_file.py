@@ -27,37 +27,28 @@ class PercentTemplate(object):
     def render(self, **namespace):
         return self.text % namespace
 
-class PercentPageTemplate(grok.components.GrokPageTemplate):
+class PercentPageTemplate(grok.components.GrokTemplate):
     """Glue class suggested by doc/minitutorials/template-languages.txt."""
-    def __init__(self, html):
-        self._template = PercentTemplate(html)
-        self.__grok_module__ = martian.util.caller_module()
 
-    def _initFactory(self, factory):
-        pass
-    
-    def namespace(self, view):
-        namespace = {}
-        namespace['request'] = view.request
-        namespace['view'] = view
-        namespace['context'] = view.context
-        namespace['static'] = view.static
-        return namespace
-    
-    def render(self, view):
-        namespace = self.namespace(view)
-        namespace.update(view.namespace())        
-        return self._template.render(**namespace)
+    def fromTemplate(self, template):
+        return PercentTemplate(template)
 
-class PercentPageTemplateFile(grok.components.GrokPageTemplate):
-    """Glue class suggested by doc/minitutorials/template-languages.txt."""
-    def __init__(self, filename, _prefix=None):
+    def fromFile(self, filename, _prefix=None):
         file = open(os.path.join(_prefix, filename))
-        self._template = PercentPageTemplate(file.read())
-        self.__grok_module__ = martian.util.caller_module()
+        return PercentTemplate(file.read())
 
     def render(self, view):
-        return self._template.render(view)
+        return self.getTemplate().render(**self.getNamespace(view))
+
+class PercentPageTemplateFileFactory(grok.GlobalUtility):
+    """Glue class suggested by doc/minitutorials/template-languages.txt."""
+    
+    grok.implements(grok.interfaces.ITemplateFileFactory)
+    grok.name('pct')
+
+    def __call__(self, filename, _prefix=None):
+        return PercentPageTemplate(filename=filename, _prefix=_prefix)
+
 
 class Bear(grok.Model):
     def __init__(self, name):
@@ -67,5 +58,5 @@ class Index(grok.View):
     def namespace(self):
         return { 'bear_name': self.context.name }
 
-index = PercentPageTemplateFile('language_file.txt',
-                                os.path.dirname(__file__))
+index = PercentPageTemplate(filename='language_file.txt',
+                            _prefix=os.path.dirname(__file__))
