@@ -210,15 +210,6 @@ class BasePageTemplate(object):
     def _initFactory(self, factory):
         pass
 
-    def namespace(self, view):
-        namespace = {}
-        namespace['request'] = view.request
-        namespace['view'] = view
-        namespace['context'] = view.context
-        # XXX need to check whether we really want to put None here if missing
-        namespace['static'] = view.static
-        
-        return namespace
 
 class GrokPageTemplate(BasePageTemplate):
     """A slightly more advanced page template
@@ -295,7 +286,13 @@ class PageTemplate(BasePageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
         factory.macros = self.macros
 
     def namespace(self, view):
-        namespace = BasePageTemplate.namespace(self, view)
+        namespace = {}
+        namespace['request'] = view.request
+        namespace['view'] = view
+        namespace['context'] = view.context
+        # XXX need to check whether we really want to put None here if missing
+        namespace['static'] = view.static
+        
         namespace.update(self.pt_getContext())
         return namespace
 
@@ -322,7 +319,13 @@ class PageTemplateFile(BasePageTemplate, TrustedAppPT,
         factory.macros = self.macros
 
     def namespace(self, view):
-        namespace = BasePageTemplate.namespace(self, view)
+        namespace = {}
+        namespace['request'] = view.request
+        namespace['view'] = view
+        namespace['context'] = view.context
+        # XXX need to check whether we really want to put None here if missing
+        namespace['static'] = view.static
+        
         namespace.update(self.pt_getContext())
         return namespace
 
