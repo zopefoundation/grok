@@ -41,7 +41,7 @@ class MyTemplate(object):
         # Silliest template language ever:
         return self._text % kw
 
-class MyPageTemplate(grok.components.GrokPageTemplate):
+class MyPageTemplate(grok.components.GrokTemplate):
 
     def fromTemplate(self, template):
         return MyTemplate(template)

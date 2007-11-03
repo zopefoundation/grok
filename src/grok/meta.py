@@ -261,7 +261,7 @@ class ModulePageTemplateGrokker(martian.InstanceGrokker):
     # use the templates
     priority = 1000
 
-    component_class = grok.components.BasePageTemplate
+    component_class = grok.components.BaseTemplate
 
     def grok(self, name, instance, context, module_info, templates):
         templates.register(name, instance)

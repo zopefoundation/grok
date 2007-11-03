@@ -191,7 +191,7 @@ class JSON(BrowserPage):
         return simplejson.dumps(method_result)
 
 
-class BasePageTemplate(object):
+class BaseTemplate(object):
     """Any sort of page template"""
     
     interface.implements(interfaces.ITemplate)
@@ -211,7 +211,7 @@ class BasePageTemplate(object):
         pass
 
 
-class GrokPageTemplate(BasePageTemplate):
+class GrokTemplate(BaseTemplate):
     """A slightly more advanced page template
     
     This provides most of what a page template needs and is a good base for
@@ -222,7 +222,7 @@ class GrokPageTemplate(BasePageTemplate):
         # __grok_module__ is needed to make defined_locally() return True for
         # inline templates
         # XXX unfortunately using caller_module means that care must be taken
-        # when GrokPageTemplate is subclassed.
+        # when GrokTemplate is subclassed.
         self.__grok_module__ = martian.util.caller_module()
         
         if not (template is None) ^ (filename is None):
@@ -266,7 +266,7 @@ class GrokPageTemplate(BasePageTemplate):
         return self._template
 
 
-class PageTemplate(BasePageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
+class PageTemplate(BaseTemplate, TrustedAppPT, pagetemplate.PageTemplate):
     expand = 0
 
     def __init__(self, template):
@@ -302,7 +302,7 @@ class PageTemplate(BasePageTemplate, TrustedAppPT, pagetemplate.PageTemplate):
         return self.pt_render(namespace)
 
 
-class PageTemplateFile(BasePageTemplate, TrustedAppPT,
+class PageTemplateFile(BaseTemplate, TrustedAppPT,
                        pagetemplatefile.PageTemplateFile):
     
     def __init__(self, filename, _prefix=None):
