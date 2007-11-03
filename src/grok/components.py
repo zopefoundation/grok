@@ -129,7 +129,8 @@ class View(BrowserPage):
         return {}
 
     def __getitem__(self, key):
-        if getattr(self.template, 'macros', None) is None:
+        # This is BBB code for Zope page templates only:
+        if not isinstance(self.template, PageTemplate):
             raise AttributeError("View has no item %s" % key)
         # When this deprecation is done with, this whole __getitem__ can 
         # be removed.
@@ -137,7 +138,7 @@ class View(BrowserPage):
                       "Please use view/@@viewname/macros/macroname\n"
                       "View %r, macro %s" % (self, key),
                       DeprecationWarning)
-        return self.template.macros[key]
+        return self.template.getTemplate().macros[key]
     
     def url(self, obj=None, name=None):
         # if the first argument is a string, that's the name. There should
@@ -222,7 +223,8 @@ class GrokTemplate(BaseTemplate):
         # __grok_module__ is needed to make defined_locally() return True for
         # inline templates
         # XXX unfortunately using caller_module means that care must be taken
-        # when GrokTemplate is subclassed.
+        # when GrokTemplate is subclassed. You can in fact not override 
+        # __init__ unless you override all of it.
         self.__grok_module__ = martian.util.caller_module()
         
         if not (template is None) ^ (filename is None):
@@ -265,75 +267,43 @@ class GrokTemplate(BaseTemplate):
     def getTemplate(self):
         return self._template
 
+class TrustedPageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
+    pass
 
-class PageTemplate(BaseTemplate, TrustedAppPT, pagetemplate.PageTemplate):
-    expand = 0
+class TrustedFilePageTemplate(TrustedAppPT, pagetemplatefile.PageTemplateFile):
+    pass
 
-    def __init__(self, template):
-        super(PageTemplate, self).__init__()
+class PageTemplate(GrokTemplate):
+    
+    def fromTemplate(self, template):
+        zpt = TrustedPageTemplate()
         if martian.util.not_unicode_or_ascii(template):
             raise ValueError("Invalid page template. Page templates must be "
                              "unicode or ASCII.")
-        self.write(template)
+        zpt.write(template)
+        return zpt
 
-        # __grok_module__ is needed to make defined_locally() return True for
-        # inline templates
-        # XXX unfortunately using caller_module means that
-        # PageTemplate cannot be subclassed
-        self.__grok_module__ = martian.util.caller_module()
+    def fromFile(self, filename, _prefix=None):
+        #_prefix = PageTemplateFile.get_path_from_prefix(_prefix)
+        return TrustedFilePageTemplate(filename, _prefix)
 
     def _initFactory(self, factory):
-        factory.macros = self.macros
-
-    def namespace(self, view):
-        namespace = {}
-        namespace['request'] = view.request
-        namespace['view'] = view
-        namespace['context'] = view.context
-        # XXX need to check whether we really want to put None here if missing
-        namespace['static'] = view.static
-        
-        namespace.update(self.pt_getContext())
-        return namespace
+        factory.macros = self.getTemplate().macros
 
     def render(self, view):
-        namespace = self.namespace(view)
-        namespace.update(view.namespace())
-        return self.pt_render(namespace)
-
-
-class PageTemplateFile(BaseTemplate, TrustedAppPT,
-                       pagetemplatefile.PageTemplateFile):
+        namespace = self.getNamespace(view)
+        template = self.getTemplate()
+        namespace.update(template.pt_getContext())
+        return template.pt_render(namespace)
     
+class PageTemplateFile(PageTemplate):
+    # For BBB
     def __init__(self, filename, _prefix=None):
-        _prefix = self.get_path_from_prefix(_prefix)
-        super(PageTemplateFile, self).__init__(filename, _prefix)
-
-        # __grok_module__ is needed to make defined_locally() return True for
-        # inline templates
-        # XXX unfortunately using caller_module means that
-        # PageTemplateFile cannot be subclassed
         self.__grok_module__ = martian.util.caller_module()
-    
-    def _initFactory(self, factory):
-        factory.macros = self.macros
-
-    def namespace(self, view):
-        namespace = {}
-        namespace['request'] = view.request
-        namespace['view'] = view
-        namespace['context'] = view.context
-        # XXX need to check whether we really want to put None here if missing
-        namespace['static'] = view.static
-        
-        namespace.update(self.pt_getContext())
-        return namespace
-
-    def render(self, view):
-        namespace = self.namespace(view)
-        namespace.update(view.namespace())
-        return self.pt_render(namespace)
-
+        if _prefix is None:
+            module = sys.modules[self.__grok_module__]
+            _prefix = os.path.dirname(module.__file__)
+        self._template = self.fromFile(filename, _prefix)
     
 class DirectoryResource(directoryresource.DirectoryResource):
     # We subclass this, because we want to override the default factories for
