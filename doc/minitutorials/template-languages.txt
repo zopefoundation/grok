@@ -16,7 +16,7 @@ Inline templates
 ----------------
 "Inline" templates are templates where the template code is written inside the
 python class. To get the automatic association to a view class, you need to
-write a class that subclasses from grok.components.GrokPageTemplate. There are 
+write a class that subclasses from grok.components.GrokTemplate. There are 
 however some methods you need to override, namely the fromFile and fromString
 factory methods, and the render method.
 
@@ -24,7 +24,7 @@ Here is an example of a minimal page template integration:
 
 .. code-block:: python
 
-class MyPageTemplate(grok.components.GrokPageTemplate):
+class MyPageTemplate(grok.components.GrokTemplate):
 
     def fromTemplate(self, template):
         return MyTemplate(template)

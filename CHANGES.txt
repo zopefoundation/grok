@@ -45,8 +45,11 @@ Restructuring
 -------------
 
 * The new pluggable template language support includes some restructuring:
+  - GrokPageTemplate is now split up into two. BaseTemplate, on which all
+    templates need to be based, and GrokTemplate, which also provides a
+    set of methods for easy integration of templating languages.
 
-  - All objects based on GrokPageTemplate is now grokked, instead of having
+  - All objects based on GrokTemplate are now grokked, instead of having
     separate grokkers for each type of template.
 
   - The View is now completely template-language agnostic, which makes it 
