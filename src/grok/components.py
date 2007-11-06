@@ -138,7 +138,7 @@ class View(BrowserPage):
                       "Please use view/@@viewname/macros/macroname\n"
                       "View %r, macro %s" % (self, key),
                       DeprecationWarning)
-        return self.template.getTemplate().macros[key]
+        return self.template._template.macros[key]
     
     def url(self, obj=None, name=None):
         # if the first argument is a string, that's the name. There should
@@ -218,7 +218,7 @@ class GrokTemplate(BaseTemplate):
     This provides most of what a page template needs and is a good base for
     writing your own page template"""
     
-    def __init__(self, template=None, filename=None, _prefix=None):
+    def __init__(self, string=None, filename=None, _prefix=None):
 
         # __grok_module__ is needed to make defined_locally() return True for
         # inline templates
@@ -227,16 +227,16 @@ class GrokTemplate(BaseTemplate):
         # __init__ unless you override all of it.
         self.__grok_module__ = martian.util.caller_module()
         
-        if not (template is None) ^ (filename is None):
+        if not (string is None) ^ (filename is None):
             raise AssertionError("You must pass in template or filename, but not both.")
         
-        if template:
-            self._template = self.fromTemplate(template)
+        if string:
+            self.setFromString(string)
         else:
             if _prefix is None:
                 module = sys.modules[self.__grok_module__]
                 _prefix = os.path.dirname(module.__file__)
-            self._template = self.fromFile(filename, _prefix)
+            self.setFromFilename(filename, _prefix)
 
     def __repr__(self):
         return '<%s template in %s>' % (self.__grok_name__,
@@ -263,9 +263,6 @@ class GrokTemplate(BaseTemplate):
         namespace = self.namespace(view)
         namespace.update(view.namespace())
         return namespace
-    
-    def getTemplate(self):
-        return self._template
 
 class TrustedPageTemplate(TrustedAppPT, pagetemplate.PageTemplate):
     pass
@@ -275,24 +272,23 @@ class TrustedFilePageTemplate(TrustedAppPT, pagetemplatefile.PageTemplateFile):
 
 class PageTemplate(GrokTemplate):
     
-    def fromTemplate(self, template):
+    def setFromString(self, string):
         zpt = TrustedPageTemplate()
-        if martian.util.not_unicode_or_ascii(template):
+        if martian.util.not_unicode_or_ascii(string):
             raise ValueError("Invalid page template. Page templates must be "
                              "unicode or ASCII.")
-        zpt.write(template)
-        return zpt
+        zpt.write(string)
+        self._template = zpt
 
-    def fromFile(self, filename, _prefix=None):
-        #_prefix = PageTemplateFile.get_path_from_prefix(_prefix)
-        return TrustedFilePageTemplate(filename, _prefix)
+    def setFromFilename(self, filename, _prefix=None):
+        self._template = TrustedFilePageTemplate(filename, _prefix)
 
     def _initFactory(self, factory):
-        factory.macros = self.getTemplate().macros
+        factory.macros = self._template.macros
 
     def render(self, view):
         namespace = self.getNamespace(view)
-        template = self.getTemplate()
+        template = self._template
         namespace.update(template.pt_getContext())
         return template.pt_render(namespace)
     
@@ -303,7 +299,7 @@ class PageTemplateFile(PageTemplate):
         if _prefix is None:
             module = sys.modules[self.__grok_module__]
             _prefix = os.path.dirname(module.__file__)
-        self._template = self.fromFile(filename, _prefix)
+        self.setFromFilename(filename, _prefix)
     
 class DirectoryResource(directoryresource.DirectoryResource):
     # We subclass this, because we want to override the default factories for

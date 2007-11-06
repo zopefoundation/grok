@@ -26,15 +26,12 @@ automatically associated with nearby ``View`` classes: if you create a
 View named ``Mammoth`` and next to it instantiate a template named
 ``mammoth``, then Grok will use them together.
 
-To enable such automatic association for a new templating language,
-you need to write a subclass of ``grok.components.GrokTemplate``.
-You will need to override three methods.  The ``fromFile`` and
-``fromString`` methods should each return an instance of the new
-template class.  Your ``render`` method should first call
-``self.getTemplate()`` to retrieve the value you returned from either
-of the other methods, and then run the template on the dictionary of
-values returned by ``self.getNamespace()`` and return the resulting
-string.
+To enable such automatic association for a new templating language, you need
+to write a subclass of ``grok.components.GrokTemplate``. You will need to
+override three methods. The ``setFromFilename`` and ``setFromString`` methods
+should each load the template from disk or a given string, depending on
+method. Your ``render`` method should run the template with the dictionary of
+values returned by ``self.getNamespace()`` and return the resulting string.
 
 Here is an example of a minimal page template integration:
 
@@ -42,33 +39,33 @@ Here is an example of a minimal page template integration:
 
 class MyPageTemplate(grok.components.GrokTemplate):
 
-    def fromTemplate(self, template):
-        return MyTemplate(template)
+    def setFromString(self, string):
+        self._template = MyTemplate(string)
 
-    def fromFile(self, filename, _prefix=None):
+    def setFromFilename(self, filename, _prefix=None):
         file = open(os.path.join(_prefix, filename))
-        return MyTemplate(file.read())
+        self._template = MyTemplate(file.read())
 
     def render(self, view):
-        return self.getTemplate().render(**self.getNamespace(view))
+        return self._template.render(**self.getNamespace(view))
 
 With this class finished you can create an inline template, like this:
 
 .. code-block:: python
 
->>> class AView(grok.View):
->>>     pass
->>>     
->>> aview = MyPageTemplate('<html><body>Some text</body></html>')
+    class AView(grok.View):
+        pass
+        
+    aview = MyPageTemplate('<html><body>Some text</body></html>')
 
 And also you can create a filebase template, inline:
 
 .. code-block:: python
 
->>> class AView(grok.View):
->>>     pass
->>>     
->>> aview = MyTemplateFile('lasceuax.html')
+    class AView(grok.View):
+        pass
+        
+    aview = MyTemplateFile('lasceuax.html')
 
 
 Templates in the _templates directory

@@ -43,19 +43,19 @@ class MyTemplate(object):
 
 class MyPageTemplate(grok.components.GrokTemplate):
 
-    def fromTemplate(self, template):
-        return MyTemplate(template)
+    def setFromString(self, string):
+        self._template = MyTemplate(string)
 
-    def fromFile(self, filename, _prefix=None):
+    def setFromFilename(self, filename, _prefix=None):
         file = open(os.path.join(_prefix, filename))
-        return MyTemplate(file.read())
+        self._template = MyTemplate(file.read())
 
     def namespace(self, view):
         # I'll override the default namespace here for testing:
         return {'middle_text': 'is in'}
 
     def render(self, view):
-        return self.getTemplate().render(**self.getNamespace(view))
+        return self._template.render(**self.getNamespace(view))
 
 class MyPageTemplateFactory(grok.GlobalUtility):
 
