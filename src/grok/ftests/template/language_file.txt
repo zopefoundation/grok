@@ -1,1 +1,0 @@
-ME GROK STILL SEE BEAR NAMED %(bear_name)s!

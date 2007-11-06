@@ -6,19 +6,35 @@ Plugging in new template languages
 
 Introduction
 ------------
-Grok uses Zope Page Templates as default templating language, since this is
-the default of Zope 3. Of course you can use whatever templating language you
-want in Grok, but to get the automatic association between template
-objects/files and views you need to do a little bit of extra work.
+
+Grok, like the Zope 3 framework on which it is built, uses Zope Page
+Templates as its default templating language.  While you can, of
+course, use whatever templating language you want in Grok by calling
+it manually, you can also “plug in” a template language such that both
+inline templates and templates stored in files are automatically
+linked with your Views — just like inline ``grok.PageTemplates`` and
+files with the ``.pt`` extension are by default.
 
 
 Inline templates
 ----------------
-"Inline" templates are templates where the template code is written inside the
-python class. To get the automatic association to a view class, you need to
-write a class that subclasses from grok.components.GrokTemplate. There are 
-however some methods you need to override, namely the fromFile and fromString
-factory methods, and the render method.
+
+“Inline” templates are templates that you create right in your Python
+code — for example, by instantiating the default ``grok.PageTemplate``
+class with a literal string value as its argument.  Such templates are
+automatically associated with nearby ``View`` classes: if you create a
+View named ``Mammoth`` and next to it instantiate a template named
+``mammoth``, then Grok will use them together.
+
+To enable such automatic association for a new templating language,
+you need to write a subclass of ``grok.components.GrokTemplate``.
+You will need to override three methods.  The ``fromFile`` and
+``fromString`` methods should each return an instance of the new
+template class.  Your ``render`` method should first call
+``self.getTemplate()`` to retrieve the value you returned from either
+of the other methods, and then run the template on the dictionary of
+values returned by ``self.getNamespace()`` and return the resulting
+string.
 
 Here is an example of a minimal page template integration:
 
@@ -58,10 +74,13 @@ And also you can create a filebase template, inline:
 Templates in the _templates directory
 -------------------------------------
 
-The most common usecase is however to place the templates in the views
-template directory. To do that, a global utility that generates
-MyPageTemplates from the filenames found is needed. That utility needs to
-implement the ITemplateFileFactory interface. 
+The most common use case, however, is to place templates for a file
+``foo.py`` in the corresponding ``foo_templates`` directory.  Grok, of
+course, already recognizes that files with a ``.pt`` extension each
+contain a Zope Page Template.  To tell Grok about a new file
+extension, simply register a global utility that generates a
+``MyPageTemplate`` when passed a filename.  That utility needs to
+implement the ``ITemplateFileFactory`` interface.
 
 .. code-block:: python
 
@@ -73,9 +92,9 @@ class MyPageTemplateFactory(grok.GlobalUtility):
     def __call__(self, filename, _prefix=None):
         return MyPageTemplate(filename=filename, _prefix=_prefix)
 
-When your module gets grokked, Grok will now pick up on the
-MyPageTemplateFactory class, register it as a global utility for templates
-with the '.mtl' extension and you can start creating .mtl files in the
-template directory for your class.
+When your module gets grokked, Grok will discover the
+``MyPageTemplateFactory`` class, register it as a global utility for
+templates with the ``.mtl`` extension, and you can start creating
+``.mtl`` files in the template directory for your class.
 
-That's all you need! Have fun!
+That's all you need!  Have fun!
