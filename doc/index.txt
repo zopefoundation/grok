@@ -140,9 +140,13 @@ Grok development is often done in the form of sprints. A sprint is a when a
 group of developers get together in the same place and all work on a focused
 set of tasks.
 
+* People `blogged <http://wiki.zope.org/grok/SprintAccomplishments>`_ about
+  the `Grok Neanderthal Sprint <http://wiki.zope.org/grok/NeanderthalerSprint/>`_.
+
+* `Jan-Wijbrand Kolman blogged`_ about the second Grok sprint, and
+  `Martijn Faassen blogged`_ about it as well.
+
 * `Martijn Faassen's blog entry`_ details the first Grok sprint.
-* `Jan-Wijbrand Kolman blogged`_ about the second Grok sprint, and `Martijn Faassen
-  blogged`_ about it as well.
 
 .. _Martijn Faassen's blog entry: http://faassen.n--tree.net/blog/view/weblog/2006/11/09/0
 .. _Jan-Wijbrand Kolman blogged: http://jw.n--tree.net/blog/dev/python/second-grok-sprint
