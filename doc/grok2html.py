@@ -158,43 +158,37 @@ def main(argv=None):
     os.chdir(source_dir)
 
     rest_files = []
-    rest_files.append(RestFile('index',
-                              os.path.join(source_dir, 'index.txt'),
-                              os.path.join(www_dir, 'index.html')))
-    rest_files.append(RestFile('about',
-                              os.path.join(source_dir, 'about.txt'),
-                              os.path.join(www_dir, 'about.html')))
-    rest_files.append(RestFile('tutorial',
-                              os.path.join(source_dir, 'tutorial.txt'),
-                              os.path.join(www_dir, 'tutorial.html')))
-    rest_files.append(RestFile('upgrade',
-                              os.path.join(source_dir, 'upgrade.txt'),
-                              os.path.join(www_dir, 'upgrade.html')))
-    rest_files.append(RestFile('mini-index',
-                              os.path.join(source_dir, 'minitutorials', 'index.txt'),
-                              os.path.join(www_dir, 'minitutorials', 'index.html')))
-    rest_files.append(RestFile('searching',
-                              os.path.join(source_dir, 'minitutorials', 'searching.txt'),
-                              os.path.join(www_dir, 'minitutorials', 'searching.html')))
-    rest_files.append(RestFile('macros',
-                              os.path.join(source_dir, 'minitutorials', 'macros.txt'),
-                              os.path.join(www_dir, 'minitutorials', 'macros.html')))
-    rest_files.append(RestFile('xmlrpc',
-                              os.path.join(source_dir, 'minitutorials', 'xmlrpc.txt'),
-                              os.path.join(www_dir, 'minitutorials', 'xmlrpc.html')))
-    rest_files.append(RestFile('permissions',
-                              os.path.join(source_dir, 'minitutorials', 'permissions.txt'),
-                              os.path.join(www_dir, 'minitutorials', 'permissions.html')))
-    rest_files.append(RestFile('transient-objects',
-                              os.path.join(source_dir, 'minitutorials', 'transient-objects.txt'),
-                              os.path.join(www_dir, 'minitutorials', 'transient-objects.html')))
-    rest_files.append(RestFile('rest',
-                              os.path.join(source_dir, 'minitutorials', 'rest.txt'),
-                              os.path.join(www_dir, 'minitutorials', 'rest.html')))
-
-    rest_files.append(RestFile('zc.buildout',
-                  'http://svn.zope.org/*checkout*/zc.buildout/trunk/doc/tutorial.txt',
-                  os.path.join(www_dir, 'minitutorials', 'buildout.html')))
+    # Toplevel pages:
+    for name in [
+        'about',
+        'index',
+        'tutorial',
+        'upgrade'
+        ]:
+        rest_files.append(
+            RestFile(
+                name, os.path.join(source_dir, name+'.txt'),
+            os.path.join(www_dir, name+'.html')))
+    # The minitutorials:
+    for name in [
+        'index',
+        'macros',
+        'permissions',
+        'rest'
+        'searching',
+        'transient-objects',
+        'xmlprc',
+        ]:
+        rest_files.append(
+            RestFile(
+                name, os.path.join(source_dir, 'minitutorials', name+'.txt'),
+            os.path.join(www_dir, 'minitutorials', name+'.html')))
+    # External sources:
+    rest_files.append(
+        RestFile(
+            'zc.buildout',
+            'http://svn.zope.org/*checkout*/zc.buildout/trunk/doc/tutorial.txt',
+            os.path.join(www_dir, 'minitutorials', 'buildout.html')))
 
     template = PageTemplateFile(os.path.join(source_dir, 'template.pt'))
     create_html(rest_files, template)
