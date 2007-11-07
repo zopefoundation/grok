@@ -35,8 +35,7 @@ def suiteFromPackage(name):
                                     tearDown=cleanUpZope,
                                     checker=checker,
                                     optionflags=doctest.ELLIPSIS+
-                                    doctest.NORMALIZE_WHITESPACE+
-                                    doctest.REPORT_ONLY_FIRST_FAILURE)
+                                    doctest.NORMALIZE_WHITESPACE)
 
         suite.addTest(test)
     return suite

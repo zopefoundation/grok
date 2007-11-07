@@ -7,7 +7,7 @@ with anything else:
     ...
   GrokImportError: You can only pass classes or interfaces to grok.context.
 
-  >>> stringcontext()
+  >>> string_context()
   Traceback (most recent call last):
     ...
   GrokImportError: You can only pass classes or interfaces to grok.context.
@@ -32,7 +32,7 @@ def function_context():
     class FunctionContext(object):
         grok.context(a)
 
-def stringcontext():
+def string_context():
     class StringContext(object):
         grok.context('string')
 

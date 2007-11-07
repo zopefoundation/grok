@@ -65,12 +65,6 @@ class MyPageTemplateFactory(grok.GlobalUtility):
     def __call__(self, filename, _prefix=None):
         return MyPageTemplate(filename=filename, _prefix=_prefix)
 
-#import pdb
-#pdb.set_trace()
-
-# Small hack to make sure this gets grokked in the right order:
-#grok.grok_component('MyPageTemplateFactory', MyPageTemplateFactory)
-
 class Cave(grok.Model):
     pass
 
