@@ -1,4 +1,4 @@
-<html metal:use-macro="context/@@grokadminmacros/gaia-page">
+<html metal:use-macro="context/@@grokadminmacros/macros/gaia-page">
   <div metal:fill-slot="content">
     <h1>Manage your Zope 3 instance</h1>
 

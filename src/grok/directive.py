@@ -41,8 +41,10 @@ class GlobalUtilityDirective(MultipleTimesDirective):
 
 
 class GlobalUtilityInfo(object):
-    def __init__(self, factory, provides=None, name=u'', direct=False):
+    def __init__(self, factory, provides=None, name=u'', direct=None):
         self.factory = factory
+        if direct is None:
+            direct = util.class_annotation(factory, 'grok.direct', False)
         self.direct = direct
 
         if provides is None:
@@ -122,3 +124,4 @@ permissions = MultiValueOnceDirective(
     'grok.permissions', ClassDirectiveContext())
 layer = InterfaceOrClassDirective('grok.layer',
                            ClassOrModuleDirectiveContext())
+direct = MarkerDirective('grok.direct', ClassDirectiveContext())

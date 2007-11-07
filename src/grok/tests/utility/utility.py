@@ -39,6 +39,16 @@ use with 'grok.provides':
   >>> isinstance(nightclub, NightClub)
   True
 
+You can make the class the utility by providing the grok.direct() directive,
+if you also use interface.classProvides instead of grok.provides.
+This is useful for utilities that do nothing but create instances:
+
+  >>> clubmaker = component.getUtility(IClubMaker, 'maker')
+  >>> IClubMaker.providedBy(clubmaker)
+  True
+  >>> clubmaker is ClubMaker
+  True
+
 Utilities (including classes that do not subclass from grok.GlobalUtility) can
 be (re-)registered using grok.global_utility:
 
@@ -133,6 +143,9 @@ class ITinyClub(IClub):
 class INightClub(interface.Interface):
     pass
 
+class IClubMaker(interface.Interface):
+    pass
+
 class NormalClub(grok.GlobalUtility):
     grok.implements(IClub)
 
@@ -153,6 +166,12 @@ class SmallClub(grok.GlobalUtility):
     grok.implements(ISmallClub, ITinyClub)
     grok.provides(ISmallClub)
     grok.name('tiny')
+
+class ClubMaker(grok.GlobalUtility):
+    grok.implements(IClub)
+    interface.classProvides(IClubMaker)
+    grok.direct()
+    grok.name('maker')
 
 class IFireplace(interface.Interface):
     pass

@@ -2,6 +2,7 @@
 Templates that are not associated with a view class will provoke an
 error:
 
+  >>> grok.testing.grok('grok.templatereg')
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
   ...

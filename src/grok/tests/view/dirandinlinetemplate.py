@@ -2,13 +2,12 @@
 If multiple templates can be found, one in the module and one in the
 template directory, there is an error:
 
+  >>> grok.testing.grok('grok.templatereg')
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
   ConfigurationExecutionError: martian.error.GrokError: Conflicting templates found for name 'cavepainting' in module
-  <module 'grok.tests.view.dirandinlinetemplate' from '...'>,
-  both inline and in template directory '...dirandinlinetemplate_templates'.
-  in:
+  <module 'grok.tests.view.dirandinlinetemplate' from ...
 
 """
 import grok

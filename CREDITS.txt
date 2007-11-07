@@ -31,6 +31,12 @@ CREDITS
 
 * Luciano Ramalho
 
+* Lennart Regebro (template pluggability)
+
+* Guido Wesdorp (template pluggability)
+
+* Brandon Rhodes (template pluggability)
+
 * ME GROK (team mascot)
 
 Thank you

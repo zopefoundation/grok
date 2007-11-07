@@ -62,7 +62,7 @@ class ExternalView(grok.View):
     grok.context(Mammoth)
 
 externalview = grok.PageTemplate("""\
-<html metal:use-macro="context/@@grokadminmacros/gaia-page">
+<html metal:use-macro="context/@@grokadminmacros/macros/gaia-page">
 </html>
 """)
 

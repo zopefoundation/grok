@@ -103,16 +103,23 @@ class MultiAdapterGrokker(martian.ClassGrokker):
 class GlobalUtilityGrokker(martian.ClassGrokker):
     component_class = grok.GlobalUtility
 
+    # This needs to happen before the FilesystemPageTemplateGrokker grokker 
+    # happens, since it relies on the ITemplateFileFactories being grokked.
+    priority = 1100
+
     def grok(self, name, factory, module_info, config, **kw):
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
             util.check_implements_one(factory)
         name = util.class_annotation(factory, 'grok.name', '')
+        direct = util.class_annotation(factory, 'grok.direct', False)
+        if not direct:
+            factory = factory()
 
         config.action(
             discriminator=('utility', provides, name),
             callable=component.provideUtility,
-            args=(factory(), provides, name),
+            args=(factory, provides, name),
             )
         return True
 
@@ -277,6 +284,9 @@ class ViewGrokker(martian.ClassGrokker):
 
         return True
 
+def view__getitem__(self, key):
+    return self.template.macros[key]
+
 
 class JSONGrokker(martian.ClassGrokker):
     component_class = grok.JSON
@@ -350,7 +360,7 @@ class ModulePageTemplateGrokker(martian.InstanceGrokker):
     # use the templates
     priority = 1000
 
-    component_class = grok.PageTemplate
+    component_class = grok.components.BaseTemplate
 
     def grok(self, name, instance, module_info, config, **kw):
         templates = module_info.getAnnotation('grok.templates', None)
@@ -367,11 +377,7 @@ class ModulePageTemplateGrokker(martian.InstanceGrokker):
             args=(name, module_info.dotted_name)
         )
         return True
-
-
-class ModulePageTemplateFileGrokker(ModulePageTemplateGrokker):
-    component_class = grok.PageTemplateFile
-
+        
 
 class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
     # do this early on, but after ModulePageTemplateGrokker, as

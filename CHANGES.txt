@@ -10,6 +10,19 @@ Feature changes
 * Integrated skins and layers: ``grok.layer``, ``grok.IGrokLayer``,
   ``grok.Skin``.
 
+* Grok now supports hooking in new template languages without much work.
+  See Restructuring below for more info.
+
+* Accessing a template macro via context/@@the_view/the_template is now 
+  deprecated for the standard ZPT story of using 
+  context/@@the_view/macro/the_template.
+
+* There is now a grok.direct() directive that can be used on GlobalUtilities
+  to mark that the class provides the utility interface directly and need 
+  no instantiation.
+  
+* Integrated skins and layers. grok.layer, grok.IGrokLayer, grok.Skin 
+
 * Removed ``grok.define_permission`` in favor of the
   ``grok.Permission`` component base class.  You should now subclass
   this base class to define permissions.
@@ -48,6 +61,25 @@ Restructuring
 
 * Grokkers now emit configuration actions, much like ZCML directive
   handlers do.
+
+* The new pluggable template language support includes some restructuring:
+  - GrokPageTemplate is now split up into two. BaseTemplate, on which all
+    templates need to be based, and GrokTemplate, which also provides a
+    set of methods for easy integration of templating languages.
+
+  - All objects based on GrokTemplate are now grokked, instead of having
+    separate grokkers for each type of template.
+
+  - The View is now completely template-language agnostic, which makes it 
+    easy to hook in new page template languages.
+  
+  - There are now new interfaces (ITemplate and ITemplateFileFactory)
+    used when you implement support for a new templating language.
+
+* The <grok:grok /> ZCML directive now emits a configuration action
+  instead of grokking right away at XML parsing time.  That way
+  grokkers can depend on components that are set up using regular ZCML
+  (e.g. checking for a permission that's defined in ZCML).
 
 * Changed the way grok's functional tests are set up.  Instead of each
   test case doing its own test setup, it is now done once by the

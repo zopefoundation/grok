@@ -3,6 +3,9 @@
   >>> from zope.configuration import xmlconfig
   >>> context = xmlconfig.file('meta.zcml', grok)
 
+Load the ZPT factory
+  >>> grok.testing.grok('grok.templatereg')
+
   >>> ignored = xmlconfig.string('''
   ... <configure
   ...     xmlns="http://namespaces.zope.org/zope"

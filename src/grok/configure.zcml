@@ -81,6 +81,10 @@
   <!-- need to grok this for some basic REST support -->
   <grok:grok package=".rest" />
 
+  <!-- ZPT support -->
+  <grok:grok package=".templatereg" />
+  
+  <!-- The admin interface -->
   <grok:grok package=".admin" />
 
 </configure>

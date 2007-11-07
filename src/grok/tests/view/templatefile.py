@@ -27,5 +27,5 @@ class Mammoth(grok.Model):
 class Food(grok.View):
     pass
 
-food = grok.PageTemplateFile(os.path.join('templatedirectoryname',
-                                          'food.pt'))
+food = grok.PageTemplate(filename=os.path.join('templatedirectoryname',
+                                               'food.pt'))

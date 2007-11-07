@@ -35,7 +35,8 @@ def suiteFromPackage(name):
                                     tearDown=cleanUpZope,
                                     checker=checker,
                                     optionflags=doctest.ELLIPSIS+
-                                    doctest.NORMALIZE_WHITESPACE)
+                                    doctest.NORMALIZE_WHITESPACE+
+                                    doctest.REPORT_ONLY_FIRST_FAILURE)
 
         suite.addTest(test)
     return suite
@@ -45,7 +46,7 @@ def test_suite():
     for name in ['adapter', 'error', 'view', 'event', 'security', 'catalog',
                  'zcml', 'static', 'utility', 'xmlrpc', 'json', 'container',
                  'traversal', 'form', 'grokker', 'directive', 'util',
-                 'baseclass', 'annotation', 'application']:
+                 'baseclass', 'annotation', 'application', 'template']:
         suite.addTest(suiteFromPackage(name))
     return suite
 
