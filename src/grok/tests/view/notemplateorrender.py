@@ -4,8 +4,9 @@ Views either need an associated template or a ``render`` method:
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
-  GrokError: View <class 'grok.tests.view.notemplateorrender.CavePainting'>
+  ConfigurationExecutionError: martian.error.GrokError: View <class 'grok.tests.view.notemplateorrender.CavePainting'>
   has no associated template or 'render' method.
+  in:
 
 """
 

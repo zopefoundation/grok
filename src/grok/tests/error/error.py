@@ -4,14 +4,15 @@ We expect this grok to fail, and give
 
   >>> try:
   ...     grok.testing.grok(__name__)
-  ... except grok.GrokError, error:
+  ... except ConfigurationExecutionError, error:
   ...     pass
-  >>> error.component
+  >>> error.evalue.component
   <class 'grok.tests.error.error.CavePainting'>
 
 """
 
 import grok
+from zope.configuration.config import ConfigurationExecutionError
 
 class Mammoth(grok.Model):
     pass

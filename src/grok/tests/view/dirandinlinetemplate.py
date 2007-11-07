@@ -5,9 +5,10 @@ template directory, there is an error:
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
-  GrokError: Conflicting templates found for name 'cavepainting' in module
+  ConfigurationExecutionError: martian.error.GrokError: Conflicting templates found for name 'cavepainting' in module
   <module 'grok.tests.view.dirandinlinetemplate' from '...'>,
   both inline and in template directory '...dirandinlinetemplate_templates'.
+  in:
 
 """
 import grok

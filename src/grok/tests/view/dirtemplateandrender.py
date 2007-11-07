@@ -5,10 +5,11 @@ we check that this also works for templates in a template-directory:
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
-  GrokError: Multiple possible ways to render view
+  ConfigurationExecutionError: martian.error.GrokError: Multiple possible ways to render view
   <class 'grok.tests.view.dirtemplateandrender.CavePainting'>.
   It has both a 'render' method as well as an associated template.
-
+  in:
+  
 """
 import grok
 

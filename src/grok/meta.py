@@ -209,7 +209,7 @@ class RESTGrokker(martian.ClassGrokker):
                 )
         return True
     
-
+    
 class ViewGrokker(martian.ClassGrokker):
     component_class = grok.View
 
@@ -233,39 +233,13 @@ class ViewGrokker(martian.ClassGrokker):
                     factory)
 
         # find templates
-        template_name = util.class_annotation(factory, 'grok.template',
-                                              factory_name)
-        template = None
         templates = module_info.getAnnotation('grok.templates', None)
         if templates is not None:
-            template = templates.get(template_name)
-
-        if factory_name != template_name:
-            # grok.template is being used
-            if templates.get(factory_name):
-                raise GrokError("Multiple possible templates for view %r. It "
-                                "uses grok.template('%s'), but there is also "
-                                "a template called '%s'."
-                                % (factory, template_name, factory_name),
-                                factory)
-
-        if template:
-            if (getattr(factory, 'render', None) and not
-                util.check_subclass(factory, components.GrokForm)):
-                # we do not accept render and template both for a view
-                # (unless it's a form, they happen to have render.
-                raise GrokError(
-                    "Multiple possible ways to render view %r. "
-                    "It has both a 'render' method as well as "
-                    "an associated template." % factory, factory)
-
-            templates.markAssociated(template_name)
-            factory.template = template
-        else:
-            if not getattr(factory, 'render', None):
-                # we do not accept a view without any way to render it
-                raise GrokError("View %r has no associated template or "
-                                "'render' method." % factory, factory)
+            config.action(
+                discriminator=None,
+                callable=templates.checkTemplates,
+                args=(module_info, factory, factory_name)
+            )
 
         # safety belt: make sure that the programmer didn't use
         # @grok.require on any of the view's methods.
@@ -382,8 +356,16 @@ class ModulePageTemplateGrokker(martian.InstanceGrokker):
         templates = module_info.getAnnotation('grok.templates', None)
         if templates is None:
             return False
-        templates.register(name, instance)
-        instance._annotateGrokInfo(name, module_info.dotted_name)
+        config.action(
+            discriminator=None,
+            callable=templates.register,
+            args=(name, instance)
+        )
+        config.action(
+            discriminator=None,
+            callable=instance._annotateGrokInfo,
+            args=(name, module_info.dotted_name)
+        )
         return True
 
 
@@ -401,7 +383,11 @@ class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
         templates = module_info.getAnnotation('grok.templates', None)
         if templates is None:
             return False
-        templates.findFilesystem(module_info)
+        config.action(
+            discriminator=None,
+            callable=templates.findFilesystem,
+            args=(module_info,)
+        )
         return True
 
 
@@ -412,13 +398,12 @@ class UnassociatedTemplatesGrokker(martian.GlobalGrokker):
         templates = module_info.getAnnotation('grok.templates', None)
         if templates is None:
             return False
-        unassociated = list(templates.listUnassociated())
-        if unassociated:
-            raise GrokError("Found the following unassociated template(s) when "
-                            "grokking %r: %s.  Define view classes inheriting "
-                            "from grok.View to enable the template(s)."
-                            % (module_info.dotted_name,
-                               ', '.join(unassociated)), module_info)
+        
+        config.action(
+            discriminator=None,
+            callable=templates.checkUnassociated,
+            args=(module_info,)
+        )
         return True
 
 
