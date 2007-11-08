@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-0.11 (unreleased)
+0.11 (2007-11-08)
 =================
 
 Feature changes
@@ -11,21 +11,21 @@ Feature changes
   ``grok.Skin``.
 
 * Grok now supports hooking in new template languages without much work.
-  See Restructuring below for more info.
+  See also doc/minitutorials/template-languages.txt. See Restructuring below
+  for more techinical info.
 
-* Accessing a template macro via context/@@the_view/the_template is now 
-  deprecated for the standard ZPT story of using 
+* Accessing a template macro via context/@@the_view/the_template is now
+  deprecated for the standard ZPT story of using
   context/@@the_view/macro/the_template.
 
 * There is now a grok.direct() directive that can be used on GlobalUtilities
-  to mark that the class provides the utility interface directly and need 
+  to mark that the class provides the utility interface directly and need
   no instantiation.
-  
-* Integrated skins and layers. grok.layer, grok.IGrokLayer, grok.Skin 
 
 * Removed ``grok.define_permission`` in favor of the
-  ``grok.Permission`` component base class.  You should now subclass
-  this base class to define permissions.
+  ``grok.Permission`` component base class. You should now subclass
+  this base class to define permissions. See also
+  doc/minitutorials/permissions.txt
 
 * Added the ``grok.Role`` component base class to define roles.
 
@@ -54,13 +54,14 @@ Bug fixes
   attribute.
 
 * buildout.cfg extends versions.cfg to pin down the versions of the
-  dependency tree.
+  dependency tree. See also http://grok.zope.org/releaseinfo/readme.html
 
 Restructuring
 -------------
 
 * Grokkers now emit configuration actions, much like ZCML directive
-  handlers do.
+  handlers do. If you defined custom grokkers, see doc/upgrade.txt for
+  more information.
 
 * The new pluggable template language support includes some restructuring:
   - GrokPageTemplate is now split up into two. BaseTemplate, on which all
@@ -70,22 +71,43 @@ Restructuring
   - All objects based on GrokTemplate are now grokked, instead of having
     separate grokkers for each type of template.
 
-  - The View is now completely template-language agnostic, which makes it 
+  - The View is now completely template-language agnostic, which makes it
     easy to hook in new page template languages.
-  
+
   - There are now new interfaces (ITemplate and ITemplateFileFactory)
     used when you implement support for a new templating language.
-
-* The <grok:grok /> ZCML directive now emits a configuration action
-  instead of grokking right away at XML parsing time.  That way
-  grokkers can depend on components that are set up using regular ZCML
-  (e.g. checking for a permission that's defined in ZCML).
 
 * Changed the way grok's functional tests are set up.  Instead of each
   test case doing its own test setup, it is now done once by the
   ftesting layer.  This avoids ordering problems when some ftests
   would influence the environment of other ftests that were run later
   in time.
+
+0.10.2 (2007-10-24)
+===================
+
+Bug fixes
+---------
+
+* Remove zc.recipe.egg, zc.recipe.filestorage, zc.recipe.testrunner,
+  zc.zope3recipes from version requirements.
+
+* Require zope.app.error = 3.5.1
+
+0.10.1 (2007-10-10)
+===================
+
+Bug fixes
+---------
+
+* buildout.cfg extends versions.cfg to pin down the versions of the
+  dependency tree. This should avoid the situation where we release
+  Grok, some dependency changes, and Grok breaks as a result. In
+  conjunction with this we will also be releasing a new version of
+  grokproject that will use this version infrastructure by default.
+
+  For more information about this change, see:
+  http://grok.zope.org/releaseinfo/readme.html
 
 0.10 (2007-08-21)
 =================
