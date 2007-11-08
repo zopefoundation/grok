@@ -32,7 +32,7 @@ Grok News
   for more details! For projects that want to upgrade, please read the
   `upgrade notes <upgrade.html>`_
 
-  .. __: http://article.gmane.org/gmane.comp.web.zope.grok.devel/noyet
+  .. __: http://permalink.gmane.org/gmane.comp.web.zope.devel/14171
 
 2007-10-24:
   Grok 0.10.2 has been released! See the `announcement`__ for more details!
@@ -89,7 +89,6 @@ Watch Grok in Action
 .. _Simple ToDo: http://www.archive.org/details/grok_todo_part1
 .. _Introduction to Grok: http://comlounge.tv/blog/zope/cltv23-snow-sprint-2007-grok-presentation
 
-
 What does Grok code look like?
 ------------------------------
 
@@ -139,12 +138,16 @@ anonymous check out of the latest version of Grok with the following command:::
 
   svn co svn://svn.zope.org/repos/main/grok/trunk grok
 
-ME GROK MINI-TUTORIALS!
------------------------
+ME GROK TUTORIALS!
+------------------
 
-* `Newbie Search HowTo <minitutorials/searching.html>`_ Sebastian Ware
-* `Newbie Macros HowTo <minitutorials/macros.html>`_ Uli Fouquet
-* `Newbie XMLRPC HowTo <minitutorials/xmlrpc.html>`_ Kushal Das
+* `Grok tutorial`__
+
+  .. __: tutorial.html
+
+* `How Tos and tutorials`__
+
+  .. __: minitutorials/index.html
 
 ME GROK SPRINTS AND BLOGS!
 --------------------------
