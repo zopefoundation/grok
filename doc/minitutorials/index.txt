@@ -8,7 +8,7 @@ Grok Mini-HowTos
 
 These mini-tutorials have been contributed by members of the Grok community.
 
-* `Newbie Permissions Tutorial </minitutorials/permissions.html>`_:
+* `Permissions Tutorial </minitutorials/permissions.html>`_:
 
   Zope3 and Grok come with authorization capabilities out of the box. While a
   vanilla Zope3 application protects all content by default and performs
@@ -18,7 +18,7 @@ These mini-tutorials have been contributed by members of the Grok community.
 
   Author: Luis De la Parra; Uli Fouquet; Jan-Wijbrand Kolman
 
-* `Newbie Search Tutorial </minitutorials/searching.html>`_:
+* `Search Tutorial </minitutorials/searching.html>`_:
 
   Grok supports the vanilla indexing services available in Zope 3
   straight out of the box. The catalog uses developer-defined indexes
@@ -61,6 +61,18 @@ These mini-tutorials have been contributed by members of the Grok community.
   using well-known semantics of HTTP.
 
   Author: Martijn Faassen
+
+* `Pluggable template laguanges </minitutorials/template-languages.html>`_:
+
+  Grok, like the Zope 3 framework on which it is built, uses Zope Page
+  Templates as its default templating language. While you can, of course, use
+  whatever templating language you want in Grok by calling it manually, you can
+  also ?plug in? a template language such that both inline templates and
+  templates stored in files are automatically linked with your Views ? just
+  like inline ``grok.PageTemplates`` and files with the ``.pt`` extension are
+  by default.
+
+  Author: Lennart Regebro
 
 Buildout
 ========

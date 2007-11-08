@@ -47,7 +47,7 @@ class MyPageTemplate(grok.components.GrokTemplate):
         self._template = MyTemplate(file.read())
 
     def render(self, view):
-        return self._template.render(**self.getNamespace(view))
+        return self._template.render(\**self.getNamespace(view))
 
 With this class finished you can create an inline template, like this:
 
@@ -55,7 +55,7 @@ With this class finished you can create an inline template, like this:
 
     class AView(grok.View):
         pass
-        
+
     aview = MyPageTemplate('<html><body>Some text</body></html>')
 
 And also you can create a filebase template, inline:
@@ -64,7 +64,7 @@ And also you can create a filebase template, inline:
 
     class AView(grok.View):
         pass
-        
+
     aview = MyTemplateFile('lasceuax.html')
 
 
