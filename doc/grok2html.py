@@ -176,6 +176,7 @@ def main(argv=None):
         'permissions',
         'rest',
         'searching',
+        'template-languages',
         'transient-objects',
         'xmlprc',
         ]:
