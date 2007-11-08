@@ -174,7 +174,7 @@ def main(argv=None):
         'index',
         'macros',
         'permissions',
-        'rest'
+        'rest',
         'searching',
         'transient-objects',
         'xmlprc',
