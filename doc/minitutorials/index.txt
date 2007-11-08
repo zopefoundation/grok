@@ -53,6 +53,15 @@ These mini-tutorials have been contributed by members of the Grok community.
 
   Author: Brandon Craig Rhodes
 
+* `REST With Grok </minitutorials/rest.html>`_:
+
+  REST is a way to build web services, i.e. a web application where the
+  user is another computer, not a human being. REST takes the approach
+  to make the web service look very similar to a normal web application,
+  using well-known semantics of HTTP.
+
+  Author: Martijn Faassen
+
 Buildout
 ========
 
