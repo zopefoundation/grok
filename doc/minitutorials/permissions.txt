@@ -1,6 +1,6 @@
-===========================
-Newbie Permissions Tutorial
-===========================
+====================
+Permissions Tutorial
+====================
 
 :Author: Luis De la Parra; Uli Fouquet; Jan-Wijbrand Kolman
 

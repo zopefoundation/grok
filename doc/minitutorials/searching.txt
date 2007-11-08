@@ -1,6 +1,6 @@
-======================
-Newbie Search Tutorial
-======================
+===============
+Search Tutorial
+===============
 
 :Author: Sebastian Ware
 
@@ -62,7 +62,7 @@ Example
         This is the actual class.
         """
         interface.implements(interfaces.IProtonObject)
-    
+
         def __init__(self, body):
             self.body = body
 
@@ -72,7 +72,7 @@ Example
     from hurry.query.query import Query, Text
     # hurry.query is a simplified search query language that
     # allows you to create ANDs and ORs.
-    
+
     class ContentIndexes(grok.Indexes):
         """
         This is where I setup my indexes. I have two indexes;
@@ -80,25 +80,25 @@ Example
         one field index called "body".
         """
         grok.site(ProtonCMS)
-    
+
         grok.context(interfaces.IProtonObject)
         # grok.context() tells Grok that objects implementing
         # the interface IProtonObject should be indexed.
-    
+
         grok.name('proton_catalog')
         # grok.name() tells Grok what to call the catalog.
         # if you have named the catalog anything but "catalog"
         # you need to specify the name of the catalog in your
         # queries.
-    
+
         text_body = index.Text(attribute='body')
         body = index.Field(attribute='body')
         # The attribute='body' parameter is actually unnecessary if the attribute to
         # be indexed has the same name as the index.
-    
+
     class Index(grok.View):
         grok.context(ProtonCMS)
-    
+
         def search_content(self, search_query):
                 # The following query does a search on the field index "body".
                 # It will return a list of object where the entire content of the body attribute
@@ -106,7 +106,7 @@ Example
                 result_a = Query().searchResults(
                                    query.Eq(('proton_catalog', 'body'), search_query)
                                    )
-    
+
                 # The following query does a search on the full-text index "text_body".
                 # It will return objects that match the search_query. You can use wildcards and
                 # boolean operators.
@@ -118,7 +118,7 @@ Example
                 result_b = Query().searchResults(
                                    Text( ('proton_catalog', 'text_body'), search_query)
                                    )
-    
+
                 return result_a, result_b
 
 Note
