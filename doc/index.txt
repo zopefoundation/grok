@@ -27,25 +27,38 @@ to get productive with Grok.
 
 Grok News
 ---------
+2007-11-08:
+  Grok 0.11 has been released! See the release `announcement`__
+  for more details! For projects that want to upgrade, please read the
+  `upgrade notes <upgrade.html>`_
+
+  .. __: http://article.gmane.org/gmane.comp.web.zope.grok.devel/noyet
 
 2007-10-24:
-  Grok-0.10.2 has been released! See the `announcement <http://article.gmane.org/gmane.comp.web.zope.grok.devel/2786>`_
-  for more details!
+  Grok 0.10.2 has been released! See the `announcement`__ for more details!
+
+  .. __: http://article.gmane.org/gmane.comp.web.zope.grok.devel/2786
 
 2007-10-10:
-  Grok-0.10.1 has been released! See the `original announcement <http://article.gmane.org/gmane.comp.web.zope.announce/1393>`_
-  for more details!
+  Grok 0.10.1 has been released! See the original `announcement`__ for more
+  details!
+
+  .. __: http://article.gmane.org/gmane.comp.web.zope.announce/1393
 
 2007-10-05:
-  Read about what was achieved during the
-  `Grok Neanderthal Sprint <http://wiki.zope.org/grok/NeanderthalerSprint/>`_
-  on the `Sprint Accomplishments <http://wiki.zope.org/grok/SprintAccomplishments>`_
-  page!
+  Read about what was achieved during the `Grok Neanderthal Sprint`__ on the
+  `Sprint Accomplishments`__ page!
+
+  .. __: http://wiki.zope.org/grok/NeanderthalerSprint
+  .. __: http://wiki.zope.org/grok/SprintAccomplishments
 
 2007-09-24:
   The first week of October (1-5 October) we are having the `Grok Neanderthal
-  Sprint <http://wiki.zope.org/grok/NeanderthalerSprint/>`_ in Cologne, Germany.
-  This sprint is generously sponsored by `GfU Cyrus <http://www.gfu.net/>`_.
+  Sprint`__ in Cologne, Germany. This sprint is generously sponsored by
+  `GfU Cyrus`__.
+
+  .. __: http://wiki.zope.org/grok/NeanderthalerSprint
+  .. __: http://www.gfu.net
 
 Who is Grok?
 ------------
