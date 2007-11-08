@@ -50,7 +50,7 @@ class Painting(grok.View):
     pass
 
 painting = grok.PageTemplate("""\
-<html metal:use-macro="context/@@layout/main">
+<html metal:use-macro="context/@@layout/macros/main">
 <div metal:fill-slot="slot">
 GROK SLOT!
 </div>
@@ -73,7 +73,7 @@ class Dancing(grok.View):
     pass
 
 dancing = grok.PageTemplate("""\
-<html metal:use-macro="context/@@dancinghall/something">
+<html metal:use-macro="context/@@dancinghall/macros/something">
 </html>
 """)
 
@@ -81,7 +81,7 @@ class GrillDish(grok.View):
     pass
 
 grilldish = grok.PageTemplate("""
-<html metal:use-macro="context/@@grilled/spices">
+<html metal:use-macro="context/@@grilled/macros/spices">
 </html>""")
 
 class Grilled(grok.View):

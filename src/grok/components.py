@@ -147,13 +147,16 @@ class View(BrowserPage):
         # This is BBB code for Zope page templates only:
         if not isinstance(self.template, PageTemplate):
             raise AttributeError("View has no item %s" % key)
+        
+        value = self.template._template.macros[key]
         # When this deprecation is done with, this whole __getitem__ can 
         # be removed.
         warnings.warn("Calling macros directly on the view is deprecated. "
-                      "Please use view/@@viewname/macros/macroname\n"
+                      "Please use context/@@viewname/macros/macroname\n"
                       "View %r, macro %s" % (self, key),
                       DeprecationWarning)
-        return self.template._template.macros[key]
+        return value
+
     
     def url(self, obj=None, name=None):
         # if the first argument is a string, that's the name. There should
