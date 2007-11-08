@@ -29,6 +29,20 @@ shadows the view. XXX This should probably generate a warning at runtime.
   <html>
   Curry
   </html>
+  
+You can skip the "macro" part of the macro call, but this is deprecated:
+
+  >>> from zope.deprecation.tests import warn
+  >>> import warnings
+  >>> saved_warn = warnings.warn
+  >>> warnings.warn = warn
+
+  >>> browser.open("http://localhost/manfred/@@burnt")
+  From tests.py's showwarning():
+  ... DeprecationWarning: Calling macros directly on the view is deprecated. Please use context/@@viewname/macros/macroname
+  ...
+  
+  >>> warnings.warn = saved_warn
 
 """
 import grok
@@ -84,6 +98,13 @@ grilldish = grok.PageTemplate("""
 <html metal:use-macro="context/@@grilled/macros/spices">
 </html>""")
 
+class Burnt(grok.View):
+    pass
+
+burnt = grok.PageTemplate("""\
+<html metal:use-macro="context/@@grilled/spices">
+</html>""")
+
 class Grilled(grok.View):
     pass
 
@@ -91,3 +112,4 @@ grilled = grok.PageTemplate("""\
 <html metal:define-macro="spices">
 Curry
 </html>""")
+

@@ -154,7 +154,7 @@ class View(BrowserPage):
         warnings.warn("Calling macros directly on the view is deprecated. "
                       "Please use context/@@viewname/macros/macroname\n"
                       "View %r, macro %s" % (self, key),
-                      DeprecationWarning)
+                      DeprecationWarning, 1)
         return value
 
     
