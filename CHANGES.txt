@@ -64,6 +64,7 @@ Restructuring
   more information.
 
 * The new pluggable template language support includes some restructuring:
+
   - GrokPageTemplate is now split up into two. BaseTemplate, on which all
     templates need to be based, and GrokTemplate, which also provides a
     set of methods for easy integration of templating languages.
