@@ -37,6 +37,8 @@ CREDITS
 
 * Brandon Rhodes (template pluggability)
 
+* Godefroid Chapelle (conversion to Z3 configuration actions)
+
 * ME GROK (team mascot)
 
 Thank you
