@@ -1,7 +1,7 @@
 """
 Testing the plugging in of a template language
 
-  >>> grok.grok(__name__)
+  >>> grok.testing.grok(__name__)
   
   >>> cave = Cave()
   >>> from zope.publisher.browser import TestRequest

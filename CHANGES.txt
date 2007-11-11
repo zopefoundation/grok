@@ -11,6 +11,10 @@ Bug fixes
   now also loads the ZPT template factories so that unit tests that
   need to configure views with ZPT templates continue to work.
 
+* Changed a few remaining references to ``grok.grok`` and
+  ``grok.grok_component`` to their correct equivalents in
+  ``grok.testing``.
+
 0.11 (2007-11-08)
 =================
 
