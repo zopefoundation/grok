@@ -2,7 +2,6 @@
 If multiple templates can be found, one in the module and one in the
 template directory, there is an error:
 
-  >>> grok.testing.grok('grok.templatereg')
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...

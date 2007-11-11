@@ -1,7 +1,6 @@
 """
 Templates can also be found in a directory with the same name as the module:
 
-  >>> grok.testing.grok('grok.templatereg')
   >>> grok.testing.grok(__name__)
   
   >>> manfred = Mammoth()

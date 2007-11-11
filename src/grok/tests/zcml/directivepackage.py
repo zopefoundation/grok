@@ -3,14 +3,12 @@
   >>> from zope.configuration import xmlconfig
   >>> context = xmlconfig.file('meta.zcml', grok)
 
-Load the ZPT factory
-  >>> grok.testing.grok('grok.templatereg')
-
   >>> ignored = xmlconfig.string('''
   ... <configure
   ...     xmlns="http://namespaces.zope.org/zope"
   ...     xmlns:grok="http://namespaces.zope.org/grok"
   ...     >
+  ...     <grok:grok package="grok.templatereg"/>
   ...     <grok:grok package="grok.tests.zcml.stoneage"/>
   ... </configure>''', context=context)
 

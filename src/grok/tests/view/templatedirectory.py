@@ -1,7 +1,6 @@
 """
 You can explicitly specify the template directory using grok.templatedir on module level:
 
-  >>> grok.testing.grok('grok.templatereg')
   >>> grok.testing.grok(__name__)
 
   >>> manfred = Mammoth()

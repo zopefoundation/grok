@@ -20,6 +20,7 @@ from grok import zcml
 def grok(module_name):
     config = ConfigurationMachine()
     zcml.do_grok('grok.meta', config)
+    zcml.do_grok('grok.templatereg', config)
     zcml.do_grok(module_name, config)
     config.execute_actions()
 
