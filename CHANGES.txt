@@ -7,6 +7,8 @@ Grok changes
 Bug fixes
 ---------
 
+* Fix imports from zope.app.securitypolicy.
+
 * Grok does not raise a GrokError anymore when it finds unassociated
   templates, but will issue a UserWarning.
 

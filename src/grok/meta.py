@@ -23,8 +23,8 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserSkinType)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.security.interfaces import IPermission
-from zope.app.securitypolicy.interfaces import IRole
-from zope.app.securitypolicy.rolepermission import rolePermissionManager
+from zope.securitypolicy.interfaces import IRole
+from zope.securitypolicy.rolepermission import rolePermissionManager
 
 from zope.annotation.interfaces import IAnnotations
 
@@ -74,7 +74,7 @@ class AdapterGrokker(martian.ClassGrokker):
             util.check_implements_one(factory)
         name = util.class_annotation(factory, 'grok.name', '')
 
-        config.action( 
+        config.action(
             discriminator=('adapter', adapter_context, provides, name),
             callable=component.provideAdapter,
             args=(factory, (adapter_context,), provides, name),
@@ -103,7 +103,7 @@ class MultiAdapterGrokker(martian.ClassGrokker):
 class GlobalUtilityGrokker(martian.ClassGrokker):
     component_class = grok.GlobalUtility
 
-    # This needs to happen before the FilesystemPageTemplateGrokker grokker 
+    # This needs to happen before the FilesystemPageTemplateGrokker grokker
     # happens, since it relies on the ITemplateFileFactories being grokked.
     priority = 1100
 
@@ -170,7 +170,7 @@ class XMLRPCGrokker(martian.ClassGrokker):
 
 class RESTGrokker(martian.ClassGrokker):
     component_class = grok.REST
-    
+
     def grok(self, name, factory, module_info, config, **kw):
         context = module_info.getAnnotation('grok.context', None)
         view_context = util.determine_class_context(factory, context)
@@ -184,7 +184,7 @@ class RESTGrokker(martian.ClassGrokker):
         view_layer = determine_class_directive('grok.layer', factory,
                                                module_info,
                                                default=grok.IRESTLayer)
-        
+
         for method in methods:
             name = method.__name__
             if name.startswith('__'):
@@ -215,8 +215,8 @@ class RESTGrokker(martian.ClassGrokker):
                 args=(factory, method_view, permission),
                 )
         return True
-    
-    
+
+
 class ViewGrokker(martian.ClassGrokker):
     component_class = grok.View
 
@@ -341,7 +341,7 @@ class TraverserGrokker(martian.ClassGrokker):
             discriminator=('adapter', adapts, IBrowserPublisher, ''),
             callable=component.provideAdapter,
             args=(factory, adapts, IBrowserPublisher),
-            )            
+            )
         return True
 
 
@@ -377,7 +377,7 @@ class ModulePageTemplateGrokker(martian.InstanceGrokker):
             args=(name, module_info.dotted_name)
         )
         return True
-        
+
 
 class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
     # do this early on, but after ModulePageTemplateGrokker, as
@@ -404,7 +404,7 @@ class UnassociatedTemplatesGrokker(martian.GlobalGrokker):
         templates = module_info.getAnnotation('grok.templates', None)
         if templates is None:
             return False
-        
+
         config.action(
             discriminator=None,
             callable=templates.checkUnassociated,
@@ -419,7 +419,7 @@ class SubscriberGrokker(martian.GlobalGrokker):
         subscribers = module_info.getAnnotation('grok.subscribers', [])
 
         for factory, subscribed in subscribers:
-            config.action( 
+            config.action(
                 discriminator=None,
                 callable=component.provideHandler,
                 args=(factory, subscribed),
@@ -446,8 +446,8 @@ class AdapterDecoratorGrokker(martian.GlobalGrokker):
                 # module context to be the thing adapted.
                 util.check_context(module_info.getModule(), context)
                 interfaces = (context, )
-            
-            config.action( 
+
+            config.action(
                 discriminator=('adapter', interfaces, function.__implemented__),
                 callable=component.provideAdapter,
                 args=(function, interfaces, function.__implemented__),
@@ -574,7 +574,7 @@ class SiteGrokker(martian.ClassGrokker):
         factory.__grok_utilities_to_install__ = overridden_infos
         adapts = (factory, grok.IObjectAddedEvent)
 
-        config.action( 
+        config.action(
             discriminator=None,
             callable=component.provideHandler,
             args=(localUtilityRegistrationSubscriber, adapts),
@@ -654,7 +654,7 @@ class PermissionGrokker(martian.ClassGrokker):
             unicode(util.class_annotation(factory, 'grok.title', id)),
             unicode(util.class_annotation(factory, 'grok.description', '')))
 
-        config.action( 
+        config.action(
             discriminator=('utility', IPermission, name),
             callable=component.provideUtility,
             args=(permission, IPermission, id),
@@ -680,7 +680,7 @@ class RoleGrokker(martian.ClassGrokker):
             unicode(util.class_annotation(factory, 'grok.title', id)),
             unicode(util.class_annotation(factory, 'grok.description', '')))
 
-        config.action( 
+        config.action(
             discriminator=('utility', IRole, name),
             callable=component.provideUtility,
             args=(role, IRole, id),
@@ -774,7 +774,7 @@ class IndexesGrokker(martian.InstanceGrokker):
         subscriber = IndexesSetupSubscriber(catalog_name, indexes,
                                             context, module_info)
         subscribed = (site, grok.IObjectAddedEvent)
-        config.action( 
+        config.action(
             discriminator=None,
             callable=component.provideHandler,
             args=(subscriber, subscribed),

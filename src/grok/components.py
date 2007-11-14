@@ -26,7 +26,7 @@ from zope import component
 from zope import interface
 from zope.interface.common import idatetime
 from zope.security.permission import Permission
-from zope.app.securitypolicy.role import Role
+from zope.securitypolicy.role import Role
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import (IBrowserPublisher,
@@ -147,9 +147,9 @@ class View(BrowserPage):
         # This is BBB code for Zope page templates only:
         if not isinstance(self.template, PageTemplate):
             raise AttributeError("View has no item %s" % key)
-        
+
         value = self.template._template.macros[key]
-        # When this deprecation is done with, this whole __getitem__ can 
+        # When this deprecation is done with, this whole __getitem__ can
         # be removed.
         warnings.warn("Calling macros directly on the view is deprecated. "
                       "Please use context/@@viewname/macros/macroname\n"
@@ -157,7 +157,7 @@ class View(BrowserPage):
                       DeprecationWarning, 1)
         return value
 
-    
+
     def url(self, obj=None, name=None):
         # if the first argument is a string, that's the name. There should
         # be no second argument
@@ -202,7 +202,7 @@ class XMLRPC(object):
 
 class REST(object):
     interface.implements(interfaces.IREST)
-    
+
     def __init__(self, context, request):
         self.context = context
         self.request = request
@@ -211,16 +211,16 @@ class REST(object):
     @property
     def response(self):
         return self.request.response
-    
+
 ##     def GET(self):
 ##         raise GrokMethodNotAllowed(self.context, self.request)
-    
+
 ##     def POST(self):
 ##         raise GrokMethodNotAllowed(self.context, self.request)
-    
+
 ##     def PUT(self):
 ##         raise GrokMethodNotAllowed(self.context, self.request)
-    
+
 ##     def DELETE(self):
 ##         raise GrokMethodNotAllowed(self.context, self.request)
 
@@ -235,7 +235,7 @@ class JSON(BrowserPage):
 
 class BaseTemplate(object):
     """Any sort of page template"""
-    
+
     interface.implements(interfaces.ITemplate)
 
     __grok_name__ = ''
@@ -255,10 +255,10 @@ class BaseTemplate(object):
 
 class GrokTemplate(BaseTemplate):
     """A slightly more advanced page template
-    
+
     This provides most of what a page template needs and is a good base for
     writing your own page template"""
-    
+
     def __init__(self, string=None, filename=None, _prefix=None):
 
         # __grok_module__ is needed to make defined_locally() return True for
@@ -267,10 +267,10 @@ class GrokTemplate(BaseTemplate):
         # when GrokTemplate is subclassed. You can not do a super().__init__
         # for example.
         self.__grok_module__ = martian.util.caller_module()
-        
+
         if not (string is None) ^ (filename is None):
             raise AssertionError("You must pass in template or filename, but not both.")
-        
+
         if string:
             self.setFromString(string)
         else:
@@ -282,7 +282,7 @@ class GrokTemplate(BaseTemplate):
     def __repr__(self):
         return '<%s template in %s>' % (self.__grok_name__,
                                         self.__grok_location__)
-    
+
     def _annotateGrokInfo(self, name, location):
         self.__grok_name__ = name
         self.__grok_location__ = location
@@ -297,9 +297,9 @@ class GrokTemplate(BaseTemplate):
         namespace['context'] = view.context
         # XXX need to check whether we really want to put None here if missing
         namespace['static'] = view.static
-        
+
         return namespace
-    
+
     def getNamespace(self, view):
         namespace = self.namespace(view)
         namespace.update(view.namespace())
@@ -312,7 +312,7 @@ class TrustedFilePageTemplate(TrustedAppPT, pagetemplatefile.PageTemplateFile):
     pass
 
 class PageTemplate(GrokTemplate):
-    
+
     def setFromString(self, string):
         zpt = TrustedPageTemplate()
         if martian.util.not_unicode_or_ascii(string):
@@ -332,7 +332,7 @@ class PageTemplate(GrokTemplate):
         template = self._template
         namespace.update(template.pt_getContext())
         return template.pt_render(namespace)
-    
+
 class PageTemplateFile(PageTemplate):
     # For BBB
     def __init__(self, filename, _prefix=None):
@@ -341,7 +341,7 @@ class PageTemplateFile(PageTemplate):
             module = sys.modules[self.__grok_module__]
             _prefix = os.path.dirname(module.__file__)
         self.setFromFilename(filename, _prefix)
-    
+
 class DirectoryResource(directoryresource.DirectoryResource):
     # We subclass this, because we want to override the default factories for
     # the resources so that .pt and .html do not get created as page

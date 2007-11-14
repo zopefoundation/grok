@@ -9,7 +9,7 @@
   <grok:grok package="grok.ftests" />
 
   <securityPolicy
-      component="zope.app.securitypolicy.zopepolicy.ZopeSecurityPolicy"
+      component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy"
       />
 
   <unauthenticatedPrincipal

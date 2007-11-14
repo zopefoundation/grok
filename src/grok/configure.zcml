@@ -1,4 +1,4 @@
-<configure    
+<configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:grok="http://namespaces.zope.org/grok">
@@ -27,7 +27,7 @@
   <include package="zope.app.session" />
 
   <securityPolicy
-      component="zope.app.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
+      component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
 
   <adapter factory=".components.ModelTraverser" />
   <adapter factory=".components.ContainerTraverser" />
@@ -83,7 +83,7 @@
 
   <!-- ZPT support -->
   <grok:grok package=".templatereg" />
-  
+
   <!-- The admin interface -->
   <grok:grok package=".admin" />
 
