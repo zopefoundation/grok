@@ -7,6 +7,9 @@ Grok changes
 Bug fixes
 ---------
 
+* Grok does not raise a GrokError anymore when it finds unassociated
+  templates, but will issue a UserWarning.
+
 * Fix https://bugs.launchpad.net/grok/+bug/161948: grok.testing.grok()
   now also loads the ZPT template factories so that unit tests that
   need to configure views with ZPT templates continue to work.
