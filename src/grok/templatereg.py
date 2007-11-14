@@ -31,7 +31,7 @@ class TemplateRegistry(object):
 
         if not os.path.isdir(template_dir):
             return
-        
+
         for template_file in os.listdir(template_dir):
             if template_file.startswith('.') or template_file.endswith('~'):
                 continue
@@ -41,7 +41,7 @@ class TemplateRegistry(object):
             template_factory = zope.component.queryUtility(
                 grok.interfaces.ITemplateFileFactory,
                 name=extension)
-                
+
             if template_factory is None:
                 # Warning when importing files. This should be
                 # allowed because people may be using editors that generate
@@ -74,19 +74,20 @@ class TemplateRegistry(object):
     def checkUnassociated(self, module_info):
         unassociated = list(self.listUnassociated())
         if unassociated:
-            raise GrokError("Found the following unassociated template(s) when "
-                            "grokking %r: %s.  Define view classes inheriting "
-                            "from grok.View to enable the template(s)."
-                            % (module_info.dotted_name,
-                               ', '.join(unassociated)), module_info)
+            msg = (
+                "Found the following unassociated template(s) when "
+                "grokking %r: %s.  Define view classes inheriting "
+                "from grok.View to enable the template(s)." % (
+                module_info.dotted_name, ', '.join(unassociated)))
+            warnings.warn(msg, UserWarning, 2)
 
     def checkTemplates(self, module_info, factory, factory_name):
         template_name = util.class_annotation(factory, 'grok.template',
                                               factory_name)
-            
+
         if factory_name != template_name:
             # grok.template is being used
-    
+
             if self.get(factory_name):
                 raise GrokError("Multiple possible templates for view %r. It "
                                 "uses grok.template('%s'), but there is also "
@@ -113,9 +114,9 @@ class TemplateRegistry(object):
                                 "'render' method." % factory, factory)
 
 class PageTemplateFileFactory(grok.GlobalUtility):
-    
+
     grok.implements(grok.interfaces.ITemplateFileFactory)
     grok.name('pt')
-    
+
     def __call__(self, filename, _prefix=None):
         return grok.components.PageTemplate(filename=filename, _prefix=_prefix)
