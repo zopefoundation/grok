@@ -480,9 +480,14 @@ class StaticResourcesGrokker(martian.GlobalGrokker):
 
         resource_factory = components.DirectoryResourceFactory(
             resource_path, module_info.dotted_name)
-        component.provideAdapter(
-            resource_factory, (IDefaultBrowserLayer,),
-            interface.Interface, name=module_info.dotted_name)
+        adapts = (IDefaultBrowserLayer,)
+        provides = interface.Interface
+        name = module_info.dotted_name
+        config.action(
+            discriminator=('adapter', adapts, provides, name),
+            callable=component.provideAdapter,
+            args=(resource_factory, adapts, provides, name),
+            )
         return True
 
 
