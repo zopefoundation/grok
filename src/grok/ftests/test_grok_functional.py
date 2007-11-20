@@ -70,7 +70,8 @@ def suiteFromPackage(name):
 def test_suite():
     suite = unittest.TestSuite()
     for name in ['view', 'staticdir', 'xmlrpc', 'traversal', 'form', 'url',
-                 'security', 'utility', 'catalog', 'admin', 'site', 'rest']:
+                 'security', 'utility', 'catalog', 'admin', 'site', 'rest',
+                 'testing']:
         suite.addTest(suiteFromPackage(name))
     return suite
 
