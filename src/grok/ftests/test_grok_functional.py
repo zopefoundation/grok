@@ -70,9 +70,15 @@ def suiteFromPackage(name):
 def test_suite():
     suite = unittest.TestSuite()
     for name in ['view', 'staticdir', 'xmlrpc', 'traversal', 'form', 'url',
-                 'security', 'utility', 'catalog', 'admin', 'site', 'rest',
-                 'testing']:
+                 'security', 'utility', 'catalog', 'admin', 'site', 'rest']:
         suite.addTest(suiteFromPackage(name))
+
+    # this test cannot follow the normal testing pattern, as the
+    # bug it tests for is only exposed in the context of a doctest
+    grok_component = doctest.DocFileSuite('grok_component.txt')
+    grok_component.layer = GrokFunctionalLayer
+    suite.addTest(grok_component)
+    
     return suite
 
 if __name__ == '__main__':

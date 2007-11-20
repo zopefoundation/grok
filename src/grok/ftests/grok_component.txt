@@ -1,5 +1,9 @@
-"""
-Test grok_component().
+Test grok_component() in an ordinary doctest.
+
+We already have tests for grok_component(), but these were placed
+inside a module. We will now test grok_component() in a pure doctest
+context. This used to demonstrate an error in martian when dealing
+with the __builtin__ module (fixed in martian 0.9.2).
 
 grok.testing.grok_component() can be used to grok individual
 components within a doctest, such as adapters. It sets up just enough
@@ -35,4 +39,3 @@ The adapter should now be available::
   >>> adapted = IFoo(Bar())
   >>> isinstance(adapted, MyAdapter)
   True
-"""
