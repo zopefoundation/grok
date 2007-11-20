@@ -17,6 +17,10 @@ Bug fixes
   ``grok.grok_component`` to their correct equivalents in
   ``grok.testing``.
 
+* ``grok.testing.grok_component()`` could not be used in a pure
+  doctest. This needed a bugfix in Martian (since 0.9.2). Add a test
+  that demonstrates this problem.
+
 0.11 (2007-11-08)
 =================
 
