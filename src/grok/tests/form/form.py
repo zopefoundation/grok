@@ -1,5 +1,5 @@
 """
-A grok.EditForm is a special grok.View that renders an edit form.
+A grok.EditForm is a special view that renders an edit form.
 
   >>> from zope import component
   >>> from zope.publisher.browser import TestRequest
@@ -12,6 +12,15 @@ A grok.EditForm is a special grok.View that renders an edit form.
   2
   >>> [w.__name__ for w in view.form_fields]
   ['name', 'size']
+
+Let's assert that forms are indeed Zope 3-style browser views and
+browser pages:
+
+  >>> from zope.publisher.interfaces.browser import IBrowserPage, IBrowserView
+  >>> IBrowserPage.providedBy(view)
+  True
+  >>> IBrowserView.providedBy(view)
+  True
 
 It is important to keep the order of the fields:
 
