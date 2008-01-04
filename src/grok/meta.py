@@ -47,7 +47,7 @@ from martian import util
 import grok
 from grok import components, formlib, templatereg
 from grok.util import check_adapts, get_default_permission, make_checker
-from grok.util import determine_class_directive
+from grok.util import determine_class_directive, public_methods_from_class
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
@@ -130,16 +130,13 @@ class XMLRPCGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, config, **kw):
         context = module_info.getAnnotation('grok.context', None)
         view_context = util.determine_class_context(factory, context)
-        # XXX We should really not make __FOO__ methods available to
-        # the outside -- need to discuss how to restrict such things.
-        methods = util.methods_from_class(factory)
+
+        methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
 
         for method in methods:
             name = method.__name__
-            if name.startswith('__'):
-                continue
 
             # Make sure that the class inherits MethodPublisher, so that the
             # views have a location
@@ -174,9 +171,8 @@ class RESTGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, config, **kw):
         context = module_info.getAnnotation('grok.context', None)
         view_context = util.determine_class_context(factory, context)
-        # XXX We should really not make __FOO__ methods available to
-        # the outside -- need to discuss how to restrict such things.
-        methods = util.methods_from_class(factory)
+
+        methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
 
@@ -187,8 +183,6 @@ class RESTGrokker(martian.ClassGrokker):
 
         for method in methods:
             name = method.__name__
-            if name.startswith('__'):
-                continue
 
             # Make sure that the class inherits RestPublisher, so that the
             # views have a location
@@ -294,7 +288,8 @@ class JSONGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, config, **kw):
         context = module_info.getAnnotation('grok.context', None)
         view_context = util.determine_class_context(factory, context)
-        methods = util.methods_from_class(factory)
+
+        methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
 

@@ -25,7 +25,7 @@ from zope.security.checker import NamesChecker, defineChecker
 from zope.security.interfaces import IPermission
 
 from martian.error import GrokError, GrokImportError
-from martian.util import class_annotation
+from martian.util import class_annotation, methods_from_class
 
 def check_adapts(class_):
     if component.adaptedBy(class_) is None:
@@ -60,7 +60,7 @@ def check_permission(factory, permission):
 
 def get_default_permission(factory):
     """Determine the default permission for a view.
-    
+
     There can be only 0 or 1 default permission.
     """
     permissions = class_annotation(factory, 'grok.require', [])
@@ -78,7 +78,7 @@ def url(request, obj, name=None):
     """Given a request and an object, give the URL.
 
     Optionally pass a third argument name which gets added to the URL.
-    """    
+    """
     url = component.getMultiAdapter((obj, request), IAbsoluteURL)()
     if name is None:
         return url
@@ -105,3 +105,7 @@ def determine_class_directive(directive_name, factory, module_info,
     if directive is not None:
         return directive
     return default
+
+def public_methods_from_class(factory):
+    return [m for m in methods_from_class(factory) if \
+            not m.__name__.startswith('_')]
