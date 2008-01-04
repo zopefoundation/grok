@@ -294,6 +294,13 @@ class JSONGrokker(martian.ClassGrokker):
         default_permission = get_default_permission(factory)
 
         for method in methods:
+            # The grok.JSON component inherits methods from its baseclass
+            # (being zope.publisher.browser.BrowserPage) with names that
+            # do not start with an underscore, but should still not
+            # be registered as views. Ignore these methods:
+            if method.__name__ in ['browserDefault', 'publishTraverse']:
+                continue
+
             # Create a new class with a __view_name__ attribute so the
             # JSON class knows what method to call.
             method_view = type(
