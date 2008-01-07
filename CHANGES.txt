@@ -7,6 +7,12 @@ Grok changes
 Bug fixes
 ---------
 
+* Do not register the publishTraverse and browserDefault methods of the
+  JSON component as views.
+
+* Methods with names that start with an '_' are not registered as views
+  for XMLRPC, REST and JSON components.
+
 * Use a configuration action for the registration of the static directory.
 
 * Fix https://bugs.launchpad.net/grok/+bug/161948: grok.testing.grok()

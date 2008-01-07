@@ -47,7 +47,7 @@ from martian import util
 import grok
 from grok import components, formlib, templatereg
 from grok.util import check_adapts, get_default_permission, make_checker
-from grok.util import determine_class_directive
+from grok.util import determine_class_directive, public_methods_from_class
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
@@ -130,9 +130,8 @@ class XMLRPCGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, config, **kw):
         context = module_info.getAnnotation('grok.context', None)
         view_context = util.determine_class_context(factory, context)
-        # XXX We should really not make __FOO__ methods available to
-        # the outside -- need to discuss how to restrict such things.
-        methods = util.methods_from_class(factory)
+
+        methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
 
@@ -174,9 +173,8 @@ class RESTGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, config, **kw):
         context = module_info.getAnnotation('grok.context', None)
         view_context = util.determine_class_context(factory, context)
-        # XXX We should really not make __FOO__ methods available to
-        # the outside -- need to discuss how to restrict such things.
-        methods = util.methods_from_class(factory)
+
+        methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
 
@@ -294,11 +292,19 @@ class JSONGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, config, **kw):
         context = module_info.getAnnotation('grok.context', None)
         view_context = util.determine_class_context(factory, context)
-        methods = util.methods_from_class(factory)
+
+        methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
 
         for method in methods:
+            # The grok.JSON component inherits methods from its baseclass
+            # (being zope.publisher.browser.BrowserPage) with names that
+            # do not start with an underscore, but should still not
+            # be registered as views. Ignore these methods:
+            if method.__name__ in ['browserDefault', 'publishTraverse']:
+                continue
+
             # Create a new class with a __view_name__ attribute so the
             # JSON class knows what method to call.
             method_view = type(
