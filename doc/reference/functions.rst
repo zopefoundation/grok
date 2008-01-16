@@ -27,30 +27,33 @@ common tasks.
    directive, in that one field is omitted from the form before
    rendering:
 
-**Example:** ::
+   **Example:**
 
-   import grok
-   from zope import interface, schema
+   .. code-block:: python
 
-   class IMammoth(interface.Interface):
-       name = schema.TextLine(title=u"Name")
-       size = schema.TextLine(title=u"Size", default=u"Quite normal")
+     import grok
+     from zope import interface, schema
 
-   class Mammoth(grok.Model):
-       interface.implements(IMammoth)
+     class IMammoth(interface.Interface):
+         name = schema.TextLine(title=u"Name")
+         size = schema.TextLine(title=u"Size", default=u"Quite normal")
 
-   class Edit(grok.EditForm):
-       grok.context(Mammoth)
+     class Mammoth(grok.Model):
+         interface.implements(IMammoth)
 
-       form_fields = grok.AutoFields(Mammoth).omit('size')
+     class Edit(grok.EditForm):
+         grok.context(Mammoth)
 
-In this example the ``size`` attribute will not show up in the
-resulting edit view.
+         form_fields = grok.AutoFields(Mammoth).omit('size')
+
+   In this example the ``size`` attribute will not show up in the
+   resulting edit view.
 
 
-.. seealso::
+   .. seealso::
 
-   :class:`grok.EditForm`, :func:`grok.Fields`
+     :class:`grok.EditForm`, :func:`grok.Fields`
+
 
 :func:`grok.Fields` -- declare schema fields of a form
 ======================================================
@@ -63,7 +66,9 @@ resulting edit view.
    A :class:`grok.Fields` can receive keyword parameters with schema
    fields. These should be available in the definition order.
 
-   **Example:** ::
+   **Example:**
+
+   .. code-block:: python
 
       import grok
       from zope import schema
@@ -85,9 +90,9 @@ resulting edit view.
 
       :func:`grok.AutoFields`, :class:`grok.Form`
 
+
 :func:`grok.getSite`
 ===============================================
-
 
 .. function:: grok.getSite()
 
@@ -103,7 +108,7 @@ resulting edit view.
    .. seealso::
 
       `Web Component Development With Zope 3, second edition <http://worldcookery.com/WhereToBuy>`_
-         By Philiip von Weitershaussen; Chapter 18 describes the use of Site objects.
+      By Philipp von Weitershausen; Chapter 18 describes the use of Site objects.
 
 
 :func:`grok.notify`
@@ -114,7 +119,9 @@ resulting edit view.
 
    Send `event` to event subscribers.
 
-   Example::
+   **Example:**
+
+   .. code-block:: python
 
       import grok
 
@@ -135,7 +142,8 @@ resulting edit view.
    .. seealso::
 
       `Web Component Development With Zope 3, second edition <http://worldcookery.com/WhereToBuy>`_
-         By Philiip von Weitershaussen; Chapter 16 describes the Zope 3 event system.
+      By Philipp von Weitershausen; Chapter 16 describes the Zope 3
+      event system.
 
 
 :func:`grok.url`
@@ -146,16 +154,17 @@ resulting edit view.
 
    Construct a URL for the given `request` and `object`.
 
-   `name` may be a string that gets appended to the object URL. Commonly used to
-   construct an URL to a particular view on the object.
+   `name` may be a string that gets appended to the object
+   URL. Commonly used to construct an URL to a particular view on the
+   object.
 
    This function returns the constructed URL as a string.
 
 
    .. seealso::
 
-      View classes derived from :class:`grok.View` have a similar :meth:`url` method
-      for constructing URLs.
+      View classes derived from :class:`grok.View` have a similar
+      :meth:`url` method for constructing URLs.
 
 
 :func:`grok.grok` -- Grok a package or module
@@ -164,37 +173,40 @@ resulting edit view.
 
 .. function:: grok(dotted_name)
 
-.. note:: Usually you don't need to invoke this funtion in your code, since it's triggered from the `configure.zcml`. Grokking test fixtures is one  situation where it is useful to call this explicitly.
+.. note:: Usually you don't need to invoke this funtion in your code,
+          since it's triggered from the `configure.zcml`. Grokking
+          test fixtures is one situation where it is useful to call
+          this explicitly.
 
-Grokking a package or module activates the contained components (like models,
-views, adapters, templates, etc.) and registers them with Zope 3's component
-architecture.
+  Grokking a package or module activates the contained components
+  (like models, views, adapters, templates, etc.) and registers them
+  with Zope 3's component architecture.
 
-The `dotted_name` must specify either a Python module or package that is
-available from the current PYTHONPATH.
+  The `dotted_name` must specify either a Python module or package
+  that is available from the current PYTHONPATH.
 
-Grokking a module:
+  Grokking a module:
 
-#. Scan the module for known components: models, adapters, utilities, views,
-      traversers, templates and subscribers.
+    #. Scan the module for known components: models, adapters,
+       utilities, views, traversers, templates and subscribers.
 
-#. Check whether a directory with file system templates exists
-(:file:`<modulename>_templates`). If it exists, load the file system templates
-into the template registry for this module.
+    #. Check whether a directory with file system templates exists
+       (:file:`<modulename>_templates`). If it exists, load the file
+       system templates into the template registry for this module.
 
-#. Determine the module context.
+    #. Determine the module context.
 
-#. Register all components with the Zope 3 component architecture.
+    #. Register all components with the Zope 3 component architecture.
 
-#. Initialize schemata for registered models
+    #. Initialize schemata for registered models
 
-   Grokking a package:
+  Grokking a package:
 
-#. Grok the package as a module.
+    #. Grok the package as a module.
 
-#. Check for a static resource directory (:file:`static`) and register it if
-it exists.
+    #. Check for a static resource directory (:file:`static`) and
+       register it if it exists.
 
-#. Recursively grok all sub-modules and sub-packages.
+    #. Recursively grok all sub-modules and sub-packages.
 
 

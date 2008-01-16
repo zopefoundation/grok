@@ -40,8 +40,8 @@ Implementation, configuration, and registration of Zope 3 adapters.
 
 .. class:: grok.Adapter
 
-   Base class to define an adapter. Adapters are automatically registered when a
-   module is "grokked".
+   Base class to define an adapter. Adapters are automatically
+   registered when a module is "grokked".
 
    .. attribute:: grok.Adapter.context
 
@@ -50,38 +50,41 @@ Implementation, configuration, and registration of Zope 3 adapters.
    **Directives:**
 
    :func:`grok.context(context_obj_or_interface)`
-      Maybe required. Identifies the type of objects or interface for the adaptation.
+      Maybe required. Identifies the type of objects or interface for
+      the adaptation.
 
    .. seealso::
 
-      :function:`grok.context`
+      :func:`grok.context`
 
    :func:`grok.implements(\*interfaces)`
       Required. Identifies the interface(s) the adapter implements.
 
    .. seealso::
 
-      :function:`grok.implements`
+      :func:`grok.implements`
 
    :func:`grok.name(name)`
-      Optional. Identifies the name used for the adapter registration. If ommitted, no
-      name will be used.
+      Optional. Identifies the name used for the adapter
+      registration. If ommitted, no name will be used.
 
-      When a name is used for the adapter registration, the adapter can only be
-      retrieved by explicitely using its name.
+      When a name is used for the adapter registration, the adapter
+      can only be retrieved by explicitely using its name.
 
    .. seealso::
 
-      :function:`grok.name`
+      :func:`grok.name`
 
    :func:`grok.provides(name)`
       Maybe required.
 
    .. seealso::
 
-      :function:`grok.provides`
+      :func:`grok.provides`
 
-**Example 1:** ::
+**Example 1:**
+
+.. code-block:: python
 
    import grok
    from zope import interface
@@ -97,15 +100,17 @@ Implementation, configuration, and registration of Zope 3 adapters.
 
    home = IHome(cave)
 
-**Example 2: Register and retrieve the adapter under a specific name** ::
+
+**Example 2: Register and retrieve the adapter under a specific name**
+
+.. code-block:: python
 
    import grok
    from zope import interface
 
    class Cave(grok.Model):
        pass
-
-   class IHome(interface.Interface):
+    class IHome(interface.Interface):
        pass
 
    class Home(grok.Adapter):
@@ -114,6 +119,7 @@ Implementation, configuration, and registration of Zope 3 adapters.
 
    from zope.component import getAdapter
    home = getAdapter(cave, IHome, name='home')
+
 
 :class:`grok.MultiAdapter`
 ==========================
@@ -144,7 +150,9 @@ Implementation, configuration, and registration of Zope 3 adapters.
       :func:`grok.provides` is required to disambiguate for what interface the
       adapter will be registered.
 
-**Example:** ::
+**Example:**
+
+.. code-block:: python
 
    import grok
    from zope import interface
@@ -170,6 +178,7 @@ Implementation, configuration, and registration of Zope 3 adapters.
 
 :class:`grok.Annotation`
 ========================
+
 
 Utilities
 ~~~~~~~~~
@@ -198,6 +207,7 @@ Utilities
       Maybe required. If the global utility implements more than one interface,
       :func:`grok.provides` is required to disambiguate for what interface the
       global utility will be registered.
+
 
 :class:`grok.LocalUtility`
 ==========================
@@ -240,7 +250,7 @@ Views
 :class:`grok.View`
 ==================
 
-:class:`grok.JSON
+:class:`grok.JSON`
 ==================
 
 :class:`grok.XMLRPC`
@@ -291,7 +301,9 @@ Security
    it is important to define permissions, which restrict access to
    certain principals or roles.
 
-   **Example:** ::
+   **Example:**
+
+   .. code-block:: python
 
       import grok
       grok.define_permission('cave.enter')
@@ -302,6 +314,7 @@ Security
       :func:`grok.require`, :class:`grok.Permission`, :class:`grok.Role`
 
    .. versionchanged:: 0.11
+
       replaced by :class:`grok.Permission`.
 
 :class:`Role`
