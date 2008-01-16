@@ -117,7 +117,7 @@ Our ``app_templates/index.pt`` can be that simple:
 
 .. code-block:: html
 
-    <html metal:use-macro="context/@@mymacros/mypage">
+    <html metal:use-macro="context/@@mymacros/macros/mypage">
     </html>
 
 Watching::
@@ -138,7 +138,7 @@ where the slot-name must be defined in the macro. Now, change
 
 .. code-block:: html
 
-    <html metal:use-macro="context/@@mymacros/mypage">
+    <html metal:use-macro="context/@@mymacros/macros/mypage">
       <body>
         <!-- slot 'mycontent' was defined in the macro above -->
         <div metal:fill-slot="mycontent">
@@ -155,7 +155,7 @@ and you will get the output::
 The pattern of the macro reference (the <macro-location>) used here
 is::
 
-    context/<view-name>/<macro-name>
+    context/<view-name>/macros/<macro-name>
 
 whereas ``context`` references the object being viewed, which in our
 case is the ``Sample`` application. In plain English we want Zope to
@@ -170,9 +170,8 @@ that the view can handle rendering of that object type).
 
 It is not a bad idea to register views for interfaces (instead of
 implementing classes), because it means, that a view will remain
-usable, while an implementation of an interface can change. [FIXME: Is
-this a lie?] This is done in the section `Defining 'all-purpose'
-macros`_ below.
+usable, while an implementation of an interface can change. This is
+done in the section `Defining 'all-purpose' macros`_ below.
 
 
 Background: how ``grok.View`` and macros interact
@@ -198,10 +197,24 @@ it is in fact an attribute of the associated template.
 
 Such, you can write in short for the above pattern::
 
-      context/<view-name>/<macro-name>
+      context/<view-name>/macros/<macro-name>
 
 View names always start with the 'eyes' (``@@``) which is a shortcut
 for ``++view++<view-name>``.
+
+.. versionchanged:: 0.11
+
+  In older grok releases (before 0.11) even omitting the `macros` part
+  of a URI was possible. So you could write::
+
+    context/<view-name>/<macro-name>
+
+  instead of::
+
+    context/<view-name>/macros/<macro-name>
+
+  This is now deprecated. Use always `macros/` to indicate, that you
+  want to reference a macro of a view.
 
 
 Defining 'all-purpose' macros
@@ -222,7 +235,7 @@ view:
 
 and reference the macros of the associated pagetemplate like this::
 
-    context/@@master/<macro-name>
+    context/@@master/macros/<macro-name>
 
 Because the macros in ``Master`` now are 'bound' (in fact their view
 is bound) to ``Interface`` and every Grok application, model or
@@ -244,7 +257,7 @@ this in your page template:
 
 .. code-block:: html
 
-        <html metal:use-macro="context/@@standard_macros/page">
+        <html metal:use-macro="context/@@standard_macros/macros/page">
           <head>
             <title metal:fill-slot="title">
               Document Title
