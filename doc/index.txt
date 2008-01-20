@@ -27,6 +27,11 @@ to get productive with Grok.
 
 Grok News
 ---------
+2008-01-20:
+  Grok 0.11.1 has been released! See the `announcement`__ for more details!
+
+  .. __: http://permalink.gmane.org/gmane.comp.web.zope.grok.devel/3565
+
 2007-11-08:
   Grok 0.11 has been released! See the release `announcement`__
   for more details! For projects that want to upgrade, please read the
