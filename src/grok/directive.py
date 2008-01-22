@@ -127,3 +127,5 @@ layer = InterfaceOrClassDirective('grok.layer',
 direct = MarkerDirective('grok.direct', ClassDirectiveContext())
 viewletmanager = InterfaceOrClassDirective('grok.viewletmanager',
                                            ClassDirectiveContext())
+view = InterfaceOrClassDirective('grok.view',
+                                 ClassDirectiveContext())

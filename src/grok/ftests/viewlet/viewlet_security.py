@@ -12,6 +12,7 @@ Set up a content object in the application root::
 
   >>> root = getRootFolder()
   >>> root['wilma'] = CaveWoman()
+  >>> root['fred'] = CaveMan()
 
 Traverse to the view on the model object. We get the viewlets
 registered for the default layer, with the anybody permission::
@@ -37,7 +38,8 @@ the ``GoldBone`` viewlet::
   Gold Bone
   T-Rex Bone
 
-Now we traverse to the view through a skin. Now we gain the viewlet registered for a particular layer, ``LayeredBone``::
+Now we traverse to the view through a skin. We gain the viewlet
+registered for a particular layer, ``LayeredBone``::
 
   >>> browser.open('http://localhost/++skin++boneskin/wilma/@@caveview')
   >>> print browser.contents
@@ -46,10 +48,34 @@ Now we traverse to the view through a skin. Now we gain the viewlet registered f
   Layered Bone
   T-Rex Bone
 
+Only viewlets registered for the CaveMan model, ``ManBone``, should up
+when traversing to fred::
+
+  >>> browser.open('http://localhost/fred/@@caveview')
+  >>> print browser.contents
+  Brack Bone
+  Gold Bone
+  Man Bone
+  T-Rex Bone
+
+
+Viewlets registered for a particular view, like ``LadyViewlet``,
+should only associate with that particular one::
+
+  >>> browser.open('http://localhost/fred/@@fireview')
+  >>> print browser.contents
+  Brack Bone
+  Gold Bone
+  Lady Viewlet
+  Man Bone
+  T-Rex Bone
+
+
 """
 
 
 import grok
+from zope.interface import Interface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 
@@ -59,19 +85,29 @@ class Gold(grok.Permission):
 class CaveWoman(grok.Model):
     pass
 
-class CaveView(grok.View):
+class CaveMan(grok.Model):
     pass
 
+class CaveView(grok.View):
+    grok.context(Interface)
+
+class FireView(grok.View):
+    grok.context(Interface)
+    grok.template('caveview')
+
 class Pot(grok.ViewletManager):
+    grok.context(Interface)
     grok.name('pot')
 
 class TRexBone(grok.Viewlet):
+    grok.context(Interface)
     grok.viewletmanager(Pot)
 
     def render(self):
         return "T-Rex Bone"
 
 class BrackerBone(grok.Viewlet):
+    grok.context(Interface)
     grok.viewletmanager(Pot)
 
     def render(self):
@@ -83,6 +119,7 @@ class BoneOwner(grok.Role):
     grok.permissions('bone.gold')
 
 class GoldBone(grok.Viewlet):
+    grok.context(Interface)
     grok.viewletmanager(Pot)
     grok.require('bone.gold')
 
@@ -93,11 +130,27 @@ class IBoneLayer(grok.IGrokLayer, IDefaultBrowserLayer):
     pass
 
 class LayeredBone(grok.Viewlet):
+    grok.context(Interface)
     grok.viewletmanager(Pot)
     grok.layer(IBoneLayer)
 
     def render(self):
         return 'Layered Bone'
+
+class ManBone(grok.Viewlet):
+    grok.viewletmanager(Pot)
+    grok.context(CaveMan)
+
+    def render(self):
+        return "Man Bone"
+
+class LadyViewlet(grok.Viewlet):
+    grok.context(Interface)
+    grok.viewletmanager(Pot)
+    grok.view(FireView)
+
+    def render(self):
+        return 'Lady Viewlet'
 
 class BoneSkin(grok.Skin):
     grok.layer(IBoneLayer)

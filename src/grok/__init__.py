@@ -44,7 +44,8 @@ from grok.components import ViewletManager, Viewlet
 
 from grok.directive import (context, name, title, template, templatedir,
                             provides, baseclass, global_utility, local_utility,
-                            permissions, require, site, layer, direct, viewletmanager)
+                            permissions, require, site, layer, direct, viewletmanager,
+                            view)
 from grok.decorators import subscribe, adapter, implementer
 from martian.error import GrokError, GrokImportError
 

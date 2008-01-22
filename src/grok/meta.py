@@ -884,8 +884,12 @@ class ViewletManagerGrokker(martian.ClassGrokker):
                                                     None) or module_info.getAnnotation('grok.layer',
                                                      None) or IDefaultBrowserLayer
 
-        context = module_info.getAnnotation('grok.context', None)
+        context = module_info.getAnnotation('grok.context', interface.Interface)
         view_context = util.determine_class_context(factory, context)
+
+        # content providers can be associated with a view as well
+        # we default to all views, or IBrowserView
+        view = grok.util.class_annotation(factory, 'grok.view', IBrowserView)
 
         view_layer = determine_class_directive('grok.layer', factory,
                                                module_info,
@@ -894,9 +898,9 @@ class ViewletManagerGrokker(martian.ClassGrokker):
         # TODO - manager is registered for IBrowserView instead of the real view
         config.action(
             discriminator = ('viewletManager', view_context, view_layer,
-                             IBrowserView, name),
+                             view, name),
             callable = component.provideAdapter,
-            args = (factory, (interface.Interface, view_layer, IBrowserView),
+            args = (factory, (interface.Interface, view_layer, view),
                     IViewletManager, name)
             )
 
@@ -957,8 +961,12 @@ class ViewletGrokker(martian.ClassGrokker):
                 raise GrokError("View %r has no associated template or "
                                 "'render' method." % factory, factory)
 
-        context = module_info.getAnnotation('grok.context', None)
+        context = module_info.getAnnotation('grok.context', interface.Interface)
         view_context = util.determine_class_context(factory, context)
+
+        # content providers can be associated with a view as well
+        # we default to all views, or IBrowserView
+        view = grok.util.class_annotation(factory, 'grok.view', IBrowserView)
 
         viewletmanager = grok.util.class_annotation(factory, 'grok.viewletmanager', [])
         view_layer = util.class_annotation(factory, 'grok.layer',
@@ -967,9 +975,9 @@ class ViewletGrokker(martian.ClassGrokker):
 
         config.action(
             discriminator = ('viewlet', view_context, view_layer,
-                             IBrowserView, viewletmanager, name),
+                             view, viewletmanager, name),
             callable = component.provideAdapter,
-            args = (factory, (view_context, view_layer, IBrowserView,
+            args = (factory, (view_context, view_layer, view,
                     viewletmanager), IViewlet, name)
             )
 
