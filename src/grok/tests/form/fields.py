@@ -1,6 +1,6 @@
 """
 A grok.Fields can receive keyword parameters with schema fields. These
-should be avaible in the definition order.
+should be available in the definition order.
 
   >>> grok.testing.grok(__name__)
 
