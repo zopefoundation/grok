@@ -40,9 +40,11 @@ from grok.components import Permission, Role
 from grok.components import Skin, IGrokLayer
 from grok.components import RESTProtocol, IRESTLayer
 from grok.interfaces import IRESTSkinType
+from grok.components import ViewletManager, Viewlet
+
 from grok.directive import (context, name, title, template, templatedir,
                             provides, baseclass, global_utility, local_utility,
-                            permissions, require, site, layer, direct)
+                            permissions, require, site, layer, direct, viewletmanager)
 from grok.decorators import subscribe, adapter, implementer
 from martian.error import GrokError, GrokImportError
 
