@@ -24,7 +24,6 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserSkinType)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.viewlet.interfaces import IViewletManager, IViewlet
-from zope.security.checker import NamesChecker, defineChecker
 from zope.security.interfaces import IPermission
 from zope.securitypolicy.interfaces import IRole
 from zope.securitypolicy.rolepermission import rolePermissionManager
@@ -901,6 +900,13 @@ class ViewletManagerGrokker(martian.ClassGrokker):
                     IViewletManager, name)
             )
 
+        permission = get_default_permission(factory)
+        config.action(
+            discriminator=('protectName', factory, '__call__'),
+            callable=make_checker,
+            args=(factory, factory, permission),
+            )
+
         return True
 
 class ViewletGrokker(martian.ClassGrokker):
@@ -911,24 +917,6 @@ class ViewletGrokker(martian.ClassGrokker):
 
         factory.module_info = module_info # to make /static available
         factory_name = factory.__name__.lower()
-
-        permissions = grok.util.class_annotation(factory, 'grok.require', [])
-        if not permissions:
-            checker = NamesChecker(['update', 'render'])
-        elif len(permissions) > 1:
-            raise GrokError('grok.require was called multiple times in viewlet '
-                            '%r. It may only be called once.' % factory,
-                            factory)
-        elif permissions[0] == 'zope.Public':
-            checker = NamesChecker(['update','render'])
-        else:
-            perm = permissions[0]
-            if component.queryUtility(IPermission, name=perm) is None:
-                raise GrokError('Undefined permission %r in view %r. Use '                            'grok.define_permission first.'
-                            % (perm, factory), factory)
-            checker = NamesChecker(['update','render'], permissions[0])
-
-        defineChecker(factory, checker)
 
         # find templates
         template_name = util.class_annotation(factory, 'grok.template',
@@ -983,6 +971,13 @@ class ViewletGrokker(martian.ClassGrokker):
             callable = component.provideAdapter,
             args = (factory, (view_context, view_layer, IBrowserView,
                     viewletmanager), IViewlet, name)
+            )
+
+        permission = get_default_permission(factory)
+        config.action(
+            discriminator=('protectName', factory, '__call__'),
+            callable=make_checker,
+            args=(factory, factory, permission, ['update', 'render']),
             )
 
         return True
