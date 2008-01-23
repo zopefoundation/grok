@@ -617,6 +617,9 @@ class ViewletManager(ViewletManagerBase):
 
     def __init__(self, context, request, view):
         super(ViewletManager, self).__init__(context, request, view)
+        self.__name__ = util.class_annotation(self.__class__,
+                                              'grok.name',
+                                              self.__class__.__name__.lower())
         self.static = component.queryAdapter(
             self.request,
             interface.Interface,
@@ -676,6 +679,9 @@ class Viewlet(ViewletBase):
 
     def __init__(self, context, request, view, manager):
         super(Viewlet, self).__init__(context, request, view, manager)
+        self.__name__ = util.class_annotation(self.__class__,
+                                             'grok.name',
+                                              self.__class__.__name__.lower())
         self.static = component.queryAdapter(
             self.request,
             interface.Interface,

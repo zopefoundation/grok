@@ -70,6 +70,34 @@ should only associate with that particular one::
   Man Bone
   T-Rex Bone
 
+Viewlets and viewlet managers should have a __name__. It's used
+for instance when looking up the absolute url for the viewlet
+or manager.
+
+  >>> from zope.publisher.browser import TestRequest
+  >>> request = TestRequest()
+  >>> model = CaveWoman()
+  >>> view = CaveView(model, request)
+
+Managers and viewlets should get their  name from the class name
+if grok.name() is not present.
+
+  >>> manager = Pot(model, request, view)
+  >>> manager.__name__
+  'pot'
+  >>> viewlet = BrackerBone(model, request, view, manager)
+  >>> viewlet.__name__
+  'brackerbone'
+
+If grok.name() is specified for manager and viewlet they should
+get those names.
+
+  >>> manager = NamedViewletManager(model, request, view)
+  >>> manager.__name__
+  'managerwithname'
+  >>> viewlet = NamedViewlet(model, request, view, manager)
+  >>> viewlet.__name__
+  'viewletwithname'
 
 """
 
@@ -154,3 +182,12 @@ class LadyViewlet(grok.Viewlet):
 
 class BoneSkin(grok.Skin):
     grok.layer(IBoneLayer)
+
+class NamedViewletManager(grok.ViewletManager):
+    grok.context(Interface)
+    grok.name('managerwithname')
+
+class NamedViewlet(grok.Viewlet):
+    grok.context(Interface)
+    grok.name('viewletwithname')
+    grok.viewletmanager(NamedViewletManager)
