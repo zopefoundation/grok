@@ -25,6 +25,7 @@ from martian.directive import (OnceDirective,
                                InterfaceDirective,
                                InterfaceOrClassDirective,
                                ModuleDirectiveContext,
+                               OptionalValueDirective,
                                ClassDirectiveContext,
                                ClassOrModuleDirectiveContext)
 from martian import util
@@ -104,6 +105,19 @@ class MultiValueOnceDirective(OnceDirective):
     def value_factory(self, *args):
         return args
 
+class OrderDirective(OptionalValueDirective, OnceDirective):
+
+    order = 0
+
+    def value_factory(self, value=None):
+        OrderDirective.order += 1
+        if value is not None:
+            return value, OrderDirective.order
+        return super(OrderDirective, self).value_factory(value)
+
+    def default_value(self):
+        return 0, OrderDirective.order
+
 # Define grok directives
 name = SingleTextDirective('grok.name', ClassDirectiveContext())
 template = SingleTextDirective('grok.template', ClassDirectiveContext())
@@ -125,3 +139,4 @@ permissions = MultiValueOnceDirective(
 layer = InterfaceOrClassDirective('grok.layer',
                            ClassOrModuleDirectiveContext())
 direct = MarkerDirective('grok.direct', ClassDirectiveContext())
+order = OrderDirective('grok.order', ClassDirectiveContext())

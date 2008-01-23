@@ -4,6 +4,15 @@ Grok changes
 0.12 (unreleased)
 =================
 
+Feature changes
+---------------
+
+* Add a new directive, ``grok.order()``, which can be used to help
+  sort components. At the time it is not used yet, but we intend to
+  use it for the viewlets support. Note that this means Grok now
+  requires Martian 0.9.3 or higher. See ``grok.interfaces`` for more
+  documentation on this directive.
+ 
 Bug fixes
 ---------
 

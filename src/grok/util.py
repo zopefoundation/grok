@@ -109,3 +109,16 @@ def determine_class_directive(directive_name, factory, module_info,
 def public_methods_from_class(factory):
     return [m for m in methods_from_class(factory) if \
             not m.__name__.startswith('_')]
+
+def _sort_key(component):
+    explicit_order, implicit_order = class_annotation(component,
+                                                      'grok.order',
+                                                      (0,0))
+    return (explicit_order,
+            component.__module__,
+            implicit_order,
+            component.__class__.__name__)
+
+def sort_components(components):
+    # if components have a grok.order directive, sort by that
+    return sorted(components, key=_sort_key)

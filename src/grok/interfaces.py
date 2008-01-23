@@ -157,6 +157,25 @@ class IGrokDirectives(interface.Interface):
         It can only be used inside grok.Indexes subclasses.
         """
 
+    def order(value=None):
+        """Control the ordering of components.
+
+        If the value is specified, the order will be determined by sorting on 
+        it.
+        If no value is specified, the order will be determined by definition
+        order within the module.
+        If the directive is absent, the order will be determined by class name.
+        (unfortunately our preferred default behavior on absence which would
+        be like grok.order() without argument is hard to implement in Python)
+
+        Inter-module order is by dotted name of the module the
+        components are in; unless an explicit argument is specified to
+        ``grok.order()``, components are grouped by module.
+  
+        The function grok.util.sort_components can be used to sort
+        components according to these rules.
+        """
+
 
 class IGrokDecorators(interface.Interface):
 
