@@ -1,0 +1,11 @@
+<html>
+<head>
+</head>
+<body>
+  <h1>Congratulations!</h1>
+
+  <p>Your Grok application is up and running.
+  Edit <code>sample/app_templates/index.pt</code> to change
+  this page.</p>
+</body>
+</html>

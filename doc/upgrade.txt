@@ -1,0 +1,83 @@
+Upgrade notes
+=============
+
+This document outlines how to update Grok applications so that they
+continue to work with newer versions of Grok.  This document only
+describes changes involving incompatibilities or deprecations, not new
+features (please refer to ``CHANGES.txt`` for those).
+
+
+Upgrading to 0.11
+-----------------
+
+* ``grok.define_permission`` has been removed in favour of a
+  ``grok.Permission`` base class, for reasons of symmetry.  Instead of
+  writing::
+
+    grok.define_permission('myapp.ViewCavePainting')
+
+  you should now write::
+
+    class View(grok.Permission):
+        grok.name('myapp.ViewCavePainting')
+
+  If you also want to supply a title and description for the
+  permission, use the ``grok.title()`` and ``grok.description()``
+  directives on the class.
+
+* ``grok.grok`` and ``grok.grok_component`` have been deprecated.  If
+  you need them for tests (which is their only legimitate use), you
+  should import them both from ``grok.testing``.
+
+* Grokkers should now emit configuration actions instead of
+  registering components right away.  For that they now get a new
+  keyword argument called ``config``, the configuration context.  For
+  example, a grokker that used to do this::
+
+    registerSomeComponent(foo, name)
+
+  should now be doing this::
+
+    config.action(
+        discriminator=('somecomponent', name),
+        callable=registerSomeComponent,
+        args=(name,)
+        )
+
+  The discriminator should be chosen so that registrations with the
+  same discriminator conflict (in the above example, if somebody tried
+  to register two different components under the same name, you'd get
+  a conflict).
+
+* Grokkers no longer get the ``context`` and ``templates`` keyword
+  arguments.  If they need access to these values, they can now get
+  them as module annotations from the ``module_info`` object like
+  this::
+
+      context = module_info.getAnnotation('grok.context')
+      templates = module_info.getAnnotation('grok.templates')
+
+* Note that grokkers must always take arbitrary keyword arguments
+  (``**kw``), as specified by the ``martian.interfaces.IGrokker``
+  interface.  A minimal specification of the ``grok()`` method is
+  therefore::
+
+    def grok(self, name, obj, **kw):
+        ...
+
+  though grokkers will likely want to take ``module_info`` as well as
+  ``config`` explicitly::
+
+    def grok(self, name, obj, module_info, config, **kw):
+        ...
+
+  If your application defines custom grokkers and you're getting a
+  ``TypeError`` about unexpected arguments to ``grok``, you likely
+  need to update the signature of the ``grok()`` method like described
+  above.
+
+
+Upgrading to 0.10
+-----------------
+
+There were no incompatible changes.

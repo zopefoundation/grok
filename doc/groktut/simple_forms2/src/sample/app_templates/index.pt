@@ -1,0 +1,10 @@
+<html>
+<body>
+<form tal:attributes="action python:view.url()" method="GET">
+  Value 1: <input type="text" name="value1" value="" /><br />
+  Value 2: <input type="text" name="value2" value="" /><br />
+  <input type="submit" value="Sum!" />
+</form>
+<p>The sum is: <span tal:replace="python:view.sum">sum</span></p>
+</body>
+</html>

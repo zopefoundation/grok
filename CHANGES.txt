@@ -1,0 +1,199 @@
+Grok changes
+************
+
+0.12 (unreleased)
+=================
+
+Feature changes
+---------------
+
+* Add a new directive, ``grok.order()``, which can be used to help
+  sort components. At the time it is not used yet, but we intend to
+  use it for the viewlets support. Note that this means Grok now
+  requires Martian 0.9.3 or higher. See ``grok.interfaces`` for more
+  documentation on this directive.
+ 
+Bug fixes
+---------
+
+* Do not register the publishTraverse and browserDefault methods of the
+  JSON component as views.
+
+* Methods with names that start with an '_' are not registered as views
+  for XMLRPC, REST and JSON components.
+
+* Use a configuration action for the registration of the static directory.
+
+* Fix imports from zope.app.securitypolicy.
+
+* Grok does not raise a GrokError anymore when it finds unassociated
+  templates, but will issue a UserWarning.
+
+* Fix https://bugs.launchpad.net/grok/+bug/161948: grok.testing.grok()
+  now also loads the ZPT template factories so that unit tests that
+  need to configure views with ZPT templates continue to work.
+
+* Changed a few remaining references to ``grok.grok`` and
+  ``grok.grok_component`` to their correct equivalents in
+  ``grok.testing``.
+
+* ``grok.testing.grok_component()`` could not be used in a pure
+  doctest. This needed a bugfix in Martian (since 0.9.2). Add a test
+  that demonstrates this problem.
+
+* Fix https://bugs.launchpad.net/grok/+bug/162437: grok.Form and its
+  subclasses did not implement IBrowserView.
+
+* Fix https://bugs.launchpad.net/grok/+bug/185414: grok introsepector
+  was broken for zipped eggs.
+
+Restructuring
+-------------
+
+* Refactor commonalities out of meta.py.
+
+0.11 (2007-11-08)
+=================
+
+Feature changes
+---------------
+
+* Integrated skins and layers: ``grok.layer``, ``grok.IGrokLayer``,
+  ``grok.Skin``.
+
+* Grok now supports hooking in new template languages without much work.
+  See also doc/minitutorials/template-languages.txt. See Restructuring below
+  for more techinical info.
+
+* Accessing a template macro via context/@@the_view/the_template is now
+  deprecated for the standard ZPT story of using
+  context/@@the_view/macro/the_template.
+
+* There is now a grok.direct() directive that can be used on GlobalUtilities
+  to mark that the class provides the utility interface directly and need
+  no instantiation.
+
+* Removed ``grok.define_permission`` in favor of the
+  ``grok.Permission`` component base class. You should now subclass
+  this base class to define permissions. See also
+  doc/minitutorials/permissions.txt
+
+* Added the ``grok.Role`` component base class to define roles.
+
+* The admin UI now displays and offers deletion of broken objects.
+
+* Removed support for defining model schemas using an inner class with
+  the special name ``fields``. This was abandoned in favor the usual
+  Zope 3 way of defining schemas in interfaces and implementing them
+  in our Grok models.
+
+* Integrated REST support. See doc/minitutorials/rest.txt for usage
+  information.
+
+Bug fixes
+---------
+
+* Remove zc.recipe.egg, zc.recipe.filestorage, zc.recipe.testrunner,
+  zc.zope3recipes from version requirements.
+
+* The admin UI now shows interfaces in modules.
+
+* ``handle...`` is not a special function name anymore.
+
+* Views no longer need a custom ``AbsoluteURL`` view to determine
+  their URL, since each instance now properly gets a ``__name__``
+  attribute.
+
+* buildout.cfg extends versions.cfg to pin down the versions of the
+  dependency tree. See also http://grok.zope.org/releaseinfo/readme.html
+
+Restructuring
+-------------
+
+* Grokkers now emit configuration actions, much like ZCML directive
+  handlers do. If you defined custom grokkers, see doc/upgrade.txt for
+  more information.
+
+* The new pluggable template language support includes some restructuring:
+
+  - GrokPageTemplate is now split up into two. BaseTemplate, on which all
+    templates need to be based, and GrokTemplate, which also provides a
+    set of methods for easy integration of templating languages.
+
+  - All objects based on GrokTemplate are now grokked, instead of having
+    separate grokkers for each type of template.
+
+  - The View is now completely template-language agnostic, which makes it
+    easy to hook in new page template languages.
+
+  - There are now new interfaces (ITemplate and ITemplateFileFactory)
+    used when you implement support for a new templating language.
+
+* Changed the way grok's functional tests are set up.  Instead of each
+  test case doing its own test setup, it is now done once by the
+  ftesting layer.  This avoids ordering problems when some ftests
+  would influence the environment of other ftests that were run later
+  in time.
+
+0.10.2 (2007-10-24)
+===================
+
+Bug fixes
+---------
+
+* Remove zc.recipe.egg, zc.recipe.filestorage, zc.recipe.testrunner,
+  zc.zope3recipes from version requirements.
+
+* Require zope.app.error = 3.5.1
+
+0.10.1 (2007-10-10)
+===================
+
+Bug fixes
+---------
+
+* buildout.cfg extends versions.cfg to pin down the versions of the
+  dependency tree. This should avoid the situation where we release
+  Grok, some dependency changes, and Grok breaks as a result. In
+  conjunction with this we will also be releasing a new version of
+  grokproject that will use this version infrastructure by default.
+
+  For more information about this change, see:
+  http://grok.zope.org/releaseinfo/readme.html
+
+0.10 (2007-08-21)
+=================
+
+Feature changes
+---------------
+
+* Integrated admin user interface.
+
+* Configuration using Martian (http://pypi.python.org/pypi/martian).
+
+* Flash message infrastructure included.
+
+* Adjust dependencies for Grok so that grokproject should work on
+  Windows.
+
+Bug fixes
+---------
+
+* A fix in Martian where multiple grok.Model or grok.Container classes
+  could result in something being found as a context twice.
+
+0.9 series (early 2007 until July 2007)
+=======================================
+
+Feature changes
+---------------
+
+Grok was released in "continuous release" mode from SVN during this period.
+
+0.1 series (September 2006 until early 2007)
+============================================
+
+Feature changes
+---------------
+
+Grok was created in September 2006.

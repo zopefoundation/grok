@@ -1,0 +1,9 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" 
+      tal:attributes="href static/style.css" />
+</head>
+<body>
+<p>Hello world!</p>
+</body>
+</html>
