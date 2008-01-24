@@ -81,7 +81,8 @@ class TemplateRegistry(object):
                 module_info.dotted_name, ', '.join(unassociated)))
             warnings.warn(msg, UserWarning, 2)
 
-    def checkTemplates(self, module_info, factory, factory_name):
+    def checkTemplates(self, module_info, factory):
+        factory_name = factory.__name__.lower()
         template_name = util.class_annotation(factory, 'grok.template',
                                               factory_name)
 

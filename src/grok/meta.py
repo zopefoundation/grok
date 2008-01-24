@@ -248,7 +248,7 @@ class ViewGrokker(martian.ClassGrokker):
             config.action(
                 discriminator=None,
                 callable=templates.checkTemplates,
-                args=(module_info, factory, factory.__name__.lower())
+                args=(module_info, factory)
             )
 
         # safety belt: make sure that the programmer didn't use
@@ -878,39 +878,23 @@ class ViewletManagerGrokker(martian.ClassGrokker):
     component_class = grok.ViewletManager
 
     def grok(self, name, factory, module_info, config, **kw):
+        factory.module_info = module_info
+        
+        name = get_name(factory)
+        view_context = get_context(module_info, factory)
 
-        factory.module_info = module_info # to make /static available
-
-        name = grok.util.class_annotation(factory, 'grok.name', factory.__name__.lower())
-        view_layer = util.class_annotation(factory, 'grok.layer',
-                                                    None) or module_info.getAnnotation('grok.layer',
-                                                     None) or IDefaultBrowserLayer
-
-        context = module_info.getAnnotation('grok.context', interface.Interface)
-        view_context = util.determine_class_context(factory, context)
-
-        # content providers can be associated with a view as well
-        # we default to all views, or IBrowserView
-        view = grok.util.class_annotation(factory, 'grok.view', IBrowserView)
-
+        view = determine_class_directive('grok.view', factory,
+                                         module_info, default=IBrowserView)
         view_layer = determine_class_directive('grok.layer', factory,
                                                module_info,
                                                default=IDefaultBrowserLayer)
 
-        # TODO - manager is registered for IBrowserView instead of the real view
         config.action(
             discriminator = ('viewletManager', view_context, view_layer,
                              view, name),
             callable = component.provideAdapter,
-            args = (factory, (interface.Interface, view_layer, view),
+            args = (factory, (view_context, view_layer, view),
                     IViewletManager, name)
-            )
-
-        permission = get_default_permission(factory)
-        config.action(
-            discriminator=('protectName', factory, '__call__'),
-            callable=make_checker,
-            args=(factory, factory, permission),
             )
 
         return True
@@ -919,62 +903,29 @@ class ViewletGrokker(martian.ClassGrokker):
     component_class = grok.Viewlet
 
     def grok(self, name, factory, module_info, config, **kw):
-        # Try to set up permissions (copied from the View grokker)
-
         factory.module_info = module_info # to make /static available
-        factory_name = factory.__name__.lower()
 
+        view_context = get_context(module_info, factory)
+        
         # find templates
-        template_name = util.class_annotation(factory, 'grok.template',
-                                              factory_name)
         templates = module_info.getAnnotation('grok.templates', None)
-        template = templates.get(template_name)
-
-        if factory_name != template_name:
-            # grok.template is being used
-            if templates.get(factory_name):
-                raise GrokError("Multiple possible templates for view %r. It "
-                                "uses grok.template('%s'), but there is also "
-                                "a template called '%s'."
-                                % (factory, template_name, factory_name),
-                                factory)
-
-        factory_template = getattr(factory,'template', None)
-
-        if template:
-            if (getattr(factory, 'render', None) and not
-                util.check_subclass(factory, components.GrokForm) and not
-                util.check_subclass(factory, components.Viewlet)):
-                # we do not accept render and template both for a view
-                # (unless it's a form, they happen to have render.)
-                # Forms currently not implemented in viewlets.
-                raise GrokError(
-                    "Multiple possible ways to render view %r. "
-                    "It has both a 'render' method as well as "
-                    "an associated template." % factory, factory)
-
-            templates.markAssociated(template_name)
-            factory.template = template
-        elif factory_template and isinstance(factory_template, (components.PageTemplate, components.PageTemplateFile)):
-            pass
-        else:
-            if not getattr(factory, 'render', None):
-                # we do not accept a view without any way to render it
-                raise GrokError("View %r has no associated template or "
-                                "'render' method." % factory, factory)
-
-        context = module_info.getAnnotation('grok.context', interface.Interface)
-        view_context = util.determine_class_context(factory, context)
-
-        # content providers can be associated with a view as well
-        # we default to all views, or IBrowserView
-        view = grok.util.class_annotation(factory, 'grok.view', IBrowserView)
-
-        viewletmanager = grok.util.class_annotation(factory, 'grok.viewletmanager', [])
-        view_layer = util.class_annotation(factory, 'grok.layer',
-                                            None) or module_info.getAnnotation('grok.layer',
-                                             None) or IDefaultBrowserLayer
-
+        if templates is not None:
+            config.action(
+                discriminator=None,
+                callable=templates.checkTemplates,
+                args=(module_info, factory))
+    
+        view = determine_class_directive('grok.view', factory,
+                                         module_info, default=IBrowserView)
+        view_layer = determine_class_directive('grok.layer', factory,
+                                               module_info,
+                                               default=IDefaultBrowserLayer)
+        viewletmanager = determine_class_directive('grok.viewletmanager',
+                                                   factory, module_info,
+                                                   None)
+        if viewletmanager is None:
+            raise GrokError("XXX This is a temporary grok error")
+    
         config.action(
             discriminator = ('viewlet', view_context, view_layer,
                              view, viewletmanager, name),
@@ -989,5 +940,5 @@ class ViewletGrokker(martian.ClassGrokker):
             callable=make_checker,
             args=(factory, factory, permission, ['update', 'render']),
             )
-
+        
         return True
