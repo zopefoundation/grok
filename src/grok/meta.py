@@ -55,9 +55,12 @@ def get_context(module_info, factory):
     context = module_info.getAnnotation('grok.context', None)
     return util.determine_class_context(factory, context)
 
-def get_name(factory):
-    return grok.util.class_annotation(factory, 'grok.name',
-                                      factory.__name__.lower())
+def get_name_classname(factory):
+    return get_name(factory, factory.__name__.lower())
+
+def get_name(factory, default=''):
+    return grok.util.class_annotation(factory, 'grok.name', default)
+
 
 class ContextGrokker(martian.GlobalGrokker):
 
@@ -79,8 +82,8 @@ class AdapterGrokker(martian.ClassGrokker):
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
             util.check_implements_one(factory)
-        name = util.class_annotation(factory, 'grok.name', '')
-
+        name = get_name(factory)
+        
         config.action(
             discriminator=('adapter', adapter_context, provides, name),
             callable=component.provideAdapter,
@@ -96,7 +99,7 @@ class MultiAdapterGrokker(martian.ClassGrokker):
         if provides is None:
             util.check_implements_one(factory)
         check_adapts(factory)
-        name = util.class_annotation(factory, 'grok.name', '')
+        name = get_name(factory)
         for_ = component.adaptedBy(factory)
 
         config.action(
@@ -118,7 +121,7 @@ class GlobalUtilityGrokker(martian.ClassGrokker):
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
             util.check_implements_one(factory)
-        name = util.class_annotation(factory, 'grok.name', '')
+        name = get_name(factory)
         direct = util.class_annotation(factory, 'grok.direct', False)
         if not direct:
             factory = factory()
@@ -260,7 +263,7 @@ class ViewGrokker(martian.ClassGrokker):
                                                factory, module_info,
                                                default=IDefaultBrowserLayer)
 
-        view_name = get_name(factory)
+        view_name = get_name_classname(factory)
         # __view_name__ is needed to support IAbsoluteURL on views
         factory.__view_name__ = view_name
         adapts = (view_context, view_layer)
@@ -648,7 +651,7 @@ class PermissionGrokker(martian.ClassGrokker):
     priority = 1500
 
     def grok(self, name, factory, module_info, config, **kw):
-        id = util.class_annotation(factory, 'grok.name', None)
+        id = get_name(factory, None)
         if id is None:
             raise GrokError(
                 "A permission needs to have a dotted name for its id. Use "
@@ -674,7 +677,7 @@ class RoleGrokker(martian.ClassGrokker):
     priority = PermissionGrokker.priority - 1
 
     def grok(self, name, factory, module_info, config, **kw):
-        id = util.class_annotation(factory, 'grok.name', None)
+        id = get_name(factory, None)
         if id is None:
             raise GrokError(
                 "A role needs to have a dotted name for its id. Use "
@@ -715,7 +718,7 @@ class AnnotationGrokker(martian.ClassGrokker):
             util.check_implements_one_from_list(real_interfaces, factory)
             provides = real_interfaces[0]
 
-        key = util.class_annotation(factory, 'grok.name', None)
+        key = get_name(factory, None)
         if key is None:
             key = factory.__module__ + '.' + factory.__name__
 
@@ -774,7 +777,7 @@ class IndexesGrokker(martian.InstanceGrokker):
         if indexes is None:
             return False
         context = get_context(module_info, factory)
-        catalog_name = util.class_annotation(factory, 'grok.name', u'')
+        catalog_name = get_name(factory)
 
         subscriber = IndexesSetupSubscriber(catalog_name, indexes,
                                             context, module_info)
@@ -844,7 +847,7 @@ class SkinGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, config, **kw):
         layer = determine_class_directive('grok.layer', factory, module_info,
                                           default=IBrowserRequest)
-        name = get_name(factory)
+        name = get_name_classname(factory)
         config.action(
             discriminator=None,
             callable=zope.component.interface.provideInterface,
@@ -858,7 +861,7 @@ class RESTProtocolGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, config, **kw):
         layer = determine_class_directive('grok.layer', factory, module_info,
                                           default=IBrowserRequest)
-        name = get_name(factory)
+        name = get_name_classname(factory)
         config.action(
             discriminator=None,
             callable=zope.component.interface.provideInterface,
