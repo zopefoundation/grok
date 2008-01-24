@@ -48,12 +48,14 @@ import grok
 from grok import components, formlib, templatereg
 from grok.util import check_adapts, get_default_permission, make_checker
 from grok.util import determine_class_directive, public_methods_from_class
+from grok.util import determine_module_context, determine_class_context
+from grok.util import check_context
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
 def get_context(module_info, factory):
     context = module_info.getAnnotation('grok.context', None)
-    return util.determine_class_context(factory, context)
+    return determine_class_context(factory, context)
 
 def get_name_classname(factory):
     return get_name(factory, factory.__name__.lower())
@@ -74,7 +76,7 @@ class ContextGrokker(martian.GlobalGrokker):
     def grok(self, name, module, module_info, config, **kw):
         possible_contexts = martian.scan_for_classes(module, [grok.Model,
                                                               grok.Container])
-        context = util.determine_module_context(module_info, possible_contexts)
+        context = determine_module_context(module_info, possible_contexts)
         module.__grok_context__ = context
         return True
 
@@ -450,7 +452,7 @@ class AdapterDecoratorGrokker(martian.GlobalGrokker):
             if interfaces is None:
                 # There's no explicit interfaces defined, so we assume the
                 # module context to be the thing adapted.
-                util.check_context(module_info.getModule(), context)
+                check_context(module_info.getModule(), context)
                 interfaces = (context, )
 
             config.action(
