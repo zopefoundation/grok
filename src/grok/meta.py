@@ -247,7 +247,7 @@ class ViewGrokker(martian.ClassGrokker):
         if templates is not None:
             config.action(
                 discriminator=None,
-                callable=templates.checkTemplates,
+                callable=templates.checkTemplatesView,
                 args=(module_info, factory)
             )
 
@@ -913,7 +913,7 @@ class ViewletGrokker(martian.ClassGrokker):
         if templates is not None:
             config.action(
                 discriminator=None,
-                callable=templates.checkTemplates,
+                callable=templates.checkTemplatesViewlet,
                 args=(module_info, factory))
     
         view = determine_class_directive('grok.view', factory,

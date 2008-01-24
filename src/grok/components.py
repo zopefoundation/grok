@@ -679,6 +679,8 @@ class Viewlet(ViewletBase):
 
     def __init__(self, context, request, view, manager):
         super(Viewlet, self).__init__(context, request, view, manager)
+        # would be nice to move this to the ViewletGrokker but
+        # new objects don't have __name__ of their class
         self.__name__ = util.class_annotation(self.__class__,
                                              'grok.name',
                                               self.__class__.__name__.lower())
@@ -688,35 +690,15 @@ class Viewlet(ViewletBase):
             name=self.module_info.package_dotted_name
             )
 
-
     @property
     def response(self):
         return self.request.response
 
-
     def render(self):
-        mapply(self.update, (), self.request)
-        if self.request.response.getStatus() in (302, 303):
-            # A redirect was triggered somewhere in update().  Don't
-            # continue rendering the template or doing anything else.
-            return
+        return self.template.render(self)
 
-        template = getattr(self, 'template', None)
-        if template is not None:
-            return self._render_template()
-
-    def _render_template(self):
-        namespace = self.template.pt_getContext()
-        namespace['request'] = self.request
-        namespace['view'] = self
-        namespace['context'] = self.context
-        # XXX need to check whether we really want to put None here if missing
-        namespace['static'] = self.static
-        return self.template.pt_render(namespace)
-
-    def __getitem__(self, key):
-        # XXX give nice error message if template is None
-        return self.template.macros[key]
+    def namespace(self):
+        return {}
 
     def url(self, obj=None, name=None):
         # if the first argument is a string, that's the name. There should
@@ -736,9 +718,6 @@ class Viewlet(ViewletBase):
             # create URL to view on context
             obj = self.context
         return util.url(self.request, obj, name)
-
-    def redirect(self, url):
-        return self.request.response.redirect(url)
 
     def update(self):
         pass

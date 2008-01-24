@@ -191,3 +191,7 @@ class NamedViewlet(grok.Viewlet):
     grok.context(Interface)
     grok.name('viewletwithname')
     grok.viewletmanager(NamedViewletManager)
+
+    def render(self):
+        return "NamedViewlet"
+
