@@ -99,8 +99,9 @@ class MultiAdapterGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, module_info, config, **kw):
         provides = get_provides(factory)
-        check_adapts(factory)
         name = get_name(factory)
+        
+        check_adapts(factory)
         for_ = component.adaptedBy(factory)
 
         config.action(
@@ -121,6 +122,7 @@ class GlobalUtilityGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, config, **kw):
         provides = get_provides(factory)
         name = get_name(factory)
+
         direct = util.class_annotation(factory, 'grok.direct', False)
         if not direct:
             factory = factory()
