@@ -124,3 +124,33 @@ def _sort_key(component):
 def sort_components(components):
     # if components have a grok.order directive, sort by that
     return sorted(components, key=_sort_key)
+
+AMBIGUOUS_CONTEXT = object()
+def check_context(component, context):
+    if context is None:
+        raise GrokError("No module-level context for %r, please use "
+                        "grok.context." % component, component)
+    elif context is AMBIGUOUS_CONTEXT:
+        raise GrokError("Multiple possible contexts for %r, please use "
+                        "grok.context." % component, component)
+
+def determine_module_context(module_info, models):
+    if len(models) == 0:
+        context = None
+    elif len(models) == 1:
+        context = models[0]
+    else:
+        context = AMBIGUOUS_CONTEXT
+
+    module_context = module_info.getAnnotation('grok.context', None)
+    if module_context:
+        context = module_context
+
+    return context
+
+
+def determine_class_context(class_, module_context):
+    context = class_annotation(class_, 'grok.context', module_context)
+    check_context(class_, context)
+    return context
+
