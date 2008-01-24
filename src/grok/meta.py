@@ -903,10 +903,11 @@ class ViewletGrokker(martian.ClassGrokker):
     component_class = grok.Viewlet
 
     def grok(self, name, factory, module_info, config, **kw):
+        viewlet_name = get_name_classname(factory)
+        view_context = get_context(module_info, factory)
+
         factory.module_info = module_info # to make /static available
 
-        view_context = get_context(module_info, factory)
-        
         # find templates
         templates = module_info.getAnnotation('grok.templates', None)
         if templates is not None:
@@ -928,10 +929,10 @@ class ViewletGrokker(martian.ClassGrokker):
     
         config.action(
             discriminator = ('viewlet', view_context, view_layer,
-                             view, viewletmanager, name),
+                             view, viewletmanager, viewlet_name),
             callable = component.provideAdapter,
             args = (factory, (view_context, view_layer, view,
-                    viewletmanager), IViewlet, name)
+                    viewletmanager), IViewlet, viewlet_name)
             )
 
         permission = get_default_permission(factory)
