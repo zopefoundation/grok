@@ -1,5 +1,5 @@
 """
-We viewlet is not allowed to define its own render method and have a template
+A viewlet is not allowed to define its own render method and have a template
 associated with it at the same time.
 
   >>> grok.testing.grok(__name__)
