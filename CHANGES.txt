@@ -47,6 +47,11 @@ Bug fixes
 * Fix https://bugs.launchpad.net/grok/+bug/185414: grok introsepector
   was broken for zipped eggs.
 
+Restructuring
+-------------
+
+* Refactor commonalities out of meta.py.
+
 0.11 (2007-11-08)
 =================
 

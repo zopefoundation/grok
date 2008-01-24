@@ -51,6 +51,10 @@ from grok.util import determine_class_directive, public_methods_from_class
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
+def get_context(module_info, factory):
+    context = module_info.getAnnotation('grok.context', None)
+    return util.determine_class_context(factory, context)
+    
 class ContextGrokker(martian.GlobalGrokker):
 
     priority = 1001
@@ -67,8 +71,7 @@ class AdapterGrokker(martian.ClassGrokker):
     component_class = grok.Adapter
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.getAnnotation('grok.context', None)
-        adapter_context = util.determine_class_context(factory, context)
+        adapter_context = get_context(module_info, factory)
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
             util.check_implements_one(factory)
@@ -128,9 +131,8 @@ class XMLRPCGrokker(martian.ClassGrokker):
     component_class = grok.XMLRPC
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.getAnnotation('grok.context', None)
-        view_context = util.determine_class_context(factory, context)
-
+        view_context = get_context(module_info, factory)
+        
         methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
@@ -169,8 +171,7 @@ class RESTGrokker(martian.ClassGrokker):
     component_class = grok.REST
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.getAnnotation('grok.context', None)
-        view_context = util.determine_class_context(factory, context)
+        view_context = get_context(module_info, factory)
 
         methods = public_methods_from_class(factory)
 
@@ -215,8 +216,7 @@ class ViewGrokker(martian.ClassGrokker):
     component_class = grok.View
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.getAnnotation('grok.context', None)
-        view_context = util.determine_class_context(factory, context)
+        view_context = get_context(module_info, factory)
 
         factory.module_info = module_info
         factory_name = factory.__name__.lower()
@@ -286,8 +286,7 @@ class JSONGrokker(martian.ClassGrokker):
     component_class = grok.JSON
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.getAnnotation('grok.context', None)
-        view_context = util.determine_class_context(factory, context)
+        view_context = get_context(module_info, factory)
 
         methods = public_methods_from_class(factory)
 
@@ -335,8 +334,7 @@ class TraverserGrokker(martian.ClassGrokker):
     component_class = grok.Traverser
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.getAnnotation('grok.context', None)
-        factory_context = util.determine_class_context(factory, context)
+        factory_context = get_context(module_info, factory)
         adapts = (factory_context, IBrowserRequest)
 
         config.action(
@@ -706,8 +704,7 @@ class AnnotationGrokker(martian.ClassGrokker):
     component_class = grok.Annotation
 
     def grok(self, name, factory, module_info, config, **kw):
-        context = module_info.getAnnotation('grok.context', None)
-        adapter_context = util.determine_class_context(factory, context)
+        adapter_context = get_context(module_info, factory)
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
             base_interfaces = interface.implementedBy(grok.Annotation)
@@ -774,8 +771,7 @@ class IndexesGrokker(martian.InstanceGrokker):
         indexes = util.class_annotation(factory, 'grok.indexes', None)
         if indexes is None:
             return False
-        context = module_info.getAnnotation('grok.context', None)
-        context = util.determine_class_context(factory, context)
+        context = get_context(module_info, factory)
         catalog_name = util.class_annotation(factory, 'grok.name', u'')
 
         subscriber = IndexesSetupSubscriber(catalog_name, indexes,
