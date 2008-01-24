@@ -44,6 +44,9 @@ Bug fixes
 * Fix https://bugs.launchpad.net/grok/+bug/162437: grok.Form and its
   subclasses did not implement IBrowserView.
 
+* Fix https://bugs.launchpad.net/grok/+bug/185414: grok introsepector
+  was broken for zipped eggs.
+
 0.11 (2007-11-08)
 =================
 

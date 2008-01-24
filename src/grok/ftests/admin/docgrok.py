@@ -93,6 +93,18 @@ packages contained in the dotted name of the examined package:
 
 and so on.
 
+A standard package, that should always be reachable, is the ``zope``
+package::
+
+  >>> browser.open('http://localhost:8080/docgrok/zope')
+  >>> print browser.contents
+  <html xmlns="http://www.w3.org/1999/xhtml">
+  ...
+  ...<span><a ...>zope</a></span>...
+  ...
+  ...(Python Package)...
+  ...
+  
 
 DocGrok for modules
 -------------------
