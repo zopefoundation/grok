@@ -47,6 +47,8 @@ class IGrokBaseClasses(interface.Interface):
     Indexes = interface.Attribute("Base class for catalog index definitions.")
     Layer = interface.Attribute("Base interface for layers.")
     Skin = interface.Attribute("Base class for skin.")
+    ViewletManager = interface.Attribute("Base class for viewletmanager.")
+    Viewlet = interface.Attribute("Base class for viewlet.")
 
 
 class IGrokErrors(interface.Interface):
