@@ -61,6 +61,11 @@ def get_name_classname(factory):
 def get_name(factory, default=''):
     return grok.util.class_annotation(factory, 'grok.name', default)
 
+def get_provides(factory):
+    provides = util.class_annotation(factory, 'grok.provides', None)
+    if provides is None:
+        util.check_implements_one(factory)
+    return provides
 
 class ContextGrokker(martian.GlobalGrokker):
 
@@ -79,9 +84,7 @@ class AdapterGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, module_info, config, **kw):
         adapter_context = get_context(module_info, factory)
-        provides = util.class_annotation(factory, 'grok.provides', None)
-        if provides is None:
-            util.check_implements_one(factory)
+        provides = get_provides(factory)
         name = get_name(factory)
         
         config.action(
@@ -95,9 +98,7 @@ class MultiAdapterGrokker(martian.ClassGrokker):
     component_class = grok.MultiAdapter
 
     def grok(self, name, factory, module_info, config, **kw):
-        provides = util.class_annotation(factory, 'grok.provides', None)
-        if provides is None:
-            util.check_implements_one(factory)
+        provides = get_provides(factory)
         check_adapts(factory)
         name = get_name(factory)
         for_ = component.adaptedBy(factory)
@@ -118,9 +119,7 @@ class GlobalUtilityGrokker(martian.ClassGrokker):
     priority = 1100
 
     def grok(self, name, factory, module_info, config, **kw):
-        provides = util.class_annotation(factory, 'grok.provides', None)
-        if provides is None:
-            util.check_implements_one(factory)
+        provides = get_provides(factory)
         name = get_name(factory)
         direct = util.class_annotation(factory, 'grok.direct', False)
         if not direct:
@@ -710,6 +709,8 @@ class AnnotationGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, module_info, config, **kw):
         adapter_context = get_context(module_info, factory)
+        # XXX cannot use get_provides here, can we refactor others to reuse
+        # this bit?
         provides = util.class_annotation(factory, 'grok.provides', None)
         if provides is None:
             base_interfaces = interface.implementedBy(grok.Annotation)
