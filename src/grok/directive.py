@@ -141,6 +141,6 @@ layer = InterfaceOrClassDirective('grok.layer',
 order = OrderDirective('grok.order', ClassDirectiveContext())
 direct = MarkerDirective('grok.direct', ClassDirectiveContext())
 viewletmanager = InterfaceOrClassDirective('grok.viewletmanager',
-                                           ClassDirectiveContext())
+                                           ClassOrModuleDirectiveContext())
 view = InterfaceOrClassDirective('grok.view',
-                                 ClassDirectiveContext())
+                                 ClassOrModuleDirectiveContext())
