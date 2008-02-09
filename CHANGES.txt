@@ -55,6 +55,9 @@ Restructuring
 
 * Refactor commonalities out of meta.py.
 
+* zope.app.securitypolicy is no longer used. zope.securitypolicy provides
+  all securitypolicy features used by Grok.
+
 0.11 (2007-11-08)
 =================
 
