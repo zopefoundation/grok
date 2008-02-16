@@ -47,8 +47,11 @@ Bug fixes
 * Fix https://bugs.launchpad.net/grok/+bug/162437: grok.Form and its
   subclasses did not implement IBrowserView.
 
-* Fix https://bugs.launchpad.net/grok/+bug/185414: grok introsepector
+* Fix https://bugs.launchpad.net/grok/+bug/185414: grok introspector
   was broken for zipped eggs.
+
+* Fix https://bugs.launchpad.net/grok/+bug/125720: server control form
+  had shutdown as default action, even when entering an admin message.
 
 Restructuring
 -------------

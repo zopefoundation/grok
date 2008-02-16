@@ -10,9 +10,13 @@
         <input type="submit" name="restart" class="button" value="Restart Zope 3" />
         <input type="submit" name="shutdown" class="button" value="Stop Zope 3" />
         after <input type="text" name="time" value="0" size="4" /> seconds
+        <input type="hidden" name="submitted" value="true"/>
       </p>
       </fieldset>
+    </form>
 
+    <form method="post" action=""
+      tal:attributes="action string:${context/@@absolute_url}/server">
       <fieldset>
         <legend>Admin message</legend>
 

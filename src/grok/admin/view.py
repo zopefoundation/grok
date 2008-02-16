@@ -408,7 +408,7 @@ class Server(GAIAView):
           z3c.flashmessage.interfaces.IMessageSource, name='admin')
         if admin_message is not None:
             source.send(admin_message)
-        elif source.current_message:
+        elif getattr(source, 'current_message', False):
             source.delete(source.current_message)
 
         # Restart control
