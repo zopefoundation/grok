@@ -292,10 +292,56 @@ can use three options:
         >>> get_basenames_from_suite(suite)
         ['file1.py']
 
+3) Pass a `filter_func` parameter:
+
+     This keyword expects an callable, which can be called with a file
+     path as argument. It should return `True` or `False`. We define
+     an example function::
+
+        >>> import os.path
+        >>> def myfilter(path):
+        ...     if os.path.basename(path).startswith('subdir'):
+        ...         return True
+        ...     return False
+
+     This function accepts all filenames that start with 'subdir',
+     which matches exactly one file in our example cave. Let's see the
+     results::
+
+        >>> setup = grok.testing.register_all_tests(
+        ...     cave, filter_func = myfilter)
+        >>> suite = setup()
+        >>> get_basenames_from_suite(suite)
+        ['file1.py', 'subdirfile.txt', 'subdirfile.txt']
+
+     Again we see the one Python module. The module search is not
+     affected by `filter_func`. Use `pfilter_func` instead::
+
+        >>> def mypfilter(module):
+        ...     basename = os.path.basename(module.__file__)
+        ...     if basename.startswith('subdirfile'):
+        ...         return True
+        ...     return False
+
+        >>> setup = grok.testing.register_all_tests(
+        ...     cave, pfilter_func = mypfilter)
+        >>> suite = setup()
+        >>> get_basenames_from_suite(suite)
+        ['file1.rst', 'file1.txt', 'subdirfile.txt']
+
+     Unit and functional dotests can be selected specifically by using
+     `ufilter_func` or `ffilter_func` respectively.
+
+     Note, that using a custom `filter_func` will disable filename
+     extension filtering. You have to implement it yourself in this
+     case. Therefore also the `regexp_list` parameter will have no
+     effect when you define your own filter functions.
+
+
 
 
 Doctests in Python modules
---------------------------
+==========================
 
 or: what the heck are those 'Python tests' after all?
 
