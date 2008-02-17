@@ -16,6 +16,7 @@
 from zope.configuration.config import ConfigurationMachine
 from martian import scan
 from grok import zcml
+import z3c.testsetup
 
 import unittest
 from os import listdir
@@ -25,6 +26,12 @@ from zope.testing import doctest, cleanup
 from zope.app.testing.functional import (
     HTTPCaller, getRootFolder, FunctionalTestSetup,
     sync, ZCMLLayer, FunctionalDocFileSuite)
+
+class GrokTestCollector(z3c.testsetup.TestCollector):
+    pass
+
+def register_all_tests(pkg, *args, **kw):
+    return GrokTestCollector(pkg, *args, **kw)
 
 class BasicTestSetup(object):
     """A basic test setup for a package.
