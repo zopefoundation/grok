@@ -54,7 +54,11 @@ To modify the default values (described below), you can pass
       pfilter_func = <function>,
       extensions = <list_of_filename_extenstions>,
       fextensions = <list_of_filename_extenstions>,
-      uextensions = <list_of_filename_extenstions>,
+      uextensions = <list_of_filename_extenstions>
+      regexp_list = <list_of_regular_expression_terms>,
+      uregexp_list = <list_of_regular_expression_terms>,
+      fregexp_list = <list_of_regular_expression_terms>,
+      pregexp_list = <list_of_regular_expression_terms>,
       encoding = <string_with_encoding_specifier>,
       checker = <output_checker>,
       globs = <dict_of_globals>,
@@ -234,12 +238,66 @@ can use three options:
      Python tests are not affected by the `extensions` parameter. But
      to be clear: you can search for doctests (and find them!) in
      Python files. See `Doctests in Python modules`_ below.
+
+2) Pass an `regexp_list` parameter:
+
+     The `regexp_list` parameter determins, which terms we want to
+     search for in potential doctest files and modules. By default the
+     'Test-Layer' terms mentioned above are used.
+
+     To set a required term for one specific test type (unitdoctest,
+     functional doctests or Python tests), you can use the
+     `uregexp_list`, `fregexp_list` and `pregexp_list` keywords
+     respectively.
+
+     If you use the `regexp_list` parameter only, all kinds of tests
+     require the same term. That is normally not what you want, but
+     works::
+
+        >>> setup = grok.testing.register_all_tests(
+        ...     cave, regexp_list = [':Test-Layer:'])
+        >>> suite = setup()
+        >>> get_basenames_from_suite(suite)
+        ['file1.py', 'file1.rst', 'file1.rst', 'file1.txt',
+        'file1.txt', 'subdirfile.txt', 'subdirfile.txt']
+
+     Here the .txt and .rst files were registered twice, once as a
+     unit doctest and once as a functional doctest.
+
+     Normally you want to set a special marker for one type of
+     tests. We require the unit doctest marker for functional doctests
+     now::
      
+        >>> setup = grok.testing.register_all_tests(
+        ...     cave, fregexp_list = [':Test-Layer: unit'])
+        >>> suite = setup()
+        >>> get_basenames_from_suite(suite)
+        ['file1.py', 'file1.rst', 'file1.rst']
+
+     The file `file1.rst` was now registered as a functional doctest
+     as well.
+
+     As you see, regexp_lists are lists. They match (accept) a file
+     iff each of the expressions of the list could be found in a line
+     of a considered file.
+
+     For example the string ':Test-Layer:' can be found in many test
+     files. But the additional string 'TestCase' appears only in the
+     file1.py file in the cave package::
+
+        >>> setup = grok.testing.register_all_tests(
+        ...     cave, regexp_list = ['.*:Test-Layer:.*',
+        ...                          '.*TestCase.*'])
+        >>> suite = setup()
+        >>> get_basenames_from_suite(suite)
+        ['file1.py']
+
+
 
 Doctests in Python modules
 --------------------------
 
-or: what the heck are Python tests after all?
+or: what the heck are those 'Python tests' after all?
 
 That a file with tests is a Python module, does not mean
 automatically, that it is a Python test in the sense of
@@ -247,9 +305,51 @@ z3c.testsetup. Instead many packages contain Python files, that
 contain **doctests** and not real Python tests. The file you are
 reading is an example for such a module with doctests.
 
+A real python test modules defines tests as follows::
 
+    '''
+    Tests with real TestCase objects.
 
+    :Test-Layer: python
 
+    '''
+
+    import unittest
+
+    class TestTest(unittest.TestCase):
+
+        def setUp(self):
+            pass
+
+        def testFoo(self):
+            self.assertEqual(2, 1+1)
+
+while a doctestfile with .py filename extension might look like this::
+
+    '''
+    Doctests in a Python module.
+
+    :Test-Layer: functional
+
+    This file contains a lot of examples::
+
+       >>> 1+1
+       2
+
+    Another example::
+
+       >>> 1+2
+       3
+    
+    '''
+    # Setup stuff...
+    class MyTestClass:
+        pass
+
+You can also define doctests in functions and classes of a regular
+Python module. The single tests will be collected as well and setup as
+doctests, as long as .py files are accepted and the file contains the
+required marker string somewhere in the file.
 
 
 """
