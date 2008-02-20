@@ -338,7 +338,208 @@ can use three options:
      effect when you define your own filter functions.
 
 
+Customizing the setup of single tests
+-------------------------------------
 
+The other keyword parameters of `register_all_tests()` influence not
+the set of files handled, but the manner in which each individual test
+is set up.
+
+The descriptions here will be somewhat short, because testing of such
+stuff requires a more complex test setup. But the behaviour is (with
+one exception described below) like the behaviour of the original
+z3c.testsetup.register_all_tests() function. See
+
+  http://svn.zope.org/z3c.testsetup/trunk/z3c/testsetup/testrunner.txt
+
+and
+
+  http://svn.zope.org/z3c.testsetup/trunk/z3c/testsetup/README.txt
+
+for some examples in action.
+
+The difference from original behaviour is the default value of the
+layer for functional doctests. We will therefore start with it.
+
+* `zcml_config`, `layer_name` and `layer`:
+
+    `zcml_config`: a string with a filesystem path to a ZCML layer,
+    that should be used during functional doctests.
+
+    `layer_name`: a string with an arbitrary name for the file
+    identified by the `zcml_config` file. The layer name is only used,
+    if a `zcml_config` is set. Default is: `FunctionalLayer`.
+
+    `layer`: a ready to use zope.testing.functional.ZCMLLayer object.
+
+    Functional doctests need a layer to set up some framework stuff
+    like registering of principals etc. The grok.register_all_tests()
+    function will lookup a few places for such a file or, if the
+    `zcml_config` keyword is passed, take this. The order is like
+    this:
+
+      1) if `layer` is set, take that. This overrides any
+         `zcml_config` given.
+
+      2) if `zcml_config` is set, lookup the file, setup a layer with
+         that file and take that.
+
+      3) if a file `ftesting.zcml` exists in the root of the package
+         scanned for tests, register and take that.
+
+      4) as fallback take the `ftesting.zcml` from the `grok`
+         package. This is the only difference from the original
+         z3c.testsetup behaviour, which takes another file as fallback
+         solution.
+
+    We will now simulate each of this four cases. For this purpose we
+    will call testrunners that collect and run tests in the `cave` and
+    the `cave_to_let` package.
+
+    In `samplesetup1.py` in the cave package is a testsetup, that
+    defines an own test layer and passes it as `layer` parameter. We
+    dump the file contents here::
+
+       >>> cavepath = os.path.join(os.path.dirname(__file__), 'cave')
+       >>> setupfile = os.path.join(cavepath, 'samplesetup1.py')
+       >>> print open(setupfile).read()
+       import os.path
+       from zope.app.testing.functional import ZCMLLayer
+       from grok.testing import register_all_tests
+       samplelayer = ZCMLLayer(
+           os.path.join(os.path.dirname(__file__), 'sample.zcml'),
+           __name__, 'CustomSampleLayer')
+       test_suite = register_all_tests(
+           'grok.tests.testsetup.cave',
+           layer = samplelayer
+           )
+
+    Note, that here a custom ZCML layer is defined, based on the file
+    `sample.zcml`. Now we setup a testrunner, that will read exactly
+    this file. We configure it such, that it runs only functional
+    tests::
+
+       >>> import sys
+       >>> old_sysargv = sys.argv # store
+       >>> defaults = [
+       ...     '--path', cavepath,
+       ...     '--tests-pattern', '^samplesetup1$',
+       ...     ]
+       >>> sys.argv = 'test -f '.split()
+       >>> from zope.testing import testrunner
+
+    The testrunner is ready. Let's start it::
+
+       >>> testrunner.run(defaults)
+       Running samplesetup1.CustomSampleLayer tests:
+         Set up samplesetup1.CustomSampleLayer in ... seconds.
+         Ran 2 tests with 0 failures and 0 errors in ... seconds.
+       Tearing down left over layers:
+         Tear down samplesetup1.CustomSampleLayer ... not supported
+       False
+
+    We see, that the custom layer was used. The `False` at the end
+    indicates, that the testrun was finished without any failures.
+
+    Now let's do the same, but give a path to the ZCML file instead of
+    a fully configured layer. For this we use `samplesetup2` from the
+    cave package::
+
+       >>> setupfile = os.path.join(cavepath, 'samplesetup2.py')
+       >>> print open(setupfile).read()
+       import os.path
+       from grok.testing import register_all_tests
+       test_suite = register_all_tests(
+           'grok.tests.testsetup.cave',
+           zcml_config = os.path.join(os.path.dirname(__file__),
+                                      'sample.zcml'),
+           layer_name = 'CustomLayerFromPath')
+
+    If we feed this setup to a testrunner, we get the following::
+
+       >>> defaults = [
+       ...     '--path', cavepath,
+       ...     '--tests-pattern', '^samplesetup2$',
+       ...     ]
+       >>> sys.argv = 'test -f '.split()
+       >>> testrunner.run(defaults)
+       Running grok.tests.testsetup.cave.CustomLayerFromPath tests:
+         Set up grok.tests.testsetup.cave.CustomLayerFromPath in ... seconds.
+         Ran 2 tests with 0 failures and 0 errors in ... seconds.
+       Tearing down left over layers:
+         Tear down grok.tests.testsetup.cave.CustomLayerFromPath ...
+       not supported
+       False
+
+    Apparently the CustomLayerFromPath was found and registered.
+
+    Now we will use the default value. The `cave` package provides an
+    (empty) `ftesting.zcml` which should be found and registered, when
+    no other option was given.
+
+    The file `samplesetup3.py` will do so::
+
+       >>> setupfile = os.path.join(cavepath, 'samplesetup3.py')
+       >>> print open(setupfile).read()
+       from grok.testing import register_all_tests
+       test_suite = register_all_tests('grok.tests.testsetup.cave')
+
+    This test setup has only two lines, but is perfectly valid. Will
+    it register the right thing?
+    
+       >>> defaults = [
+       ...     '--path', cavepath,
+       ...     '--tests-pattern', '^samplesetup3$',
+       ...     ]
+       >>> sys.argv = 'test -f '.split()
+       >>> testrunner.run(defaults)
+       Running grok.tests.testsetup.cave.FunctionalLayer tests:
+         Set up grok.tests.testsetup.cave.FunctionalLayer in ... seconds.
+         Ran 2 tests with 0 failures and 0 errors in ... seconds.
+       Tearing down left over layers:
+         Tear down grok.tests.testsetup.cave.FunctionalLayer ...
+       not supported
+       False
+
+    The ftesting.zcml layer from the cave package was used
+    automatically. The name `FunctionalLayer` is the default for such
+    cases. It can be overriden by passing the `layer_name` keyword.
+
+    Now, the last layer test.
+
+    In `samplesetup4.py` in the cave package, there is another
+    testsetup, which is as short as the last one, but registers tests
+    for the `cave_to_let` package, which contrary to the `cave`
+    package does not provide an `ftesting.zcml`. It looks like this::
+
+       >>> setupfile = os.path.join(cavepath, 'samplesetup4.py')
+       >>> print open(setupfile).read()
+       from grok.testing import register_all_tests
+       test_suite = register_all_tests('grok.tests.testsetup.cave_to_let')
+
+    Obviously, the only difference is the 'cave_to_let' package
+    registered. Let's run it::
+
+       >>> defaults = [
+       ...     '--path', cavepath,
+       ...     '--tests-pattern', '^samplesetup4$',
+       ...     ]
+       >>> sys.argv = 'test -f '.split()
+       >>> testrunner.run(defaults)
+       Running grok.tests.testsetup.cave_to_let.GrokFunctionalLayer tests:
+         Set up grok.tests.testsetup.cave_to_let.GrokFunctionalLayer in ... seconds.
+         Ran 1 tests with 0 failures and 0 errors in ... seconds.
+       Tearing down left over layers:
+         Tear down grok.tests.testsetup.cave_to_let.GrokFunctionalLayer ... not supported
+       False
+
+    So, the `GrokFunctionalLayer` was used as fallback, because the
+    `cave_to_let` package has no own ftesting.zcml. Note also, that
+    here the testsetup was put into a location out of the package
+    tested. A testsetup does not have to be part of the package it
+    tests.
+
+       >>> sys.argv = old_sysargv # restore old values
 
 Doctests in Python modules
 ==========================
