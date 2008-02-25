@@ -79,5 +79,6 @@ setup(
                       'zope.testbrowser',
                       'zc.catalog',
                       'z3c.flashmessage',
+                      'z3c.autoinclude',
                       ],
 )
