@@ -1,0 +1,66 @@
+CREDITS
+=======
+
+* Martijn Faassen (original developer)
+
+* Wolfgang Schnerring (original developer)
+
+* Christian Theune (original developer)
+
+* Philipp von Weitershausen (original developer)
+
+* Jan-Wijbrand Kolman (Grok Zwei sprint, meta grokker improvements)
+
+* Uli Fouquet (admin interface, summer of code student)
+
+* Darryl Cousins (website, admin interface)
+
+* Kevin Teague (website)
+
+* Tim Terlegård (JSON support)
+
+* Sebastian Ware (website effort, documentation)
+
+* Christian Zagrodnick (early grok discussions)
+
+* Mikhail Kashkin
+
+* Wim Boucqaert (admin interface layout improvements)
+
+* Kevin M. Smith (skins and layers support)
+
+* Luciano Ramalho
+
+* Lennart Regebro (template pluggability)
+
+* Guido Wesdorp (template pluggability)
+
+* Brandon Rhodes (template pluggability)
+
+* Godefroid Chapelle (conversion to Z3 configuration actions)
+
+* ME GROK (team mascot)
+
+Thank you
+---------
+
+* The Zope 3 developers, who provided the mountain for Grok to stand
+  on.
+
+* gocept for hosting the first grok sprint in Halle, Germany. Special
+  thanks to Felicia Faassen Wong, Christian Zagrodnick and Magda
+  Motyka for the delicious food.
+
+* Philipp von Weitershausen for hosting the second grok sprint in
+  Dresden, Germany. Special thanks to Heinrich von Jagwitz for the
+  delicious food.
+
+* The organizers of EuroPython 2007 in Vilnius for allowing us to host
+  the third Grok sprint after EuroPython there.
+
+* GfU Cyrus in Cologne for generously hosting the fourth Grok sprint
+  (Neanderthal sprint).
+
+* ID StudioLab of the faculty of Industrial Design at the Delft
+  University of Technology for sponsoring the development of REST
+  support in Grok.

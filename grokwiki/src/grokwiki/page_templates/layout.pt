@@ -1,0 +1,37 @@
+<html metal:define-macro="main">
+  <head>
+    <link
+      rel="stylesheet"
+      tal:attributes="href static/wiki.css"
+      type="text/css"/>
+  </head>
+
+  <body
+    tal:define="wiki context/__parent__">
+
+    <div id="messages" tal:content="structure context/@@messages" />
+
+    <div metal:define-slot="content">
+      Page content goes here ...
+    </div>
+
+    <hr/>
+
+    <h3>Other pages</h3>
+
+    <p>
+      <span tal:repeat="page wiki">
+        <a tal:attributes="href python:view.url(wiki, page)"
+          tal:content="page"
+          />
+      </span>
+    </p>
+
+    <hr/>
+
+    <div id="footer">
+      This wiki is powered by Grok.
+    </div>
+
+  </body>
+</html>

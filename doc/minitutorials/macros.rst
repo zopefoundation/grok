@@ -1,0 +1,275 @@
+============================
+Mini-Howto: Macros with Grok
+============================
+
+:Author: Uli Fouquet
+
+Intended Audience:
+
+  * Python Developers
+
+  * Zope 2 Developers
+
+  * Zope 3 Developers
+
+
+
+Introduction
+------------
+
+Macros are a way to define a chunk of presentation in one template,
+and share it in others. Changes to the macro are immediately reflected
+in all of the places, that share it.
+
+Such, a developer can easily write some sort of 'page-skeleton' (the
+macro), which can be reused in other pages to take care, for instance,
+for a certain and consistent look-and-feel of a whole site with less
+maintenance.
+
+Technically, macros are made available by ``METAL``, a Macro Expansion
+for TAL, which ships with nearly every Zope installation. They can be
+used in Zope Page Templates. See the `TAL`_ and `METAL`_ pages for
+details.
+
+.. _`TAL`: http://wiki.zope.org/ZPT/TAL
+
+.. _`METAL`: http://wiki.zope.org/ZPT/METAL
+
+
+
+Defining a simple macro
+-----------------------
+
+In Grok macros are defined in usual views, where the associated page
+templates contain `metal`-statements to define the desired
+macros. Macros generally are attributes of the page template wherein they
+are defined, but to get them rendered, we usually use views.
+
+We define a view ``MyMacros`` the usual way in ``app.py``:
+
+.. code-block:: python
+
+   import grok
+
+   class Sample(grok.Application, grok.Container):
+       pass
+
+   class Index(grok.View):
+       pass # see app_templates/index.pt
+
+   class MyMacros(grok.View):
+       """The macro holder"""
+       grok.context(Sample) # The default model this view is bound to.
+
+In the associated page template ``app_templates/mymacros.pt`` we
+define the macros we like to have available. You define macros with
+the ``METAL`` attribute::
+
+    metal:define-macro="<macro-name>"
+
+and the slots therein with::
+
+    metal:define-slot=<slot-name> 
+
+Let's define a very plain page macro in ``app_templates/mymacros.pt``:
+
+.. code-block:: html
+
+   <html metal:define-macro="mypage">
+     <head></head>
+     <body>
+       The content:
+       <div metal:define-slot="mycontent">
+         Put your content here...
+       </div>
+     </body>
+   </html>
+
+Here we defined a single macro ``mypage`` with only one slot
+``mycontent``. 
+
+If we restart our Zope instance (don't forget to put some ``index.pt``
+into ``app_templates/``) and have created our application as ``test``,
+we now can go to the following URL::
+
+    http://localhost:8080/test/mymacros
+
+and see the output::
+
+    The content:
+    Put your content here...
+
+Allright.
+
+
+Referencing a simple macro
+--------------------------
+
+In ``index.pt`` we now want to *use* the macro defined in
+``mymacros.pt``. Using a macro means to let it render a part of
+another page template, especially, filling the slots defined in
+``mymacros.pt`` with content defined in ``index.pt``. You call macros
+with the ``METAL`` attribute::
+
+     metal:use-macro="<macro-location>" 
+
+Our ``app_templates/index.pt`` can be that simple:
+
+.. code-block:: html
+
+    <html metal:use-macro="context/@@mymacros/macros/mypage">
+    </html>
+
+Watching::
+
+	http://localhost:8080/test/index
+
+should now give the same result as above, although we didn't call
+``mymacros`` in browser, but ``index``. That's what macros are made
+for.
+
+When we fill the slots, we get different content rendered within
+the same macro. You can fill slots using::
+
+    metal:fill-slot="<slot-name>"
+
+where the slot-name must be defined in the macro. Now, change
+``index.pt`` to:
+
+.. code-block:: html
+
+    <html metal:use-macro="context/@@mymacros/macros/mypage">
+      <body>
+        <!-- slot 'mycontent' was defined in the macro above -->
+        <div metal:fill-slot="mycontent">
+          My content from index.pt
+        </div>
+      </body>
+    </html>
+
+and you will get the output::
+
+    The content:
+    My content from index.pt
+
+The pattern of the macro reference (the <macro-location>) used here
+is::
+
+    context/<view-name>/macros/<macro-name>
+
+whereas ``context`` references the object being viewed, which in our
+case is the ``Sample`` application. In plain English we want Zope to
+look for a view for a ``Sample`` application object (``test``) which
+is called ``mymacros`` and contains a macro called ``mypage``.
+
+The logic behind this is, that views are always registered for certain
+object types. Registering a view with some kind of object (using
+``grok.context()`` for example), means, that we promise, that this
+view can render objects of that type. (It is up to you to make sure,
+that the view can handle rendering of that object type).
+
+It is not a bad idea to register views for interfaces (instead of
+implementing classes), because it means, that a view will remain
+usable, while an implementation of an interface can change. This is
+done in the section `Defining 'all-purpose' macros`_ below.
+
+
+Background: how ``grok.View`` and macros interact
+-------------------------------------------------
+
+In case of ``grok.View`` views are in fact ``BrowserPage`` objects
+with an attribute ``template``, which is the associated page
+template. The associated page template in turn has got an attribute
+``macros``, which is a dictionary containing all the macros defined in
+the page template with their names as keys (or ``None``). 
+
+This means, that you can also reference a macro of a ``grok.View``
+using::
+
+     context/<view-name>/template/macros/<macro-name>
+
+Grok shortens this path for you by mapping the ``macros`` dictionary
+keys to the associated ``grok.View``. If you define a macro
+``mymacro`` in a template associated with a ``grok.View`` called
+``myview``, this view will map ``mymacro`` as an own attribute, so
+that you can ask for the attribute ``mymacro`` of the *view*, wheras
+it is in fact an attribute of the associated template.
+
+Such, you can write in short for the above pattern::
+
+      context/<view-name>/macros/<macro-name>
+
+View names always start with the 'eyes' (``@@``) which is a shortcut
+for ``++view++<view-name>``.
+
+.. versionchanged:: 0.11
+
+  In older grok releases (before 0.11) even omitting the `macros` part
+  of a URI was possible. So you could write::
+
+    context/<view-name>/<macro-name>
+
+  instead of::
+
+    context/<view-name>/macros/<macro-name>
+
+  This is now deprecated. Use always `macros/` to indicate, that you
+  want to reference a macro of a view.
+
+
+Defining 'all-purpose' macros
+------------------------------
+
+To define an 'all-purpose' macro, i.e. a macro, that can render
+objects of (nearly) any type and thus be accessed from any
+other page template, just set a very general context for your macro
+view:
+
+.. code-block:: python
+
+    from zope.interface import Interface
+    import grok
+
+    class Master(grok.View):
+        grok.context(Interface)
+
+and reference the macros of the associated pagetemplate like this::
+
+    context/@@master/macros/<macro-name>
+
+Because the macros in ``Master`` now are 'bound' (in fact their view
+is bound) to ``Interface`` and every Grok application, model or
+container implements some interface, the ``Master`` macros will be
+accessible from nearly every other context. ``Master`` promises to be
+a view for every object, which implements ``Interface``.
+
+
+Accessing Zope3 standard macros
+-------------------------------
+
+The standard macros of Zope 3, which render also the default ZMI
+pages, are accessible under the view-name ``standard_macros`` and usually
+provide slots ``title``, ``headers`` and ``body``. It is
+good style to provide this slots with your homegrown views as well.
+
+To give your pages standard Zope3 look, you can do something like
+this in your page template:
+
+.. code-block:: html
+
+        <html metal:use-macro="context/@@standard_macros/macros/page">
+          <head>
+            <title metal:fill-slot="title">
+              Document Title
+            </title>
+            <metal:headers fill-slot="headers">
+              <!-- Additional headers here... -->
+            </metal:headers>
+          </head>
+          <body>
+            <div metal:fill-slot="body">
+              Your content here...
+            </div>
+          </body>
+        </html>
+

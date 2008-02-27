@@ -1,0 +1,23 @@
+Contributors to the Grok Documentation
+======================================
+
+This section lists people who have contributed in some way to the Grok
+documentation. It is probably not complete -- if you feel that you or
+anyone else should be on this list, please let us know (send email to
+grok-dev@zope.org), and we'll be glad to correct the problem.
+
+.. acks::
+
+   * Darryl Cousins
+   * Kushal Das
+   * Martijn Faassen
+   * Uli Fouquet
+   * Jim Fulton
+   * Jan-Wijbrand Kolman
+   * Luis de la Parra
+   * Luciano Ramalho
+   * Lennart Regebro
+   * Brandon Craig Rhodes
+   * Kevin Teague
+   * Sebastian Ware
+   * Philipp von Weitershausen

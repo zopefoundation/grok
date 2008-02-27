@@ -1,0 +1,5 @@
+<html>
+<body>
+<p tal:content="python:view.sum">sum</p>
+</body>
+</html>

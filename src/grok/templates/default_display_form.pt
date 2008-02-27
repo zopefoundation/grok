@@ -1,0 +1,36 @@
+<html>
+<head>
+</head>
+
+<body>
+  <table class="listing">
+    <thead>
+      <tr>
+        <th class="label-column">&nbsp;</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:block repeat="widget view/widgets">
+        <tr tal:define="odd repeat/widget/odd"
+          tal:attributes="class python: odd and 'odd' or 'even'">
+          <td class="fieldname">
+            <tal:block content="widget/label"/>
+          </td>
+          <td>
+            <input tal:replace="structure widget" />
+          </td>
+        </tr>
+      </tal:block>
+    </tbody>
+    <tfoot>
+      <tr class="controls">
+        <td colspan="2" class="align-right">
+          <input tal:repeat="action view/actions" 
+            tal:replace="structure action/render" />
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</body>
+</html>

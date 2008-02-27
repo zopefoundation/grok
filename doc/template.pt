@@ -1,0 +1,68 @@
+<metal:block define-macro="pagelayout">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title tal:content="context/title" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="description" content="Grok - now even cavemen can use Zope3" />
+  <meta name="keywords" content="Grok, internet, zope, zope3, software, web apps, web applications, python" />
+	<style type="text/css"><!-- @import url(/resources/grok.css); --></style>
+</head>
+
+<body>
+<div class="header">
+	
+	<a href="http://grok.zope.org">
+	<img src="/resources/grok-header.jpg" alt="GROK"/></a>
+	<ul id="navigation">
+        <li tal:repeat="item context/menu">
+            <a tal:content="item/title"
+               tal:attributes="title item/description;
+                               class item/klass;
+                               href item/href">link</a></li>
+  </ul>
+</div>
+
+
+<div class="roundcont">
+	
+  <div class="roundtop">
+    <img src="/resources/corner-topleft.jpg" alt="" 
+           width="45" height="45" class="corner" 
+           style="display: none" />
+  </div>
+
+  <div class="content">
+
+          <tal:block replace="structure context/content" />
+
+  </div>
+
+  <div class="roundbottom">
+     <img src="/resources/corner-bottomleft.jpg" alt="" 
+     width="45" height="45" class="corner" 
+     style="display: none" />
+  </div>
+
+</div>
+
+<div class="footer">
+	
+	<table><tr><td>
+	Grok cooks around the campfire of <br />
+	<a href="http://wiki.zope.org/zope3/FrontPage"><img src="/resources/zopelogo.gif" alt="Zope" style="padding: 0.5em;" /></a>
+	</td><td>
+	 and roams free on the savannah of<br />
+	<a href="http://www.python.org"><img src="/resources/python-logo.gif" style="padding: 0.5em;" alt="Python" /></a>
+	</td></tr>
+	</table>
+
+	<p>Hosting provided by <a href="http://quintagroup.com/"><b>Quintagroup</b></a></p>
+</div>
+
+</body>
+</html>
+</metal:block>
+
