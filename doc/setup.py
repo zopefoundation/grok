@@ -14,7 +14,5 @@ setup(
     [console_scripts]
     grokdocs2html = grokdocs:grokdocs
     grokdocs2latex = grokdocs:grokdocs_latex
-    grokref2html = grokdocs:grokref
-    grokref2latex = grokdocs:grokref_latex
     """
     )
