@@ -16,7 +16,6 @@
 import sys
 import os
 import persistent
-import urllib
 import datetime
 import warnings
 import pytz
@@ -634,7 +633,8 @@ class ViewletManager(ViewletManagerBase):
             #return self.template(viewlets=self.viewlets)
             return self._render_template()
         else:
-            return u'\n'.join([viewlet.render() for viewlet in self.viewlets])
+            viewlets = util.sort_components(self.viewlets)
+            return u'\n'.join([viewlet.render() for viewlet in viewlets])
 
 
     @property
