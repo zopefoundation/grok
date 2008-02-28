@@ -7,6 +7,9 @@ Grok changes
 Feature changes
 ---------------
 
+* Add support for viewlets and viewlet managers, ``grok.Viewlet``
+  and ``grok.ViewletManager``.
+
 * Add a new directive, ``grok.order()``, which can be used to help
   sort components. At the time it is not used yet, but we intend to
   use it for the viewlets support. Note that this means Grok now
