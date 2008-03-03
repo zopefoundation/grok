@@ -138,5 +138,9 @@ permissions = MultiValueOnceDirective(
     'grok.permissions', ClassDirectiveContext())
 layer = InterfaceOrClassDirective('grok.layer',
                            ClassOrModuleDirectiveContext())
-direct = MarkerDirective('grok.direct', ClassDirectiveContext())
 order = OrderDirective('grok.order', ClassDirectiveContext())
+direct = MarkerDirective('grok.direct', ClassDirectiveContext())
+viewletmanager = InterfaceOrClassDirective('grok.viewletmanager',
+                                           ClassOrModuleDirectiveContext())
+view = InterfaceOrClassDirective('grok.view',
+                                 ClassOrModuleDirectiveContext())

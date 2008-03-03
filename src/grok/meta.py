@@ -17,11 +17,13 @@ import os
 
 import zope.component.interface
 from zope import interface, component
+from zope.publisher.browser import IBrowserView
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher,
                                                IBrowserSkinType)
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
+from zope.viewlet.interfaces import IViewletManager, IViewlet
 from zope.security.interfaces import IPermission
 from zope.securitypolicy.interfaces import IRole
 from zope.securitypolicy.rolepermission import rolePermissionManager
@@ -47,15 +49,19 @@ from martian import util
 import grok
 from grok import components, formlib, templatereg
 from grok.util import check_adapts, get_default_permission, make_checker
+from grok.util import check_module_component, determine_module_component
+from grok.util import determine_class_component
 from grok.util import determine_class_directive, public_methods_from_class
-from grok.util import determine_module_context, determine_class_context
-from grok.util import check_context
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
 def get_context(module_info, factory):
-    context = module_info.getAnnotation('grok.context', None)
-    return determine_class_context(factory, context)
+    return determine_class_component(module_info, factory,
+                                     'context', 'grok.context')
+
+def get_viewletmanager(module_info, factory):
+    return determine_class_component(module_info, factory,
+                                     'viewletmanager', 'grok.viewletmanager')
 
 def get_name_classname(factory):
     return get_name(factory, factory.__name__.lower())
@@ -74,13 +80,23 @@ class ContextGrokker(martian.GlobalGrokker):
     priority = 1001
 
     def grok(self, name, module, module_info, config, **kw):
-        possible_contexts = martian.scan_for_classes(module, [grok.Model,
-                                                              grok.Container])
-        context = determine_module_context(module_info, possible_contexts)
+        context = determine_module_component(module_info, 'grok.context',
+                                             [grok.Model, grok.Container])
         module.__grok_context__ = context
         return True
 
 
+class ViewletManagerContextGrokker(martian.GlobalGrokker):
+
+    priority = 1001
+
+    def grok(self, name, module, module_info, config, **kw):
+        viewletmanager = determine_module_component(module_info,
+                                                    'grok.viewletmanager',
+                                                    [grok.ViewletManager])
+        module.__grok_viewletmanager__ = viewletmanager
+        return True
+    
 class AdapterGrokker(martian.ClassGrokker):
     component_class = grok.Adapter
 
@@ -247,8 +263,8 @@ class ViewGrokker(martian.ClassGrokker):
         if templates is not None:
             config.action(
                 discriminator=None,
-                callable=templates.checkTemplates,
-                args=(module_info, factory, factory.__name__.lower())
+                callable=templates.checkTemplatesView,
+                args=(module_info, factory)
             )
 
         # safety belt: make sure that the programmer didn't use
@@ -452,7 +468,8 @@ class AdapterDecoratorGrokker(martian.GlobalGrokker):
             if interfaces is None:
                 # There's no explicit interfaces defined, so we assume the
                 # module context to be the thing adapted.
-                check_context(module_info.getModule(), context)
+                check_module_component(module_info.getModule(), context,
+                                       'context', 'grok.context')
                 interfaces = (context, )
 
             config.action(
@@ -872,4 +889,70 @@ class RESTProtocolGrokker(martian.ClassGrokker):
             callable=zope.component.interface.provideInterface,
             args=(name, layer, IRESTSkinType)
             )
+        return True
+
+class ViewletManagerGrokker(martian.ClassGrokker):
+    component_class = grok.ViewletManager
+
+    def grok(self, name, factory, module_info, config, **kw):
+        factory.module_info = module_info
+        
+        name = get_name(factory)
+        view_context = get_context(module_info, factory)
+
+        view = determine_class_directive('grok.view', factory,
+                                         module_info, default=IBrowserView)
+        viewlet_layer = determine_class_directive('grok.layer', factory,
+                                                  module_info,
+                                                  default=IDefaultBrowserLayer)
+
+        config.action(
+            discriminator = ('viewletManager', view_context, viewlet_layer,
+                             view, name),
+            callable = component.provideAdapter,
+            args = (factory, (view_context, viewlet_layer, view),
+                    IViewletManager, name)
+            )
+
+        return True
+
+class ViewletGrokker(martian.ClassGrokker):
+    component_class = grok.Viewlet
+
+    def grok(self, name, factory, module_info, config, **kw):
+        viewlet_name = get_name_classname(factory)
+        viewlet_context = get_context(module_info, factory)
+
+        factory.module_info = module_info # to make /static available
+
+        # find templates
+        templates = module_info.getAnnotation('grok.templates', None)
+        if templates is not None:
+            config.action(
+                discriminator=None,
+                callable=templates.checkTemplatesViewlet,
+                args=(module_info, factory))
+    
+        view = determine_class_directive('grok.view', factory,
+                                         module_info, default=IBrowserView)
+        viewlet_layer = determine_class_directive('grok.layer', factory,
+                                                  module_info,
+                                                  default=IDefaultBrowserLayer)
+        viewletmanager = get_viewletmanager(module_info, factory)
+    
+        config.action(
+            discriminator = ('viewlet', viewlet_context, viewlet_layer,
+                             view, viewletmanager, viewlet_name),
+            callable = component.provideAdapter,
+            args = (factory, (viewlet_context, viewlet_layer, view,
+                    viewletmanager), IViewlet, viewlet_name)
+            )
+
+        permission = get_default_permission(factory)
+        config.action(
+            discriminator=('protectName', factory, '__call__'),
+            callable=make_checker,
+            args=(factory, factory, permission, ['update', 'render']),
+            )
+        
         return True

@@ -11,6 +11,7 @@
 
   <include package="zope.annotation" />
   <include package="zope.copypastemove" />
+  <include package="zope.contentprovider" />
   <include package="zope.formlib" />
   <include package="zope.i18n.locales" />
   <include package="zope.publisher" />
