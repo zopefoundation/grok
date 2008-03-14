@@ -81,8 +81,8 @@ class TemplateRegistry(object):
                 module_info.dotted_name, ', '.join(unassociated)))
             warnings.warn(msg, UserWarning, 2)
 
-    def _checkTemplates(self, module_info, factory, component_name,
-                        has_render, has_no_render):
+    def checkTemplates(self, module_info, factory, component_name,
+                       has_render, has_no_render):
         factory_name = factory.__name__.lower()
         template_name = util.class_annotation(factory, 'grok.template',
                                               factory_name)
@@ -115,23 +115,6 @@ class TemplateRegistry(object):
                 raise GrokError("%s %r has no associated template or "
                                 "'render' method." %
                                 (component_name.title(), factory), factory)
-
-    def checkTemplatesView(self, module_info, factory):
-        def has_render(factory):
-            return (getattr(factory, 'render', None) and
-                    not util.check_subclass(factory, grok.components.GrokForm))
-        def has_no_render(factory):
-            return not getattr(factory, 'render', None)
-        self._checkTemplates(module_info, factory, 'view',
-                             has_render, has_no_render)
-
-    def checkTemplatesViewlet(self, module_info, factory):
-        def has_render(factory):
-            return factory.render != grok.components.Viewlet.render
-        def has_no_render(factory):
-            return not has_render(factory)
-        self._checkTemplates(module_info, factory, 'viewlet',
-                             has_render, has_no_render)
 
 class PageTemplateFileFactory(grok.GlobalUtility):
 

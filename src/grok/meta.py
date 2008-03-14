@@ -263,8 +263,8 @@ class ViewGrokker(martian.ClassGrokker):
         if templates is not None:
             config.action(
                 discriminator=None,
-                callable=templates.checkTemplatesView,
-                args=(module_info, factory)
+                callable=self.checkTemplates,
+                args=(templates, module_info, factory)
             )
 
         # safety belt: make sure that the programmer didn't use
@@ -301,6 +301,16 @@ class ViewGrokker(martian.ClassGrokker):
             )
 
         return True
+
+    def checkTemplates(self, templates, module_info, factory):
+        def has_render(factory):
+            return (getattr(factory, 'render', None) and
+                    not util.check_subclass(factory, grok.components.GrokForm))
+        def has_no_render(factory):
+            return not getattr(factory, 'render', None)
+        templates.checkTemplates(module_info, factory, 'view',
+                                 has_render, has_no_render)
+
 
 def view__getitem__(self, key):
     return self.template.macros[key]
@@ -930,8 +940,9 @@ class ViewletGrokker(martian.ClassGrokker):
         if templates is not None:
             config.action(
                 discriminator=None,
-                callable=templates.checkTemplatesViewlet,
-                args=(module_info, factory))
+                callable=self.checkTemplates,
+                args=(templates, module_info, factory)
+                )
     
         view = determine_class_directive('grok.view', factory,
                                          module_info, default=IBrowserView)
@@ -956,3 +967,11 @@ class ViewletGrokker(martian.ClassGrokker):
             )
         
         return True
+
+    def checkTemplates(self, templates, module_info, factory):
+        def has_render(factory):
+            return factory.render != grok.components.Viewlet.render
+        def has_no_render(factory):
+            return not has_render(factory)
+        templates.checkTemplates(module_info, factory, 'viewlet',
+                                 has_render, has_no_render)
