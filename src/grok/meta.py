@@ -312,10 +312,6 @@ class ViewGrokker(martian.ClassGrokker):
                                  has_render, has_no_render)
 
 
-def view__getitem__(self, key):
-    return self.template.macros[key]
-
-
 class JSONGrokker(martian.ClassGrokker):
     component_class = grok.JSON
 
