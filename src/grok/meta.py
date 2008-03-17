@@ -902,7 +902,16 @@ class ViewletManagerGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, module_info, config, **kw):
         factory.module_info = module_info
-        
+
+        # find templates
+        templates = module_info.getAnnotation('grok.templates', None)
+        if templates is not None:
+            config.action(
+                discriminator=None,
+                callable=self.checkTemplates,
+                args=(templates, module_info, factory)
+                )
+
         name = get_name(factory)
         view_context = get_context(module_info, factory)
 
@@ -922,6 +931,15 @@ class ViewletManagerGrokker(martian.ClassGrokker):
 
         return True
 
+    def checkTemplates(self, templates, module_info, factory):
+        def has_render(factory):
+            return factory.render != grok.components.ViewletManager.render
+        def has_no_render(factory):
+            # always has a render method
+            return False
+        templates.checkTemplates(module_info, factory, 'viewlet manager',
+                                 has_render, has_no_render)
+
 class ViewletGrokker(martian.ClassGrokker):
     component_class = grok.Viewlet
 
@@ -939,14 +957,14 @@ class ViewletGrokker(martian.ClassGrokker):
                 callable=self.checkTemplates,
                 args=(templates, module_info, factory)
                 )
-    
+
         view = determine_class_directive('grok.view', factory,
                                          module_info, default=IBrowserView)
         viewlet_layer = determine_class_directive('grok.layer', factory,
                                                   module_info,
                                                   default=IDefaultBrowserLayer)
         viewletmanager = get_viewletmanager(module_info, factory)
-    
+
         config.action(
             discriminator = ('viewlet', viewlet_context, viewlet_layer,
                              view, viewletmanager, viewlet_name),
@@ -961,7 +979,7 @@ class ViewletGrokker(martian.ClassGrokker):
             callable=make_checker,
             args=(factory, factory, permission, ['update', 'render']),
             )
-        
+
         return True
 
     def checkTemplates(self, templates, module_info, factory):

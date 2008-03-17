@@ -625,31 +625,21 @@ class ViewletManager(ViewletManagerBase):
             name=self.module_info.package_dotted_name
             )
 
-
     def render(self):
         """See zope.contentprovider.interfaces.IContentProvider"""
         # Now render the view
         if self.template:
-            #return self.template(viewlets=self.viewlets)
-            return self._render_template()
+            return self.template.render(self) 
         else:
             viewlets = util.sort_components(self.viewlets)
             return u'\n'.join([viewlet.render() for viewlet in viewlets])
 
+    def namespace(self):
+        return {}
 
     @property
     def response(self):
         return self.request.response
-
-    def _render_template(self):
-        namespace = self.template.pt_getContext()
-        namespace['request'] = self.request
-        namespace['view'] = self
-        namespace['viewlets'] = self.viewlets
-        namespace['static'] = self.static
-        namespace['context'] = self.context
-        # XXX need to check whether we really want to put None here if missing
-        return self.template.pt_render(namespace)
 
     def url(self, obj=None, name=None):
         # if the first argument is a string, that's the name. There should
