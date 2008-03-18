@@ -28,6 +28,10 @@ Feature changes
 
     $ easy_install -U grokproject
 
+* Classes that end with "-Base" are no longer implicitly considered base
+  classes. These classes need to have the grok.baseclass() directive added to
+  them explicitly.
+
   See also the ``upgrade notes``_ for information on how to update
   your existing projects.
  

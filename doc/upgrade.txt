@@ -26,6 +26,12 @@ Upgrading to 0.12
 
     $ easy_install -U grokproject
 
+* The convention that classes ending with -Base automatically become base
+  classes has been removed with martian 0.9.4. Please add the grok.baseclass()
+  directive to these classes explicitly where the 'Base' class convention was
+  relied upon to preserve existing functionality.
+
+
 Upgrading to 0.11
 -----------------
 
