@@ -134,4 +134,4 @@ available should you need it, however.
 
 During the development of Grok we have taken a careful look at common
 patterns in Zope 3 code and configuration. Grok aims to make these
-patterns more easy to use and succinct.
+patterns easier to use and more succinct.
