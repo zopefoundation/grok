@@ -39,6 +39,7 @@ setup(
                       'simplejson',
                       'pytz',
                       'ZODB3',
+                      'grokcore.component',
                       'zope.annotation',
                       'zope.app.apidoc',
                       'zope.app.applicationcontrol',
