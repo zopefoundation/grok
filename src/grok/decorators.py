@@ -14,9 +14,6 @@
 """Grok
 """
 import sys
-import types
-from zope.component._declaration import adapter as _adapter
-from zope.interface.declarations import implementer as _implementer
 from martian.util import frame_is_module
 from martian.error import GrokImportError
 
@@ -40,28 +37,3 @@ class subscribe:
             frame.f_locals['__grok_subscribers__'] = subscribers = []
         subscribers.append((function, self.subscribed))
         return function
-
-class adapter(_adapter):
-
-    def __init__(self, *interfaces):
-        # Override the z.c.adapter decorator to force sanity checking
-        # and have better error reporting.
-        if not interfaces:
-            raise GrokImportError(
-                "@grok.adapter requires at least one argument.")
-        if type(interfaces[0]) is types.FunctionType:
-            raise GrokImportError(
-                "@grok.adapter requires at least one argument.")
-        self.interfaces = interfaces
-
-class implementer(_implementer):
-
-    def __call__(self, ob):
-        # XXX we do not have function grokkers (yet) so we put the annotation
-        # on the module.
-        frame = sys._getframe(1)
-        implementers = frame.f_locals.get('__implementers__', None)
-        if implementers is None:
-            frame.f_locals['__implementers__'] = implementers = []
-        implementers.append(ob)
-        return _implementer.__call__(self, ob)

@@ -29,33 +29,7 @@ from martian.directive import (OnceDirective,
                                ClassDirectiveContext,
                                ClassOrModuleDirectiveContext)
 from martian import util
-
-class GlobalUtilityDirective(MultipleTimesDirective):
-    def check_arguments(self, factory, provides=None, name=u'',
-                        direct=False):
-        if provides is not None and not IInterface.providedBy(provides):
-            raise GrokImportError("You can only pass an interface to the "
-                                  "provides argument of %s." % self.name)
-
-    def value_factory(self, *args, **kw):
-        return GlobalUtilityInfo(*args, **kw)
-
-
-class GlobalUtilityInfo(object):
-    def __init__(self, factory, provides=None, name=u'', direct=None):
-        self.factory = factory
-        if direct is None:
-            direct = util.class_annotation(factory, 'grok.direct', False)
-        self.direct = direct
-
-        if provides is None:
-            provides = util.class_annotation(factory, 'grok.provides', None)
-        self.provides = provides
-
-        if name is u'':
-            name = util.class_annotation(factory, 'grok.name', u'')
-        self.name = name
-
+from grokcore.component.directive import MultiValueOnceDirective
 
 class LocalUtilityDirective(MultipleTimesDirective):
     def check_arguments(self, factory, provides=None, name=u'',
@@ -97,49 +71,18 @@ class RequireDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
             return func
         return decorator
 
-class MultiValueOnceDirective(OnceDirective):
-
-    def check_arguments(self, *values):
-        pass
-
-    def value_factory(self, *args):
-        return args
-
-class OrderDirective(OptionalValueDirective, OnceDirective):
-
-    order = 0
-
-    def value_factory(self, value=None):
-        OrderDirective.order += 1
-        if value is not None:
-            return value, OrderDirective.order
-        return super(OrderDirective, self).value_factory(value)
-
-    def default_value(self):
-        return 0, OrderDirective.order
-
 # Define grok directives
-name = SingleTextDirective('grok.name', ClassDirectiveContext())
 template = SingleTextDirective('grok.template', ClassDirectiveContext())
-context = InterfaceOrClassDirective('grok.context',
-                                    ClassOrModuleDirectiveContext())
 templatedir = SingleTextDirective('grok.templatedir', ModuleDirectiveContext())
-provides = InterfaceDirective('grok.provides', ClassDirectiveContext())
-baseclass = MarkerDirective('grok.baseclass', ClassDirectiveContext())
-global_utility = GlobalUtilityDirective('grok.global_utility',
-                                        ModuleDirectiveContext())
 local_utility = LocalUtilityDirective('grok.local_utility',
                                       ClassDirectiveContext())
 require = RequireDirective('grok.require', ClassDirectiveContext())
 site = InterfaceOrClassDirective('grok.site',
                                  ClassDirectiveContext())
-title = SingleTextDirective('grok.title', ClassDirectiveContext())
 permissions = MultiValueOnceDirective(
     'grok.permissions', ClassDirectiveContext())
 layer = InterfaceOrClassDirective('grok.layer',
                            ClassOrModuleDirectiveContext())
-order = OrderDirective('grok.order', ClassDirectiveContext())
-direct = MarkerDirective('grok.direct', ClassDirectiveContext())
 viewletmanager = InterfaceOrClassDirective('grok.viewletmanager',
                                            ClassOrModuleDirectiveContext())
 view = InterfaceOrClassDirective('grok.view',

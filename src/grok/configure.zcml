@@ -7,6 +7,7 @@
   <include package="zope.i18n" file="meta.zcml" />
   <include package="zope.securitypolicy" file="meta.zcml" />
   <include package="zope.app.zcmlfiles" file="meta.zcml" />
+  <include package="grokcore.component" file="meta.zcml" />
   <include package="grok" file="meta.zcml" />
 
   <include package="zope.annotation" />

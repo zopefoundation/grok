@@ -43,11 +43,13 @@ from grok.components import RESTProtocol, IRESTLayer
 from grok.interfaces import IRESTSkinType
 from grok.components import ViewletManager, Viewlet
 
-from grok.directive import (context, name, title, template, templatedir,
-                            provides, baseclass, global_utility, local_utility,
-                            permissions, require, site, layer, direct, viewletmanager,
-                            view, order)
-from grok.decorators import subscribe, adapter, implementer
+from grokcore.component.directive import (
+    context, name, title, provides, baseclass, global_utility, direct, order)
+from grok.directive import (
+    template, templatedir, local_utility, permissions, require, site,
+    layer, viewletmanager, view)
+from grokcore.component.decorators import adapter, implementer
+from grok.decorators import subscribe
 from martian.error import GrokError, GrokImportError
 
 # BBB These two functions are meant for test fixtures and should be
