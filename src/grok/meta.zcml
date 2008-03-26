@@ -3,6 +3,8 @@
     xmlns:meta="http://namespaces.zope.org/meta"
     xmlns:grok="http://namespaces.zope.org/grok">
 
+  <include package="z3c.autoinclude" file="meta.zcml" />
+
   <meta:directives namespace="http://namespaces.zope.org/grok">
     <meta:directive
         name="grok"

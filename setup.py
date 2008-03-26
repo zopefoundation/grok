@@ -77,8 +77,10 @@ setup(
                       'zope.testing',
                       'zope.traversing',
                       'zope.testbrowser',
+                      'zope.viewlet',
                       'zc.catalog',
                       'z3c.flashmessage',
                       'z3c.testsetup',
+                      'z3c.autoinclude',
                       ],
 )

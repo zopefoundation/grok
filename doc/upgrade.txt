@@ -6,6 +6,31 @@ continue to work with newer versions of Grok.  This document only
 describes changes involving incompatibilities or deprecations, not new
 features (please refer to ``CHANGES.txt`` for those).
 
+Upgrading to 0.12
+-----------------
+
+* If you have existing Grok projects and you want to make use of 
+  Grok's new autoinclusion functionality in them, you can place
+  the following line in your project's ``configure.zcml``:
+
+    <autoinclude package="." />
+
+  This will cause the ZCML for ``setup.py`` dependencies of your
+  package to be loaded automatically. You can now get rid of any
+  manual ``include`` statements (except the one that includes ``grok``
+  itself).
+
+  For new projects created by ``grokproject``, this line will be
+  automatically be added for you and you don't have to do anything except
+  to upgrade ``grokproject``::
+
+    $ easy_install -U grokproject
+
+* The convention that classes ending with -Base automatically become base
+  classes has been removed with martian 0.9.4. Please add the grok.baseclass()
+  directive to these classes explicitly where the 'Base' class convention was
+  relied upon to preserve existing functionality.
+
 
 Upgrading to 0.11
 -----------------

@@ -38,7 +38,7 @@ helps if you are familiar with Zope Page Templates, though most of the
 examples should be fairly obvious if you are already familiar with
 another templating language.
 
-We recommend beginners to follow the tutorial from top to bottom. The
+We recommend that beginners follow the tutorial from top to bottom. The
 tutorial is designed to explain important concepts in order and slowly
 builds up from there.
 
@@ -91,7 +91,9 @@ easy.
 
 Let's go through the prerequisites first. You need a computer
 connected to the internet, as Grok installs itself over the
-network. You also need Python 2.4 installed.
+network. You also need Python 2.4 installed (Python 2.5 is not
+yet supported, and does not pass all unit tests, though some
+have reported success using it with Grok.)
 
 Because Grok uses a source distribution of Zope 3, you may need to
 install your operating system's Python "dev" package. You also need a
@@ -120,39 +122,6 @@ This tells grokproject to create a new subdirectory called ``Sample``
 and set up the project in there. grokproject will automatically
 download and install Zope 3 and Grok into the project area.
 
-.. XXX when grokproject gains a switch for pointing to a shared egg
-       directory, mention this here.
-
-grokproject will tell you what it will be creating::
-
-  Selected and implied templates:
-    grokproject#grokproject  A grok project
-
-  Variables:
-    egg:      Sample
-    package:  sample
-    project:  Sample
-
-The "Selected and implied templates" line is something reported by
-Paste, which is the Python project generation software which
-grokproject is using. After this, it reports three names. 
-
-First, it reports the name this project will have if in the project's
-``setup.py``::
-
-    egg:      Sample
-
-Next, it specifies the name of the Python package that you will be
-developing with. The package will be placed under the project's ``src``
-directory::
-
-    package:  sample
-
-Finally, it gives the name of the project directory that it will
-create (under the current directory)::
-
-    project:  Sample
-
 You will be asked a number of questions now. First you need to supply
 the name of the initial module that your package will contain. We'll
 stick with the default ``app.py``::
@@ -164,8 +133,12 @@ Zope server. We'll use ``grok`` for both::
 
   Enter user (Name of an initial administrator user): grok
   Enter passwd (Password for the initial administrator user): grok
+  Enter eggs_dir (Location where zc.buildout will look for and place packages) ['/home/<user>/buildout-eggs']:
 
-Now you have to wait a while as grokproject downloads `zc.buildout`_
+For the last question, we'll stick with the default path which will be
+a directory called 'buildout-eggs' in your home directory.
+
+Now you have to wait while grokproject downloads `zc.buildout`_
 (the system that's used to build the project area), Grok and the Zope
 3 libraries.
 
@@ -1275,8 +1248,9 @@ Luckily we have another class annotation that can help us here:
 ``grok.name``. We can use it on both view classes
 (``grok.name('index')``) to explicitly explain to Grok what we want.
 
-You can now try to restart Zope and create both applications. They
-should display the correct index pages when you look at them.
+You can now try to restart Zope and create both applications in the
+Grok Admin interface. They should display the correct index pages
+when you look at them.
 
 We can see that the introduction of a second model has complicated our
 code a bit, though you will hopefully agree with us that it is still
@@ -1295,7 +1269,7 @@ objects. Our ``Sample`` application is already a container, as it
 subclasses ``grok.Container``. What we will do in this section is
 build an application that actually puts something into that container.
 
-Grok applications ar typically composed of containers and
+Grok applications are typically composed of containers and
 models. Containers are objects that can contain models. This includes
 other containers, as a container is just a special kind of model.
 

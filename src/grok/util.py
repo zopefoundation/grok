@@ -25,7 +25,7 @@ from zope.security.checker import NamesChecker, defineChecker
 from zope.security.interfaces import IPermission
 
 from martian.error import GrokError, GrokImportError
-from martian.util import class_annotation, methods_from_class
+from martian.util import class_annotation, methods_from_class, scan_for_classes
 
 def check_adapts(class_):
     if component.adaptedBy(class_) is None:
@@ -33,18 +33,20 @@ def check_adapts(class_):
                         "(use grok.adapts to specify)."
                         % class_, class_)
 
-def make_checker(factory, view_factory, permission):
+def make_checker(factory, view_factory, permission, method_names=None):
     """Make a checker for a view_factory associated with factory.
 
     These could be one and the same for normal views, or different
     in case we make method-based views such as for JSON and XMLRPC.
     """
+    if method_names is None:
+        method_names = ['__call__']
     if permission is not None:
         check_permission(factory, permission)
     if permission is None or permission == 'zope.Public':
-        checker = NamesChecker(['__call__'])
+        checker = NamesChecker(method_names)
     else:
-        checker = NamesChecker(['__call__'], permission)
+        checker = NamesChecker(method_names, permission)
     defineChecker(view_factory, checker)
 
 def check_permission(factory, permission):
@@ -123,31 +125,66 @@ def sort_components(components):
     # if components have a grok.order directive, sort by that
     return sorted(components, key=_sort_key)
 
-AMBIGUOUS_CONTEXT = object()
-def check_context(component, context):
-    if context is None:
-        raise GrokError("No module-level context for %r, please use "
-                        "grok.context." % component, component)
-    elif context is AMBIGUOUS_CONTEXT:
-        raise GrokError("Multiple possible contexts for %r, please use "
-                        "grok.context." % component, component)
+AMBIGUOUS_COMPONENT = object()
+def check_module_component(factory, component,
+                           component_name, component_directive):
+    """Raise error if module-level component cannot be determined.
 
-def determine_module_context(module_info, models):
-    if len(models) == 0:
-        context = None
-    elif len(models) == 1:
-        context = models[0]
+    If the module-level component is None, it's never been specified;
+    raise error telling developer to specify.
+
+    if the module-level component is AMBIGUOUS_COMPONENT, raise
+    an error telling developer to specify which one to use.
+    """
+    if component is None:
+        raise GrokError("No module-level %s for %r, please use "
+                        "%s." % (component_name, factory, component_directive),
+                        factory)
+    elif component is AMBIGUOUS_COMPONENT:
+        raise GrokError("Multiple possible %ss for %r, please use "
+                        "%s." % (component_name, factory, component_directive),
+                        factory)
+    
+def determine_module_component(module_info, annotation, classes):
+    """Determine module-level component.
+
+    The module-level component can be set explicitly using the
+    annotation (such as grok.context).
+
+    If there is no annotation, the module-level component is determined
+    by scanning for subclasses of any in the list of classes.
+
+    If there is no module-level component, the module-level component is
+    None.
+
+    If there is one module-level component, it is returned.
+
+    If there are more than one module-level component, AMBIGUOUS_COMPONENT
+    is returned.
+    """
+    components = scan_for_classes(module_info.getModule(), classes)
+    if len(components) == 0:
+        component = None
+    elif len(components) == 1:
+        component = components[0]
     else:
-        context = AMBIGUOUS_CONTEXT
+        component= AMBIGUOUS_COMPONENT
+        
+    module_component = module_info.getAnnotation(annotation, None)
+    if module_component:
+        component = module_component
+    return component
 
-    module_context = module_info.getAnnotation('grok.context', None)
-    if module_context:
-        context = module_context
 
-    return context
+def determine_class_component(module_info, class_,
+                              component_name, component_directive):
+    """Determine component for a class.
 
-
-def determine_class_context(class_, module_context):
-    context = class_annotation(class_, 'grok.context', module_context)
-    check_context(class_, context)
-    return context
+    Determine a component for a class. If no class-specific component exists,
+    try falling back on module-level component.
+    """
+    module_component = module_info.getAnnotation(component_directive, None)
+    component = class_annotation(class_, component_directive, module_component)
+    check_module_component(class_, component,
+                           component_name, component_directive)
+    return component

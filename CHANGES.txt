@@ -10,12 +10,33 @@ Feature changes
 * Added testsetup classes in grok.testing to improve easy setup of
   unit- and functional tests.
 
+* Add support for viewlets and viewlet managers, ``grok.Viewlet``
+  and ``grok.ViewletManager``.
+
 * Add a new directive, ``grok.order()``, which can be used to help
   sort components. At the time it is not used yet, but we intend to
   use it for the viewlets support. Note that this means Grok now
   requires Martian 0.9.3 or higher. See ``grok.interfaces`` for more
   documentation on this directive.
+
+* Now depend on ``z3c.autoinclude``. This allows the use of the
+  ``<autoinclude package="."/>`` directive, which automatically loads
+  up ZCML needed for the dependencies listed in your project's
+  ``setup.py``. The new release of grokproject adds this line
+  automatically. Upgrade ``grokproject`` to make use of this
+  functionality in new projects::
+
+    $ easy_install -U grokproject
+
+* Classes that end with "-Base" are no longer implicitly considered base
+  classes. These classes need to have the grok.baseclass() directive added to
+  them explicitly.
+
+  See also the ``upgrade notes``_ for information on how to update
+  your existing projects.
  
+.. _``upgrade notes``: http://grok.zope.org/project/upgrade-notes
+
 Bug fixes
 ---------
 
