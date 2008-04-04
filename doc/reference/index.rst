@@ -38,3 +38,4 @@ introductory material.
    functions.rst
    events.rst
    exceptions.rst
+   model.rst
