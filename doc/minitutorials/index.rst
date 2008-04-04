@@ -2,7 +2,7 @@
 Grok Mini-HowTos
 ================
 
-.. image:: evencaveman.jpg
+.. image:: ../resources/evencaveman.jpg
    :alt: Now even cavemen can use Zope3
    :class: right
 
