@@ -2,9 +2,10 @@ from setuptools import setup, find_packages
 
 setup(
     name='grokdocs',
-    install_requires=['docutils',
+    install_requires=['docutils==0.4',
                       'zope.pagetemplate',
                       'zope.app.renderer',
+                      'Sphinx==0.1.61950',
                       'Pygments',
                       'ulif.rest',
                       ],
