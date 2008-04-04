@@ -1,5 +1,4 @@
-Copyright (c) 2006 gocept gmbh & co. kg, Martijn Faassen and Philipp von
-Weitershausen
+Copyright (c) 2006-2008 Zope Corporation and contributors
 All Rights Reserved.
 
 This software is subject to the provisions of the Zope Public License,

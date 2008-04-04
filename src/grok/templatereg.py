@@ -81,7 +81,9 @@ class TemplateRegistry(object):
                 module_info.dotted_name, ', '.join(unassociated)))
             warnings.warn(msg, UserWarning, 2)
 
-    def checkTemplates(self, module_info, factory, factory_name):
+    def checkTemplates(self, module_info, factory, component_name,
+                       has_render, has_no_render):
+        factory_name = factory.__name__.lower()
         template_name = util.class_annotation(factory, 'grok.template',
                                               factory_name)
 
@@ -89,29 +91,30 @@ class TemplateRegistry(object):
             # grok.template is being used
 
             if self.get(factory_name):
-                raise GrokError("Multiple possible templates for view %r. It "
+                raise GrokError("Multiple possible templates for %s %r. It "
                                 "uses grok.template('%s'), but there is also "
                                 "a template called '%s'."
-                                % (factory, template_name, factory_name),
-                                factory)
+                                % (component_name, factory, template_name,
+                                   factory_name), factory)
         template = self.get(template_name)
-        if template:
-            if (getattr(factory, 'render', None) and not
-                util.check_subclass(factory, grok.components.GrokForm)):
+        if template is not None:
+            if has_render(factory):
                 # we do not accept render and template both for a view
                 # (unless it's a form, they happen to have render.
                 raise GrokError(
-                    "Multiple possible ways to render view %r. "
+                    "Multiple possible ways to render %s %r. "
                     "It has both a 'render' method as well as "
-                    "an associated template." % factory, factory)
+                    "an associated template." %
+                    (component_name, factory), factory)
             self.markAssociated(template_name)
             factory.template = template
             template._initFactory(factory)
         else:
-            if not getattr(factory, 'render', None):
+            if has_no_render(factory):
                 # we do not accept a view without any way to render it
-                raise GrokError("View %r has no associated template or "
-                                "'render' method." % factory, factory)
+                raise GrokError("%s %r has no associated template or "
+                                "'render' method." %
+                                (component_name.title(), factory), factory)
 
 class PageTemplateFileFactory(grok.GlobalUtility):
 

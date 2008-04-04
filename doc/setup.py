@@ -14,5 +14,6 @@ setup(
     [console_scripts]
     grokdocs2html = grokdocs:grokdocs
     grokdocs2latex = grokdocs:grokdocs_latex
+    quickstart = grokdocs:sphinxquickstart
     """
     )
