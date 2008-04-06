@@ -74,6 +74,11 @@ Bug fixes
 * Fix https://bugs.launchpad.net/grok/+bug/125720: server control form
   had shutdown as default action, even when entering an admin message.
 
+* Fix https://bugs.launchpad.net/grok/+bug/80403: Fix situation where
+  a module name is identical to the package name. At least modules
+  with templates can now have same name as their package.
+
+
 Restructuring
 -------------
 

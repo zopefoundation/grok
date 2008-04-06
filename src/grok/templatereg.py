@@ -32,6 +32,9 @@ class TemplateRegistry(object):
         if not os.path.isdir(template_dir):
             return
 
+        if module_info.isPackage():
+            return
+
         for template_file in os.listdir(template_dir):
             if template_file.startswith('.') or template_file.endswith('~'):
                 continue
