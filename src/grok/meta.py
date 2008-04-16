@@ -877,7 +877,7 @@ class SkinGrokker(martian.ClassGrokker):
                                           default=IBrowserRequest)
         name = get_name_classname(factory)
         config.action(
-            discriminator=None,
+            discriminator=('skin', name),
             callable=zope.component.interface.provideInterface,
             args=(name, layer, IBrowserSkinType)
             )
@@ -891,7 +891,7 @@ class RESTProtocolGrokker(martian.ClassGrokker):
                                           default=IBrowserRequest)
         name = get_name_classname(factory)
         config.action(
-            discriminator=None,
+            discriminator=('restprotocol', name),
             callable=zope.component.interface.provideInterface,
             args=(name, layer, IRESTSkinType)
             )
