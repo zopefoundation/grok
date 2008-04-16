@@ -22,6 +22,8 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher,
                                                IBrowserSkinType)
+from zope.publisher.interfaces.http import IHTTPRequest
+
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.viewlet.interfaces import IViewletManager, IViewlet
 from zope.security.interfaces import IPermission
@@ -365,7 +367,7 @@ class TraverserGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, module_info, config, **kw):
         factory_context = get_context(module_info, factory)
-        adapts = (factory_context, IBrowserRequest)
+        adapts = (factory_context, IHTTPRequest)
 
         config.action(
             discriminator=('adapter', adapts, IBrowserPublisher, ''),

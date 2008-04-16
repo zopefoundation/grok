@@ -82,6 +82,10 @@ Bug fixes
   name, but this is actually a conflict. Now give configuration
   conflict error when someone tries this.
 
+* Overriding traversal behavior using the ``traverse()`` method or
+  ``grok.Traverser`` failed in the face of (REST) ``PUT`` and
+  ``DELETE``. XML-RPC also failed when custom traversal was in use.
+
 Restructuring
 -------------
 
