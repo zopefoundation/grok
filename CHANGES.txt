@@ -89,6 +89,11 @@ Bug fixes
 * Fix https://bugs.launchpad.net/grok/+bug/187590 where config action
   discriminators for permission and role registrations were incorrect.
 
+* Permission definitions received the wrong, too high, configure
+  action priority (not to be confused with grokker priority). In some
+  cases this caused permissions to be defined later than they were
+  used. Use a low action priority instead for permissions.
+
 Restructuring
 -------------
 

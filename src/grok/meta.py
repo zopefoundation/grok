@@ -50,7 +50,8 @@ from martian import util
 
 import grok
 from grok import components, formlib, templatereg
-from grok.util import check_adapts, get_default_permission, make_checker
+from grok.util import check_adapts, get_default_permission
+from grok.util import check_permission, make_checker
 from grok.util import check_module_component, determine_module_component
 from grok.util import determine_class_component
 from grok.util import determine_class_directive, public_methods_from_class
@@ -154,7 +155,6 @@ class GlobalUtilityGrokker(martian.ClassGrokker):
             )
         return True
 
-
 class XMLRPCGrokker(martian.ClassGrokker):
     component_class = grok.XMLRPC
 
@@ -164,7 +164,16 @@ class XMLRPCGrokker(martian.ClassGrokker):
         methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
-
+        
+        # make sure we issue an action to check whether this permission
+        # exists. That's the only thing that action does
+        if default_permission is not None:
+            config.action(
+                discriminator=None,
+                callable=check_permission,
+                args=(factory, default_permission)
+                ) 
+        
         for method in methods:
             name = method.__name__
 
@@ -204,7 +213,15 @@ class RESTGrokker(martian.ClassGrokker):
         methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
-
+        # make sure we issue an action to check whether this permission
+        # exists. That's the only thing that action does
+        if default_permission is not None:
+            config.action(
+                discriminator=None,
+                callable=check_permission,
+                args=(factory, default_permission)
+                ) 
+ 
         # grab layer from class or module
         view_layer = determine_class_directive('grok.layer', factory,
                                                module_info,
@@ -323,6 +340,14 @@ class JSONGrokker(martian.ClassGrokker):
         methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
+        # make sure we issue an action to check whether this permission
+        # exists. That's the only thing that action does
+        if default_permission is not None:
+            config.action(
+                discriminator=None,
+                callable=check_permission,
+                args=(factory, default_permission)
+                ) 
 
         for method in methods:
             # The grok.JSON component inherits methods from its baseclass
@@ -696,7 +721,7 @@ class PermissionGrokker(martian.ClassGrokker):
             discriminator=('utility', IPermission, id),
             callable=component.provideUtility,
             args=(permission, IPermission, id),
-            order=self.priority
+            order=0 # need to do this early in the process
             )
         return True
 

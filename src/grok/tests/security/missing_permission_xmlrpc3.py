@@ -6,7 +6,7 @@ case for a default permission that is never used.
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
    ...
-  ConfigurationExecutionError: martian.error.GrokError: Undefined permission 'foo' in <class 'grok.tests.security.missing_permission_xmlrpc3.MissingPermission'>. Use grok.Permission first.
+  ConfigurationExecutionError: martian.error.GrokError: Undefined permission 'doesnt.exist' in <class 'grok.tests.security.missing_permission_xmlrpc3.MissingPermission'>. Use grok.Permission first.
   ...
 
 """
