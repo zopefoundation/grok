@@ -34,7 +34,7 @@ Feature changes
 
   See also the ``upgrade notes``_ for information on how to update
   your existing projects.
- 
+
 .. _``upgrade notes``: http://grok.zope.org/project/upgrade-notes
 
 Bug fixes
@@ -85,6 +85,9 @@ Bug fixes
 * Overriding traversal behavior using the ``traverse()`` method or
   ``grok.Traverser`` failed in the face of (REST) ``PUT`` and
   ``DELETE``. XML-RPC also failed when custom traversal was in use.
+
+* Fix https://bugs.launchpad.net/grok/+bug/187590 where config action
+  discriminators for permission and role registrations were incorrect.
 
 Restructuring
 -------------

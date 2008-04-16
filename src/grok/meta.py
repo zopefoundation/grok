@@ -98,7 +98,7 @@ class ViewletManagerContextGrokker(martian.GlobalGrokker):
                                                     [grok.ViewletManager])
         module.__grok_viewletmanager__ = viewletmanager
         return True
-    
+
 class AdapterGrokker(martian.ClassGrokker):
     component_class = grok.Adapter
 
@@ -106,7 +106,7 @@ class AdapterGrokker(martian.ClassGrokker):
         adapter_context = get_context(module_info, factory)
         provides = get_provides(factory)
         name = get_name(factory)
-        
+
         config.action(
             discriminator=('adapter', adapter_context, provides, name),
             callable=component.provideAdapter,
@@ -120,7 +120,7 @@ class MultiAdapterGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, config, **kw):
         provides = get_provides(factory)
         name = get_name(factory)
-        
+
         check_adapts(factory)
         for_ = component.adaptedBy(factory)
 
@@ -160,7 +160,7 @@ class XMLRPCGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, module_info, config, **kw):
         view_context = get_context(module_info, factory)
-        
+
         methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
@@ -247,7 +247,7 @@ class ViewGrokker(martian.ClassGrokker):
         view_context = get_context(module_info, factory)
 
         factory.module_info = module_info
-        
+
         if util.check_subclass(factory, components.GrokForm):
             # setup form_fields from context class if we've encountered a form
             if getattr(factory, 'form_fields', None) is None:
@@ -693,7 +693,7 @@ class PermissionGrokker(martian.ClassGrokker):
             unicode(util.class_annotation(factory, 'grok.description', '')))
 
         config.action(
-            discriminator=('utility', IPermission, name),
+            discriminator=('utility', IPermission, id),
             callable=component.provideUtility,
             args=(permission, IPermission, id),
             order=self.priority
@@ -719,7 +719,7 @@ class RoleGrokker(martian.ClassGrokker):
             unicode(util.class_annotation(factory, 'grok.description', '')))
 
         config.action(
-            discriminator=('utility', IRole, name),
+            discriminator=('utility', IRole, id),
             callable=component.provideUtility,
             args=(role, IRole, id),
             )

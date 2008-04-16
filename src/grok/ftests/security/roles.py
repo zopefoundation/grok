@@ -24,7 +24,7 @@ just fine:
   >>> from zope.securitypolicy.interfaces import IPrincipalRoleManager
   >>> root = getRootFolder()
   >>> IPrincipalRoleManager(root).assignRoleToPrincipal(
-  ...    'grok.PaintingOwner', 'zope.anybody')
+  ...    'paint.PaintingOwner', 'zope.anybody')
 
   >>> browser.open("http://localhost/@@cavepainting")
   >>> print browser.contents
@@ -47,27 +47,27 @@ import grok
 import zope.interface
 
 class View(grok.Permission):
-    grok.name('grok.ViewPainting')
+    grok.name('paint.ViewPainting')
 
 class Edit(grok.Permission):
-    grok.name('grok.EditPainting')
+    grok.name('paint.EditPainting')
 
 class Erase(grok.Permission):
-    grok.name('grok.ErasePainting')
+    grok.name('paint.ErasePainting')
 
 class Approve(grok.Permission):
-    grok.name('grok.ApprovePainting')
+    grok.name('paint.ApprovePainting')
 
 class PaintingOwner(grok.Role):
-    grok.name('grok.PaintingOwner')
+    grok.name('paint.PaintingOwner')
     grok.title('Painting Owner')
     grok.permissions(
-        'grok.ViewPainting', 'grok.EditPainting', 'grok.ErasePainting')
+        'paint.ViewPainting', 'paint.EditPainting', 'paint.ErasePainting')
 
 class CavePainting(grok.View):
 
     grok.context(zope.interface.Interface)
-    grok.require('grok.ViewPainting')
+    grok.require('paint.ViewPainting')
 
     def render(self):
         return 'What a beautiful painting.'
@@ -75,7 +75,7 @@ class CavePainting(grok.View):
 class EditCavePainting(grok.View):
 
     grok.context(zope.interface.Interface)
-    grok.require('grok.EditPainting')
+    grok.require('paint.EditPainting')
 
     def render(self):
         return 'Let\'s make it even prettier.'
@@ -83,7 +83,7 @@ class EditCavePainting(grok.View):
 class EraseCavePainting(grok.View):
 
     grok.context(zope.interface.Interface)
-    grok.require('grok.ErasePainting')
+    grok.require('paint.ErasePainting')
 
     def render(self):
         return 'Oops, mistake, let\'s erase it.'
@@ -91,7 +91,7 @@ class EraseCavePainting(grok.View):
 class ApproveCavePainting(grok.View):
 
     grok.context(zope.interface.Interface)
-    grok.require('grok.ApprovePainting')
+    grok.require('paint.ApprovePainting')
 
     def render(self):
         return 'Painting owners cannot approve their paintings.'
