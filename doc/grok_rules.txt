@@ -1,0 +1,711 @@
+The rules of Grok
+=================
+
+This document intends to descibe the rules of Grok briefly. It is not
+intended to be a beginner's tutorial. It's also not a tutorial. It's
+something in between. It gives a succinct an overview of *what's
+there* in Grok, with a brief idea on how to use it, so you can try it
+out and learn more about it. This includes rules, common APIs and
+patterns.
+
+Models
+------
+
+A Grok-based application is composed out of one or more *models*. We
+also call these *content objects*, or just *objects*. The objects are
+just Python objects, instantiated from a class. Models can be stored
+in the object database (ZODB), created by an object relational mapper,
+or created on the fly by your code.
+
+Grok comes with two kinds of models: ``grok.Model`` and
+``grok.Container``. ``grok.Model`` is the most basic one and doesn't
+really do much for you. You can subclass from ``grok.Model``, like
+this::
+
+  class Document(grok.Model):
+      pass
+
+The main thing subclassing from ``grok.Model`` does is make it
+possible (but not required) to store instances in the ZODB.
+
+You can also subclass from ``grok.Container``, like this::
+
+  class Folder(grok.Container):
+      pass
+
+A container is like a model, but also acts much like a Python
+dictionary. The main difference with Python dictionaries is that its
+methods, like ``keys`` and ``items``, are iterator-like. They also do
+more, like send events, but we can forget about that for now.
+
+In order to be able to install an application, you need to mix in
+``grok.Application`` into a class::
+
+  class Application(grok.Application, grok.Container):
+      pass
+
+Instances of this class can now be installable in the Grok web UI.
+
+Let's make a structure with some folders and documents::
+
+  app = Application()
+  app['a'] = a = Container()
+  a['b'] = Document()
+  a['c'] = Container()
+  a['c']['d'] = Document()
+
+Grok publishes these objects to the web: this is called object
+publishing. What this means in essence is that objects can be
+addressed with URLs. When you access a URL of a Grok application with
+your web browser, Grok uses this URL to find an object.
+
+An example: if ``app`` were installed under
+``http://localhost:8080/app``, the following URLs will exist in your
+application::
+
+  http://localhost:8080/app
+  http://localhost:8080/app/a
+  http://localhost:8080/app/a/b
+  http://localhost:8080/app/a/c
+  http://localhost:8080/app/a/c/d
+
+``__parent__`` and ``__name__``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Models in Grok are automatically supplied with a ``__parent__`` and a
+``__name__`` attribute. 
+
+* ``__parent__`` points to object this object is in. If the object is in 
+  a container, this is the container.
+
+* ``__name__`` is the name this object has in a URL (and in its
+  container, if it is in a container).
+
+These attributes are used for navigation through content space, and
+Grok also uses them to construct URLs automatically (see below). The
+``__parent__`` and ``__name__`` attributes are automatically said when
+an object is placed in a container, or when it is being traversed
+through using ``traverse``.
+
+Custom traversing
+~~~~~~~~~~~~~~~~~
+
+Grok resolves URLs to objects by *traversing* through the containers
+and models in question. What if you want to customize the way this
+traversal works? Perhaps you want to traverse through objects you
+create yourself, or objects created by an object relational
+mapper. Grok offers a handy way to do so: the ``traverse`` method on
+models.
+
+A math example: imagine you want to create an application that
+represents integer numbers, and you want to traverse to each
+individual number, like this::
+
+  http://localhost:8080/integers/0
+  http://localhost:8080/integers/1
+  http://localhost:8080/integers/2
+  http://localhost:8080/integers/3
+  ...
+
+and so on. How would we implement this? We cannot create a container
+and fill it with all integers possible, as there are an infinite
+number of them. Okay, so we are in a math example, so let's be exact:
+this is true if we ignore memory limitations and URL length
+limitations. Storing all possible integers in a container is just not
+*practical*.
+
+We use the ``traverse`` method::
+
+  class ParticularInteger(grok.Model):
+      def __init__(self, number):
+          self.number = number
+
+  class Integers(grok.Application, grok.Model):
+      def traverse(self, name):
+          try:
+               return ParticularInteger(int(name))
+          except ValueError:
+               return None # not an integer
+
+Now all URLs for numbers are available. What's more, other URLs like
+this are not::
+
+  http://localhost:8080/integers/foo
+
+The ``traverse`` method works by trying to convert the path element
+that comes in as ``name`` to an integer. If it fails, we return
+``None``, telling Grok that the ``traverse()`` method didn't find the
+object asked for. Grok then falls back on default behavior, which in
+this case would mean a ``404 Not Found`` error.
+
+Views
+-----
+
+Now that we have models and can build structures of them, we will need
+to look at ways to actually present them to the user: views. So what
+is a view? A view is a class that represents a model in some way. It
+creates a user interface of some sort (typically HTML) for a model. A
+single model can have more than one view. It looks like this::
+ 
+  class Index(grok.View):
+      grok.context(Application)
+     
+      def render(self):
+          return "This is the application"
+
+The ``grok.context`` bit is in the class an example of using a *Grok
+directive*. If you use ``grok.context`` on a view class, it connects
+the view to the class we give it. So in this case, ``Index`` is a view
+for ``Application``. Note that if there is only a single model in the
+module and you want your view to be associated with it, you can leave
+out ``grok.context`` and the view will be associated with that model
+by default. Many directives have such default behavior, allowing you
+to leave them out of your code if you organize your code in a certain
+way.
+
+The default view for a model is called ``index``. You can specify
+``index`` at the end of the URL, like this::
+
+  http://localhost:8080/app/index
+
+What happens when you go to this URL is that Grok instantiates the
+``Index`` class, creating a ``Index`` instance. View instances have
+a number of attributes by default: 
+
+  * ``context``, the model instance that the view is presenting.
+
+  * ``request``, the current web request.
+
+  * ``response``, an object representing the response sent to the
+                  user.  Used less often.
+
+``index`` views are special, as it's also fine not to add ``index`` at
+the end, as the name ``index`` is the default::
+
+  http://localhost:8080/app
+
+You can also create views with different names::
+
+  class Edit(grok.View):
+      grok.context(Application)
+    
+      def render(self):
+          return "This is the edit screen for the application"
+
+Now you can go to this URL::
+
+   http://localhost:8080/app/edit
+
+The name of the view is the name of the view class, lowercased. This
+is the default behavior: you can override this using the ``grok.name``
+directive::
+
+  class SomeImpossiblyLongClassName(grok.View):
+      grok.context(Application)
+      grok.name('edit')
+ 
+      def render(self):
+          return "This is the edit screen for the application"
+
+Templates
+~~~~~~~~~
+
+In the previous examples, we used the ``render`` method to determine
+what you actually see on a web page. For most views we don't want to
+do that: we want to use a template to prepare presentation. Using a
+template with a view is easy.  First create a directory
+``<name>_templates``, where ``<name>`` is the the module that contains
+the views. So, if you are developing in a module ``app.py``, you need
+to create a subdirectory ``app_templates`` for templates in the same
+directory as the ``app.py`` module.
+
+You can then add templates to that directory with the same name as the
+view class name (lowercase), with the ``.pt`` extension
+appended. These template follow the Zope Page Template (ZPT) rules,
+though Grok can also be extended to support other template languages.
+
+You could for instance have this view::
+
+  class Index(grok.View):
+      grok.context(Application)
+
+and a file ``index.pt`` in the module's templates directory containing
+template instructions.
+
+These are the defaults. If for some reason you want the name of the
+template directory not to be based on the name of module, you can
+manually set the name of the template directory used by a module by
+using the ``grok.templatedir`` directory in the module. If you want
+the name of the template not to be based on the name of the class, you
+use the ``grok.template`` directive in the view class.
+
+The template can access attributes and methods on the view through the
+special ``view`` name available in the template. The template can
+access attributes and methods on the model through the special
+``context`` name available in the template.
+
+``update``
+~~~~~~~~~~
+
+You can define an ``update`` method in a view to prepare a view just
+before it is accessed. You can use this to process information in the
+request (URL parameters or form variables), and set attributes on the
+view that can be used in the template::
+
+  def update(self):
+     self.total = int(self.request.form['a']) + int(self.request.form['b'])
+
+The template now has access to ``view.total``.
+
+You can define parameters in the update view. These will be
+automatically bound to parameters (or form values) in the request::
+
+  def update(self, a, b):
+      self.total = int(a) + int(b)
+
+the ``url`` method
+~~~~~~~~~~~~~~~~~~
+
+Views have a special method called ``url()`` that can be used to
+create URLs to objects. The ``url`` method takes zero, one or two 
+arguments::
+
+* self.url() - URL to this view.
+
+* self.url(object) - a URL to the context object.
+
+* self.url(name) - a URL to the context object, and then name append
+                   to get to a view or subobject of the context.
+
+* self.url(object, name) - the URL to the object, and then the
+                   subobject or view named by name.
+
+From the view, this is accessed through ``self.url()``. From the
+template, this method can be accessed using ``view.url()``.
+
+the ``redirect`` method
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``redirect`` method on views can be used to redirect the browser
+to another URL. Example::
+
+   def render(self):
+       self.redirect(self.url(self.context.__parent__))
+       # return empty body as we are going to redirect anyway
+       return ''
+
+``__parent__`` and ``__name__`` on views
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Like models, views also get supplied with a ``__parent__`` and
+``__name__`` object when they are instantiated for a particular model.
+
+``__parent__`` points to the model being viewed (and is the same as
+``context``, which should normally be used).
+
+``__name__`` is the name of the view in the URL.
+ 
+The ``@@`` thing
+~~~~~~~~~~~~~~~~
+
+Whenever you write this::
+
+  http://localhost:8080/app/edit
+
+you can also write this::
+
+  http://localhost:8080/app/@@edit
+
+Why the ugly ``@@`` syntax? Imagine that ``app`` is a container, and
+that your user interface lets the user add objects to it with a name
+of their own choosing. The user could decide to add an object called
+``index``. In that case Grok wouldn't know whether the
+``http://localhost:8080/app/index`` index is to get to a view or a
+sub-object. ``@@`` tells the system to look up a view definitely.
+
+Request
+-------
+
+Some useful things to know about the request object (as accessible as an
+attribute on the view):
+
+Information on the ``request`` object can be accessed using mapping
+access (``request[`foo`]``). You can access request form variables and
+cookies and headers (including `environment variables`_).
+
+.. _`environment variables`: http://hoohoo.ncsa.uiuc.edu/cgi/env.html
+
+To access form variables in particular use: ``request.form['foo']``.
+
+To access cookies in particular use: ``request.cookies['foo']``.
+
+To access headers (and environment variables) in particular use:
+``request.headers['foo']``. You can also use ``request.getHeader()``,
+with the header name as the argument, and an optional second default
+argument.
+
+Instead of the mapping access, the ``get`` methods work as well, as on
+normal Python dictionaries.
+
+More can be found in the request interface documentation in
+``zope.publisher.interfaces``.
+
+Response
+--------
+
+Some useful things to know about the response object (as accessible as
+an attribute on the view):
+
+``setStatus(name, reason)`` sets the HTTP status code. The argument
+may either be an integer representing the status code (such as ``200``
+or ``400``), or a string (``OK``, ``NotFound``). The optional second
+argument can be be used to pass the human-readable representation
+(``Not Found``).
+
+``setHeader(name, value)`` can be used to set HTTP response headers. The first
+argument is the header name, the second the value.
+
+``addHeader(name, value)`` can be used to add a HTTP header, while
+retaining any previously set headers with the same name.
+
+``setCookie(name, value, **kw)`` can be used to set a cookie. The first
+argument is the cookie name, the second the value. Optional keyword
+arguments can be used to set up further cookie properties (such as
+``max_age`` and ``expires``).
+
+``expireCookie(name, value)`` can be used to immediately expire a
+cookie.
+
+More can be found in the request interface documentation in
+``zope.publisher.interfaces``.
+
+Adapters
+--------
+
+An adapter is much like a view, but is aimed towards developers, not
+end users. It presents an interface to an object, but an interface for
+developers, not user interface for end-users.
+
+The section on adapters will of necessity be rather abstract. Feel
+free to skip it until you want to know what is going on up with
+interfaces and adapters - it is an important foundation to Grok, but one
+you do not know much about when you get started.
+
+An adapter can be used to add new methods to an object without
+changing the object. To demonstrate the principle, we will construct
+adapters entirely by hand first. At the end we will show how Groks
+helps in constructing adapters and using them.
+
+Imagine we are developing a content management system and we want to
+get information about the size (in, say, bytes, approximately) of
+content objects stored in our CMS, for instance in order to display it
+in our UI or to calculate the total size of all objects in a
+container. The simplest approach would be to add a ``size()`` method
+to all our content objects::
+
+  class Document(grok.Model):
+       def __init__(self, text):
+           self.text = text
+
+       def size(self):
+           return len(self.text.encode('UTF-8'))
+
+  class Image(grok.Model):
+       def __init__(self, data):
+            self.data = data
+
+       def size(self):
+            return len(self.data)
+
+  class Container(grok.Container):
+        def size(self):
+            total = 0
+            for obj in self.values():
+                total += obj.size() 
+            return total
+
+For simple cases this is fine, but for larger applications this can
+become a problem. Our ``Document`` model needs a ``size`` method, and
+does our ``Image`` model, and our ``Container``, and our ``News Item``
+model, and so on. Given the requirements of a typical CMS, content
+objects would soon end up with a very large number of methods, for all
+sorts of functionality, from getting the size of objects to offering a
+commenting facility. It would be nicer to separate things out and keep
+the underlying models clean.
+
+To do this, we can use the adaptation pattern. As said, we will do it
+by hand at first. An adapter is an object that adds an API to another
+object (typically stored as the ``context`` attribute of the
+adapter)::
+
+  class DocumentSized(object):
+      def __init__(self, context):
+          self.context = context
+
+      def size(self):
+          return len(self.context.text.encode('UTF-8'))
+
+We would use it like this::
+
+   DocumentSized(document).size()
+
+We could extend this same adapter to work for different kinds of
+content objects, but that isn't very extensible when new adapters need
+to be made::
+
+  class Sized(object):
+      def __init__(self, context):
+          self.context = context
+
+      def size(self):
+          if isinstance(self.context, Document):
+               return len(self.context.text.encode('UTF-8'))
+          elif isinstance(self.context, Image):
+               return len(self.context.data)
+          elif isintance(self.context, Container):
+               total = 0
+               for obj in self.context.values():
+                   total += Sized(obj).size() 
+               return total
+               
+Instead, we can create a smart ``sized`` factory that does this
+switch-on-type behavior instead, keeping our adapters clean::
+
+  class DocumentSized(object):
+      def __init__(self, context):
+          self.context = context
+ 
+      def sized(self):
+          return len(self.context.text.encode('UTF-8'))
+
+  class ImageSized(object):
+      def __init__(self, context):
+          self.context = context
+ 
+      def sized(self):
+          return len(self.context.data)
+
+  class ContainerSized(object):
+      def __init__(self, context):
+          self.context = context
+ 
+      def sized(self):
+          total = 0
+          for obj in self.context.values():
+              total += sized(obj).size() 
+          return total
+   
+  def sized(context):
+      if isinstance(context, Document):
+          return DocumentedSized(context)
+      elif isinstance(context, Image):
+          return ImageSized(context)
+      elif isinstance(context, Container):
+          return ContainerSized(context)
+       
+We can now call ``sized`` for a content object and get an object back
+that implements the "sized API"::
+
+   s = sized(my_content_object)
+   print s.size()
+
+It's good to spell out the APIs of your application explicitly, as
+documentation so that other developers can work with them and also
+implement them for their own content objects. Grok lets you do this
+using an *interface* specification, using the ``zope.interface``
+package::
+
+  from zope.interface import Interface
+
+  class ISized(Interface):
+      def size():
+           "Return the size of the object"
+
+We can now make this ``ISized`` interface into the adapter factory
+(like ``sized`` above), without actually having to implement it
+directly. Let's do that now by subclassing from ``grok.Adapter`` and
+using a few grok directives::
+
+  class DocumentSized(grok.Adapter):
+      grok.context(Document)
+      grok.provides(ISized)
+ 
+      def sized(self):
+          return len(self.context.text.encode('UTF-8'))
+
+  class ImageSized(grok.Adapter):
+      grok.context(Image)
+      grok.provides(ISized)
+ 
+      def sized(self):
+          return len(self.context.data)
+
+  class ContainerSized(grok.Adapter):
+      grok.context(Container)
+      grok.provides(ISized)
+ 
+      def sized(self):
+          total = 0
+          for obj in self.context.values():
+              total += ISized(obj).size()
+          return total
+
+We can now use ``ISized`` like we used ``sized`` above::
+
+   s = ISized(my_content_object)
+   print s.size()
+
+When new content objects were to be created for this CMS, ``ISized``
+adapters can be registered for them anywhere. Using this pattern,
+existing objects implemented by someone else can be made to conform
+with the ``ISized`` API without having to modify them.
+
+``grok.context`` works as for views. It is useful to point it to any
+class however, not just that of models. ``grok.provides`` has to be
+pointed to an interface (the interface that the adapter *adapts to*).
+
+Interfaces
+~~~~~~~~~~
+
+Classes can also be made to *implement* an interface. This means that
+instances of that class *provide* that interface::
+
+  from zope.interface import Interface, Attribute
+
+  class IAnimal(Interface):
+      name = Attribute("The name of the animal")
+
+      def makeSound():
+          "The sound the animal makes."
+
+  class Cow(object):
+      grok.implements(IAnimal)
+ 
+      def __init__(self, name):
+          self.name = name
+
+      def makeSound(self):
+          return "Mooo"
+
+We can ask the interface machinery whether an object provides an interface::
+
+  >>> cow = Cow()
+  >>> IAnimal.providedBy(cow)
+  True
+
+If you use an interface to adapt an object, and this object already
+provides the interface, you get back the object itself::
+
+  >>> IAnimal(cow) is cow
+  True
+
+``grok.context`` can always point to an interface instead of a class
+directly. This indirection can be useful to make a view or adapter
+work for a whole set of classes that all implement the same interface.
+
+``ComponentLookupError``
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+What if an adapter cannot be found for a particular object? Perhaps no
+adapter has been registered for a particular object or a particular
+interface. The system will raise a ``ComponentLookupError``::
+
+  >>> ISized(cow)
+  Traceback (most recent call last):
+    ...
+  ComponentLookupError
+
+If you want to catch this exception, you can import it from
+``zope.component.interfaces``::
+
+  from zope.component.interfaces import ComponentLookupError
+
+Named adapters
+~~~~~~~~~~~~~~
+
+It is possible to give an adapter a name, making it a *named
+adapter*. This way it is possible to have more than one adapter
+registered for a single object that all provide the same interface,
+each with a different name. This is a rarely used feature directly,
+but internally it is used for views, as we will see later. The
+``grok.name()`` directive can be used to give an adapter a name::
+
+  class Adapter(object):
+      grok.name('somename')
+      grok.context(SomeClass)
+      grok.provides(ISomeInterface)
+ 
+Actually all adapters are named: by default adapters the name of an
+adapter is the empty string.
+
+You cannot call the interface directly to get a named adapter for an
+object.  Instead, you need to use the APIs provided by the
+``zope.component`` package, in particular ``getAdapter``::
+
+  from zope import component
+  
+  my_adapter = component.getAdapter(some_object, ISomeInterface, 
+                                   name='somename')
+
+``getAdapter`` can also be used to look up unnamed adapters, as an
+alternative to using the interface directly::
+
+  myadapter = component.getAdapter(some_object, ISomeInterface)
+
+Multi adapters
+~~~~~~~~~~~~~~
+
+Another feature of adapters is that you can adapt multiple objects at
+once using a *multi adapter*. Again this feature is rarely used in
+practice, except internally to implement views and events.
+
+You can construct a multi adapter by subclassing from
+``grok.MultiAdapter``::
+
+  class MyMultiAdapter(grok.MultiAdapter):
+      grok.adapts(SomeClass, AnotherClass)
+      grok.provides(ISomeInterface)
+   
+      def __init__(some_instance, another_instance):
+          self.some_interface = some_instance
+          self.another_instance = another_instance
+
+The multi-adapter receives as many arguments as what it was registered
+for using ``grok.adapts``.
+
+A multi adapter also cannot be looked up directly by calling the
+interface. Instead, we need to use the ``zope.component`` package
+again::
+
+  from zope import component
+
+  my_multi_adapter = component.getMultiAdapter((some_object, another_object),
+                                               ISomeInterface)
+
+``getMultiAdapter`` receives as the first argument a tuple with the
+combination of objects to adapt.
+
+It can also optionally be named using ``grok.name`` and then looked up
+using a name argument::
+
+  my_named_multi_adapter = component.getMultiAdapter(
+      (some_object, another_object), ISomeInterface, name="foo")
+
+Views as adapters
+~~~~~~~~~~~~~~~~~
+
+A view in Grok is in fact a named multi adapter, providing the base
+interface (``Interface``). This means that a view in Grok can be
+looked up in code by the following call::
+ 
+  from zope.interface import Interface
+
+  view = component.getMultiAdapter((object, request), Interface, name="index")
+
+Since the default for the second argument is in fact ``Interface``, this
+call can be shorted to this::
+
+  view = component.getMultiAdapter((object, request), name="index")
+
+Being able to do this in code is sometimes useful. It is also what
+Grok does internally when it creates a view.
