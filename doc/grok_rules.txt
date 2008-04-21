@@ -123,9 +123,10 @@ We use the ``traverse`` method::
   class Integers(grok.Application, grok.Model):
       def traverse(self, name):
           try:
-               return ParticularInteger(int(name))
+               value = int(name)
           except ValueError:
                return None # not an integer
+          return ParticularInteger(value)
 
 Now all URLs for numbers are available. What's more, other URLs like
 this are not::
@@ -235,7 +236,7 @@ template instructions.
 These are the defaults. If for some reason you want the name of the
 template directory not to be based on the name of module, you can
 manually set the name of the template directory used by a module by
-using the ``grok.templatedir`` directory in the module. If you want
+using the ``grok.templatedir`` directive in the module. If you want
 the name of the template not to be based on the name of the class, you
 use the ``grok.template`` directive in the view class.
 
@@ -249,8 +250,8 @@ access attributes and methods on the model through the special
 
 You can define an ``update`` method in a view to prepare a view just
 before it is accessed. You can use this to process information in the
-request (URL parameters or form variables), and set attributes on the
-view that can be used in the template::
+request (URL parameters or form variables) or in the context, and set
+attributes on the view that can be used in the template::
 
   def update(self):
      self.total = int(self.request.form['a']) + int(self.request.form['b'])
@@ -272,13 +273,14 @@ arguments::
 
 * self.url() - URL to this view.
 
-* self.url(object) - a URL to the context object.
+* self.url(object) - URL to the provided object.
 
-* self.url(name) - a URL to the context object, and then name append
-                   to get to a view or subobject of the context.
+* self.url(u"name") - URL to the context object, with ``/name`` appended,
+                   to point to a view or subobject of the context.
 
-* self.url(object, name) - the URL to the object, and then the
-                   subobject or view named by name.
+* self.url(object, u"name") - URL to the provided object, with
+  		   ``/name`` appended, to point to a view or subobject
+  		   of the provided object.
 
 From the view, this is accessed through ``self.url()``. From the
 template, this method can be accessed using ``view.url()``.
@@ -308,7 +310,7 @@ Like models, views also get supplied with a ``__parent__`` and
 The ``@@`` thing
 ~~~~~~~~~~~~~~~~
 
-Whenever you write this::
+Supposing you have a view called ``edit``, whenever you write this::
 
   http://localhost:8080/app/edit
 
@@ -321,7 +323,9 @@ that your user interface lets the user add objects to it with a name
 of their own choosing. The user could decide to add an object called
 ``index``. In that case Grok wouldn't know whether the
 ``http://localhost:8080/app/index`` index is to get to a view or a
-sub-object. ``@@`` tells the system to look up a view definitely.
+subobject. ``@@`` tells the system to look up a view definitely. If
+``@@`` is not provided, subobjects take precedence over views in case
+of name collision.
 
 Request
 -------
@@ -626,7 +630,7 @@ Named adapters
 It is possible to give an adapter a name, making it a *named
 adapter*. This way it is possible to have more than one adapter
 registered for a single object that all provide the same interface,
-each with a different name. This is a rarely used feature directly,
+each with a different name. This feature is rarely used directly,
 but internally it is used for views, as we will see later. The
 ``grok.name()`` directive can be used to give an adapter a name::
 
@@ -635,8 +639,8 @@ but internally it is used for views, as we will see later. The
       grok.context(SomeClass)
       grok.provides(ISomeInterface)
  
-Actually all adapters are named: by default adapters the name of an
-adapter is the empty string.
+Actually all adapters are named: by default the name of an adapter is
+the empty string.
 
 You cannot call the interface directly to get a named adapter for an
 object.  Instead, you need to use the APIs provided by the
@@ -708,4 +712,4 @@ call can be shorted to this::
   view = component.getMultiAdapter((object, request), name="index")
 
 Being able to do this in code is sometimes useful. It is also what
-Grok does internally when it creates a view.
+Grok does internally when it looks up a view.
