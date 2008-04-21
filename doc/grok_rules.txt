@@ -83,7 +83,7 @@ Models in Grok are automatically supplied with a ``__parent__`` and a
 
 These attributes are used for navigation through content space, and
 Grok also uses them to construct URLs automatically (see below). The
-``__parent__`` and ``__name__`` attributes are automatically said when
+``__parent__`` and ``__name__`` attributes are automatically used when
 an object is placed in a container, or when it is being traversed
 through using ``traverse``.
 
@@ -154,7 +154,7 @@ single model can have more than one view. It looks like this::
       def render(self):
           return "This is the application"
 
-The ``grok.context`` bit is in the class an example of using a *Grok
+The ``grok.context`` bit in the class is an example of using a *Grok
 directive*. If you use ``grok.context`` on a view class, it connects
 the view to the class we give it. So in this case, ``Index`` is a view
 for ``Application``. Note that if there is only a single model in the
@@ -181,7 +181,7 @@ a number of attributes by default:
                   user.  Used less often.
 
 ``index`` views are special, as it's also fine not to add ``index`` at
-the end, as the name ``index`` is the default::
+the end, because the name ``index`` is the default::
 
   http://localhost:8080/app
 
@@ -222,7 +222,7 @@ directory as the ``app.py`` module.
 
 You can then add templates to that directory with the same name as the
 view class name (lowercase), with the ``.pt`` extension
-appended. These template follow the Zope Page Template (ZPT) rules,
+appended. These templates follow the Zope Page Template (ZPT) rules,
 though Grok can also be extended to support other template languages.
 
 You could for instance have this view::
@@ -231,7 +231,7 @@ You could for instance have this view::
       grok.context(Application)
 
 and a file ``index.pt`` in the module's templates directory containing
-template instructions.
+template code.
 
 These are the defaults. If for some reason you want the name of the
 template directory not to be based on the name of module, you can
@@ -330,7 +330,7 @@ of name collision.
 Request
 -------
 
-Some useful things to know about the request object (as accessible as an
+Some useful things to know about the request object (accessible as an
 attribute on the view):
 
 Information on the ``request`` object can be accessed using mapping
@@ -351,13 +351,13 @@ argument.
 Instead of the mapping access, the ``get`` methods work as well, as on
 normal Python dictionaries.
 
-More can be found in the request interface documentation in
-``zope.publisher.interfaces``.
+More can be found in the ``IHTTPRequest`` interface documentation
+in ``zope.publisher.interfaces.http``.
 
 Response
 --------
 
-Some useful things to know about the response object (as accessible as
+Some useful things to know about the response object (accessible as
 an attribute on the view):
 
 ``setStatus(name, reason)`` sets the HTTP status code. The argument
@@ -380,15 +380,15 @@ arguments can be used to set up further cookie properties (such as
 ``expireCookie(name, value)`` can be used to immediately expire a
 cookie.
 
-More can be found in the request interface documentation in
-``zope.publisher.interfaces``.
+More can be found in the ``IHTTPResponse`` interface documentation
+in ``zope.publisher.interfaces.http``.
 
 Adapters
 --------
 
 An adapter is much like a view, but is aimed towards developers, not
 end users. It presents an interface to an object, but an interface for
-developers, not user interface for end-users.
+developers, not an user interface for end-users.
 
 The section on adapters will of necessity be rather abstract. Feel
 free to skip it until you want to know what is going on up with
