@@ -1,12 +1,11 @@
-An Overview of Grok
-===================
+Grok Developer's Notes 
+======================
 
-This document intends to descibe the rules and APIs of Grok
-briefly. It is not intended to be a beginner's tutorial. It's also not
-a reference. It's something in between. It gives a succinct an
-overview of *what's there* in Grok, with a brief idea on how to use
-it, so you can try it out and learn more about it. This includes
-rules, common APIs and patterns.
+This document is a developer's overview of Grok. It is not intended to
+be a beginner's tutorial. It's also not a reference. It gives a
+succinct an overview of *what's there* in Grok, with a brief idea on
+how to use it, so you can try it out and learn more about it. This
+includes rules, common APIs and patterns.
 
 Models
 ------
@@ -331,6 +330,14 @@ arguments::
 
 From the view, this is accessed through ``self.url()``. From the
 template, this method can be accessed using ``view.url()``.
+
+the ``application_url`` method
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When using views it is sometimes desirable to be able to construct a
+URL to the application object. ``application_url`` is a quick way to
+do it.  It takes a single optional argument, name, which is the name
+of a view of the application.
 
 the ``redirect`` method
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -760,3 +767,354 @@ call can be shorted to this::
 
 Being able to do this in code is sometimes useful. It is also what
 Grok does internally when it looks up a view.
+
+Events
+------
+
+Grok lets you write handlers for *events*. Using event handlers you
+can hook into code that you do not control. Events allow decoupling: a
+framework can send events without worrying who is interested in it,
+and similarly you can send events to work with existing bits of
+framework that expects them. You can also define new types of events
+if you are designing a framework yourself.
+
+You write an event handler by writing a function that *subscribes* to
+the event, and marking it with a python decorator::
+
+  @grok.subscribe(Document, grok.IObjectAddedEvent)
+  def handle(obj, event):
+      print "Object %s was added." % obj
+
+Whenever an instance of a model of class ``Document`` (or subclasses)
+is added to a container, this code will be run. You can then take some
+action. Any ``grok.Container`` subclass will take care of sending
+these events automatically.  You can have as many subscribers for a
+particular event as you like.  The order in which they are run is not
+guaranteed by the system, so cannot be relied on.
+
+The event handler takes two arguments: the object for which the event
+was fired, and the event instance. The event instance has attributes,
+depending on the type of event.
+
+Events defined by Grok
+~~~~~~~~~~~~~~~~~~~~~~
+
+Here we describe the standard events defined by Grok. Described are
+the interfaces which you would use in a subscriber, and how you can
+send this event yourself. Other events may be defined by libraries or
+by you.
+
+``IObjectMovedEvent``
++++++++++++++++++++++
+
+Will be fired whenever an object is moved from container to container,
+renamed, added or removed.
+
+The event object has these attributes:
+
+* ``object`` - the object being moved
+
+* ``oldParent`` - the parent (container) from which the object was moved
+                  or removed, or ``None`` if this object is newly added.
+
+* ``oldName`` - the previous name of the object in its container,
+                before renaming if renaming took place, or ``None`` if
+                this object is newly added.
+
+* ``newParent`` - the parent (container) to this object was moved or
+                added. ``None`` if this object was removed.
+
+* ``newName`` - the name the object has in the new container, or ``None``
+                if this object was removed.
+
+Containers take care of sending this event, but should you want to
+send it yourself, use::
+
+  grok.notify(grok.ObjectMovedEvent(obj, oldParent, oldName, newParent, newName))
+
+``IObjectAddedEvent``
++++++++++++++++++++++
+
+Fired when an object is added to a container. Specialization of
+``IObjectMovedEvent``, and shares the attributes as described.
+
+Containers take care of sending this event, but should you want to send it
+yourself, use::
+
+  grok.notify(grok.ObjectAddedEvent(obj))
+
+or::
+
+  grok.notify(grok.ObjectAddedEvent(obj, newParent, newName))
+
+``IObjectRemovedEvent``
++++++++++++++++++++++++
+
+Fired when an object is removed from a container (and not re-added
+elsewhere). Specialization of ``IObjectMovedEvent``, and shares the
+attributes as described.
+
+Containers take care of sending this event, but should you want to send it
+yourself, use::
+
+  grok.notify(grok.ObjectRemovedEvent(obj)
+
+or::
+
+  grok.notify(grok.ObjectRemovedEvent(obj, oldparent, oldName))
+
+``IObjectModifiedEvent``
+++++++++++++++++++++++++
+
+Fired when an object is modified by the system, such as when a form is
+saved. If you modify the object in code, the system won't know about
+this, and you will have to remember to send it yourself.
+
+This event has a single attribute, ``object``, which is the object
+that was modified.
+
+To send this event yourself, use::
+
+  grok.notify(grok.ObjectModifiedEvent(obj))
+
+``IContainerModifiedEvent``
++++++++++++++++++++++++++++
+
+A specialization of ``IObjectModifiedEvent`` that fires when the
+container was modified by adding something to it or removing from it.
+
+Containers take care of sending this event, but if you want to send it
+yourself, use::
+
+  grok.notify(grok.ContainerModifiedEvent(obj))
+
+``IObjectCreatedEvent``
++++++++++++++++++++++++
+
+Fired when an object is created. When you create your own objects the
+system won't know about this, and you will have to remember to send it
+yourself if you care about listing to ``IObjectCreatedEvent``. This is
+fairly rare - usually you're better of looking at
+``IObjectAddedEvent`` if you can.
+
+This event has a single attribute, ``object``, which is the object
+that was created.
+
+To send this event yourself::
+
+  grok.notify(grok.ObjectCreatedEvent(obj))
+
+``IObjectCopiedEvent``
+++++++++++++++++++++++
+
+Fired when an object was copied. It is a specialization of
+``IObjectCreatedEvent`` that is fired by the system if you use the
+``zope.copypastemove`` functionality. 
+
+Besides the ``object`` attribute it shares with
+``IObjectCreattedEvent``, it has also has the ``original`` attribute,
+which was the object that iwas copied from.
+
+To send this event yourself::
+
+  grok.notify(grok.ObjectCopiedEvent(copy, original))
+
+Creating and sending your own events
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you are going to send an object that pertains to a particular object,
+subclass ``zope.component.interfaces.ObjectEvent``::
+
+  from zope.component.interfaces import ObjectEvent
+
+  class MyEvent(ObjectEvent):
+      pass
+
+You can then send it like this::
+
+  grok.notify(MyEvent(some_obj))
+
+And listen for it like this::
+
+  grok.subscribe(SomeClass, MyEvent)
+  def handle_my_event(obj, event):
+      pass
+
+This subclassing from ``ObjectEvent`` is not required; if your event
+isn't about an object, you can choose to design your event class
+entirely yourself. See ``zope.sendmail`` for the construction of mail sending
+events for an example. 
+
+Interfaces for events
+~~~~~~~~~~~~~~~~~~~~~
+
+For documentation purposes it can be a good idea to to define an
+interface for your event. You can then also allow for multiple
+implementations of the same event interface. When you have an
+interface for your event, you can then listen for the interface in the
+subscribers as well::
+
+  from zope.interface import Interface
+
+  class IMyEvent(zope.component.interfaces.IObjectEvent):
+      "My special event"
+
+  class MyEvent(zope.component.interfaces.ObjectEvent):
+      grok.implements(IMyEvent)
+
+  grok.subscribe(SomeClass, IMyEvent):
+  def handle_my_event(obj, event):
+      pass
+
+More about interfaces
+---------------------
+
+We have seen small examples of interfaces before, but here we will go
+a bit more into them, and why they are useful.
+
+An *interface* is a description of the API of a class (or more rarely,
+module or object). Interfaces are useful because:
+
+* They are API documentation.
+
+* They can describe how a framework expects you to implement classes
+  that fit into it.
+
+* The system can inspect the interfaces a particular object provides,
+  and treat them as an abstract form of classes for registration
+  purposes. 
+
+Interfaces make it possible to use a generic framework's pluggability
+points with confidence: you can clearly see what you are supposed to
+implement to plug into it. You can define very generic frameworks
+yourself by defining them in terms of interfaces.
+
+Some interface features
+~~~~~~~~~~~~~~~~~~~~~~~
+
+A summary of interface features we've seen:
+
+* To create an interface, subclass from ``zope.interface.Interface``.
+
+* To state that implementors of the interface must have a method, supply
+  the method with arguments. Don't use ``self`` as the first
+  arguments, as this is an implementation detail not important to the
+  interface. Instead, describe the methods as they look to the caller.
+
+* To state that implementors of the interface must have an attribute, use::
+
+    some_attribute = zope.interface.Attribute("Description of attribute")
+
+* To state a class *implements* an interface, use ``grok.implements``.
+
+* Instances of a class are said to *provide* the interface that the
+  class *implements*.
+
+* You can check whether an instance provides a certain interface by using
+  ``some_interface.providedBy``::
+
+     IObjectEvent.providedBy(NonSubclassEvent(some_obj))
+
+Interfaces and events
+~~~~~~~~~~~~~~~~~~~~~
+
+Let's study interfaces some more in connection with
+``IObjectModifiedEvent``. The ``IObjectModifiedEvent`` interface looks
+like this::
+
+  class IObjectModifiedEvent(zope.component.interfaces.IObjectEvent):
+      """An object has been modified"""
+
+This refers us to the ``IObjectEvent`` interface, which looks like
+this::
+
+  from zope import interface
+
+  class IObjectEvent(interface.Interface):
+      """An event related to an object.
+      """
+
+      object = interface.Attribute("The subject of the event.")
+
+We therefore know that if we implement ``IObjectModifiedEvent``, we
+must supply a single attribute, ``object``.
+
+The following event handler for instances of ``SomeClass`` subscribes
+to *any* event that provides ``IModifiedObjectEvent``::
+
+   @grok.subscribe(SomeClass, IObjectModifiedEvent):
+   def handle_event(obj, event):
+       "Called when there is an IObjectModifiedEvent for SomeClass instances."
+
+This handler will be called not only for subclasses of the
+``grok.ObjectModifiedEvent`` class, but also for other, otherwise
+unrelated classes that implement ``IObjectEvent``, such as this one::
+
+  class NonSubclassObjectEvent(object):
+      grok.implements(IObjectEvent)
+ 
+      def __init__(self, object):
+           self.object = object
+
+So far we have only used interfaces for the second argument of the
+event handler registration, but the principle also works for the first
+argument. For example, to handle ``IObjectModifiedEvent`` events for
+all kinds of containers, you can subscribe to
+``zope.app.container.interfaces.IContainer`` objects::
+
+  @grok.subscribe(IContainer, IObjectModifiedEvent):
+  def handle_event(obj, event):
+      "Called whenever any container is modified"
+
+``zope.app.container.interfaces.IContainer`` defines the abstract
+container API that all containers must provide, no matter how they are
+implemented internally.
+
+Interfaces and adapters
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The same principle also works for adapters and ``grok.context``. You
+can use ``grok.context`` with interfaces as well as with concrete
+classes. To write an adapter that works for any kind of container, you
+can write::
+
+  from zope.app.container.interfaces import IContainer
+
+  class SortedKeysAdapter(grok.Adapter):
+      grok.context(IContainer)
+      grok.provides(ISortedKeys)
+
+      def sortedKeys(self):
+          return sorted(self.context.keys())     
+
+Interfaces and views
+~~~~~~~~~~~~~~~~~~~~
+
+The same principle can also be used with ``grok.context`` in other
+places, such as in views. This view is registered for all containers::
+
+  from zope.app.container.interfaces import IContainer
+
+  class Keys(grok.View):
+     grok.context(IContainer)
+     
+     def render(self):
+         return ', '.join(ISortedKeysAdapter(self.context).sortedKeys())
+
+The view ``keys`` exists for all containers, no matter how they are
+implement, where they are implemented or who implemented them, as long
+as they provide ``IContainer``.
+
+Using the fact ``Interface`` is the base of all interfaces, you can
+even register a view for *all* objects. This can be useful to register
+ZPT macros, which will then be available on all contexts::
+
+  class Layout(grok.View):
+      grok.context(Interface)
+ 
+with a template ``layout.pt`` associated to it.
+
+You can then use these macros in any page template anywhere by
+referring to them like this::
+
+  <html metal:use-macro="context/@@layout/macros/page">
