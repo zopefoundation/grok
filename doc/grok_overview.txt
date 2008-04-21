@@ -1,12 +1,12 @@
-The rules of Grok
-=================
+A Quick Overview of Grok
+========================
 
-This document intends to descibe the rules of Grok briefly. It is not
-intended to be a beginner's tutorial. It's also not a reference. It's
-something in between. It gives a succinct an overview of *what's
-there* in Grok, with a brief idea on how to use it, so you can try it
-out and learn more about it. This includes rules, common APIs and
-patterns.
+This document intends to descibe the rules and APIs of Grok
+briefly. It is not intended to be a beginner's tutorial. It's also not
+a reference. It's something in between. It gives a succinct an
+overview of *what's there* in Grok, with a brief idea on how to use
+it, so you can try it out and learn more about it. This includes
+rules, common APIs and patterns.
 
 Models
 ------
