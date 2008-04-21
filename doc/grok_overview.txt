@@ -83,9 +83,9 @@ Models in Grok are automatically supplied with a ``__parent__`` and a
 
 These attributes are used for navigation through content space, and
 Grok also uses them to construct URLs automatically (see below). The
-``__parent__`` and ``__name__`` attributes are automatically used when
-an object is placed in a container, or when it is being traversed
-through using ``traverse``.
+``__parent__`` and ``__name__`` attributes are automatically added to
+an object when it is placed in a container, or when it is being
+traversed through using ``traverse``.
 
 Custom traversing
 ~~~~~~~~~~~~~~~~~
