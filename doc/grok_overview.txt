@@ -1,5 +1,5 @@
-A Quick Overview of Grok
-========================
+An Overview of Grok
+===================
 
 This document intends to descibe the rules and APIs of Grok
 briefly. It is not intended to be a beginner's tutorial. It's also not
@@ -243,7 +243,41 @@ use the ``grok.template`` directive in the view class.
 The template can access attributes and methods on the view through the
 special ``view`` name available in the template. The template can
 access attributes and methods on the model through the special
-``context`` name available in the template.
+``context`` name available in the template. The template has the
+following special names available::
+
+* ``view`` - the view that this template is associated with
+
+* ``context`` - the model that is being viewed
+
+* ``request`` - the current request object
+
+* ``static`` - to make URLs to static content made available by this module
+
+and any names you also make available using the ``namespace`` method.
+
+static content
+~~~~~~~~~~~~~~
+
+A typical web page references one or more CSS files, javascript files
+and images: static content that is part of the layout.
+
+To make available static content to your template create a directory
+in your package called ``static``. Put ``.css`` files, ``.js`` files,
+image and whatever else is needed in there.
+
+You can now refer to these static files in your template using the
+special name ``static``, like this (ZPT example)::
+
+  <img tal:attributes="src static/my_image.png" />
+
+This will automatically create a URL to the place where Grok published
+that image.
+
+You can create subdirectories in ``static`` and refer to them as you'd
+expect::
+
+  <image tal:attributes="src static/images/some_image.gif" />
 
 ``update``
 ~~~~~~~~~~
@@ -254,7 +288,7 @@ request (URL parameters or form variables) or in the context, and set
 attributes on the view that can be used in the template::
 
   def update(self):
-     self.total = int(self.request.form['a']) + int(self.request.form['b'])
+      self.total = int(self.request.form['a']) + int(self.request.form['b'])
 
 The template now has access to ``view.total``.
 
@@ -263,6 +297,19 @@ automatically bound to parameters (or form values) in the request::
 
   def update(self, a, b):
       self.total = int(a) + int(b)
+
+``namespace``
+~~~~~~~~~~~~~
+
+If you just want a variable to become available in the top-level of
+your template (much like ``view`` and ``model``), you can also define
+the ``namespace`` method on the view::
+
+  def namespace(self):
+      return {'foo': "Some value"}
+
+You can now refer to ``foo`` in your template and have available to
+this value.
 
 the ``url`` method
 ~~~~~~~~~~~~~~~~~~
