@@ -9,11 +9,15 @@ features (please refer to ``CHANGES.txt`` for those).
 Upgrading to 0.12
 -----------------
 
+* Please upgrade grokproject::
+
+    $ easy_install -U grokproject
+
 * If you have existing Grok projects and you want to make use of 
   Grok's new autoinclusion functionality in them, you can place
   the following line in your project's ``configure.zcml``:
 
-    <autoinclude package="." />
+    <includeDependencies package="." />
 
   This will cause the ZCML for ``setup.py`` dependencies of your
   package to be loaded automatically. You can now get rid of any

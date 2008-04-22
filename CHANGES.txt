@@ -7,6 +7,10 @@ Grok changes
 Feature changes
 ---------------
 
+* The new release needs new version of grokproject, please do::
+
+    $ easy_install -U grokproject
+
 * Added testsetup classes in grok.testing to improve easy setup of
   unit- and functional tests.
 
@@ -20,7 +24,7 @@ Feature changes
   documentation on this directive.
 
 * Now depend on ``z3c.autoinclude``. This allows the use of the
-  ``<autoinclude package="."/>`` directive, which automatically loads
+  ``<includeDependencies package="."/>`` directive, which automatically loads
   up ZCML needed for the dependencies listed in your project's
   ``setup.py``. The new release of grokproject adds this line
   automatically. Upgrade ``grokproject`` to make use of this
