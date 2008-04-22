@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-0.12 (unreleased)
+0.12 (2008-04-22)
 =================
 
 Feature changes
