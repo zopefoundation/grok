@@ -36,10 +36,10 @@ Feature changes
   classes. These classes need to have the grok.baseclass() directive added to
   them explicitly.
 
-  See also the ``upgrade notes``_ for information on how to update
+  See also the `upgrade notes`_ for information on how to update
   your existing projects.
 
-.. _``upgrade notes``: http://grok.zope.org/project/upgrade-notes
+.. _`upgrade notes`: http://grok.zope.org/project/upgrade-notes
 
 Bug fixes
 ---------
