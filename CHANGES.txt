@@ -1,6 +1,15 @@
 Grok changes
 ************
 
+0.12.1 (unreleased)
+===================
+
+Bug fixes
+---------
+
+* Remove quick testsetup hack from grok.testing
+
+
 0.12 (2008-04-22)
 =================
 
