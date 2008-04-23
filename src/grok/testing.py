@@ -16,7 +16,26 @@
 from zope.configuration.config import ConfigurationMachine
 from martian import scan
 from grok import zcml
+import z3c.testsetup
+import os.path
 
+class GrokTestCollector(z3c.testsetup.TestCollector):
+
+    def initialize(self):
+        # inject the grok ftesting ZCML as fallback...
+        if 'zcml_config' in self.settings.keys():
+            return
+        pkg_path = os.path.dirname(self.package.__file__)
+        if os.path.isfile(os.path.join(pkg_path, 'ftesting.zcml')):
+            return
+        self.settings['zcml_config'] = os.path.join(
+            os.path.dirname(__file__), 'ftesting.zcml')
+        if 'layer_name' in self.settings.keys():
+            return
+        self.settings['layer_name'] = 'GrokFunctionalLayer'
+
+def register_all_tests(pkg, *args, **kw):
+    return GrokTestCollector(pkg, *args, **kw)
 
 def grok(module_name):
     config = ConfigurationMachine()
