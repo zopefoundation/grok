@@ -4,8 +4,21 @@ Grok changes
 0.13 (unreleased)
 =================
 
-Bugs fixed
-----------
+Feature changes
+---------------
+
+* Added support for easier testsetup based on z3c.testsetup. This is a
+  more stable and more powerful implementation of
+  grok.testing.register_all_tests(). See
+
+    http://grok.zope.org/documentation/how-to/tests-with-grok-testing
+
+  for details.
+
+Bug fixes
+---------
+
+* Removed first testsetup hack from grok.testing.
 
 * Version 2.1 of z3c.autoinclude contained code that caused Grok to
   fail to start on some platforms if the system-supplied Python was
@@ -13,11 +26,6 @@ Bugs fixed
   version 2.2 of z3c.autoinclude which should fix this problem. This
   fix was also made on Grok 0.12 in its online versions list after
   release.
-
-Feature changes
----------------
-
-* ...
 
 0.12 (2008-04-22)
 =================

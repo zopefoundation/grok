@@ -81,5 +81,6 @@ setup(
                       'zc.catalog',
                       'z3c.flashmessage',
                       'z3c.autoinclude',
+                      'z3c.testsetup',
                       ],
 )
