@@ -1118,3 +1118,199 @@ You can then use these macros in any page template anywhere by
 referring to them like this::
 
   <html metal:use-macro="context/@@layout/macros/page">
+
+Forms
+-----
+
+Grok can autogenerate web forms from descriptions called *schema*. A
+schema is a special kind of interface. We already saw ``Attribute``,
+which can be used to specify that something that provides that
+interface should have that attribute. The ``zope.schema`` package adds
+a lot more specific field descriptions. Here is an example of a
+schema::
+
+  from zope.interface import Interface
+  from zope import schema
+  
+  class ISpecies(Interface):
+      name = schema.TextLine(u"Animal species name")
+      scientific_name = schema.TextLine(u"Scientific name")
+      legs = schema.Int(u"Number of legs")
+
+Let's also look at a simple implementation of this interface::
+
+  class Species(grok.Model):
+      grok.implements(ISpecies)
+
+Note how we aren't even creating an ``__init__`` to set the
+attributes; we could, but we'll see below that Grok's ``applyData``
+can take care of this automatically.
+
+The ``ISpecies`` schema can be turned into a form. Grok does this by
+looking up a *widget* for each schema field to display it. A widget is
+very much like a view. Let's look at a form for this schema::
+
+  class Species(grok.Form):
+      form_fields = grok.Fields(ISpecies)
+  
+      @grok.action(u"Save form")
+      def handle_save(self, **data):
+          print data['name']
+          print data['scientific_name']
+          print data['legs']
+
+What is going on here? Firstly we use a special base class called
+``grok.Form``. A form is a special kind of ``grok.View``, and
+associates the same way (using ``grok.context``). A form expects two
+things::
+
+* a ``form_fields`` attribute. Above we see the most common way to construct
+  this attribute, using ``grok.Fields`` on the interface.
+
+* one or more actions. Actions are specified by using the
+  ``@grok.action`` decorator. An action gets the fields filled in the
+  form as keyword parameters, so ``**data`` in this case. We could
+  also have specified the arguments we expected specifically.
+
+Form widgets translate the raw HTML form input to Python objects, such
+as (unicode) strings, integers and datetime objects, as specified by
+schema fields. The schema fields can then be used to validate this
+input further. Forms are self-submitting, and in case of a validation
+error the form can render them in-line next to the fields.
+
+We'll look at a lot of form features next.
+
+``grok.AddForm``
+~~~~~~~~~~~~~~~~
+
+An add form is used to create a new object. Most forms are views of
+the object that they are representing, but an add form is typically
+associated a view of the container in which new objects are to be
+added. Let's look at an example::
+
+  class SpeciesContainer(grok.Container):
+      pass
+
+  class Add(grok.AddForm):
+      grok.context(SpeciesContainer)
+
+      form_fields = grok.Fields(ISpecies)
+      
+      @grok.action(u"Add species")
+      def add_species(self, **data):
+          # create a species instance
+          species = Species()
+          # assign the right attributes to fulfill ISpecies schema with
+          # the form data
+          self.applyData(species, **data)
+          # stores the instance into the SpeciesContainer
+          name = data['name']
+          self.context[name] = species
+          # redirect to the newly created object
+          self.redirect(self.url(species))
+          # we don't want to display anything, as we redirect
+          return ''
+
+The user can now go to ``myspeciescontainer/add`` to add a species,
+where ``myspeciescontainer`` is any instance of ``SpeciesContainer``.
+
+``grok.EditForm``
+~~~~~~~~~~~~~~~~~
+
+Now that we can create species objects, let's create a form so you can
+easily edit them. This *is* a view of the ``Species`` model::
+
+  class Edit(grok.EditForm):
+     grok.context(Species)
+    
+     form_fields = grok.Fields(ISpecies)
+
+     @grok.action(u"Edit species")
+     def edit_species(self, **data):
+          self.applyData(species, **data)
+     
+Forms are self-submitting, so this will show the edit form again. If
+you want to display another page, you can redirect the browser as we
+showed for the add form previously.
+
+The user can now go to ``myspecies/edit`` to edit the species.
+
+``grok.DisplayForm``
+~~~~~~~~~~~~~~~~~~~~
+
+Sometimes you just want to display an object, and not actually edit
+it. If the object is schema-based, an easy way to do this is to use
+display forms. Let's look at an example::
+
+  class Display(grok.DisplayForm):
+     grok.context(Species)
+    
+     form_fields = grok.Fields(ISpecies)
+
+The user can now go to ``myspecies/display`` to look at the species.
+
+Associating a template for a form
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, Grok supplies some templates for forms. They work, but
+they are not very pretty and don't fit into your application's
+layout. You can instead use your own form rendering logic in a
+template you associate with the form just like you associate templates
+with views. You can also abstract form rendering logic you keep
+reusing into a ZPT macro. Below is an example of form rendering logic
+to help you get started. The example doesn't have any consideration
+for layouting to make the logic clear. As a result, the form will be
+very ugly if you use this - you will want to use CSS or table HTML to
+layout things::
+
+  <!-- render the form tag -->
+  <form action="." tal:attributes="action request/URL" method="post"
+        class="edit-form" enctype="multipart/form-data">
+    <!-- render any validation errors on top -->
+    <ul class="errors" tal:condition="view/errors">
+      <li tal:repeat="error view/error_views">
+         <span tal:replace="structure error">Error Type</span>
+      </li>
+    </ul>
+
+    <!-- render the widgets -->
+    <tal:block repeat="widget view/widgets">
+      <label tal:attributes="for widget/name">
+        <!-- a * when the widget is required -->
+        <span class="required" tal:condition="widget/required">*</span>
+        <!-- the title of the field -->
+        <span i18n:translate="" tal:content="widget/label">label</span>
+      </label>
+     
+      <!-- render the HTML widget -->
+      <div class="widget" tal:content="structure widget">
+        <input type="text" />
+      </div>
+      
+      <!-- render any field specific validation error from a previous
+           form submit next to the field -->
+      <div class="error" tal:condition="widget/error">
+        <span tal:replace="structure widget/error">error</span>
+      </div>
+    </tal:block>
+
+    <!-- render all the action submit buttons -->
+    <span class="actionButtons" tal:condition="view/availableActions">
+      <input tal:repeat="action view/actions"
+             tal:replace="structure action/render" />
+    </span>
+  </form>
+
+The template for a display form a lot simpler::
+
+  <tal:block repeat="widget view/widgets">
+    <tal:block content="widget/label" />
+    <input tal:replace="structure widget" />
+  </tal:block>
+   
+  <!-- render all the action submit buttons -->
+  <span class="actionButtons" tal:condition="view/availableActions">
+    <input tal:repeat="action view/actions"
+           tal:replace="structure action/render" />
+  </span>
+
