@@ -4,6 +4,16 @@ Grok changes
 0.13 (unreleased)
 =================
 
+Bugs fixed
+----------
+
+* Version 2.1 of z3c.autoinclude contained code that caused Grok to
+  fail to start on some platforms if the system-supplied Python was
+  used (at least on some versions of Ubuntu and Debian). Now include
+  version 2.2 of z3c.autoinclude which should fix this problem. This
+  fix was also made on Grok 0.12 in its online versions list after
+  release.
+
 Feature changes
 ---------------
 
