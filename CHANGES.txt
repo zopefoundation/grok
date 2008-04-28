@@ -7,7 +7,8 @@ Grok changes
 Bug fixes
 ---------
 
-* ...
+* Port fix of zope.formlib to correctly adapt the context to a FormField's
+  interface, not the field'
 
 0.11.1 (2008-01-20)
 ===================
