@@ -86,7 +86,7 @@ def apply_data(context, form_fields, data, adapters=None, update=False):
     for form_field in form_fields:
         field = form_field.field
         # Adapt context, if necessary
-        interface = field.interface
+        interface = form_field.interface
         adapter = adapters.get(interface)
         if adapter is None:
             if interface is None:
