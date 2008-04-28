@@ -1,6 +1,15 @@
 Grok changes
 ************
 
+0.12.1 (????-??-??)
+===================
+
+Bug fixes
+---------
+
+* Port fix of zope.formlib to correctly adapt the context to a FormField's
+  interface, not the field'
+
 0.12 (2008-04-22)
 =================
 
@@ -72,6 +81,7 @@ Bug fixes
 * Fix https://bugs.launchpad.net/grok/+bug/162437: grok.Form and its
   subclasses did not implement IBrowserView.
 
+<<<<<<< .working
 * Fix https://bugs.launchpad.net/grok/+bug/185414: grok introspector
   was broken for zipped eggs.
 
