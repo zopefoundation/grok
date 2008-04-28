@@ -7,6 +7,8 @@ Grok changes
 Bug fixes
 ---------
 
+* Removed quickly hacked testsetup code from grok.testing.
+
 * Port fix of zope.formlib to correctly adapt the context to a FormField's
   interface, not the field'
 
