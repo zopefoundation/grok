@@ -14,6 +14,9 @@ Upgrading to 0.13
   warnings for imports that have been moved. Please check your code
   and fix your imports if you get those warnings.
 
+  If you were using ``zope.publisher.http.applySkin``, you now must
+  use ``grok.util.applySkin``.
+
 Upgrading to 0.12
 -----------------
 
