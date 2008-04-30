@@ -7,6 +7,9 @@ Grok changes
 Feature changes
 ---------------
 
+* Merged the versions from the 3.4 KGS:
+  http://download.zope.org/zope3.4/versions-3.4.0c1.cfg
+
 * Added support for easier testsetup based on z3c.testsetup. This is a
   more stable and more powerful implementation of
   grok.testing.register_all_tests(). See

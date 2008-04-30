@@ -6,6 +6,15 @@ continue to work with newer versions of Grok.  This document only
 describes changes involving incompatibilities or deprecations, not new
 features (please refer to ``CHANGES.txt`` for those).
 
+Upgrading to 0.13
+-----------------
+
+- We moved to newer versions of zope packages.  This means your code
+  can now get some new deprecation warnings for imports that have been
+  moved.  Please check your code and fix your imports if you get those
+  warnings.
+
+
 Upgrading to 0.12
 -----------------
 
