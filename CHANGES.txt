@@ -1,11 +1,44 @@
 Grok changes
 ************
 
-0.12 (unreleased)
+0.13 (unreleased)
 =================
 
 Feature changes
 ---------------
+
+* Added support for easier testsetup based on z3c.testsetup. This is a
+  more stable and more powerful implementation of
+  grok.testing.register_all_tests(). See
+
+    http://grok.zope.org/documentation/how-to/tests-with-grok-testing
+
+  for details.
+
+Bug fixes
+---------
+
+* Removed first testsetup hack from grok.testing.
+
+* Version 2.1 of z3c.autoinclude contained code that caused Grok to
+  fail to start on some platforms if the system-supplied Python was
+  used (at least on some versions of Ubuntu and Debian). Now include
+  version 2.2 of z3c.autoinclude which should fix this problem. This
+  fix was also made on Grok 0.12 in its online versions list after
+  release.
+
+* Port fix of zope.formlib to correctly adapt the context to a FormField's
+  interface, not the field'
+
+0.12 (2008-04-22)
+=================
+
+Feature changes
+---------------
+
+* The new release needs new version of grokproject, please do::
+
+    $ easy_install -U grokproject
 
 * Added testsetup classes in grok.testing to improve easy setup of
   unit- and functional tests.
@@ -20,7 +53,7 @@ Feature changes
   documentation on this directive.
 
 * Now depend on ``z3c.autoinclude``. This allows the use of the
-  ``<autoinclude package="."/>`` directive, which automatically loads
+  ``<includeDependencies package="."/>`` directive, which automatically loads
   up ZCML needed for the dependencies listed in your project's
   ``setup.py``. The new release of grokproject adds this line
   automatically. Upgrade ``grokproject`` to make use of this
@@ -34,7 +67,13 @@ Feature changes
 
   See also the `upgrade notes`_ for information on how to update
   your existing projects.
+<<<<<<< .working
  
+=======
+
+>>>>>>> .merge-rechts.r85857
+.. _`upgrade notes`: http://grok.zope.org/project/upgrade-notes
+
 Bug fixes
 ---------
 
@@ -71,6 +110,26 @@ Bug fixes
 
 * Fix https://bugs.launchpad.net/grok/+bug/125720: server control form
   had shutdown as default action, even when entering an admin message.
+
+* Fix https://bugs.launchpad.net/grok/+bug/80403: Fix situation where
+  a module name is identical to the package name. At least modules
+  with templates can now have same name as their package.
+
+* Multiple skins and REST protocols could be registered under the same
+  name, but this is actually a conflict. Now give configuration
+  conflict error when someone tries this.
+
+* Overriding traversal behavior using the ``traverse()`` method or
+  ``grok.Traverser`` failed in the face of (REST) ``PUT`` and
+  ``DELETE``. XML-RPC also failed when custom traversal was in use.
+
+* Fix https://bugs.launchpad.net/grok/+bug/187590 where config action
+  discriminators for permission and role registrations were incorrect.
+
+* Permission definitions received the wrong, too high, configure
+  action priority (not to be confused with grokker priority). In some
+  cases this caused permissions to be defined later than they were
+  used. Use a low action priority instead for permissions.
 
 Restructuring
 -------------

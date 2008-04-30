@@ -11,7 +11,7 @@ Unauthorized:
 When we log in (e.g. as a manager), we can access the view just fine:
 
   >>> from zope.securitypolicy.rolepermission import rolePermissionManager
-  >>> rolePermissionManager.grantPermissionToRole('grok.ViewPainting',
+  >>> rolePermissionManager.grantPermissionToRole('cave.ViewPainting',
   ...                                             'zope.Manager')
   >>> browser.addHeader('Authorization', 'Basic mgr:mgrpw')
   >>> browser.handleErrors = False
@@ -31,12 +31,12 @@ import grok
 import zope.interface
 
 class ViewPainting(grok.Permission):
-    grok.name('grok.ViewPainting')
+    grok.name('cave.ViewPainting')
 
 class Painting(grok.View):
 
     grok.context(zope.interface.Interface)
-    grok.require('grok.ViewPainting')
+    grok.require('cave.ViewPainting')
 
     def render(self):
         return 'What a beautiful painting.'

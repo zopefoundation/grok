@@ -28,8 +28,8 @@ from zope.security.permission import Permission
 from zope.securitypolicy.role import Role
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
-from zope.publisher.interfaces.browser import (IBrowserPublisher,
-                                               IBrowserRequest)
+from zope.publisher.interfaces.browser import IBrowserPublisher
+from zope.publisher.interfaces.http import IHTTPRequest
 from zope.publisher.publish import mapply
 from zope.pagetemplate import pagetemplate, pagetemplatefile
 from zope.formlib import form
@@ -418,7 +418,7 @@ class Traverser(object):
 
 
 class ModelTraverser(Traverser):
-    component.adapts(Model, IBrowserRequest)
+    component.adapts(Model, IHTTPRequest)
 
     def traverse(self, name):
         traverse = getattr(self.context, 'traverse', None)
@@ -427,7 +427,7 @@ class ModelTraverser(Traverser):
 
 
 class ContainerTraverser(Traverser):
-    component.adapts(Container, IBrowserRequest)
+    component.adapts(Container, IHTTPRequest)
 
     def traverse(self, name):
         traverse = getattr(self.context, 'traverse', None)

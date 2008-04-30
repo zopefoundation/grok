@@ -13,6 +13,16 @@ error:
   'grok.tests.view.unassociated': index.  Define view classes inheriting from
   grok.View to enable the template(s).
 
+Also templates of modules named equally as the package name the module
+resides in, should be found without error or warning. We check this
+with the local package `modequalspkgname`::
+
+  >>> warnings.warn = warn
+
+  >>> pkg = __name__.rsplit('.', 1)[0] + '.modequalspkgname'
+  >>> grok.testing.grok(pkg) is None
+  True
+  
   >>> warnings.warn = saved_warn
 
 """

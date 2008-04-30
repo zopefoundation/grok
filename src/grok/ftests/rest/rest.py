@@ -235,15 +235,8 @@ random objects without access:
  We shouldn't be allowed to PUT either::
  
   >>> print http('PUT /app/beta HTTP/1.1')
-  HTTP/1. 500 Internal Server Error
-  Content-Length: 127
-  Content-Type: text/html;charset=utf-8
-  <BLANKLINE>
-  <html><head><title>ForbiddenAttribute</title></head>
-  <body><h2>ForbiddenAttribute</h2>
-  A server error occurred.
-  </body></html>
-  <BLANKLINE>
+  HTTP/1. 404 Not Found
+  Content-Length: 0
 
 XXX shouldn't this really give a FORBIDDEN response?
 

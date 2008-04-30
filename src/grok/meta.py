@@ -22,6 +22,8 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher,
                                                IBrowserSkinType)
+from zope.publisher.interfaces.http import IHTTPRequest
+
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.viewlet.interfaces import IViewletManager, IViewlet
 from zope.security.interfaces import IPermission
@@ -48,7 +50,8 @@ from martian import util
 
 import grok
 from grok import components, formlib, templatereg
-from grok.util import check_adapts, get_default_permission, make_checker
+from grok.util import check_adapts, get_default_permission
+from grok.util import check_permission, make_checker
 from grok.util import check_module_component, determine_module_component
 from grok.util import determine_class_component
 from grok.util import determine_class_directive, public_methods_from_class
@@ -96,7 +99,7 @@ class ViewletManagerContextGrokker(martian.GlobalGrokker):
                                                     [grok.ViewletManager])
         module.__grok_viewletmanager__ = viewletmanager
         return True
-    
+
 class AdapterGrokker(martian.ClassGrokker):
     component_class = grok.Adapter
 
@@ -104,7 +107,7 @@ class AdapterGrokker(martian.ClassGrokker):
         adapter_context = get_context(module_info, factory)
         provides = get_provides(factory)
         name = get_name(factory)
-        
+
         config.action(
             discriminator=('adapter', adapter_context, provides, name),
             callable=component.provideAdapter,
@@ -118,7 +121,7 @@ class MultiAdapterGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, config, **kw):
         provides = get_provides(factory)
         name = get_name(factory)
-        
+
         check_adapts(factory)
         for_ = component.adaptedBy(factory)
 
@@ -152,16 +155,24 @@ class GlobalUtilityGrokker(martian.ClassGrokker):
             )
         return True
 
-
 class XMLRPCGrokker(martian.ClassGrokker):
     component_class = grok.XMLRPC
 
     def grok(self, name, factory, module_info, config, **kw):
         view_context = get_context(module_info, factory)
-        
+
         methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
+
+        # make sure we issue an action to check whether this permission
+        # exists. That's the only thing that action does
+        if default_permission is not None:
+            config.action(
+                discriminator=None,
+                callable=check_permission,
+                args=(factory, default_permission)
+                )
 
         for method in methods:
             name = method.__name__
@@ -202,6 +213,14 @@ class RESTGrokker(martian.ClassGrokker):
         methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
+        # make sure we issue an action to check whether this permission
+        # exists. That's the only thing that action does
+        if default_permission is not None:
+            config.action(
+                discriminator=None,
+                callable=check_permission,
+                args=(factory, default_permission)
+                )
 
         # grab layer from class or module
         view_layer = determine_class_directive('grok.layer', factory,
@@ -245,7 +264,7 @@ class ViewGrokker(martian.ClassGrokker):
         view_context = get_context(module_info, factory)
 
         factory.module_info = module_info
-        
+
         if util.check_subclass(factory, components.GrokForm):
             # setup form_fields from context class if we've encountered a form
             if getattr(factory, 'form_fields', None) is None:
@@ -321,6 +340,14 @@ class JSONGrokker(martian.ClassGrokker):
         methods = public_methods_from_class(factory)
 
         default_permission = get_default_permission(factory)
+        # make sure we issue an action to check whether this permission
+        # exists. That's the only thing that action does
+        if default_permission is not None:
+            config.action(
+                discriminator=None,
+                callable=check_permission,
+                args=(factory, default_permission)
+                )
 
         for method in methods:
             # The grok.JSON component inherits methods from its baseclass
@@ -365,7 +392,7 @@ class TraverserGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, module_info, config, **kw):
         factory_context = get_context(module_info, factory)
-        adapts = (factory_context, IBrowserRequest)
+        adapts = (factory_context, IHTTPRequest)
 
         config.action(
             discriminator=('adapter', adapts, IBrowserPublisher, ''),
@@ -691,10 +718,10 @@ class PermissionGrokker(martian.ClassGrokker):
             unicode(util.class_annotation(factory, 'grok.description', '')))
 
         config.action(
-            discriminator=('utility', IPermission, name),
+            discriminator=('utility', IPermission, id),
             callable=component.provideUtility,
             args=(permission, IPermission, id),
-            order=self.priority
+            order=-1 # need to do this early in the process
             )
         return True
 
@@ -717,7 +744,7 @@ class RoleGrokker(martian.ClassGrokker):
             unicode(util.class_annotation(factory, 'grok.description', '')))
 
         config.action(
-            discriminator=('utility', IRole, name),
+            discriminator=('utility', IRole, id),
             callable=component.provideUtility,
             args=(role, IRole, id),
             )
@@ -877,7 +904,7 @@ class SkinGrokker(martian.ClassGrokker):
                                           default=IBrowserRequest)
         name = get_name_classname(factory)
         config.action(
-            discriminator=None,
+            discriminator=('skin', name),
             callable=zope.component.interface.provideInterface,
             args=(name, layer, IBrowserSkinType)
             )
@@ -891,7 +918,7 @@ class RESTProtocolGrokker(martian.ClassGrokker):
                                           default=IBrowserRequest)
         name = get_name_classname(factory)
         config.action(
-            discriminator=None,
+            discriminator=('restprotocol', name),
             callable=zope.component.interface.provideInterface,
             args=(name, layer, IRESTSkinType)
             )
