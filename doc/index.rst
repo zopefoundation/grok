@@ -2,7 +2,7 @@
 What is Grok?
 =============
 
-.. image:: ./resources/evencaveman.jpg
+.. image:: resources/evencaveman.jpg
    :alt: Now even cavemen can use Zope3
    :class: right
 
