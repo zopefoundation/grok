@@ -166,7 +166,8 @@ def render(argv=sys.argv, srcdir=SRCDIR_ALL, htmldir=HTMLDIR_ALL,
             argv[-1] = latexdir
         # Copy fncychap.sty to targetdir...
         if os.path.isdir(argv[-1]):
-            copyfile(os.path.join(HERE, 'texinputs', 'fncychap.sty'),
+            copyfile(os.path.join(os.path.dirname(__file__),
+                                  'texinputs', 'fncychap.sty'),
                      os.path.join(argv[-1], 'fncychap.sty'))
         # Let sphinx know, we want LaTeX...
         argv.insert(1, ('latex'))
