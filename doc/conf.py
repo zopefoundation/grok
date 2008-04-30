@@ -89,7 +89,7 @@ html_use_smartypants = True
 
 # Content template for the index page, filename relative to this file.
 #html_index = ''
-html_index = path.join(path.abspath(curdir),  'build', 'docindex.template')
+html_index = path.join(path.abspath(curdir), 'docindex.template')
 
 # Custom sidebar templates, maps page names to filenames relative to this file.
 #html_sidebars = {}
