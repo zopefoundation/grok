@@ -35,7 +35,7 @@ Grok has an extensive tutorial_ that helps you to get started. And
 thanks to grokproject_, you'll be able to create your first web app
 with Grok in no time.
 
-.. _tutorial: /tutorial.html
+.. _tutorial: tutorial.html
 
 .. _grokproject: http://cheeseshop.python.org/pypi/grokproject
 
