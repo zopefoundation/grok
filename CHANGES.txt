@@ -67,11 +67,7 @@ Feature changes
 
   See also the `upgrade notes`_ for information on how to update
   your existing projects.
-<<<<<<< .working
- 
-=======
 
->>>>>>> .merge-rechts.r85857
 .. _`upgrade notes`: http://grok.zope.org/project/upgrade-notes
 
 Bug fixes
