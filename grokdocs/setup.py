@@ -10,11 +10,8 @@ setup(
 Grokdocs: Build the Grok documentation in different formats!
 """,
     install_requires=['docutils==0.4',
-                      'zope.pagetemplate',
-                      'zope.app.renderer',
                       'Sphinx==0.1.61950',
                       'Pygments',
-                      'ulif.rest',
                       ],
     package_dir = {'': 'src'},
     packages=find_packages('src'),

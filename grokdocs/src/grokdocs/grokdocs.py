@@ -23,7 +23,6 @@ from docutils.parsers.rst import directives
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, TextLexer
 from pygments.formatters import LatexFormatter
-from ulif.rest import pygments_directive
 import sphinx
 from sphinx.util.console import nocolor
 import latex_hacks
