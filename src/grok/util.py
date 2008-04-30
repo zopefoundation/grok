@@ -18,6 +18,7 @@ import urllib
 
 import zope.location.location
 from zope import component
+from zope import interface
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
 
@@ -188,3 +189,14 @@ def determine_class_component(module_info, class_,
     check_module_component(class_, component,
                            component_name, component_directive)
     return component
+
+def applySkin(request, skin, skin_type):
+    """Change the presentation skin for this request.
+    """
+    # Remove all existing skin declarations (commonly the default skin).
+    ifaces = [iface for iface in interface.directlyProvidedBy(request)
+              if not skin_type.providedBy(iface)]
+    # Add the new skin.
+    ifaces.append(skin)
+    interface.directlyProvides(request, *ifaces)
+

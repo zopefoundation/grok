@@ -10,6 +10,9 @@ Feature changes
 * Merged the versions from the 3.4 KGS:
   http://download.zope.org/zope3.4/versions-3.4.0c1.cfg
 
+  We are now using the latest Zope 3 releases for all the Zope 
+  For upgrade notes, see doc/upgrade.txt for more information.
+
 * Added support for easier testsetup based on z3c.testsetup. This is a
   more stable and more powerful implementation of
   grok.testing.register_all_tests(). See
