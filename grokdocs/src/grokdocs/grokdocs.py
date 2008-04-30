@@ -28,15 +28,17 @@ import sphinx
 from sphinx.util.console import nocolor
 import latex_hacks
 
-HERE = os.path.dirname(__file__)
-
-SRCDIR_ALL = os.path.dirname(os.path.dirname(__file__))
+ROOT = os.path.join(os.path.dirname(
+    os.path.abspath(__file__)), '..', '..', '..') 
+SRCDIR_ALL = os.path.join(ROOT, 'doc')
 SRCDIR_REF = os.path.join(SRCDIR_ALL, 'reference')
 
-HTMLDIR_ALL = os.path.join(HERE, 'html')
-HTMLDIR_REF = os.path.join(HERE, 'html', 'reference')
+BUILD_DIR = os.path.join(ROOT, 'build')
 
-LATEX_ALL = os.path.join(HERE, 'latex')
+HTMLDIR_ALL = os.path.join(BUILD_DIR, 'html')
+HTMLDIR_REF = os.path.join(BUILD_DIR, 'html', 'reference')
+
+LATEX_ALL = os.path.join(BUILD_DIR, 'latex')
 
 LATEX_SETTINGS = {
     'DEFAULT': LatexFormatter(),
@@ -46,6 +48,12 @@ LATEX_SETTINGS = {
        },
     'FORMAT': 'latex',
     }
+
+for build_path in (BUILD_DIR, HTMLDIR_ALL, HTMLDIR_REF, LATEX_ALL):
+    # Create the output directories, if they do not exist...
+    if not os.path.exists(build_path):
+        os.makedirs(build_path)
+
 
 def pygments_latex_directive(name, arguments, options, content, lineno,
                              content_offset, block_text, state, state_machine):
@@ -116,7 +124,7 @@ def usage_grokref(argv, msg=None):
                  default_out=HTMLDIR_REF)
 
 
-def grokdocs(argv=sys.argv, srcdir=SRCDIR_ALL, htmldir=HTMLDIR_ALL,
+def render(argv=sys.argv, srcdir=SRCDIR_ALL, htmldir=HTMLDIR_ALL,
              latexdir=LATEX_ALL, do_latex=False):
     """Generate the whole docs, including howtos, reference, etc.
     """
@@ -174,24 +182,20 @@ def grokdocs(argv=sys.argv, srcdir=SRCDIR_ALL, htmldir=HTMLDIR_ALL,
 
     print "Generated docs are in %s." % os.path.abspath(argv[-1])
 
-def grokdocs_latex(argv=sys.argv):
+def render_latex(argv=sys.argv):
     """Generate all docs in LaTeX.
     """
-    return grokdocs(argv, do_latex=True)
+    return render(argv, do_latex=True)
 
 def grokref(argv=sys.argv, do_latex=False):
     """Generate the reference docs.
     """
     sphinx.usage = usage_grokref
-    return grokdocs(argv, srcdir=SRCDIR_REF, htmldir=HTMLDIR_REF,
+    return render(argv, srcdir=SRCDIR_REF, htmldir=HTMLDIR_REF,
                     latexdir=LATEX_ALL, do_latex=do_latex)
 
 def grokref_latex(argv=sys.argv):
     """Generate reference in LaTeX format.
     """
-    return grokref(argv, do_latex=True)
-
-def sphinxquickstart(argv=sys.argv):
-    from sphinx import quickstart
-    quickstart.main(argv)
+    return render(argv, do_latex=True)
 
