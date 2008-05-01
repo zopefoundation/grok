@@ -30,10 +30,11 @@ from zope.app.container.contained import (
     IContainerModifiedEvent, ContainerModifiedEvent)
 
 from martian import ClassGrokker, InstanceGrokker, GlobalGrokker
-from grok.components import Model, Adapter, MultiAdapter, View
+from grokcore.component import Adapter, MultiAdapter, GlobalUtility
+from grok.components import Model, View
 from grok.components import XMLRPC, REST, JSON
 from grok.components import PageTemplate, PageTemplateFile, Container, Traverser
-from grok.components import Site, GlobalUtility, LocalUtility, Annotation
+from grok.components import Site, LocalUtility, Annotation
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Permission, Role
@@ -42,11 +43,12 @@ from grok.components import RESTProtocol, IRESTLayer
 from grok.interfaces import IRESTSkinType
 from grok.components import ViewletManager, Viewlet
 
-from grok.directive import (context, name, title, template, templatedir,
-                            provides, baseclass, global_utility, local_utility,
-                            permissions, require, site, layer, direct, viewletmanager,
-                            view, order)
-from grok.decorators import subscribe, adapter, implementer
+from grokcore.component.directive import (
+    context, name, title, provides, baseclass, global_utility, direct, order)
+from grok.directive import (
+    template, templatedir, local_utility, permissions, require, site,
+    layer, viewletmanager, view)
+from grokcore.component.decorators import subscribe, adapter, implementer
 from martian.error import GrokError, GrokImportError
 
 # BBB These two functions are meant for test fixtures and should be

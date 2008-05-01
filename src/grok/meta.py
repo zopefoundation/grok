@@ -50,44 +50,20 @@ from martian import util
 
 import grok
 from grok import components, formlib, templatereg
-from grok.util import check_adapts, get_default_permission
-from grok.util import check_permission, make_checker
-from grok.util import check_module_component, determine_module_component
-from grok.util import determine_class_component
-from grok.util import determine_class_directive, public_methods_from_class
+from grok.util import check_permission, get_default_permission, make_checker
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
-def get_context(module_info, factory):
-    return determine_class_component(module_info, factory,
-                                     'context', 'grok.context')
+from grokcore.component.meta import get_context, get_name, get_name_classname
+from grokcore.component.util import check_adapts
+from grokcore.component.util import determine_class_component
+from grokcore.component.util import determine_class_directive
+from grokcore.component.util import determine_module_component
+from grokcore.component.util import public_methods_from_class
 
 def get_viewletmanager(module_info, factory):
     return determine_class_component(module_info, factory,
                                      'viewletmanager', 'grok.viewletmanager')
-
-def get_name_classname(factory):
-    return get_name(factory, factory.__name__.lower())
-
-def get_name(factory, default=''):
-    return grok.util.class_annotation(factory, 'grok.name', default)
-
-def get_provides(factory):
-    provides = util.class_annotation(factory, 'grok.provides', None)
-    if provides is None:
-        util.check_implements_one(factory)
-    return provides
-
-class ContextGrokker(martian.GlobalGrokker):
-
-    priority = 1001
-
-    def grok(self, name, module, module_info, config, **kw):
-        context = determine_module_component(module_info, 'grok.context',
-                                             [grok.Model, grok.Container])
-        module.__grok_context__ = context
-        return True
-
 
 class ViewletManagerContextGrokker(martian.GlobalGrokker):
 
@@ -98,61 +74,6 @@ class ViewletManagerContextGrokker(martian.GlobalGrokker):
                                                     'grok.viewletmanager',
                                                     [grok.ViewletManager])
         module.__grok_viewletmanager__ = viewletmanager
-        return True
-
-class AdapterGrokker(martian.ClassGrokker):
-    component_class = grok.Adapter
-
-    def grok(self, name, factory, module_info, config, **kw):
-        adapter_context = get_context(module_info, factory)
-        provides = get_provides(factory)
-        name = get_name(factory)
-
-        config.action(
-            discriminator=('adapter', adapter_context, provides, name),
-            callable=component.provideAdapter,
-            args=(factory, (adapter_context,), provides, name),
-            )
-        return True
-
-class MultiAdapterGrokker(martian.ClassGrokker):
-    component_class = grok.MultiAdapter
-
-    def grok(self, name, factory, module_info, config, **kw):
-        provides = get_provides(factory)
-        name = get_name(factory)
-
-        check_adapts(factory)
-        for_ = component.adaptedBy(factory)
-
-        config.action(
-            discriminator=('adapter', for_, provides, name),
-            callable=component.provideAdapter,
-            args=(factory, None, provides, name),
-            )
-        return True
-
-
-class GlobalUtilityGrokker(martian.ClassGrokker):
-    component_class = grok.GlobalUtility
-
-    # This needs to happen before the FilesystemPageTemplateGrokker grokker
-    # happens, since it relies on the ITemplateFileFactories being grokked.
-    priority = 1100
-
-    def grok(self, name, factory, module_info, config, **kw):
-        provides = get_provides(factory)
-        name = get_name(factory)
-
-        direct = util.class_annotation(factory, 'grok.direct', False)
-        if not direct:
-            factory = factory()
-
-        config.action(
-            discriminator=('utility', provides, name),
-            callable=component.provideUtility,
-            args=(factory, provides, name),
-            )
         return True
 
 class XMLRPCGrokker(martian.ClassGrokker):
@@ -470,49 +391,6 @@ class UnassociatedTemplatesGrokker(martian.GlobalGrokker):
         return True
 
 
-class SubscriberGrokker(martian.GlobalGrokker):
-
-    def grok(self, name, module, module_info, config, **kw):
-        subscribers = module_info.getAnnotation('grok.subscribers', [])
-
-        for factory, subscribed in subscribers:
-            config.action(
-                discriminator=None,
-                callable=component.provideHandler,
-                args=(factory, subscribed),
-                )
-
-            for iface in subscribed:
-                config.action(
-                    discriminator=None,
-                    callable=zope.component.interface.provideInterface,
-                    args=('', iface)
-                    )
-        return True
-
-
-class AdapterDecoratorGrokker(martian.GlobalGrokker):
-
-    def grok(self, name, module, module_info, config, **kw):
-        context = module_info.getAnnotation('grok.context', None)
-        implementers = module_info.getAnnotation('implementers', [])
-        for function in implementers:
-            interfaces = getattr(function, '__component_adapts__', None)
-            if interfaces is None:
-                # There's no explicit interfaces defined, so we assume the
-                # module context to be the thing adapted.
-                check_module_component(module_info.getModule(), context,
-                                       'context', 'grok.context')
-                interfaces = (context, )
-
-            config.action(
-                discriminator=('adapter', interfaces, function.__implemented__),
-                callable=component.provideAdapter,
-                args=(function, interfaces, function.__implemented__),
-                )
-        return True
-
-
 class StaticResourcesGrokker(martian.GlobalGrokker):
 
     def grok(self, name, module, module_info, config, **kw):
@@ -546,24 +424,6 @@ class StaticResourcesGrokker(martian.GlobalGrokker):
             callable=component.provideAdapter,
             args=(resource_factory, adapts, provides, name),
             )
-        return True
-
-
-class GlobalUtilityDirectiveGrokker(martian.GlobalGrokker):
-
-    def grok(self, name, module, module_info, config, **kw):
-        infos = module_info.getAnnotation('grok.global_utility', [])
-
-        for info in infos:
-            if info.provides is None:
-                util.check_implements_one(info.factory)
-            if info.direct:
-                obj = info.factory
-            else:
-                obj = info.factory()
-            component.provideUtility(obj,
-                                     provides=info.provides,
-                                     name=info.name)
         return True
 
 

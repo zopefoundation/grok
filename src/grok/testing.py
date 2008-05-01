@@ -15,7 +15,7 @@
 """
 from zope.configuration.config import ConfigurationMachine
 from martian import scan
-from grok import zcml
+from grokcore.component import zcml
 import z3c.testsetup
 import os.path
 
@@ -39,6 +39,7 @@ def register_all_tests(pkg, *args, **kw):
 
 def grok(module_name):
     config = ConfigurationMachine()
+    zcml.do_grok('grokcore.component.meta', config)
     zcml.do_grok('grok.meta', config)
     zcml.do_grok('grok.templatereg', config)
     zcml.do_grok(module_name, config)

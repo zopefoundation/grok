@@ -7,8 +7,8 @@ GlobalUtilityInfo objects annotated on the module.
   >>> module_info = scan.module_info_from_module(multipletimes)
   >>> guis = module_info.getAnnotation('grok.global_utility', None)
   >>> guis
-  [<grok.directive.GlobalUtilityInfo object at 0x...>,
-  <grok.directive.GlobalUtilityInfo object at 0x...>]
+  [<grokcore.component.directive.GlobalUtilityInfo object at 0x...>,
+   <grokcore.component.directive.GlobalUtilityInfo object at 0x...>]
   >>> guis[0].factory
   <class 'grok.tests.directive.multipletimes.Club'>
   >>> guis[0].provides

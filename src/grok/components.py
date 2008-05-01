@@ -50,19 +50,20 @@ from zope.viewlet.manager import ViewletManagerBase
 from zope.viewlet.viewlet import ViewletBase
 
 import z3c.flashmessage.interfaces
-
 import martian.util
+import grokcore.component.util
+
 from grok import interfaces, formlib, util
 
 
-class Model(Contained, persistent.Persistent):
+class Model(Contained, persistent.Persistent, grokcore.component.Context):
     # XXX Inheritance order is important here. If we reverse this,
     # then containers can't be models anymore because no unambigous MRO
     # can be established.
     interface.implements(IAttributeAnnotatable)
 
 
-class Container(BTreeContainer):
+class Container(BTreeContainer, grokcore.component.Context):
     interface.implements(IAttributeAnnotatable)
 
 
@@ -84,21 +85,7 @@ class Application(Site):
     interface.implements(interfaces.IApplication)
 
 
-class Adapter(object):
-
-    def __init__(self, context):
-        self.context = context
-
-
-class GlobalUtility(object):
-    pass
-
-
 class LocalUtility(Model):
-    pass
-
-
-class MultiAdapter(object):
     pass
 
 
@@ -631,7 +618,7 @@ class ViewletManager(ViewletManagerBase):
         if self.template:
             return self.template.render(self) 
         else:
-            viewlets = util.sort_components(self.viewlets)
+            viewlets = grokcore.component.util.sort_components(self.viewlets)
             return u'\n'.join([viewlet.render() for viewlet in viewlets])
 
     def namespace(self):

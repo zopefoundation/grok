@@ -5,15 +5,8 @@
 
   <include package="z3c.autoinclude" file="meta.zcml" />
 
-  <meta:directives namespace="http://namespaces.zope.org/grok">
-    <meta:directive
-        name="grok"
-        schema=".zcml.IGrokDirective"
-        handler=".zcml.grokDirective"
-        />
-  </meta:directives>
-
   <!-- Load the grokkers -->
+  <include package="grokcore.component" file="meta.zcml" />
   <grok:grok package=".meta" />
 
 </configure>
