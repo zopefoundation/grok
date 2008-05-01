@@ -33,7 +33,8 @@ from martian import ClassGrokker, InstanceGrokker, GlobalGrokker
 from grokcore.component import Adapter, MultiAdapter, GlobalUtility
 from grok.components import Model, View
 from grok.components import XMLRPC, REST, JSON
-from grok.components import PageTemplate, PageTemplateFile, Container, Traverser
+from grok.components import PageTemplate, PageTemplateFile, Traverser
+from grok.components import Container, OrderedContainer
 from grok.components import Site, LocalUtility, Annotation
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes

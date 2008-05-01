@@ -28,6 +28,7 @@ class IGrokBaseClasses(interface.Interface):
     Model = interface.Attribute("Base class for persistent content objects "
                                 "(models).")
     Container = interface.Attribute("Base class for containers.")
+    OrderedContainer = interface.Attribute("Base class for ordered containers.")
     Site = interface.Attribute("Mixin class for sites.")
     Application = interface.Attribute("Base class for applications.")
     Adapter = interface.Attribute("Base class for adapters.")
@@ -162,7 +163,7 @@ class IGrokDirectives(interface.Interface):
     def order(value=None):
         """Control the ordering of components.
 
-        If the value is specified, the order will be determined by sorting on 
+        If the value is specified, the order will be determined by sorting on
         it.
         If no value is specified, the order will be determined by definition
         order within the module.
@@ -173,7 +174,7 @@ class IGrokDirectives(interface.Interface):
         Inter-module order is by dotted name of the module the
         components are in; unless an explicit argument is specified to
         ``grok.order()``, components are grouped by module.
-  
+
         The function grok.util.sort_components can be used to sort
         components according to these rules.
         """
@@ -441,7 +442,7 @@ class IREST(interface.Interface):
 
     request = interface.Attribute("Request that REST handler was looked"
                                   "up with.")
-    
+
     body = interface.Attribute(
         """The text of the request body.""")
 
@@ -468,22 +469,22 @@ class IRESTSkinType(IInterface):
     """
 
 class ITemplateFileFactory(interface.Interface):
-    """Utility that generates templates from files in template directories. 
+    """Utility that generates templates from files in template directories.
     """
-    
+
     def __call__(filename, _prefix=None):
         """Creates an ITemplate from a file
-        
+
         _prefix is the directory the file is located in
         """
 
 class ITemplate(interface.Interface):
     """Template objects
     """
-    
+
     def _initFactory(factory):
         """Template language specific initializations on the view factory."""
-        
+
     def render(view):
         """Renders the template"""
 

@@ -43,6 +43,9 @@ from zope.app.publisher.browser.pagetemplateresource import \
 from zope.app.container.btree import BTreeContainer
 from zope.app.container.contained import Contained
 from zope.app.container.interfaces import IReadContainer, IObjectAddedEvent
+from zope.app.container.interfaces import IOrderedContainer
+from zope.app.container.contained import notifyContainerModified
+from persistent.list import PersistentList
 from zope.app.component.site import SiteManagerContainer
 from zope.app.component.site import LocalSiteManager
 
@@ -65,6 +68,47 @@ class Model(Contained, persistent.Persistent, grokcore.component.Context):
 
 class Container(BTreeContainer, grokcore.component.Context):
     interface.implements(IAttributeAnnotatable)
+
+
+class OrderedContainer(Container):
+    interface.implements(IOrderedContainer)
+
+    def __init__(self):
+        super(OrderedContainer, self).__init__()
+        self._order = PersistentList()
+
+    def keys(self):
+        # Return a copy of the list to prevent accidental modifications.
+        return self._order[:]
+
+    def __iter__(self):
+        return iter(self.keys())
+
+    def values(self):
+        return (self[key] for key in self._order)
+
+    def items(self):
+        return ((key, self[key]) for key in self._order)
+
+    def __setitem__(self, key, object):
+        foo = self.has_key(key)
+        # Then do whatever containers normally do.
+        super(OrderedContainer, self).__setitem__(key, object)
+        if not foo:
+            self._order.append(key)
+
+    def __delitem__(self, key):
+        # First do whatever containers normally do.
+        super(OrderedContainer, self).__delitem__(key)
+        self._order.remove(key)
+
+    def updateOrder(self, order):
+        if set(order) != set(self._order):
+            raise ValueError("Incompatible key set.")
+
+        self._order = PersistentList()
+        self._order.extend(order)
+        notifyContainerModified(self)
 
 
 class Site(SiteManagerContainer):
@@ -616,7 +660,7 @@ class ViewletManager(ViewletManagerBase):
         """See zope.contentprovider.interfaces.IContentProvider"""
         # Now render the view
         if self.template:
-            return self.template.render(self) 
+            return self.template.render(self)
         else:
             viewlets = grokcore.component.util.sort_components(self.viewlets)
             return u'\n'.join([viewlet.render() for viewlet in viewlets])
