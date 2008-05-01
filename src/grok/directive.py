@@ -30,6 +30,7 @@ from martian.directive import (OnceDirective,
                                ClassOrModuleDirectiveContext)
 from martian import util
 from grokcore.component.directive import MultiValueOnceDirective
+from grok import components
 
 class LocalUtilityDirective(MultipleTimesDirective):
     def check_arguments(self, factory, provides=None, name=u'',
@@ -55,9 +56,20 @@ class LocalUtilityInfo(object):
         self.name_in_container = name_in_container
 
 
-class RequireDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
+class RequireDirective(SingleValue, MultipleTimesDirective):
+
+    def check_arguments(self, value):
+        if util.check_subclass(value, components.Permission):
+            return
+        if util.not_unicode_or_ascii(value):
+            raise GrokImportError(
+                "You can only pass unicode, ASCII, or a subclass "
+                "of grok.Permission %s." % self.name)
 
     def store(self, frame, value):
+        if util.check_subclass(value, components.Permission):
+            value = getattr(value, '__grok_name__')
+
         super(RequireDirective, self).store(frame, value)
         values = frame.f_locals.get(self.local_name, [])
 
@@ -70,6 +82,7 @@ class RequireDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
             func.__grok_require__ = permission
             return func
         return decorator
+
 
 # Define grok directives
 template = SingleTextDirective('grok.template', ClassDirectiveContext())
