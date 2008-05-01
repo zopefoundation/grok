@@ -9,6 +9,9 @@ Feature changes
 
 * Added an OrderedContainer component.
 
+* Introduced the new `sphinx`-based documentation engine. See
+  grokdocs/README.txt for details.
+
 * Merged the versions from the 3.4 KGS:
   http://download.zope.org/zope3.4/versions-3.4.0c1.cfg
 
