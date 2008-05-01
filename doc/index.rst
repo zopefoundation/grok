@@ -143,16 +143,12 @@ anonymous check out of the latest version of Grok with the following command:::
 
   svn co svn://svn.zope.org/repos/main/grok/trunk grok
 
-ME GROK TUTORIALS!
+ME GROK TUTORIAL!
 ------------------
 
 * `Grok tutorial`__
 
   .. __: tutorial.html
-
-* `How Tos and tutorials`__
-
-  .. __: minitutorials/index.html
 
 ME GROK SPRINTS AND BLOGS!
 --------------------------
@@ -177,7 +173,6 @@ set of tasks.
 
    about.rst
    contents.rst
-   minitutorials/index.rst
    reference/index.rst
 
    bugs.rst

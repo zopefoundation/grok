@@ -9,10 +9,6 @@
       >Tutorial</a><br>
       <span class="linkdescr">Get started with Grok</span></p>
 
-      <p class="biglink"><a class="biglink" href="{{ pathto("minitutorials/index") }}"
-      >Grok HOWTOS</a><br>
-      <span class="linkdescr">in-depth documents on specific topics</span></p>
-
     </td><td width="50%">
 
       <p class="biglink"><a class="biglink" href="{{ pathto("about") }}"

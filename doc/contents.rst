@@ -9,7 +9,6 @@ Grok Documentation Contents
    about.rst
    tutorial.rst
    reference/index.rst
-   minitutorials/index.rst
    naming_conventions.rst
 
    bugs.rst
