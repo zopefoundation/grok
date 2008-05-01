@@ -1,3 +1,0 @@
-The examples were moved to the grokapps dir at the root of this repository:
-
-http://svn.zope.org/grokapps/
