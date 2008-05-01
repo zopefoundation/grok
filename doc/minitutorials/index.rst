@@ -2,13 +2,25 @@
 Grok Mini-HowTos
 ================
 
-.. image:: /resources/evencaveman.jpg
+.. image:: ../resources/evencaveman.jpg
    :alt: Now even cavemen can use Zope3
    :class: right
 
+.. toctree::
+   :maxdepth: 1
+
+   permissions.rst
+   searching.rst
+   macros.rst
+   xmlrpc.rst  
+   transient-objects.rst
+   rest.rst
+   template-languages.rst
+   automatic_form_generation.rst
+
 These mini-tutorials have been contributed by members of the Grok community.
 
-* `Permissions Tutorial </minitutorials/permissions.html>`_:
+* `Permissions Tutorial <permissions.html>`_:
 
   Zope3 and Grok come with authorization capabilities out of the box. While a
   vanilla Zope3 application protects all content by default and performs
@@ -16,9 +28,9 @@ These mini-tutorials have been contributed by members of the Grok community.
   everything unless you explicitly restrict it. The authorization checks here are
   done based on the Views used to access (display/manipulate) the content.
 
-  Author: Luis De la Parra; Uli Fouquet; Jan-Wijbrand Kolman
+  Authors: Luis De la Parra; Uli Fouquet; Jan-Wijbrand Kolman
 
-* `Search Tutorial </minitutorials/searching.html>`_:
+* `Search Tutorial <searching.html>`_:
 
   Grok supports the vanilla indexing services available in Zope 3
   straight out of the box. The catalog uses developer-defined indexes
@@ -28,7 +40,7 @@ These mini-tutorials have been contributed by members of the Grok community.
 
   Author: Sebastian Ware
 
-* `Macros With Grok </minitutorials/macros.html>`_:
+* `Macros With Grok <macros.html>`_:
 
   Macros are a way to define a chunk of presentation in one template,
   and share it in others. Changes to the macro are immediately
@@ -36,7 +48,7 @@ These mini-tutorials have been contributed by members of the Grok community.
 
   Author: Uli Fouquet
 
-* `XMLRPC With Grok </minitutorials/xmlrpc.html>`_:
+* `XMLRPC With Grok <xmlrpc.html>`_:
 
   XMLRPC (http://xmlrpc.com) is a spec and a set of implementations
   that allow software running on disparate operating systems, running in
@@ -44,7 +56,7 @@ These mini-tutorials have been contributed by members of the Grok community.
 
   Author: Kushal Das
 
-* `Navigating To Transient Objects Tutorial </minitutorials/transient-objects.html>`_:
+* `Navigating To Transient Objects Tutorial <transient-objects.html>`_:
 
   Sometimes you need to create objects that do not persist in the ZODB.
   For the purpose of this tutorial, we are going to call all such objects
@@ -53,16 +65,7 @@ These mini-tutorials have been contributed by members of the Grok community.
 
   Author: Brandon Craig Rhodes
 
-* `REST With Grok </minitutorials/rest.html>`_:
-
-  REST is a way to build web services, i.e. a web application where the
-  user is another computer, not a human being. REST takes the approach
-  to make the web service look very similar to a normal web application,
-  using well-known semantics of HTTP.
-
-  Author: Martijn Faassen
-
-* `Pluggable template laguanges </minitutorials/template-languages.html>`_:
+* `Pluggable template laguanges <template-languages.html>`_:
 
   Grok, like the Zope 3 framework on which it is built, uses Zope Page
   Templates as its default templating language. While you can, of course, use
