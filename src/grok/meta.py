@@ -362,27 +362,6 @@ class UnassociatedTemplatesGrokker(martian.GlobalGrokker):
         return True
 
 
-class SubscriberGrokker(martian.GlobalGrokker):
-
-    def grok(self, name, module, module_info, config, **kw):
-        subscribers = module_info.getAnnotation('grok.subscribers', [])
-
-        for factory, subscribed in subscribers:
-            config.action(
-                discriminator=None,
-                callable=component.provideHandler,
-                args=(factory, subscribed),
-                )
-
-            for iface in subscribed:
-                config.action(
-                    discriminator=None,
-                    callable=zope.component.interface.provideInterface,
-                    args=('', iface)
-                    )
-        return True
-
-
 class StaticResourcesGrokker(martian.GlobalGrokker):
 
     def grok(self, name, module, module_info, config, **kw):

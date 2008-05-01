@@ -48,8 +48,7 @@ from grokcore.component.directive import (
 from grok.directive import (
     template, templatedir, local_utility, permissions, require, site,
     layer, viewletmanager, view)
-from grokcore.component.decorators import adapter, implementer
-from grok.decorators import subscribe
+from grokcore.component.decorators import subscribe, adapter, implementer
 from martian.error import GrokError, GrokImportError
 
 # BBB These two functions are meant for test fixtures and should be
