@@ -173,6 +173,7 @@ set of tasks.
 
    about.rst
    contents.rst
+   grok_overview.rst
    reference/index.rst
 
    bugs.rst
