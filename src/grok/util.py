@@ -80,16 +80,19 @@ def get_default_permission(factory):
     result = permissions[0]
     return result
 
-def url(request, obj, name=None):
-    """Given a request and an object, give the URL.
-
-    Optionally pass a third argument name which gets added to the URL.
-    """
+def url(request, obj, name=None, data={}):
     url = component.getMultiAdapter((obj, request), IAbsoluteURL)()
-    if name is None:
-        return url
-    return url + '/' + urllib.quote(name.encode('utf-8'),
-                                    SAFE_URL_CHARACTERS)
+    if name is not None:
+        url += '/' + urllib.quote(name.encode('utf-8'), SAFE_URL_CHARACTERS)
+    if data:
+        for k,v in data.items():
+            if isinstance(v, unicode):
+                data[k] = v.encode('utf-8')
+            if isinstance(v, (list, set, tuple)):
+                data[k] = [isinstance(item, unicode) and item.encode('utf-8') 
+                or item for item in v]
+        url += '?' + urllib.urlencode(data, doseq=True)
+    return url
 
 def safely_locate_maybe(obj, parent, name):
     """Set an object's __parent__ (and __name__) if the object's

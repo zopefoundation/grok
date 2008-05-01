@@ -229,10 +229,10 @@ list entry being a dictionary with keys ``name``, ``signature``,
     >>> entry = [x for x in methods if x['name'] == 'url'][0]
     >>> entry['name']
     'url'
-    >>> entry['doc']
-    ''
+    >>> entry['doc'].strip()
+    'Return string for the URL based on the obj and name. The data \n    argument is used to form a CGI query string.'
     >>> entry['signature']
-    '(obj=None, name=None)'
+    '(obj=None, name=None, data=None)'
 
 The other methods work as described in the ``DocGrokClass``
 documentation.

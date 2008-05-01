@@ -244,8 +244,10 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
         for some grokkers which rely on them.
         """
 
-    def url(request, obj, name=None):
+    def url(request, obj, name=None, data=None):
         """Generate the URL to an object with optional name attached.
+        An optional argument 'data' can be a dictionary that is converted
+        into a query string appended to the URL.
         """
 
     def notify(event):
@@ -294,7 +296,7 @@ class IGrokView(IBrowserPage, IBrowserView):
     def redirect(url):
        """Redirect to given URL"""
 
-    def url(obj=None, name=None):
+    def url(obj=None, name=None, data=None):
         """Construct URL.
 
         If no arguments given, construct URL to view itself.
@@ -306,6 +308,9 @@ class IGrokView(IBrowserPage, IBrowserView):
 
         If both object and name arguments are supplied, construct
         URL to obj/name.
+        
+        Optionally pass a 'data' keyword argument which gets added to the URL 
+        as a cgi query string.
         """
 
     def update(**kw):

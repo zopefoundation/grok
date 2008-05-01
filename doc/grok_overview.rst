@@ -315,7 +315,8 @@ the ``url`` method
 
 Views have a special method called ``url()`` that can be used to
 create URLs to objects. The ``url`` method takes zero, one or two 
-arguments::
+arguments and an additional optional keyword argument 'data' that
+is converted into a CGI query string appended to the URL::
 
 * self.url() - URL to this view.
 
@@ -327,6 +328,13 @@ arguments::
 * self.url(object, u"name") - URL to the provided object, with
   		   ``/name`` appended, to point to a view or subobject
   		   of the provided object.
+                   
+* self.url(object, u"name", data={'name':'Peter', 'age':28}) 
+            - URL to the provided object, with ``/name`` appended
+              with '?name=Peter&age=28' at the end.
+                   
+* self.url(data={'name':u'Andr\xe9', 'age:int':28}) - URL to the provided 
+                   object with '?name=Andre%C3%A9'&age%3Aint=28'.
 
 From the view, this is accessed through ``self.url()``. From the
 template, this method can be accessed using ``view.url()``.

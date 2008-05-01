@@ -191,9 +191,10 @@ class View(BrowserPage):
         return value
 
 
-    def url(self, obj=None, name=None):
-        # if the first argument is a string, that's the name. There should
-        # be no second argument
+    def url(self, obj=None, name=None, data=None):
+        """Return string for the URL based on the obj and name. The data 
+        argument is used to form a CGI query string.
+        """
         if isinstance(obj, basestring):
             if name is not None:
                 raise TypeError(
@@ -208,7 +209,14 @@ class View(BrowserPage):
         elif name is not None and obj is None:
             # create URL to view on context
             obj = self.context
-        return util.url(self.request, obj, name)
+            
+        if data is None:
+            data = {}
+        else:
+            if not isinstance(data, dict):
+                raise TypeError('url() data argument must be a dict.')
+
+        return util.url(self.request, obj, name, data=data)
 
     def application_url(self, name=None):
         obj = self.context
