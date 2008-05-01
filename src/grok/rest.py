@@ -1,8 +1,10 @@
 import grok
 
 from zope import component
+from zope.component.interfaces import ComponentLookupError
 
-from zope.traversing.namespace import skin
+from zope.traversing.interfaces import TraversalError
+from zope.traversing.namespace import view
 from zope.interface import Interface
 from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IBrowserRequest
@@ -12,6 +14,7 @@ from zope.app.publication.http import MethodNotAllowed
 import zope.location
 
 from grok.interfaces import IRESTSkinType
+from zope.publisher.browser import applySkin
 
 class RestPublisher(zope.location.Location):
     grok.implements(IBrowserPublisher)
@@ -51,9 +54,21 @@ class MethodNotAllowedView(grok.MultiAdapter):
         self.request.response.setHeader('Allow', ', '.join(self.allow))
         self.request.response.setStatus(405)
         return 'Method Not Allowed'
+
+class rest_skin(view):
+    """A rest skin.
     
-class rest_skin(skin):
-    skin_type = IRESTSkinType
+    This used to be supported by zope.traversing but the change was backed out.
+    We need it for our REST support.
+    """
+    def traverse(self, name, ignored):
+        self.request.shiftNameToApplication()
+        try:
+            skin = component.getUtility(IRESTSkinType, name)
+        except ComponentLookupError:
+            raise TraversalError("++rest++%s" % name)
+        applySkin(self.request, skin)
+        return self.context
 
 class DefaultRest(grok.REST):
     grok.context(Interface)

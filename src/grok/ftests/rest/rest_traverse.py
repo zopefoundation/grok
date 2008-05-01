@@ -51,7 +51,7 @@ on content objects works::
 
 import grok
 from zope.interface import Interface
-from zope.publisher.http import applySkin
+from grok.util import applySkin
 
 class IFoo(Interface):
     pass

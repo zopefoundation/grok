@@ -9,9 +9,7 @@ provoke an error:
 
   >>> grok.testing.grok(__name__)
   From tests.py's showwarning():
-  ...UserWarning: Found the following unassociated template(s) when grokking
-  'grok.tests.view.inline_unassociated': club.  Define view classes inheriting
-  from grok.View to enable the template(s).
+  ...UserWarning: Found the following unassociated template(s) when grokking 'grok.tests.view.inline_unassociated': club.  Define view classes inheriting from grok.View to enable the template(s).
 
   >>> warnings.warn = saved_warn
 

@@ -7,6 +7,17 @@ describes changes involving incompatibilities or deprecations, not new
 features (please see :ref:`changes` below or refer to ``CHANGES.txt``
 for those).
 
+Upgrading to 0.13
+-----------------
+
+- We moved to newer versions of zope packages, using the KGS list for
+  Zope 3.4c1.  This means your code can now get some new deprecation
+  warnings for imports that have been moved. Please check your code
+  and fix your imports if you get those warnings.
+
+  If you were using ``zope.publisher.http.applySkin``, you now must
+  use ``grok.util.applySkin``.
+
 Upgrading to 0.12
 -----------------
 
