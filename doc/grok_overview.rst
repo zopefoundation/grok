@@ -1170,7 +1170,7 @@ very much like a view. Let's look at a form for this schema::
 What is going on here? Firstly we use a special base class called
 ``grok.Form``. A form is a special kind of ``grok.View``, and
 associates the same way (using ``grok.context``). A form expects two
-things::
+things:
 
 * a ``form_fields`` attribute. Above we see the most common way to construct
   this attribute, using ``grok.Fields`` on the interface.
