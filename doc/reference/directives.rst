@@ -432,14 +432,14 @@ Utility directives
   **Linking to resources from templates**
 
   grok provides a convenient way to calculate the URLs to static
-  resource using the keyword :keyword:`static` in page templates:
+  resource using the keyword `static` in page templates:
 
   .. code-block:: html
 
     <link rel="stylesheet" tal:attributes="href static/example.css"
           type="text/css">
 
-  The keyword :keyword:`static` will be replaced by the reference to
+  The keyword `static` will be replaced by the reference to
   the resource directory for the package in which the template was
   registered.
 

@@ -2,7 +2,7 @@
 What is Grok?
 =============
 
-.. image:: ./resources/evencaveman.jpg
+.. image:: resources/evencaveman.jpg
    :alt: Now even cavemen can use Zope3
    :class: right
 
@@ -172,3 +172,15 @@ set of tasks.
 .. _Martijn Faassen's blog entry: http://faassen.n--tree.net/blog/view/weblog/2006/11/09/0
 .. _Jan-Wijbrand Kolman blogged: http://jw.n--tree.net/blog/dev/python/second-grok-sprint
 .. _Martijn Faassen blogged: http://faassen.n--tree.net/blog/view/weblog/2007/01/09/0
+
+.. toctree::
+
+   about.rst
+   contents.rst
+   minitutorials/index.rst
+   reference/index.rst
+
+   bugs.rst
+   README.rst
+   license.rst
+   copyright.rst
