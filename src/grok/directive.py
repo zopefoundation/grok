@@ -17,7 +17,7 @@
 from zope.interface.interfaces import IInterface
 
 from martian.error import GrokImportError
-from martian.directive import (OnceDirective,
+from martian.directive import (Directive, OnceDirective,
                                MultipleTimesDirective, BaseTextDirective,
                                SingleValue, SingleTextDirective,
                                MultipleTextDirective,
@@ -54,6 +54,21 @@ class LocalUtilityInfo(object):
         self.public = public
         self.name_in_container = name_in_container
 
+class MultipleTimesAsDictDirective(Directive):
+    def store(self, frame, value):
+        values = frame.f_locals.get(self.local_name, {})
+        values[value[1]] = value[0]
+        frame.f_locals[self.local_name] = values
+
+class TraversableDirective(MultipleTimesAsDictDirective):
+    def check_argument_signature(self, attr, name=None):
+        pass
+    def check_arguments(self, attr, name=None):
+        pass
+    def value_factory(self, attr, name=None):
+        if name is None:
+            name = attr
+        return (attr, name)
 
 class RequireDirective(BaseTextDirective, SingleValue, MultipleTimesDirective):
 
@@ -87,3 +102,4 @@ viewletmanager = InterfaceOrClassDirective('grok.viewletmanager',
                                            ClassOrModuleDirectiveContext())
 view = InterfaceOrClassDirective('grok.view',
                                  ClassOrModuleDirectiveContext())
+traversable = TraversableDirective('grok.traversable', ClassDirectiveContext())

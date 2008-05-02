@@ -11,7 +11,7 @@ content. Main target are developers new to Grok.
 DocGrok is a helper to generate documentation for nearly everything
 living in a running Zope 3 instance. Basically it provides
 'information'-objects for different types of things, like modules,
-classes, functions, textfiles etc. 
+classes, functions, textfiles etc.
 
 A ``DocGrok`` therefore is an object wich normally is bound to a
 certain entity, which is describable by a dotted path. It provides
@@ -230,7 +230,7 @@ list entry being a dictionary with keys ``name``, ``signature``,
     >>> entry['name']
     'url'
     >>> entry['doc'].strip()
-    'Return string for the URL based on the obj and name. The data \n    argument is used to form a CGI query string.'
+    'Return string for the URL based on the obj and name. The data\n    argument is used to form a CGI query string.'
     >>> entry['signature']
     '(obj=None, name=None, data=None)'
 

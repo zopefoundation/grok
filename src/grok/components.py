@@ -192,7 +192,7 @@ class View(BrowserPage):
 
 
     def url(self, obj=None, name=None, data=None):
-        """Return string for the URL based on the obj and name. The data 
+        """Return string for the URL based on the obj and name. The data
         argument is used to form a CGI query string.
         """
         if isinstance(obj, basestring):
@@ -209,7 +209,7 @@ class View(BrowserPage):
         elif name is not None and obj is None:
             # create URL to view on context
             obj = self.context
-            
+
         if data is None:
             data = {}
         else:
@@ -435,6 +435,15 @@ class Traverser(object):
         subob = self.traverse(name)
         if subob is not None:
             return util.safely_locate_maybe(subob, self.context, name)
+
+        traversable_dict = getattr(self.context, '__grok_traversable__', None)
+        if traversable_dict:
+            if name in traversable_dict:
+                subob = getattr(self.context, traversable_dict[name])
+                if callable(subob):
+                    subob = subob()
+                print 'XXX', subob, dir(subob), subob.__parent__
+                return util.safely_locate_maybe(subob, self.context, name)
 
         # XXX Special logic here to deal with containers.  It would be
         # good if we wouldn't have to do this here. One solution is to

@@ -89,7 +89,7 @@ def url(request, obj, name=None, data={}):
             if isinstance(v, unicode):
                 data[k] = v.encode('utf-8')
             if isinstance(v, (list, set, tuple)):
-                data[k] = [isinstance(item, unicode) and item.encode('utf-8') 
+                data[k] = [isinstance(item, unicode) and item.encode('utf-8')
                 or item for item in v]
         url += '?' + urllib.urlencode(data, doseq=True)
     return url
