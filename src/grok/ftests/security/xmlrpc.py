@@ -15,7 +15,7 @@ raise Unauthorized:
 
 With manager privileges, the protected method is accessible, however:
 
-  >>> print mgr_server.dance()  
+  >>> print mgr_server.dance()
   Manfred doesn't like to dance.
 
 The same applies when a default permission is defined for all XML-RPC
@@ -58,6 +58,6 @@ class CavemanRPC(grok.XMLRPC):
     def eat(self):
         return 'MMM, MANFRED TASTE GOOD!'
 
-    @grok.require('zope.Public')
+    @grok.require(grok.Public)
     def rest(self):
         return 'ME GROK TIRED!'

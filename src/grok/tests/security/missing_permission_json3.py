@@ -20,8 +20,8 @@ class MissingPermission(grok.JSON):
     grok.context(zope.interface.Interface)
 
     grok.require('doesnt.exist')
-    
-    @grok.require('json.exists')
+
+    @grok.require(Permission)
     def foo(self):
         pass
 

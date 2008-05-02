@@ -17,6 +17,6 @@ class Bogus(grok.Permission):
 class BogusView(grok.View):
     grok.context(zope.interface.Interface)
 
-    @grok.require('bogus.perm')
+    @grok.require(Bogus)
     def render(self):
         pass

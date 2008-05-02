@@ -50,6 +50,9 @@ class IGrokBaseClasses(interface.Interface):
     Skin = interface.Attribute("Base class for skin.")
     ViewletManager = interface.Attribute("Base class for viewletmanager.")
     Viewlet = interface.Attribute("Base class for viewlet.")
+    Permission = interface.Attribute("Base class for permissions.")
+    Role = interface.Attribute("Base class for roles.")
+    Public = interface.Attribute("Marker for explicitly not requiring a permission.")
 
 
 class IGrokErrors(interface.Interface):
@@ -308,8 +311,8 @@ class IGrokView(IBrowserPage, IBrowserView):
 
         If both object and name arguments are supplied, construct
         URL to obj/name.
-        
-        Optionally pass a 'data' keyword argument which gets added to the URL 
+
+        Optionally pass a 'data' keyword argument which gets added to the URL
         as a cgi query string.
         """
 
