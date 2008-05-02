@@ -7,6 +7,9 @@ Grok changes
 Feature changes
 ---------------
 
+* Added grok.traversable directive for easy traversal to attributes and
+  methods.
+
 * grok.require() can refer to subclasses of grok.Permission directly, instead
   of their id. This, for one, avoids making typos in permission ids. Permission
   components *do* still need the grok.name() directive for defining the

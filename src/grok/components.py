@@ -436,6 +436,14 @@ class Traverser(object):
         if subob is not None:
             return util.safely_locate_maybe(subob, self.context, name)
 
+        traversable_dict = getattr(self.context, '__grok_traversable__', None)
+        if traversable_dict:
+            if name in traversable_dict:
+                subob = getattr(self.context, traversable_dict[name])
+                if callable(subob):
+                    subob = subob()
+                return util.safely_locate_maybe(subob, self.context, name)
+
         # XXX Special logic here to deal with containers.  It would be
         # good if we wouldn't have to do this here. One solution is to
         # rip this out and make you subclass ContainerTraverser if you
