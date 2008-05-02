@@ -7,11 +7,14 @@ Grok changes
 Feature changes
 ---------------
 
+* Added grok.traversable directive for easy traversal to attributes and
+  methods.
+
 * Added an optional parameter 'data' to the method 'url()' that accepts
-  a dictionary that is then converted to a query string. See 
-   
+  a dictionary that is then converted to a query string. See
+
   http://grok.zope.org/documentation/how-to/generate-urls-with-the-url-function-in-views/view
-  
+
 * Added an OrderedContainer component.
 
 * Introduced the new `sphinx`-based documentation engine. See
