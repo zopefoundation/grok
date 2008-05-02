@@ -442,7 +442,6 @@ class Traverser(object):
                 subob = getattr(self.context, traversable_dict[name])
                 if callable(subob):
                     subob = subob()
-                print 'XXX', subob, dir(subob), subob.__parent__
                 return util.safely_locate_maybe(subob, self.context, name)
 
         # XXX Special logic here to deal with containers.  It would be
