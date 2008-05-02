@@ -239,7 +239,7 @@ implementers of the surrounding class.
 
     class ModelBase(grok.Model):
         pass
- 
+
     class ViewBase(grok.View):
         def render(self):
             return "hello world"
@@ -463,7 +463,7 @@ Security directives
 
     class ViewPainting(grok.Permission):
 	grok.name('grok.ViewPainting')
-	
+
   .. seealso::
 
     :class:`grok.Permission` component, :func:`@grok.require` decorator
@@ -535,3 +535,33 @@ in which local component registry the indexes should be located.
 	grok.context(IMammoth)
 
 	name = index.Field()
+
+
+:func:`grok.traversable`
+========================
+
+A class level directive used to mark attributes or methods as traversable. An
+optional `name` argument can be used to give the attribute a different name in
+the URL.
+
+.. function:: grok.traversable(attr, name=None)
+
+  **Example**
+
+  .. code-block:: python
+
+
+      class Foo(grok.Model):
+          grok.traversable('bar')
+          grok.traversable('foo')
+          grok.traversable(attr='bar', name='namedbar')
+
+          def __init__(self, name):
+              self.name = name
+
+          foo = Bar('foo')
+          def bar(self):
+              return Bar('bar')
+
+The result is that you can now access http://localhost/foo/bar,
+http://localhost/foo/foo and http://localhost/foo/namedbar.
