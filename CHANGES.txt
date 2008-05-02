@@ -7,6 +7,11 @@ Grok changes
 Feature changes
 ---------------
 
+* The basic component base classes (``Adapter``, ``MultiAdapter``,
+  ``GlobalUtility``), their grokkers, as well as many of the basic
+  directives have been factored out to a reusable
+  ``grokcore.component`` package.
+
 * Added an optional parameter 'data' to the method 'url()' that accepts
   a dictionary that is then converted to a query string. See 
    
