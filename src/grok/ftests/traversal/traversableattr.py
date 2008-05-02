@@ -47,7 +47,7 @@ class BarIndex(grok.View):
     def render(self):
         return self.context.name
 
-class Foo(grok.Model): #, grok.Application):
+class Foo(grok.Model):
     grok.traversable('bar')
     grok.traversable('foo')
     grok.traversable(attr='bar', name='namedbar')
