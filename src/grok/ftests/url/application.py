@@ -38,28 +38,29 @@ application_url also works with empty containers::
   
 """
 import zope.interface
-
 import grok
+
+class IMarker(zope.interface.Interface):
+    pass
 
 
 class Index(grok.View):
-    grok.context(zope.interface.Interface)
+    grok.context(IMarker)
 
     def render(self):
         return self.application_url()
 
 class Second(grok.View):
-    grok.context(zope.interface.Interface)
+    grok.context(IMarker)
 
     def render(self):
         return self.application_url('second')
     
 class Cave(grok.Application, grok.Container):
-    pass
-
+    grok.implements(IMarker)
 
 class CaveMan(grok.Model):
-    pass
+    grok.implements(IMarker)
 
 class Corridors(grok.Container):
-    pass
+    grok.implements(IMarker)
