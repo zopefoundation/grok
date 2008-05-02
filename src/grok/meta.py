@@ -55,6 +55,7 @@ from grok.util import check_permission, make_checker
 from grok.util import check_module_component, determine_module_component
 from grok.util import determine_class_component
 from grok.util import determine_class_directive, public_methods_from_class
+from grok.util import check_provides_one
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
@@ -76,6 +77,7 @@ def get_provides(factory):
     provides = util.class_annotation(factory, 'grok.provides', None)
     if provides is None:
         util.check_implements_one(factory)
+        provides = list(interface.implementedBy(factory))[0]
     return provides
 
 class ContextGrokker(martian.GlobalGrokker):
@@ -141,17 +143,24 @@ class GlobalUtilityGrokker(martian.ClassGrokker):
     priority = 1100
 
     def grok(self, name, factory, module_info, config, **kw):
-        provides = get_provides(factory)
+        provides = util.class_annotation(factory, 'grok.provides', None)
+        direct = util.class_annotation(factory, 'grok.direct', False)
         name = get_name(factory)
 
-        direct = util.class_annotation(factory, 'grok.direct', False)
-        if not direct:
-            factory = factory()
+        if direct:
+            obj = factory
+            if provides is None:
+                check_provides_one(factory)
+                provides = list(interface.providedBy(factory))[0]
+        else:
+            obj = factory()
+            if provides is None:
+                provides = get_provides(factory)
 
         config.action(
             discriminator=('utility', provides, name),
             callable=component.provideUtility,
-            args=(factory, provides, name),
+            args=(obj, provides, name),
             )
         return True
 
@@ -555,15 +564,24 @@ class GlobalUtilityDirectiveGrokker(martian.GlobalGrokker):
         infos = module_info.getAnnotation('grok.global_utility', [])
 
         for info in infos:
-            if info.provides is None:
-                util.check_implements_one(info.factory)
+            provides = info.provides
+
             if info.direct:
                 obj = info.factory
+                if provides is None:
+                    check_provides_one(obj)
+                    provides = list(interface.providedBy(obj))[0]
             else:
                 obj = info.factory()
-            component.provideUtility(obj,
-                                     provides=info.provides,
-                                     name=info.name)
+                if provides is None:
+                    provides = get_provides(info.factory)
+
+            config.action(
+                discriminator=('utility', provides, info.name),
+                callable=component.provideUtility,
+                args=(obj, provides, info.name),
+                )
+
         return True
 
 
