@@ -192,7 +192,7 @@ class View(BrowserPage):
 
 
     def url(self, obj=None, name=None, data=None):
-        """Return string for the URL based on the obj and name. The data 
+        """Return string for the URL based on the obj and name. The data
         argument is used to form a CGI query string.
         """
         if isinstance(obj, basestring):
@@ -209,7 +209,7 @@ class View(BrowserPage):
         elif name is not None and obj is None:
             # create URL to view on context
             obj = self.context
-            
+
         if data is None:
             data = {}
         else:
@@ -634,6 +634,9 @@ Indexes = IndexesClass('Indexes')
 
 class Permission(Permission):
     pass
+
+class Public(Permission):
+    grok.name('zope.Public')
 
 class Role(Role):
     pass

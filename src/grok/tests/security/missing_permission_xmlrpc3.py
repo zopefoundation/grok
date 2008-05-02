@@ -21,6 +21,6 @@ class MissingPermission(grok.XMLRPC):
     grok.context(zope.interface.Interface)
     grok.require('doesnt.exist')
 
-    @grok.require('foo')
+    @grok.require(Foo)
     def foo(self):
         pass

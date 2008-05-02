@@ -56,7 +56,7 @@ class ViewPainting(grok.Permission):
 class Painting(grok.View):
 
     grok.context(zope.interface.Interface)
-    grok.require('cave.ViewPainting')
+    grok.require(ViewPainting)
 
     def render(self):
         return 'What a beautiful painting.'
@@ -64,7 +64,7 @@ class Painting(grok.View):
 class PublicNudity(grok.View):
 
     grok.context(zope.interface.Interface)
-    grok.require('zope.Public')
+    grok.require(grok.Public)
 
     def render(self):
         return 'Everybody can see this.'

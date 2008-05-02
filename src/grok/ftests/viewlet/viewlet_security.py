@@ -149,7 +149,7 @@ class BoneOwner(grok.Role):
 class GoldBone(grok.Viewlet):
     grok.context(Interface)
     grok.viewletmanager(Pot)
-    grok.require('bone.gold')
+    grok.require(Gold)
 
     def render(self):
         return 'Gold Bone'

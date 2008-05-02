@@ -18,8 +18,8 @@ class Two(grok.Permission):
 
 class MultipleView(grok.View):
     grok.context(zope.interface.Interface)
-    grok.require('permission.1')
-    grok.require('permission.2')
+    grok.require(One)
+    grok.require(Two)
 
     def render(self):
         pass

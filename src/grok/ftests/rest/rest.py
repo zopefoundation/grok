@@ -7,7 +7,7 @@ Let's create a simple application with REST support::
   >>> root = getRootFolder()
   >>> root['app'] = MyApp()
   >>> root['app']['alpha'] = MyContent()
-  
+
 Issue a GET request::
 
   >>> response = http_call('GET', 'http://localhost/++rest++a/app')
@@ -100,7 +100,7 @@ Let's examine the default protocol d, where nothing should work as well::
   Traceback (most recent call last):
     ...
   GrokMethodNotAllowed: <grok.ftests.rest.rest.MyApp object at ...
-  
+
 We have added support for GET for the ``alpha`` subobject only, in
 the default rest layer::
 
@@ -133,10 +133,10 @@ methods for the requested resource::
   Content-Length: 18
   <BLANKLINE>
   Method Not Allowed
-  
+
   >>> print http('POST /++rest++c/app HTTP/1.1')
   HTTP/1. 405 Method Not Allowed
-  Allow: 
+  Allow:
   Content-Length: 18
   Content-Type: text/plain
   <BLANKLINE>
@@ -233,7 +233,7 @@ random objects without access:
   <BLANKLINE>
 
  We shouldn't be allowed to PUT either::
- 
+
   >>> print http('PUT /app/beta HTTP/1.1')
   HTTP/1. 404 Not Found
   Content-Length: 0
@@ -264,7 +264,7 @@ We should also get a different result for the PUT request::
   >>> response = http_call('PUT', 'http://localhost/++rest++g/app/two')
   >>> print response.getBody()
   PUT directly registered
-  
+
 We expect POST and DELETE to be the same on both. For the directly
 registered object (two) it should fall back to the interface as there
 is none more specifically declared::
@@ -301,7 +301,7 @@ class MyApp(grok.Container, grok.Application):
 
 class MyContent(grok.Model):
     pass
-    
+
 class LayerA(grok.IRESTLayer):
     pass
 
@@ -340,11 +340,11 @@ class F(grok.RESTProtocol):
 
 class G(grok.RESTProtocol):
     grok.layer(LayerInterface)
-    
+
 class ARest(grok.REST):
     grok.layer(LayerA)
     grok.context(MyApp)
-    
+
     def GET(self):
         return "GET"
 
@@ -360,7 +360,7 @@ class ARest(grok.REST):
 class BRest(grok.REST):
     grok.layer(LayerB)
     grok.context(MyApp)
-    
+
     def GET(self):
         return "GET"
 
@@ -373,15 +373,15 @@ class CRest(grok.REST):
 
 class DRest(grok.REST):
     grok.context(MyContent)
-    
+
     def GET(self):
         return "GET2"
 
 class SecurityRest(grok.REST):
     grok.context(MyContent)
     grok.layer(LayerSecurity)
-    
-    @grok.require('zope.Public')
+
+    @grok.require(grok.Public)
     def GET(self):
         return "GET3"
 
@@ -396,7 +396,7 @@ class SecurityRest(grok.REST):
     @grok.require('zope.ManageContent')
     def DELETE(self):
         return "DELETE3"
-    
+
 class BodyTest(grok.REST):
     grok.context(MyContent)
     grok.layer(LayerContent)
@@ -416,7 +416,7 @@ class MyNoInterfaceContent(grok.Model):
 class InterfaceRest(grok.REST):
     grok.context(IFoo)
     grok.layer(LayerInterface)
-    
+
     def GET(self):
         return "GET interface registered"
 
@@ -432,7 +432,7 @@ class InterfaceRest(grok.REST):
 class NoInterfaceRest(grok.REST):
     grok.context(MyNoInterfaceContent)
     grok.layer(LayerInterface)
-    
+
     def GET(self):
         return "GET directly registered"
 

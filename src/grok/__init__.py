@@ -38,7 +38,7 @@ from grok.components import Container, OrderedContainer
 from grok.components import Site, LocalUtility, Annotation
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
-from grok.components import Permission, Role
+from grok.components import Permission, Role, Public
 from grok.components import Skin, IGrokLayer
 from grok.components import RESTProtocol, IRESTLayer
 from grok.interfaces import IRESTSkinType
