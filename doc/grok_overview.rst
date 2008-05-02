@@ -1,4 +1,4 @@
-Grok Developer's Notes 
+Grok Developer's Notes
 ======================
 
 This document is a developer's overview of Grok. It is not intended to
@@ -72,9 +72,9 @@ application::
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Models in Grok are automatically supplied with a ``__parent__`` and a
-``__name__`` attribute. 
+``__name__`` attribute.
 
-* ``__parent__`` points to object this object is in. If the object is in 
+* ``__parent__`` points to object this object is in. If the object is in
   a container, this is the container.
 
 * ``__name__`` is the name this object has in a URL (and in its
@@ -138,6 +138,27 @@ that comes in as ``name`` to an integer. If it fails, we return
 object asked for. Grok then falls back on default behavior, which in
 this case would mean a ``404 Not Found`` error.
 
+Traversable attributes
+~~~~~~~~~~~~~~~~~~~~~~
+
+In some cases, you want to traverse to attributes or methods of your
+``grok.Model``. This can be done easily using the ``grok.traversable``
+directive::
+
+  class Mammoth(grok.Model):
+      grok.traversable('trunk')
+
+      trunk = Trunk()
+
+  class MammothView(grok.View):
+      grok.context(Mammoth)
+
+      def render(self):
+          return "I'm a mammoth!"
+
+Now, if traversing to http://localhost/mammoth/trunk , a Trunk()
+object will be exposed at that URL.
+
 Views
 -----
 
@@ -146,10 +167,10 @@ to look at ways to actually present them to the user: views. So what
 is a view? A view is a class that represents a model in some way. It
 creates a user interface of some sort (typically HTML) for a model. A
 single model can have more than one view. It looks like this::
- 
+
   class Index(grok.View):
       grok.context(Application)
-     
+
       def render(self):
           return "This is the application"
 
@@ -170,7 +191,7 @@ The default view for a model is called ``index``. You can specify
 
 What happens when you go to this URL is that Grok instantiates the
 ``Index`` class, creating a ``Index`` instance. View instances have
-a number of attributes by default: 
+a number of attributes by default:
 
   * ``context``, the model instance that the view is presenting.
 
@@ -188,7 +209,7 @@ You can also create views with different names::
 
   class Edit(grok.View):
       grok.context(Application)
-    
+
       def render(self):
           return "This is the edit screen for the application"
 
@@ -203,7 +224,7 @@ directive::
   class SomeImpossiblyLongClassName(grok.View):
       grok.context(Application)
       grok.name('edit')
- 
+
       def render(self):
           return "This is the edit screen for the application"
 
@@ -314,7 +335,7 @@ the ``url`` method
 ~~~~~~~~~~~~~~~~~~
 
 Views have a special method called ``url()`` that can be used to
-create URLs to objects. The ``url`` method takes zero, one or two 
+create URLs to objects. The ``url`` method takes zero, one or two
 arguments and an additional optional keyword argument 'data' that
 is converted into a CGI query string appended to the URL::
 
@@ -328,12 +349,12 @@ is converted into a CGI query string appended to the URL::
 * self.url(object, u"name") - URL to the provided object, with
   		   ``/name`` appended, to point to a view or subobject
   		   of the provided object.
-                   
-* self.url(object, u"name", data={'name':'Peter', 'age':28}) 
+
+* self.url(object, u"name", data={'name':'Peter', 'age':28})
             - URL to the provided object, with ``/name`` appended
               with '?name=Peter&age=28' at the end.
-                   
-* self.url(data={'name':u'Andr\xe9', 'age:int':28}) - URL to the provided 
+
+* self.url(data={'name':u'Andr\xe9', 'age:int':28}) - URL to the provided
                    object with '?name=Andre%C3%A9'&age%3Aint=28'.
 
 From the view, this is accessed through ``self.url()``. From the
@@ -368,7 +389,7 @@ Like models, views also get supplied with a ``__parent__`` and
 ``context``, which should normally be used).
 
 ``__name__`` is the name of the view in the URL.
- 
+
 The ``@@`` thing
 ~~~~~~~~~~~~~~~~
 
@@ -487,7 +508,7 @@ to all our content objects::
         def size(self):
             total = 0
             for obj in self.values():
-                total += obj.size() 
+                total += obj.size()
             return total
 
 For simple cases this is fine, but for larger applications this can
@@ -531,36 +552,36 @@ to be made::
           elif isintance(self.context, Container):
                total = 0
                for obj in self.context.values():
-                   total += Sized(obj).size() 
+                   total += Sized(obj).size()
                return total
-               
+
 Instead, we can create a smart ``sized`` factory that does this
 switch-on-type behavior instead, keeping our adapters clean::
 
   class DocumentSized(object):
       def __init__(self, context):
           self.context = context
- 
+
       def sized(self):
           return len(self.context.text.encode('UTF-8'))
 
   class ImageSized(object):
       def __init__(self, context):
           self.context = context
- 
+
       def sized(self):
           return len(self.context.data)
 
   class ContainerSized(object):
       def __init__(self, context):
           self.context = context
- 
+
       def sized(self):
           total = 0
           for obj in self.context.values():
-              total += sized(obj).size() 
+              total += sized(obj).size()
           return total
-   
+
   def sized(context):
       if isinstance(context, Document):
           return DocumentedSized(context)
@@ -568,7 +589,7 @@ switch-on-type behavior instead, keeping our adapters clean::
           return ImageSized(context)
       elif isinstance(context, Container):
           return ContainerSized(context)
-       
+
 We can now call ``sized`` for a content object and get an object back
 that implements the "sized API"::
 
@@ -595,21 +616,21 @@ using a few grok directives::
   class DocumentSized(grok.Adapter):
       grok.context(Document)
       grok.provides(ISized)
- 
+
       def sized(self):
           return len(self.context.text.encode('UTF-8'))
 
   class ImageSized(grok.Adapter):
       grok.context(Image)
       grok.provides(ISized)
- 
+
       def sized(self):
           return len(self.context.data)
 
   class ContainerSized(grok.Adapter):
       grok.context(Container)
       grok.provides(ISized)
- 
+
       def sized(self):
           total = 0
           for obj in self.context.values():
@@ -646,7 +667,7 @@ instances of that class *provide* that interface::
 
   class Cow(object):
       grok.implements(IAnimal)
- 
+
       def __init__(self, name):
           self.name = name
 
@@ -700,7 +721,7 @@ but internally it is used for views, as we will see later. The
       grok.name('somename')
       grok.context(SomeClass)
       grok.provides(ISomeInterface)
- 
+
 Actually all adapters are named: by default the name of an adapter is
 the empty string.
 
@@ -709,8 +730,8 @@ object.  Instead, you need to use the APIs provided by the
 ``zope.component`` package, in particular ``getAdapter``::
 
   from zope import component
-  
-  my_adapter = component.getAdapter(some_object, ISomeInterface, 
+
+  my_adapter = component.getAdapter(some_object, ISomeInterface,
                                    name='somename')
 
 ``getAdapter`` can also be used to look up unnamed adapters, as an
@@ -731,7 +752,7 @@ You can construct a multi adapter by subclassing from
   class MyMultiAdapter(grok.MultiAdapter):
       grok.adapts(SomeClass, AnotherClass)
       grok.provides(ISomeInterface)
-   
+
       def __init__(some_instance, another_instance):
           self.some_interface = some_instance
           self.another_instance = another_instance
@@ -763,7 +784,7 @@ Views as adapters
 A view in Grok is in fact a named multi adapter, providing the base
 interface (``Interface``). This means that a view in Grok can be
 looked up in code by the following call::
- 
+
   from zope.interface import Interface
 
   view = component.getMultiAdapter((object, request), Interface, name="index")
@@ -917,7 +938,7 @@ To send this event yourself::
 
 Fired when an object was copied. It is a specialization of
 ``IObjectCreatedEvent`` that is fired by the system if you use the
-``zope.copypastemove`` functionality. 
+``zope.copypastemove`` functionality.
 
 Besides the ``object`` attribute it shares with
 ``IObjectCreattedEvent``, it has also has the ``original`` attribute,
@@ -951,7 +972,7 @@ And listen for it like this::
 This subclassing from ``ObjectEvent`` is not required; if your event
 isn't about an object, you can choose to design your event class
 entirely yourself. See ``zope.sendmail`` for the construction of mail sending
-events for an example. 
+events for an example.
 
 Interfaces for events
 ~~~~~~~~~~~~~~~~~~~~~
@@ -990,7 +1011,7 @@ module or object). Interfaces are useful because:
 
 * The system can inspect the interfaces a particular object provides,
   and treat them as an abstract form of classes for registration
-  purposes. 
+  purposes.
 
 Interfaces make it possible to use a generic framework's pluggability
 points with confidence: you can clearly see what you are supposed to
@@ -1060,7 +1081,7 @@ unrelated classes that implement ``IObjectEvent``, such as this one::
 
   class NonSubclassObjectEvent(object):
       grok.implements(IObjectEvent)
- 
+
       def __init__(self, object):
            self.object = object
 
@@ -1093,7 +1114,7 @@ can write::
       grok.provides(ISortedKeys)
 
       def sortedKeys(self):
-          return sorted(self.context.keys())     
+          return sorted(self.context.keys())
 
 Interfaces and views
 ~~~~~~~~~~~~~~~~~~~~
@@ -1105,7 +1126,7 @@ places, such as in views. This view is registered for all containers::
 
   class Keys(grok.View):
      grok.context(IContainer)
-     
+
      def render(self):
          return ', '.join(ISortedKeysAdapter(self.context).sortedKeys())
 
@@ -1119,7 +1140,7 @@ ZPT macros, which will then be available on all contexts::
 
   class Layout(grok.View):
       grok.context(Interface)
- 
+
 with a template ``layout.pt`` associated to it.
 
 You can then use these macros in any page template anywhere by
@@ -1139,7 +1160,7 @@ schema::
 
   from zope.interface import Interface
   from zope import schema
-  
+
   class ISpecies(Interface):
       name = schema.TextLine(u"Animal species name")
       scientific_name = schema.TextLine(u"Scientific name")
@@ -1160,7 +1181,7 @@ very much like a view. Let's look at a form for this schema::
 
   class Species(grok.Form):
       form_fields = grok.Fields(ISpecies)
-  
+
       @grok.action(u"Save form")
       def handle_save(self, **data):
           print data['name']
@@ -1170,7 +1191,7 @@ very much like a view. Let's look at a form for this schema::
 What is going on here? Firstly we use a special base class called
 ``grok.Form``. A form is a special kind of ``grok.View``, and
 associates the same way (using ``grok.context``). A form expects two
-things::
+things:
 
 * a ``form_fields`` attribute. Above we see the most common way to construct
   this attribute, using ``grok.Fields`` on the interface.
@@ -1203,7 +1224,7 @@ added. Let's look at an example::
       grok.context(SpeciesContainer)
 
       form_fields = grok.Fields(ISpecies)
-      
+
       @grok.action(u"Add species")
       def add_species(self, **data):
           # create a species instance
@@ -1230,13 +1251,13 @@ easily edit them. This *is* a view of the ``Species`` model::
 
   class Edit(grok.EditForm):
      grok.context(Species)
-    
+
      form_fields = grok.Fields(ISpecies)
 
      @grok.action(u"Edit species")
      def edit_species(self, **data):
           self.applyData(species, **data)
-     
+
 Forms are self-submitting, so this will show the edit form again. If
 you want to display another page, you can redirect the browser as we
 showed for the add form previously.
@@ -1252,7 +1273,7 @@ display forms. Let's look at an example::
 
   class Display(grok.DisplayForm):
      grok.context(Species)
-    
+
      form_fields = grok.Fields(ISpecies)
 
 The user can now go to ``myspecies/display`` to look at the species.
@@ -1289,12 +1310,12 @@ layout things::
         <!-- the title of the field -->
         <span i18n:translate="" tal:content="widget/label">label</span>
       </label>
-     
+
       <!-- render the HTML widget -->
       <div class="widget" tal:content="structure widget">
         <input type="text" />
       </div>
-      
+
       <!-- render any field specific validation error from a previous
            form submit next to the field -->
       <div class="error" tal:condition="widget/error">
@@ -1315,10 +1336,9 @@ The template for a display form a lot simpler::
     <tal:block content="widget/label" />
     <input tal:replace="structure widget" />
   </tal:block>
-   
+
   <!-- render all the action submit buttons -->
   <span class="actionButtons" tal:condition="view/availableActions">
     <input tal:repeat="action view/actions"
            tal:replace="structure action/render" />
   </span>
-
