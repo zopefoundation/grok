@@ -32,10 +32,13 @@ from martian.util import class_annotation
 # grokkers that use these utility functions)
 from grokcore.component.util import check_adapts
 from grokcore.component.util import determine_class_directive
-from grokcore.component.util import public_methods_from_class
 from grokcore.component.util import sort_components
 from grokcore.component.util import determine_module_component
 from grokcore.component.util import determine_class_component
+
+def public_methods_from_class(factory):
+    return [m for m in methods_from_class(factory) if \
+            not m.__name__.startswith('_')]
 
 def make_checker(factory, view_factory, permission, method_names=None):
     """Make a checker for a view_factory associated with factory.
