@@ -16,6 +16,7 @@
 
 import sys
 import grok
+from zope import interface
 from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IBrowserView
 
@@ -36,23 +37,56 @@ class templatedir(martian.Directive):
     store = martian.ONCE
     validate = martian.validateText
 
-class local_utility(martian.MultipleTimesDirective):
+class local_utility(martian.Directive):
     scope = martian.CLASS
+    store = martian.DICT
 
     def factory(self, factory, provides=None, name=u'',
                 setup=None, public=False, name_in_container=None):
         if provides is not None and not IInterface.providedBy(provides):
             raise GrokImportError("You can only pass an interface to the "
                                   "provides argument of %s." % self.name)
-        return LocalUtilityInfo(factory, provides, name, setup,
-                                public, name_in_container)
 
-class LocalUtilityInfo(object):
-    def __init__(self, factory, provides=None, name=u'',
-                 setup=None, public=False, name_in_container=None):
-        self.factory = factory
         if provides is None:
             provides = grok.provides.get(factory)
+
+        if provides is None:
+            if util.check_subclass(factory, grok.LocalUtility):
+                baseInterfaces = interface.implementedBy(grok.LocalUtility)
+                utilityInterfaces = interface.implementedBy(factory)
+                provides = list(utilityInterfaces - baseInterfaces)
+
+                if len(provides) == 0 and len(list(utilityInterfaces)) > 0:
+                    raise GrokImportError(
+                        "Cannot determine which interface to use "
+                        "for utility registration of %r. "
+                        "It implements an interface that is a specialization "
+                        "of an interface implemented by grok.LocalUtility. "
+                        "Specify the interface by either using grok.provides "
+                        "on the utility or passing 'provides' to "
+                        "grok.local_utility." % factory, factory)
+            else:
+                provides = list(interface.implementedBy(factory))
+
+            util.check_implements_one_from_list(provides, factory)
+            provides = provides[0]
+
+        if (provides, name) in self.frame.f_locals.get(self.dotted_name(), {}):
+            raise GrokImportError(
+                "Conflicting local utility registration %r. "
+                "Local utilities are registered multiple "
+                "times for interface %r and name %r." %
+                (factory, provides, name), factory)
+
+        info = LocalUtilityInfo(factory, provides, name, setup, public,
+                                name_in_container)
+        return (provides, name), info
+
+
+class LocalUtilityInfo(object):
+    def __init__(self, factory, provides, name=u'',
+                 setup=None, public=False, name_in_container=None):
+        self.factory = factory
         self.provides = provides
         self.name = name
         self.setup = setup
@@ -62,8 +96,7 @@ class LocalUtilityInfo(object):
 class RequireDirectiveStore(StoreMultipleTimes):
 
     def get(self, directive, component, default):
-        permissions = super(RequireDirectiveStore, self).get(
-            directive, component, default)
+        permissions = getattr(component, directive.dotted_name(), default)
         if (permissions is default) or not permissions:
             return default
         if len(permissions) > 1:

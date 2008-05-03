@@ -432,64 +432,16 @@ class SiteGrokker(martian.ClassGrokker):
         if not infos:
             return False
 
+        infos = infos.values()
         for info in infos:
             if info.public and not IContainer.implementedBy(factory):
                 raise GrokError(
                     "Cannot set public to True with grok.local_utility as "
                     "the site (%r) is not a container." %
                     factory, factory)
-            if info.provides is None:
-                if util.check_subclass(info.factory, grok.LocalUtility):
-                    baseInterfaces = interface.implementedBy(grok.LocalUtility)
-                    utilityInterfaces = interface.implementedBy(info.factory)
-                    provides = list(utilityInterfaces - baseInterfaces)
-
-                    if len(provides) == 0 and len(list(utilityInterfaces)) > 0:
-                        raise GrokError(
-                            "Cannot determine which interface to use "
-                            "for utility registration of %r in site %r. "
-                            "It implements an interface that is a specialization "
-                            "of an interface implemented by grok.LocalUtility. "
-                            "Specify the interface by either using grok.provides "
-                            "on the utility or passing 'provides' to "
-                            "grok.local_utility." % (info.factory, factory),
-                            info.factory)
-                else:
-                    provides = list(interface.implementedBy(info.factory))
-
-                util.check_implements_one_from_list(provides, info.factory)
-                info.provides = provides[0]
-
-        # raise an error in case of any duplicate registrations
-        # on the class level (subclassing overrides, see below)
-        used = set()
-        class_infos = grok.local_utility.get(factory)
-        for info in class_infos:
-            key = (info.provides, info.name)
-            if key in used:
-                raise GrokError(
-                    "Conflicting local utility registration %r in "
-                    "site %r. Local utilities are registered multiple "
-                    "times for interface %r and name %r." %
-                    (info.factory, factory, info.provides, info.name),
-                    factory)
-            used.add(key)
-
-        # Make sure that local utilities from subclasses override
-        # utilities from base classes if the registration (provided
-        # interface, name) is identical.
-        overridden_infos = []
-        used = set()
-        for info in reversed(infos):
-            key = (info.provides, info.name)
-            if key in used:
-                continue
-            used.add(key)
-            overridden_infos.append(info)
-        overridden_infos.reverse()
 
         # store infos on site class
-        factory.__grok_utilities_to_install__ = overridden_infos
+        factory.__grok_utilities_to_install__ = infos
         adapts = (factory, grok.IObjectAddedEvent)
 
         config.action(

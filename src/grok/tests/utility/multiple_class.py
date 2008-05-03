@@ -2,28 +2,13 @@
 When you try to register multiple classes with the same (interface, name)
 combination multiple times using grok.local_utility, we expect an error:
 
-  >>> grok.testing.grok(__name__)
+  >>> import grok.tests.utility.multiple_class_fixture
   Traceback (most recent call last):
     ...
-  GrokError: Conflicting local utility registration
-  <class 'grok.tests.utility.multiple_class.Fireplace2'> in site
-  <class 'grok.tests.utility.multiple_class.Cave'>.
+  GrokImportError: ("Conflicting local utility registration
+  <class 'grok.tests.utility.multiple_class_fixture.Fireplace2'>.
   Local utilities are registered multiple times for interface
-  <InterfaceClass grok.tests.utility.multiple_class.IFireplace> and
-  name 'Foo'.  
+  <InterfaceClass grok.tests.utility.multiple_class_fixture.IFireplace>
+  and name 'Foo'.",
+  <class 'grok.tests.utility.multiple_class_fixture.Fireplace2'>)
 """
-import grok
-from zope import interface
-
-class IFireplace(interface.Interface):
-    pass
-
-class Fireplace(grok.LocalUtility):
-    grok.implements(IFireplace)
-
-class Fireplace2(grok.LocalUtility):
-    grok.implements(IFireplace)
-    
-class Cave(grok.Model, grok.Site):
-    grok.local_utility(Fireplace, name='Foo')
-    grok.local_utility(Fireplace2, name='Foo')
