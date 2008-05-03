@@ -53,9 +53,17 @@ from grok.util import check_permission, get_default_permission, make_checker
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
-from grokcore.component.meta import get_context, get_name_classname
+from grokcore.component.meta import get_context
 from grokcore.component.util import check_adapts
 from grokcore.component.util import determine_module_component
+
+#  XXX helper moved back from grokcore.component
+def get_name_classname(factory):
+    name = grok.name.get(factory)
+    if not name:
+        name = factory.__name__.lower()
+    return name
+
 
 class ViewletManagerContextGrokker(martian.GlobalGrokker):
 
@@ -75,7 +83,7 @@ class XMLRPCGrokker(martian.ClassGrokker):
     component_class = grok.XMLRPC
 
     def grok(self, name, factory, module_info, config, **kw):
-        view_context = get_context(module_info, factory)
+        view_context = get_context(factory, module_info)
 
         methods = public_methods_from_class(factory)
 
@@ -124,7 +132,7 @@ class RESTGrokker(martian.ClassGrokker):
     component_class = grok.REST
 
     def grok(self, name, factory, module_info, config, **kw):
-        view_context = get_context(module_info, factory)
+        view_context = get_context(factory, module_info)
 
         methods = public_methods_from_class(factory)
 
@@ -177,7 +185,7 @@ class ViewGrokker(martian.ClassGrokker):
     component_class = grok.View
 
     def grok(self, name, factory, module_info, config, **kw):
-        view_context = get_context(module_info, factory)
+        view_context = get_context(factory, module_info)
 
         factory.module_info = module_info
 
@@ -251,7 +259,7 @@ class JSONGrokker(martian.ClassGrokker):
     component_class = grok.JSON
 
     def grok(self, name, factory, module_info, config, **kw):
-        view_context = get_context(module_info, factory)
+        view_context = get_context(factory, module_info)
 
         methods = public_methods_from_class(factory)
 
@@ -307,7 +315,7 @@ class TraverserGrokker(martian.ClassGrokker):
     component_class = grok.Traverser
 
     def grok(self, name, factory, module_info, config, **kw):
-        factory_context = get_context(module_info, factory)
+        factory_context = get_context(factory, module_info)
         adapts = (factory_context, IHTTPRequest)
 
         config.action(
@@ -617,7 +625,7 @@ class AnnotationGrokker(martian.ClassGrokker):
     component_class = grok.Annotation
 
     def grok(self, name, factory, module_info, config, **kw):
-        adapter_context = get_context(module_info, factory)
+        adapter_context = get_context(factory, module_info)
         # XXX cannot use get_provides here, can we refactor others to reuse
         # this bit?
         provides = util.class_annotation(factory, 'grok.provides', None)
@@ -686,7 +694,7 @@ class IndexesGrokker(martian.InstanceGrokker):
         indexes = util.class_annotation(factory, 'grok.indexes', None)
         if indexes is None:
             return False
-        context = get_context(module_info, factory)
+        context = get_context(factory, module_info)
         catalog_name = grok.name.get(factory)
 
         subscriber = IndexesSetupSubscriber(catalog_name, indexes,
@@ -799,7 +807,7 @@ class ViewletManagerGrokker(martian.ClassGrokker):
                 )
 
         name = grok.name.get(factory)
-        view_context = get_context(module_info, factory)
+        view_context = get_context(factory, module_info)
         view = grok.view.get(factory, module_info.getModule())
 
         viewlet_layer = grok.layer.get(factory, module_info.getModule())
@@ -830,7 +838,7 @@ class ViewletGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, module_info, config, **kw):
         viewlet_name = get_name_classname(factory)
-        viewlet_context = get_context(module_info, factory)
+        viewlet_context = get_context(factory, module_info)
 
         factory.module_info = module_info # to make /static available
 
