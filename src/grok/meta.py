@@ -54,7 +54,7 @@ from grok.util import check_permission, get_default_permission, make_checker
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
-from grokcore.component.meta import get_context, get_name, get_name_classname
+from grokcore.component.meta import get_context, get_name_classname
 from grokcore.component.util import check_adapts
 from grokcore.component.util import determine_class_component
 from grokcore.component.util import determine_class_directive
@@ -564,7 +564,7 @@ class PermissionGrokker(martian.ClassGrokker):
     priority = 1500
 
     def grok(self, name, factory, module_info, config, **kw):
-        id = get_name(factory, None)
+        id = grok.name.get(factory, None)
         if id is None:
             raise GrokError(
                 "A permission needs to have a dotted name for its id. Use "
@@ -590,7 +590,7 @@ class RoleGrokker(martian.ClassGrokker):
     priority = PermissionGrokker.priority - 1
 
     def grok(self, name, factory, module_info, config, **kw):
-        id = get_name(factory, None)
+        id = grok.name.get(factory, None)
         if id is None:
             raise GrokError(
                 "A role needs to have a dotted name for its id. Use "
@@ -633,7 +633,7 @@ class AnnotationGrokker(martian.ClassGrokker):
             util.check_implements_one_from_list(real_interfaces, factory)
             provides = real_interfaces[0]
 
-        key = get_name(factory, None)
+        key = grok.name.get(factory, None)
         if key is None:
             key = factory.__module__ + '.' + factory.__name__
 
@@ -692,7 +692,7 @@ class IndexesGrokker(martian.InstanceGrokker):
         if indexes is None:
             return False
         context = get_context(module_info, factory)
-        catalog_name = get_name(factory)
+        catalog_name = grok.name.get(factory)
 
         subscriber = IndexesSetupSubscriber(catalog_name, indexes,
                                             context, module_info)
@@ -799,7 +799,7 @@ class ViewletManagerGrokker(martian.ClassGrokker):
                 args=(templates, module_info, factory)
                 )
 
-        name = get_name(factory)
+        name = grok.name.get(factory)
         view_context = get_context(module_info, factory)
 
         view = determine_class_directive('grok.view', factory,
