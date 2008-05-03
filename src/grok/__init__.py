@@ -46,7 +46,7 @@ from grok.components import ViewletManager, Viewlet
 
 from martian import baseclass
 from grokcore.component.directive import (
-    context, name, title, provides, global_utility, direct, order)
+    context, name, title, description, provides, global_utility, direct, order)
 from grok.directive import (
     template, templatedir, local_utility, permissions, require, site,
     layer, viewletmanager, view, traversable)
