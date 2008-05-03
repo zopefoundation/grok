@@ -482,9 +482,14 @@ class ContainerTraverser(Traverser):
             result = traverse(name)
             if result is not None:
                 return result
-        # try to get the item from the container
-        return self.context.get(name)
-
+        # try to get the item from the container, casting it to an int
+        # if the key might be an int (which is quite reasonable for a
+        # key that lives in a database)
+        # XXX this is a dirty hack, but it works fine
+        try:
+            return self.context.get(type(self.context.keys()[0])(name))
+        except KeyError:
+            return self.context.get(name)
 
 default_form_template = PageTemplateFile(os.path.join(
     'templates', 'default_edit_form.pt'))
