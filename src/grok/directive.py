@@ -16,6 +16,7 @@
 
 import grok
 from zope.interface.interfaces import IInterface
+from zope.publisher.interfaces.browser import IBrowserView
 
 from martian.error import GrokImportError
 from martian.directive import (Directive, OnceDirective,
@@ -127,15 +128,19 @@ class permissions(ndir.Directive):
     def factory(*args):
         return args
 
-class layer(ndir.Directive):
+class OneInterfaceOrClassOnClassOrModule(ndir.Directive):
     scope = ndir.CLASS_OR_MODULE
     store = ndir.ONCE
     validate = ndir.validateInterfaceOrClass
 
-viewletmanager = InterfaceOrClassDirective('grok.viewletmanager',
-                                           ClassOrModuleDirectiveContext())
-view = InterfaceOrClassDirective('grok.view',
-                                 ClassOrModuleDirectiveContext())
+class layer(OneInterfaceOrClassOnClassOrModule):
+    pass
+
+class viewletmanager(OneInterfaceOrClassOnClassOrModule):
+    pass
+
+class view(OneInterfaceOrClassOnClassOrModule):
+    default = IBrowserView
 
 class traversable(ndir.Directive):
     scope = ndir.CLASS

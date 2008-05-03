@@ -17,7 +17,6 @@ import os
 
 import zope.component.interface
 from zope import interface, component
-from zope.publisher.browser import IBrowserView
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher,
@@ -58,47 +57,18 @@ from grokcore.component.meta import get_context, get_name_classname
 from grokcore.component.util import check_adapts
 from grokcore.component.util import determine_module_component
 
-# XXX these helpers will eventually be replaced with
-#     grok.viewletmanager.get(class_, module_info.getModule())
-# et. al.
-
-def get_viewletmanager(module_info, factory):
-    return determine_class_component(module_info, factory,
-                                     'viewletmanager', 'grok.viewletmanager')
-
-def determine_class_component(module_info, class_,
-                              component_name, component_directive):
-    """Determine component for a class.
-
-    Determine a component for a class. If no class-specific component exists,
-    try falling back on module-level component.
-    """
-    module_component = module_info.getAnnotation(component_directive, None)
-    component = class_annotation(class_, component_directive, module_component)
-    check_module_component(class_, component,
-                           component_name, component_directive)
-    return component
-
-def determine_class_directive(directive_name, factory, module_info,
-                              default=None):
-    directive = class_annotation(factory, directive_name, None)
-    if directive is None:
-        directive = module_info.getAnnotation(directive_name, None)
-    if directive is not None:
-        return directive
-    return default
-
-# XXX
-
 class ViewletManagerContextGrokker(martian.GlobalGrokker):
 
     priority = 1001
 
     def grok(self, name, module, module_info, config, **kw):
         viewletmanager = determine_module_component(module_info,
-                                                    'grok.viewletmanager',
+                                                    grok.viewletmanager,
                                                     [grok.ViewletManager])
-        module.__grok_viewletmanager__ = viewletmanager
+        # XXX this depends on the particular implementation of the
+        # directive storages :(
+        dotted_name = 'grok.directive.viewletmanager'
+        setattr(module, dotted_name, viewletmanager)
         return True
 
 class XMLRPCGrokker(martian.ClassGrokker):
@@ -830,9 +800,7 @@ class ViewletManagerGrokker(martian.ClassGrokker):
 
         name = grok.name.get(factory)
         view_context = get_context(module_info, factory)
-
-        view = determine_class_directive('grok.view', factory,
-                                         module_info, default=IBrowserView)
+        view = grok.view.get(factory, module_info.getModule())
 
         viewlet_layer = grok.layer.get(factory, module_info.getModule())
         if viewlet_layer is None:
@@ -875,13 +843,13 @@ class ViewletGrokker(martian.ClassGrokker):
                 args=(templates, module_info, factory)
                 )
 
-        view = determine_class_directive('grok.view', factory,
-                                         module_info, default=IBrowserView)
+        view = grok.view.get(factory, module_info.getModule())
         viewlet_layer = grok.layer.get(factory, module_info.getModule())
         if viewlet_layer is None:
             viewlet_layer = IDefaultBrowserLayer
 
-        viewletmanager = get_viewletmanager(module_info, factory)
+        viewletmanager = grok.viewletmanager.get(factory,
+                                                 module_info.getModule())
 
         config.action(
             discriminator = ('viewlet', viewlet_context, viewlet_layer,
