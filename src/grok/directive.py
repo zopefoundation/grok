@@ -18,6 +18,7 @@ import grok
 from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IBrowserView
 
+import martian
 from martian.error import GrokImportError
 from martian.directive import (Directive, OnceDirective,
                                MultipleTimesDirective, BaseTextDirective,
@@ -31,7 +32,6 @@ from martian.directive import (Directive, OnceDirective,
                                ClassDirectiveContext,
                                ClassOrModuleDirectiveContext)
 from martian import util
-from martian import ndir
 from grok import components
 
 class MultiValueOnceDirective(OnceDirective):
@@ -101,26 +101,34 @@ class RequireDirective(SingleValue, MultipleTimesDirective):
 
 
 # Define grok directives
-template = SingleTextDirective('grok.template', ClassDirectiveContext())
-templatedir = SingleTextDirective('grok.templatedir', ModuleDirectiveContext())
+class template(martian.Directive):
+    scope = martian.CLASS
+    store = martian.ONCE
+    validate = martian.validateText
+
+class templatedir(martian.Directive):
+    scope = martian.MODULE
+    store = martian.ONCE
+    validate = martian.validateText
+
 local_utility = LocalUtilityDirective('grok.local_utility',
                                       ClassDirectiveContext())
 require = RequireDirective('grok.require', ClassDirectiveContext())
 site = InterfaceOrClassDirective('grok.site',
                                  ClassDirectiveContext())
 
-class permissions(ndir.Directive):
-    scope = ndir.CLASS
-    store = ndir.ONCE
+class permissions(martian.Directive):
+    scope = martian.CLASS
+    store = martian.ONCE
     default = []
 
     def factory(*args):
         return args
 
-class OneInterfaceOrClassOnClassOrModule(ndir.Directive):
-    scope = ndir.CLASS_OR_MODULE
-    store = ndir.ONCE
-    validate = ndir.validateInterfaceOrClass
+class OneInterfaceOrClassOnClassOrModule(martian.Directive):
+    scope = martian.CLASS_OR_MODULE
+    store = martian.ONCE
+    validate = martian.validateInterfaceOrClass
 
 class layer(OneInterfaceOrClassOnClassOrModule):
     pass
@@ -131,9 +139,9 @@ class viewletmanager(OneInterfaceOrClassOnClassOrModule):
 class view(OneInterfaceOrClassOnClassOrModule):
     default = IBrowserView
 
-class traversable(ndir.Directive):
-    scope = ndir.CLASS
-    store = ndir.DICT
+class traversable(martian.Directive):
+    scope = martian.CLASS
+    store = martian.DICT
 
     def factory(self, attr, name=None):
         if name is None:

@@ -44,7 +44,7 @@ from grok.components import RESTProtocol, IRESTLayer
 from grok.interfaces import IRESTSkinType
 from grok.components import ViewletManager, Viewlet
 
-from martian.ndir import baseclass
+from martian import baseclass
 from grokcore.component.directive import (
     context, name, title, provides, global_utility, direct, order)
 from grok.directive import (
