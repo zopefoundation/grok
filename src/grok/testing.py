@@ -13,6 +13,7 @@
 ##############################################################################
 """Grok test helpers
 """
+import grokcore.component
 from zope.configuration.config import ConfigurationMachine
 from martian import scan
 from grokcore.component import zcml
