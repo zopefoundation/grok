@@ -565,8 +565,8 @@ class PermissionGrokker(martian.ClassGrokker):
     priority = 1500
 
     def grok(self, name, factory, module_info, config, **kw):
-        id = grok.name.get(factory, None)
-        if id is None:
+        id = grok.name.get(factory)
+        if not id:
             raise GrokError(
                 "A permission needs to have a dotted name for its id. Use "
                 "grok.name to specify one.", factory)
@@ -592,7 +592,7 @@ class RoleGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, module_info, config, **kw):
         id = grok.name.get(factory, None)
-        if id is None:
+        if not id:
             raise GrokError(
                 "A role needs to have a dotted name for its id. Use "
                 "grok.name to specify one.", factory)

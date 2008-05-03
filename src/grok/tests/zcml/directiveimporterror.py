@@ -15,5 +15,5 @@ When a GrokImportError occurs, ZCML will give the proper stack trace:
   Traceback (most recent call last):
     ...
   ZopeXMLConfigurationError: File "...", line ...
-  GrokImportError: grok.template can only be used on class level.
+  GrokImportError: The 'template' directive can only be used on class level.
 """

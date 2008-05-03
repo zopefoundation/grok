@@ -85,7 +85,7 @@ class require(martian.Directive):
         if util.not_unicode_or_ascii(value):
             raise GrokImportError(
                 "You can only pass unicode, ASCII, or a subclass "
-                "of grok.Permission %s." % self.name)
+                "of grok.Permission to the '%s' directive." % self.name)
 
     def factory(self, value):
         if util.check_subclass(value, components.Permission):
