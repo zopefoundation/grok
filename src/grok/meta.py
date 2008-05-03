@@ -51,6 +51,7 @@ import grok
 from grok import components, formlib, templatereg
 from grok.util import check_permission, make_checker
 from grok.util import public_methods_from_class
+from grok.util import get_name_classname
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
@@ -58,14 +59,6 @@ from grokcore.component.meta import get_context
 from grokcore.component.util import check_adapts
 from grokcore.component.util import determine_module_component
 from grokcore.component.util import check_module_component
-
-#  XXX helper moved back from grokcore.component
-def get_name_classname(factory):
-    name = grok.name.get(factory)
-    if not name:
-        name = factory.__name__.lower()
-    return name
-
 
 class ViewletManagerContextGrokker(martian.GlobalGrokker):
 
@@ -514,8 +507,7 @@ def localUtilityRegistrationSubscriber(site, event):
     if installed:
         return
 
-    for info in util.class_annotation(site.__class__,
-                                      'grok.utilities_to_install', []):
+    for info in getattr(site.__class__, '__grok_utilities_to_install__', []):
         setupUtility(site, info.factory(), info.provides, name=info.name,
                      name_in_container=info.name_in_container,
                      public=info.public, setup=info.setup)
@@ -574,10 +566,11 @@ class PermissionGrokker(martian.ClassGrokker):
         # We can safely convert to unicode, since the directives make sure
         # it is either unicode already or ASCII.
         id = unicode(id)
-        permission = factory(
-            id,
-            unicode(util.class_annotation(factory, 'grok.title', id)),
-            unicode(util.class_annotation(factory, 'grok.description', '')))
+        title = grok.title.get(factory)
+        if not title:
+            title = id
+        permission = factory(id, unicode(title),
+                             unicode(grok.description.get(factory)))
 
         config.action(
             discriminator=('utility', IPermission, id),
@@ -600,10 +593,11 @@ class RoleGrokker(martian.ClassGrokker):
         # We can safely convert to unicode, since the directives makes sure
         # it is either unicode already or ASCII.
         id = unicode(id)
-        role = factory(
-            id,
-            unicode(util.class_annotation(factory, 'grok.title', id)),
-            unicode(util.class_annotation(factory, 'grok.description', '')))
+        title = grok.title.get(factory)
+        if not title:
+            title = id
+        role = factory(id, unicode(title),
+                       unicode(grok.description.get(factory)))
 
         config.action(
             discriminator=('utility', IRole, id),

@@ -663,9 +663,8 @@ class ViewletManager(ViewletManagerBase):
 
     def __init__(self, context, request, view):
         super(ViewletManager, self).__init__(context, request, view)
-        self.__name__ = util.class_annotation(self.__class__,
-                                              'grok.name',
-                                              self.__class__.__name__.lower())
+        self.__name__ = util.get_name_classname(self.__class__)
+
         self.static = component.queryAdapter(
             self.request,
             interface.Interface,
@@ -718,9 +717,8 @@ class Viewlet(ViewletBase):
         super(Viewlet, self).__init__(context, request, view, manager)
         # would be nice to move this to the ViewletGrokker but
         # new objects don't have __name__ of their class
-        self.__name__ = util.class_annotation(self.__class__,
-                                             'grok.name',
-                                              self.__class__.__name__.lower())
+        self.__name__ = util.get_name_classname(self.__class__)
+
         self.static = component.queryAdapter(
             self.request,
             interface.Interface,

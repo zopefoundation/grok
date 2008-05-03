@@ -16,6 +16,7 @@
 
 import urllib
 
+import grok
 import zope.location.location
 from zope import component
 from zope import interface
@@ -33,6 +34,12 @@ from martian.util import class_annotation, methods_from_class
 from grokcore.component.util import check_adapts
 from grokcore.component.util import sort_components
 from grokcore.component.util import determine_module_component
+
+def get_name_classname(factory):
+    name = grok.name.get(factory)
+    if not name:
+        name = factory.__name__.lower()
+    return name
 
 def public_methods_from_class(factory):
     return [m for m in methods_from_class(factory) if \
