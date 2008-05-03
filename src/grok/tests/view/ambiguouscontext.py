@@ -5,7 +5,8 @@ Templates with ambiguous context cannot be grokked:
   Traceback (most recent call last):
     ...
   GrokError: Multiple possible contexts for
-  <class 'grok.tests.view.ambiguouscontext.Club'>, please use grok.context.
+  <class 'grok.tests.view.ambiguouscontext.Club'>, please use the
+  'context' directive.
 
 """
 

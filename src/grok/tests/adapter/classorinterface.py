@@ -5,22 +5,22 @@ with anything else:
   >>> function_context()
   Traceback (most recent call last):
     ...
-  GrokImportError: You can only pass classes or interfaces to grok.context.
+  GrokImportError: The 'context' directive can only be called with a class or an interface.
 
   >>> string_context()
   Traceback (most recent call last):
     ...
-  GrokImportError: You can only pass classes or interfaces to grok.context.
+  GrokImportError: The 'context' directive can only be called with a class or an interface.
 
   >>> module_context()
   Traceback (most recent call last):
     ...
-  GrokImportError: You can only pass classes or interfaces to grok.context.
+  GrokImportError: The 'context' directive can only be called with a class or an interface.
 
   >>> instance_context()
   Traceback (most recent call last):
     ...
-  GrokImportError: You can only pass classes or interfaces to grok.context.
+  GrokImportError: The 'context' directive can only be called with a class or an interface.
 
 """
 import grok
