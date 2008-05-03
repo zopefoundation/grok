@@ -14,6 +14,7 @@
 """Grok directives.
 """
 
+import grok
 from zope.interface.interfaces import IInterface
 
 from martian.error import GrokImportError
@@ -92,7 +93,7 @@ class RequireDirective(SingleValue, MultipleTimesDirective):
 
     def store(self, frame, value):
         if util.check_subclass(value, components.Permission):
-            value = getattr(value, '__grok_name__')
+            value = grok.name.get(value)
 
         super(RequireDirective, self).store(frame, value)
         values = frame.f_locals.get(self.local_name, [])
