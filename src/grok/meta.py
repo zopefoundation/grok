@@ -57,6 +57,7 @@ from grok.interfaces import IRESTSkinType
 from grokcore.component.meta import get_context
 from grokcore.component.util import check_adapts
 from grokcore.component.util import determine_module_component
+from grokcore.component.util import check_module_component
 
 #  XXX helper moved back from grokcore.component
 def get_name_classname(factory):
@@ -591,7 +592,7 @@ class RoleGrokker(martian.ClassGrokker):
     priority = PermissionGrokker.priority - 1
 
     def grok(self, name, factory, module_info, config, **kw):
-        id = grok.name.get(factory, None)
+        id = grok.name.get(factory)
         if not id:
             raise GrokError(
                 "A role needs to have a dotted name for its id. Use "
@@ -624,9 +625,7 @@ class AnnotationGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, module_info, config, **kw):
         adapter_context = get_context(factory, module_info)
-        # XXX cannot use get_provides here, can we refactor others to reuse
-        # this bit?
-        provides = util.class_annotation(factory, 'grok.provides', None)
+        provides = grok.provides.get(factory)
         if provides is None:
             base_interfaces = interface.implementedBy(grok.Annotation)
             factory_interfaces = interface.implementedBy(factory)
@@ -634,8 +633,8 @@ class AnnotationGrokker(martian.ClassGrokker):
             util.check_implements_one_from_list(real_interfaces, factory)
             provides = real_interfaces[0]
 
-        key = grok.name.get(factory, None)
-        if key is None:
+        key = grok.name.get(factory)
+        if not key:
             key = factory.__module__ + '.' + factory.__name__
 
         @component.adapter(adapter_context)
@@ -856,6 +855,8 @@ class ViewletGrokker(martian.ClassGrokker):
 
         viewletmanager = grok.viewletmanager.get(factory,
                                                  module_info.getModule())
+        check_module_component(
+            factory, viewletmanager, 'viewletmanager', grok.viewletmanager)
 
         config.action(
             discriminator = ('viewlet', viewlet_context, viewlet_layer,
