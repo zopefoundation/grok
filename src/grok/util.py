@@ -31,10 +31,8 @@ from martian.util import class_annotation
 # BBB backwards-compatibility imports (in case somebody wrote custom
 # grokkers that use these utility functions)
 from grokcore.component.util import check_adapts
-from grokcore.component.util import determine_class_directive
 from grokcore.component.util import sort_components
 from grokcore.component.util import determine_module_component
-from grokcore.component.util import determine_class_component
 
 def public_methods_from_class(factory):
     return [m for m in methods_from_class(factory) if \

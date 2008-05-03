@@ -29,8 +29,15 @@ from martian.directive import (Directive, OnceDirective,
                                ClassDirectiveContext,
                                ClassOrModuleDirectiveContext)
 from martian import util
-from grokcore.component.directive import MultiValueOnceDirective
 from grok import components
+
+class MultiValueOnceDirective(OnceDirective):
+
+    def check_arguments(self, *values):
+        pass
+
+    def value_factory(self, *args):
+        return args
 
 class LocalUtilityDirective(MultipleTimesDirective):
     def check_arguments(self, factory, provides=None, name=u'',
