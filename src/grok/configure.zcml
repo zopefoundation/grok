@@ -34,11 +34,7 @@
   <adapter factory=".components.ContainerTraverser" />
 
   <browser:defaultView
-      for=".components.Model"
-      name="index"
-      />
-  <browser:defaultView
-      for=".components.Container"
+      for=".interfaces.IContext"
       name="index"
       />
 
