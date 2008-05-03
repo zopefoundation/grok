@@ -26,7 +26,7 @@ from zope.security.checker import NamesChecker, defineChecker
 from zope.security.interfaces import IPermission
 
 from martian.error import GrokError
-from martian.util import class_annotation
+from martian.util import class_annotation, methods_from_class
 
 # BBB backwards-compatibility imports (in case somebody wrote custom
 # grokkers that use these utility functions)

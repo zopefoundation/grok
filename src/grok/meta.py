@@ -50,6 +50,7 @@ from martian import util
 import grok
 from grok import components, formlib, templatereg
 from grok.util import check_permission, get_default_permission, make_checker
+from grok.util import public_methods_from_class
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
