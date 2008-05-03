@@ -56,14 +56,39 @@ from grok.interfaces import IRESTSkinType
 
 from grokcore.component.meta import get_context, get_name_classname
 from grokcore.component.util import check_adapts
-from grokcore.component.util import determine_class_component
-from grokcore.component.util import determine_class_directive
 from grokcore.component.util import determine_module_component
-from grokcore.component.util import public_methods_from_class
+
+# XXX these helpers will eventually be replaced with
+#     grok.viewletmanager.get(class_, module_info.getModule())
+# et. al.
 
 def get_viewletmanager(module_info, factory):
     return determine_class_component(module_info, factory,
                                      'viewletmanager', 'grok.viewletmanager')
+
+def determine_class_component(module_info, class_,
+                              component_name, component_directive):
+    """Determine component for a class.
+
+    Determine a component for a class. If no class-specific component exists,
+    try falling back on module-level component.
+    """
+    module_component = module_info.getAnnotation(component_directive, None)
+    component = class_annotation(class_, component_directive, module_component)
+    check_module_component(class_, component,
+                           component_name, component_directive)
+    return component
+
+def determine_class_directive(directive_name, factory, module_info,
+                              default=None):
+    directive = class_annotation(factory, directive_name, None)
+    if directive is None:
+        directive = module_info.getAnnotation(directive_name, None)
+    if directive is not None:
+        return directive
+    return default
+
+# XXX
 
 class ViewletManagerContextGrokker(martian.GlobalGrokker):
 
