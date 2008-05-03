@@ -169,9 +169,9 @@ class RESTGrokker(martian.ClassGrokker):
                 )
 
         # grab layer from class or module
-        view_layer = determine_class_directive('grok.layer', factory,
-                                               module_info,
-                                               default=grok.IRESTLayer)
+        view_layer = grok.layer.get(factory, module_info.getModule())
+        if view_layer is None:
+            view_layer = grok.IRESTLayer
 
         for method in methods:
             name = method.__name__
@@ -243,9 +243,9 @@ class ViewGrokker(martian.ClassGrokker):
                                 % (method.__name__, factory), factory)
 
         # grab layer from class or module
-        view_layer = determine_class_directive('grok.layer',
-                                               factory, module_info,
-                                               default=IDefaultBrowserLayer)
+        view_layer = grok.layer.get(factory, module_info.getModule())
+        if view_layer is None:
+            view_layer = IDefaultBrowserLayer
 
         view_name = get_name_classname(factory)
         # __view_name__ is needed to support IAbsoluteURL on views
@@ -634,7 +634,7 @@ class RoleGrokker(martian.ClassGrokker):
             args=(role, IRole, id),
             )
 
-        permissions = util.class_annotation(factory, 'grok.permissions', ())
+        permissions = grok.permissions.get(factory)
         for permission in permissions:
             config.action(
                 discriminator=('grantPermissionToRole', permission, id),
@@ -785,8 +785,10 @@ class SkinGrokker(martian.ClassGrokker):
     component_class = grok.Skin
 
     def grok(self, name, factory, module_info, config, **kw):
-        layer = determine_class_directive('grok.layer', factory, module_info,
-                                          default=IBrowserRequest)
+        view_layer = grok.layer.get(factory, module_info.getModule())
+        if view_layer is None:
+            view_layer = IBrowserRequest
+
         name = get_name_classname(factory)
         config.action(
             discriminator=('skin', name),
@@ -799,8 +801,10 @@ class RESTProtocolGrokker(martian.ClassGrokker):
     component_class = grok.RESTProtocol
 
     def grok(self, name, factory, module_info, config, **kw):
-        layer = determine_class_directive('grok.layer', factory, module_info,
-                                          default=IBrowserRequest)
+        layer = grok.layer.get(factory, module_info.getModule())
+        if layer is None:
+            layer = IBrowserRequest
+
         name = get_name_classname(factory)
         config.action(
             discriminator=('restprotocol', name),
@@ -829,9 +833,10 @@ class ViewletManagerGrokker(martian.ClassGrokker):
 
         view = determine_class_directive('grok.view', factory,
                                          module_info, default=IBrowserView)
-        viewlet_layer = determine_class_directive('grok.layer', factory,
-                                                  module_info,
-                                                  default=IDefaultBrowserLayer)
+
+        viewlet_layer = grok.layer.get(factory, module_info.getModule())
+        if viewlet_layer is None:
+            viewlet_layer = IDefaultBrowserLayer
 
         config.action(
             discriminator = ('viewletManager', view_context, viewlet_layer,
@@ -872,9 +877,10 @@ class ViewletGrokker(martian.ClassGrokker):
 
         view = determine_class_directive('grok.view', factory,
                                          module_info, default=IBrowserView)
-        viewlet_layer = determine_class_directive('grok.layer', factory,
-                                                  module_info,
-                                                  default=IDefaultBrowserLayer)
+        viewlet_layer = grok.layer.get(factory, module_info.getModule())
+        if viewlet_layer is None:
+            viewlet_layer = IDefaultBrowserLayer
+
         viewletmanager = get_viewletmanager(module_info, factory)
 
         config.action(

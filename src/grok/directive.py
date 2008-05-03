@@ -29,7 +29,7 @@ from martian.directive import (Directive, OnceDirective,
                                OptionalValueDirective,
                                ClassDirectiveContext,
                                ClassOrModuleDirectiveContext)
-from martian import util
+from martian import util, ndir
 from grok import components
 
 class MultiValueOnceDirective(OnceDirective):
@@ -117,10 +117,20 @@ local_utility = LocalUtilityDirective('grok.local_utility',
 require = RequireDirective('grok.require', ClassDirectiveContext())
 site = InterfaceOrClassDirective('grok.site',
                                  ClassDirectiveContext())
-permissions = MultiValueOnceDirective(
-    'grok.permissions', ClassDirectiveContext())
-layer = InterfaceOrClassDirective('grok.layer',
-                           ClassOrModuleDirectiveContext())
+
+class permissions(ndir.Directive):
+    scope = ndir.CLASS
+    store = ndir.ONCE
+    default = []
+
+    def factory(*args):
+        return args
+
+class layer(ndir.Directive):
+    scope = ndir.CLASS_OR_MODULE
+    store = ndir.ONCE
+    validate = ndir.validateInterfaceOrClass
+
 viewletmanager = InterfaceOrClassDirective('grok.viewletmanager',
                                            ClassOrModuleDirectiveContext())
 view = InterfaceOrClassDirective('grok.view',
