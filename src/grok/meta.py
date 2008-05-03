@@ -51,6 +51,7 @@ from martian import util
 import grok
 from grok import components, formlib, templatereg
 from grok.util import check_permission, get_default_permission, make_checker
+from grok.util import public_methods_from_class
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
@@ -59,7 +60,6 @@ from grokcore.component.util import check_adapts
 from grokcore.component.util import determine_class_component
 from grokcore.component.util import determine_class_directive
 from grokcore.component.util import determine_module_component
-from grokcore.component.util import public_methods_from_class
 
 def get_viewletmanager(module_info, factory):
     return determine_class_component(module_info, factory,
