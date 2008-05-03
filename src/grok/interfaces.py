@@ -17,6 +17,9 @@ from zope import interface, schema
 from zope.publisher.interfaces.browser import IBrowserPage, IBrowserView
 from zope.formlib.interfaces import reConstraint
 from zope.interface.interfaces import IInterface
+from zope.viewlet.interfaces import IViewletManager as IViewletManagerBase
+
+from grokcore.component.interfaces import IContext
 
 class IGrokBaseClasses(interface.Interface):
     ClassGrokker = interface.Attribute("Base class to define a class "
@@ -495,4 +498,8 @@ class ITemplate(interface.Interface):
 
     def render(view):
         """Renders the template"""
+
+class IViewletManager(IViewletManagerBase):
+    """The Grok viewlet manager.
+    """
 

@@ -54,6 +54,7 @@ from grok.util import check_permission, get_default_permission, make_checker
 from grok.util import public_methods_from_class
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
+from grok.interfaces import IViewletManager as IGrokViewletManager
 
 from grokcore.component.meta import get_context, get_name, get_name_classname
 from grokcore.component.util import check_adapts
@@ -72,7 +73,7 @@ class ViewletManagerContextGrokker(martian.GlobalGrokker):
     def grok(self, name, module, module_info, config, **kw):
         viewletmanager = determine_module_component(module_info,
                                                     'grok.viewletmanager',
-                                                    [grok.ViewletManager])
+                                                    IGrokViewletManager)
         module.__grok_viewletmanager__ = viewletmanager
         return True
 

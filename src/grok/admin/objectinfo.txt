@@ -337,7 +337,7 @@ directly provided ones.
   (<InterfaceClass zope.app.folder.interfaces.IFolder>, <InterfaceClass persistent.interfaces.IPersistent>, <InterfaceClass zope.location.interfaces.IPossibleSite>, <InterfaceClass zope.app.container.interfaces.IContained>)
 
   >>> sweethome_info.getProvidedInterfaces()
-  (<InterfaceClass zope.annotation.interfaces.IAttributeAnnotatable>, <InterfaceClass zope.app.container.interfaces.IContainer>, <InterfaceClass zope.app.container.interfaces.IContained>, <InterfaceClass persistent.interfaces.IPersistent>)
+  (<InterfaceClass zope.annotation.interfaces.IAttributeAnnotatable>, <InterfaceClass zope.app.container.interfaces.IContainer>, <InterfaceClass zope.app.container.interfaces.IContained>, <InterfaceClass persistent.interfaces.IPersistent>, <InterfaceClass grokcore.component.interfaces.IContext>)
 
 Manfred again, is a bit too plain to give us interesting information:
 
