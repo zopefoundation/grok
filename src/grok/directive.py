@@ -52,7 +52,7 @@ class LocalUtilityInfo(object):
                  setup=None, public=False, name_in_container=None):
         self.factory = factory
         if provides is None:
-            provides = util.class_annotation(factory, 'grok.provides', None)
+            provides = grok.provides.get(factory)
         self.provides = provides
         self.name = name
         self.setup = setup
