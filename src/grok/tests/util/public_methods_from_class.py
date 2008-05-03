@@ -4,7 +4,7 @@
   ['should_also_be_public', 'should_be_public']
 
 """
-import grokcore.component.util as util
+from grok import util
 
 class A(object):
 
