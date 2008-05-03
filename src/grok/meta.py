@@ -74,10 +74,7 @@ class ViewletManagerContextGrokker(martian.GlobalGrokker):
         viewletmanager = determine_module_component(module_info,
                                                     grok.viewletmanager,
                                                     [grok.ViewletManager])
-        # XXX this depends on the particular implementation of the
-        # directive storages :(
-        dotted_name = 'grok.directive.viewletmanager'
-        setattr(module, dotted_name, viewletmanager)
+        grok.viewletmanager.set(module, viewletmanager)
         return True
 
 class XMLRPCGrokker(martian.ClassGrokker):
