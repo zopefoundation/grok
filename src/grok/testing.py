@@ -55,7 +55,7 @@ def grok_component(name, component,
 
     module = module_info.getModule()
     if context is not None:
-        module.__grok_context__ = context
+        grokcore.component.context.set(module, context)
     if templates is not None:
         module.__grok_templates__ = templates
     config = ConfigurationMachine()
