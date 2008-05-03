@@ -29,7 +29,8 @@ from martian.directive import (Directive, OnceDirective,
                                OptionalValueDirective,
                                ClassDirectiveContext,
                                ClassOrModuleDirectiveContext)
-from martian import util, ndir
+from martian import util
+from martian import ndir
 from grok import components
 
 class MultiValueOnceDirective(OnceDirective):
@@ -135,4 +136,12 @@ viewletmanager = InterfaceOrClassDirective('grok.viewletmanager',
                                            ClassOrModuleDirectiveContext())
 view = InterfaceOrClassDirective('grok.view',
                                  ClassOrModuleDirectiveContext())
-traversable = TraversableDirective('grok.traversable', ClassDirectiveContext())
+
+class traversable(ndir.Directive):
+    scope = ndir.CLASS
+    store = ndir.DICT
+
+    def factory(self, attr, name=None):
+        if name is None:
+            name = attr
+        return (name, attr)

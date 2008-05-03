@@ -436,7 +436,7 @@ class Traverser(object):
         if subob is not None:
             return util.safely_locate_maybe(subob, self.context, name)
 
-        traversable_dict = getattr(self.context, '__grok_traversable__', None)
+        traversable_dict = grok.traversable.get(self.context)
         if traversable_dict:
             if name in traversable_dict:
                 subob = getattr(self.context, traversable_dict[name])
