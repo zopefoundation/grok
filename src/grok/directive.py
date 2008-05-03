@@ -73,17 +73,6 @@ class MultipleTimesAsDictDirective(Directive):
         frame.f_locals[self.local_name] = values
 
 
-class TraversableDirective(MultipleTimesAsDictDirective):
-    def check_argument_signature(self, attr, name=None):
-        pass
-    def check_arguments(self, attr, name=None):
-        pass
-    def value_factory(self, attr, name=None):
-        if name is None:
-            name = attr
-        return (attr, name)
-
-
 class RequireDirective(SingleValue, MultipleTimesDirective):
     def check_arguments(self, value):
         if util.check_subclass(value, components.Permission):
