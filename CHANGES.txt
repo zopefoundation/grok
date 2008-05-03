@@ -50,6 +50,16 @@ Feature changes
   lookup if ``grok.context`` is not present). This relies on a feature
   introduced in grokcore.component 1.1.
 
+* ``grok.Model`` implements ``grok.interfaces.IContext`` now (which is
+  imported from ``grokcore.component``). ``grok.Container`` now
+  implements ``grok.interfaces.IContainer``. Traversers and default
+  views have been set up for these interfaces, so that new
+  implementations that function as a model or container can be easily
+  created. Just use ``grok.implements(IContainer)`` or
+  ``grok.implements(IContext)``. This is useful for Grok extensions
+  that want to implement new content classes.
+
+
 Bug fixes
 ---------
 

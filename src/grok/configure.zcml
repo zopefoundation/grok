@@ -30,7 +30,7 @@
   <securityPolicy
       component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
 
-  <adapter factory=".components.ModelTraverser" />
+  <adapter factory=".components.ContextTraverser" />
   <adapter factory=".components.ContainerTraverser" />
 
   <browser:defaultView

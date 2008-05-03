@@ -59,15 +59,15 @@ import grokcore.component.util
 from grok import interfaces, formlib, util
 
 
-class Model(Contained, persistent.Persistent, grokcore.component.Context):
+class Model(Contained, persistent.Persistent):
     # XXX Inheritance order is important here. If we reverse this,
     # then containers can't be models anymore because no unambigous MRO
     # can be established.
-    interface.implements(IAttributeAnnotatable)
+    interface.implements(IAttributeAnnotatable, interfaces.IContext)
 
 
-class Container(BTreeContainer, grokcore.component.Context):
-    interface.implements(IAttributeAnnotatable)
+class Container(BTreeContainer):
+    interface.implements(IAttributeAnnotatable, interfaces.IContainer)
 
 
 class OrderedContainer(Container):
@@ -464,8 +464,8 @@ class Traverser(object):
         pass
 
 
-class ModelTraverser(Traverser):
-    component.adapts(Model, IHTTPRequest)
+class ContextTraverser(Traverser):
+    component.adapts(interfaces.IContext, IHTTPRequest)
 
     def traverse(self, name):
         traverse = getattr(self.context, 'traverse', None)
@@ -474,7 +474,7 @@ class ModelTraverser(Traverser):
 
 
 class ContainerTraverser(Traverser):
-    component.adapts(Container, IHTTPRequest)
+    component.adapts(interfaces.IContainer, IHTTPRequest)
 
     def traverse(self, name):
         traverse = getattr(self.context, 'traverse', None)
