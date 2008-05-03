@@ -21,7 +21,7 @@ from zope.publisher.interfaces.browser import IBrowserView
 
 import martian
 from martian import util
-from martian.error import GrokImportError
+from martian.error import GrokImportError, GrokError
 from martian.directive import StoreMultipleTimes
 from grok import components
 
@@ -61,6 +61,17 @@ class LocalUtilityInfo(object):
 
 class RequireDirectiveStore(StoreMultipleTimes):
 
+    def get(self, directive, component, default):
+        permissions = super(RequireDirectiveStore, self).get(
+            directive, component, default)
+        if (permissions is default) or not permissions:
+            return default
+        if len(permissions) > 1:
+            raise GrokError('grok.require was called multiple times in '
+                            '%r. It may only be set once for a class.'
+                            % component, component)
+        return permissions[0]
+
     def pop(self, locals_, directive):
         return locals_[directive.dotted_name()].pop()
 
@@ -88,7 +99,7 @@ class require(martian.Directive):
         # used as a directive.
         frame = sys._getframe(1)
         permission = self.store.pop(frame.f_locals, self)
-        self.set(func, permission)
+        self.set(func, [permission])
         return func
 
 class site(martian.Directive):

@@ -65,22 +65,6 @@ def check_permission(factory, permission):
                        'grok.Permission first.'
                        % (permission, factory), factory)
 
-def get_default_permission(factory):
-    """Determine the default permission for a view.
-
-    There can be only 0 or 1 default permission.
-    """
-    permissions = class_annotation(factory, 'grok.require', [])
-    if not permissions:
-        return None
-    if len(permissions) > 1:
-        raise GrokError('grok.require was called multiple times in '
-                        '%r. It may only be set once for a class.'
-                        % factory, factory)
-
-    result = permissions[0]
-    return result
-
 def url(request, obj, name=None, data={}):
     url = component.getMultiAdapter((obj, request), IAbsoluteURL)()
     if name is not None:

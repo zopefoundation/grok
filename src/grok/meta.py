@@ -49,7 +49,7 @@ from martian import util
 
 import grok
 from grok import components, formlib, templatereg
-from grok.util import check_permission, get_default_permission, make_checker
+from grok.util import check_permission, make_checker
 from grok.util import public_methods_from_class
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
@@ -84,8 +84,7 @@ class XMLRPCGrokker(martian.ClassGrokker):
         view_context = get_context(factory, module_info)
 
         methods = public_methods_from_class(factory)
-
-        default_permission = get_default_permission(factory)
+        default_permission = grok.require.get(factory)
 
         # make sure we issue an action to check whether this permission
         # exists. That's the only thing that action does
@@ -134,8 +133,7 @@ class RESTGrokker(martian.ClassGrokker):
         view_context = get_context(factory, module_info)
 
         methods = public_methods_from_class(factory)
-
-        default_permission = get_default_permission(factory)
+        default_permission = grok.require.get(factory)
         # make sure we issue an action to check whether this permission
         # exists. That's the only thing that action does
         if default_permission is not None:
@@ -237,7 +235,7 @@ class ViewGrokker(martian.ClassGrokker):
             args=(factory, adapts, interface.Interface, view_name),
             )
 
-        permission = get_default_permission(factory)
+        permission = grok.require.get(factory)
         config.action(
             discriminator=('protectName', factory, '__call__'),
             callable=make_checker,
@@ -263,8 +261,7 @@ class JSONGrokker(martian.ClassGrokker):
         view_context = get_context(factory, module_info)
 
         methods = public_methods_from_class(factory)
-
-        default_permission = get_default_permission(factory)
+        default_permission = grok.require.get(factory)
         # make sure we issue an action to check whether this permission
         # exists. That's the only thing that action does
         if default_permission is not None:
@@ -868,7 +865,7 @@ class ViewletGrokker(martian.ClassGrokker):
                     viewletmanager), IViewlet, viewlet_name)
             )
 
-        permission = get_default_permission(factory)
+        permission = grok.require.get(factory)
         config.action(
             discriminator=('protectName', factory, '__call__'),
             callable=make_checker,
