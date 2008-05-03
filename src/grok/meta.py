@@ -761,9 +761,9 @@ class SkinGrokker(martian.ClassGrokker):
     component_class = grok.Skin
 
     def grok(self, name, factory, module_info, config, **kw):
-        view_layer = grok.layer.get(factory, module_info.getModule())
-        if view_layer is None:
-            view_layer = IBrowserRequest
+        layer = grok.layer.get(factory, module_info.getModule())
+        if layer is None:
+            layer = IBrowserRequest
 
         name = get_name_classname(factory)
         config.action(
