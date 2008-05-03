@@ -621,15 +621,13 @@ class IndexesClass(object):
     def __init__(self, name, bases=(), attrs=None):
         if attrs is None:
             return
-        # make sure we take over a bunch of possible attributes
-        for name in ['__grok_context__', '__grok_name__',
-                     '__grok_site__']:
-            value = attrs.get(name)
-            if value is not None:
-                setattr(self, name, value)
-        # now read and store indexes
         indexes = {}
         for name, value in attrs.items():
+            # Ignore everything that's not an index definition object
+            # except for values set by directives
+            if '.' in name:
+                setattr(self, name, value)
+                continue
             if not interfaces.IIndexDefinition.providedBy(value):
                 continue
             indexes[name] = value
