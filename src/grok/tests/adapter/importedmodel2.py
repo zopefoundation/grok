@@ -5,7 +5,8 @@ Grok error because import model doesn't count as context:
   Traceback (most recent call last):
     ...
   GrokError: No module-level context for
-  <class 'grok.tests.adapter.importedmodel2.Painting'>, please use grok.context.
+  <class 'grok.tests.adapter.importedmodel2.Painting'>,
+  please use the 'context' directive.
 
 """
 import grok
