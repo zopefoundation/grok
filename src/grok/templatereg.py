@@ -24,8 +24,9 @@ class TemplateRegistry(object):
         return entry['template']
 
     def findFilesystem(self, module_info):
-        template_dir_name = module_info.getAnnotation(
-            'grok.templatedir', module_info.name + '_templates')
+        template_dir_name = grok.templatedir.get(module_info.getModule())
+        if template_dir_name is None:
+            template_dir_name = module_info.name + '_templates'
 
         template_dir = module_info.getResourcePath(template_dir_name)
 
@@ -87,8 +88,9 @@ class TemplateRegistry(object):
     def checkTemplates(self, module_info, factory, component_name,
                        has_render, has_no_render):
         factory_name = factory.__name__.lower()
-        template_name = util.class_annotation(factory, 'grok.template',
-                                              factory_name)
+        template_name = grok.template.get(factory)
+        if template_name is None:
+            template_name = factory_name
 
         if factory_name != template_name:
             # grok.template is being used

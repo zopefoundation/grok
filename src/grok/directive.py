@@ -14,44 +14,38 @@
 """Grok directives.
 """
 
+import sys
 import grok
 from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IBrowserView
 
 import martian
-from martian.error import GrokImportError
-from martian.directive import (Directive, OnceDirective,
-                               MultipleTimesDirective, BaseTextDirective,
-                               SingleValue, SingleTextDirective,
-                               MultipleTextDirective,
-                               MarkerDirective,
-                               InterfaceDirective,
-                               InterfaceOrClassDirective,
-                               ModuleDirectiveContext,
-                               OptionalValueDirective,
-                               ClassDirectiveContext,
-                               ClassOrModuleDirectiveContext)
 from martian import util
+from martian.error import GrokImportError
+from martian.directive import StoreMultipleTimes
 from grok import components
 
-class MultiValueOnceDirective(OnceDirective):
+# Define grok directives
+class template(martian.Directive):
+    scope = martian.CLASS
+    store = martian.ONCE
+    validate = martian.validateText
 
-    def check_arguments(self, *values):
-        pass
+class templatedir(martian.Directive):
+    scope = martian.MODULE
+    store = martian.ONCE
+    validate = martian.validateText
 
-    def value_factory(self, *args):
-        return args
+class local_utility(martian.MultipleTimesDirective):
+    scope = martian.CLASS
 
-class LocalUtilityDirective(MultipleTimesDirective):
-    def check_arguments(self, factory, provides=None, name=u'',
-                        setup=None, public=False, name_in_container=None):
+    def factory(self, factory, provides=None, name=u'',
+                setup=None, public=False, name_in_container=None):
         if provides is not None and not IInterface.providedBy(provides):
             raise GrokImportError("You can only pass an interface to the "
                                   "provides argument of %s." % self.name)
-
-    def value_factory(self, *args, **kw):
-        return LocalUtilityInfo(*args, **kw)
-
+        return LocalUtilityInfo(factory, provides, name, setup,
+                                public, name_in_container)
 
 class LocalUtilityInfo(object):
     def __init__(self, factory, provides=None, name=u'',
@@ -65,16 +59,16 @@ class LocalUtilityInfo(object):
         self.public = public
         self.name_in_container = name_in_container
 
+class RequireDirectiveStore(StoreMultipleTimes):
 
-class MultipleTimesAsDictDirective(Directive):
-    def store(self, frame, value):
-        values = frame.f_locals.get(self.local_name, {})
-        values[value[1]] = value[0]
-        frame.f_locals[self.local_name] = values
+    def pop(self, locals_, directive):
+        return locals_[directive.dotted_name()].pop()
 
+class require(martian.Directive):
+    scope = martian.CLASS
+    store = RequireDirectiveStore()
 
-class RequireDirective(SingleValue, MultipleTimesDirective):
-    def check_arguments(self, value):
+    def validate(self, value):
         if util.check_subclass(value, components.Permission):
             return
         if util.not_unicode_or_ascii(value):
@@ -82,40 +76,25 @@ class RequireDirective(SingleValue, MultipleTimesDirective):
                 "You can only pass unicode, ASCII, or a subclass "
                 "of grok.Permission %s." % self.name)
 
-    def store(self, frame, value):
+    def factory(self, value):
         if util.check_subclass(value, components.Permission):
-            value = grok.name.get(value)
+            return grok.name.get(value)
+        return value
 
-        super(RequireDirective, self).store(frame, value)
-        values = frame.f_locals.get(self.local_name, [])
-
+    def __call__(self, func):
         # grok.require can be used both as a class-level directive and
         # as a decorator for methods.  Therefore we return a decorator
         # here, which may be used for methods, or simply ignored when
         # used as a directive.
-        def decorator(func):
-            permission = values.pop()
-            func.__grok_require__ = permission
-            return func
-        return decorator
+        frame = sys._getframe(1)
+        permission = self.store.pop(frame.f_locals, self)
+        self.set(func, permission)
+        return func
 
-
-# Define grok directives
-class template(martian.Directive):
+class site(martian.Directive):
     scope = martian.CLASS
     store = martian.ONCE
-    validate = martian.validateText
-
-class templatedir(martian.Directive):
-    scope = martian.MODULE
-    store = martian.ONCE
-    validate = martian.validateText
-
-local_utility = LocalUtilityDirective('grok.local_utility',
-                                      ClassDirectiveContext())
-require = RequireDirective('grok.require', ClassDirectiveContext())
-site = InterfaceOrClassDirective('grok.site',
-                                 ClassDirectiveContext())
+    validate = martian.validateInterfaceOrClass
 
 class permissions(martian.Directive):
     scope = martian.CLASS
@@ -126,6 +105,7 @@ class permissions(martian.Directive):
         return args
 
 class OneInterfaceOrClassOnClassOrModule(martian.Directive):
+    """Convenience base class.  Not for public use."""
     scope = martian.CLASS_OR_MODULE
     store = martian.ONCE
     validate = martian.validateInterfaceOrClass

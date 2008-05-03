@@ -116,8 +116,9 @@ class XMLRPCGrokker(martian.ClassGrokker):
             # Protect method_view with either the permission that was
             # set on the method, the default permission from the class
             # level or zope.Public.
-            permission = getattr(method, '__grok_require__',
-                                 default_permission)
+            permission = grok.require.get(method)
+            if permission is None:
+                permission = default_permission
 
             config.action(
                 discriminator=('protectName', method_view, '__call__'),
@@ -169,8 +170,10 @@ class RESTGrokker(martian.ClassGrokker):
             # Protect method_view with either the permission that was
             # set on the method, the default permission from the class
             # level or zope.Public.
-            permission = getattr(method, '__grok_require__',
-                                 default_permission)
+            permission = grok.require.get(method)
+            if permission is None:
+                permission = default_permission
+
             config.action(
                 discriminator=('protectName', method_view, '__call__'),
                 callable=make_checker,
@@ -212,7 +215,7 @@ class ViewGrokker(martian.ClassGrokker):
         # @grok.require on any of the view's methods.
         methods = util.methods_from_class(factory)
         for method in methods:
-            if getattr(method, '__grok_require__', None) is not None:
+            if grok.require.get(method) is not None:
                 raise GrokError('The @grok.require decorator is used for '
                                 'method %r in view %r. It may only be used '
                                 'for XML-RPC methods.'
@@ -298,8 +301,9 @@ class JSONGrokker(martian.ClassGrokker):
             # set on the method, the default permission from the class
             # level or zope.Public.
 
-            permission = getattr(method, '__grok_require__',
-                                 default_permission)
+            permission = grok.require.get(method)
+            if permission is None:
+                permission = default_permission
 
             config.action(
                 discriminator=('protectName', method_view, '__call__'),
@@ -433,8 +437,8 @@ class SiteGrokker(martian.ClassGrokker):
     priority = 500
 
     def grok(self, name, factory, module_info, config, **kw):
-        infos = util.class_annotation_list(factory, 'grok.local_utility', None)
-        if infos is None:
+        infos = grok.local_utility.get(factory)
+        if not infos:
             return False
 
         for info in infos:
@@ -468,8 +472,7 @@ class SiteGrokker(martian.ClassGrokker):
         # raise an error in case of any duplicate registrations
         # on the class level (subclassing overrides, see below)
         used = set()
-        class_infos = util.class_annotation(factory, 'grok.local_utility',
-                                            [])
+        class_infos = grok.local_utility.get(factory)
         for info in class_infos:
             key = (info.provides, info.name)
             if key in used:
@@ -683,7 +686,7 @@ class IndexesGrokker(martian.InstanceGrokker):
     component_class = components.IndexesClass
 
     def grok(self, name, factory, module_info, config, **kw):
-        site = util.class_annotation(factory, 'grok.site', None)
+        site = grok.site.get(factory)
         if site is None:
             raise GrokError("No site specified for grok.Indexes "
                             "subclass in module %r. "
