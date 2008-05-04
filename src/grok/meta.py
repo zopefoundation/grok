@@ -55,7 +55,6 @@ from grok.util import get_name_classname
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
-from grokcore.component.util import check_adapts
 from grokcore.component.util import determine_module_component
 from grokcore.component.util import check_module_component
 
