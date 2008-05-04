@@ -143,7 +143,7 @@ class GAIAView(grok.View):
         obj = self.context
         result = ""
         while obj is not None:
-            if __grok_context__.providedBy(obj):
+            if IRootFolder.providedBy(obj):
                 return self.url(obj, name)
             obj = obj.__parent__
         raise ValueError("No application nor root element found.")
