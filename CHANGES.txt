@@ -7,6 +7,8 @@ Grok changes
 Feature changes
 ---------------
 
+* Updated tutorial section about grokproject to fit the latest changes.
+
 * Added grok.traversable directive for easy traversal to attributes and
   methods.
 

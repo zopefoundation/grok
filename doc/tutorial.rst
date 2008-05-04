@@ -111,6 +111,16 @@ We're ready to create our first grok project now!
 Creating a grok project
 -----------------------
 
+.. sidebar:: Using paster
+
+  For those who know paster_: ``grokproject`` is just a wrapper around
+  a paster template.  So instead of running the ``grokproject``
+  command, you can also run::
+
+  $ paster create -t grok Sample
+
+.. _paster: http://pythonpaste.org/script/
+
 Let's create a first Grok project. A Grok project is a working
 environment for a developer using Grok. In essence, a directory with a
 lot of files and subdirectories in it. Let's create a Grok project
@@ -122,21 +132,12 @@ This tells grokproject to create a new subdirectory called ``Sample``
 and set up the project in there. grokproject will automatically
 download and install Zope 3 and Grok into the project area.
 
-You will be asked a number of questions now. First you need to supply
-the name of the initial module that your package will contain. We'll
-stick with the default ``app.py``::
- 
-  Enter module (Name of a demo Python module placed into the package) ['app.py']:
-
-After this Grok asks you for an initial username and password for the
-Zope server. We'll use ``grok`` for both::
+You will be asked a number of questions now.  Grok asks you for an
+initial username and password for the Zope server. We'll use ``grok``
+for both::
 
   Enter user (Name of an initial administrator user): grok
   Enter passwd (Password for the initial administrator user): grok
-  Enter eggs_dir (Location where zc.buildout will look for and place packages) ['/home/<user>/buildout-eggs']:
-
-For the last question, we'll stick with the default path which will be
-a directory called 'buildout-eggs' in your home directory.
 
 Now you have to wait while grokproject downloads `zc.buildout`_
 (the system that's used to build the project area), Grok and the Zope
