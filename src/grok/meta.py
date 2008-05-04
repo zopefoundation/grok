@@ -634,7 +634,7 @@ class IndexesGrokker(martian.InstanceGrokker):
                             "subclass in module %r. "
                             "Use grok.site() to specify." % module_info.getModule(),
                             factory)
-        indexes = getattr(util, '__grok_indexes__', None)
+        indexes = getattr(factory, '__grok_indexes__', None)
         if indexes is None:
             return False
         context = get_context(factory, module_info)
