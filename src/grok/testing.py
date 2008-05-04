@@ -13,13 +13,13 @@
 ##############################################################################
 """Grok test helpers
 """
+import os.path
+import z3c.testsetup
 import grokcore.component
 from zope.configuration.config import ConfigurationMachine
 from martian import scan
 from grokcore.component import zcml
 from grokcore.component.testing import grok_component
-import z3c.testsetup
-import os.path
 
 class GrokTestCollector(z3c.testsetup.TestCollector):
 
