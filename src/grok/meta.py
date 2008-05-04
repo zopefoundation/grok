@@ -56,8 +56,8 @@ from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 from grok.interfaces import IViewletManager as IGrokViewletManager
 
-from grokcore.component.util import determine_module_component
-from grokcore.component.util import check_module_component
+from grokcore.component.scan import determine_module_component
+from grokcore.component.scan import check_module_component
 
 class ViewletManagerContextGrokker(martian.GlobalGrokker):
 
