@@ -4,23 +4,26 @@ Grok changes
 0.13 (unreleased)
 =================
 
-Feature changes
----------------
-
-* Updated tutorial section about grokproject to fit the latest changes.
-
-* Added grok.traversable directive for easy traversal to attributes and
-  methods.
-
-* grok.require() can refer to subclasses of grok.Permission directly, instead
-  of their id. This, for one, avoids making typos in permission ids. Permission
-  components *do* still need the grok.name() directive for defining the
-  permission's id.
+Restructuring
+-------------
 
 * The basic component base classes (``Adapter``, ``MultiAdapter``,
   ``GlobalUtility``), their grokkers, as well as many of the basic
   directives have been factored out to a reusable
   ``grokcore.component`` package.
+
+Feature changes
+---------------
+
+* Updated tutorial section about grokproject to fit the latest changes.
+
+* Added ``grok.traversable`` directive for easy traversal to attributes and
+  methods.
+
+* ``grok.require()`` can refer to subclasses of ``grok.Permission``
+  directly, instead of their id. This, for one, avoids making typos in
+  permission ids. Permission components *do* still need the
+  grok.name() directive for defining the permission's id.
 
 * Added an optional parameter 'data' to the method 'url()' that accepts
   a dictionary that is then converted to a query string. See
@@ -38,7 +41,7 @@ Feature changes
   We are now using the latest Zope 3 releases for all Zope packages.
   For upgrade notes, see doc/upgrade.txt for more information.
 
-* Added support for easier testsetup based on z3c.testsetup. This is a
+* Added support for easier test setup based on z3c.testsetup. This is a
   more stable and more powerful implementation of
   grok.testing.register_all_tests(). See
 
