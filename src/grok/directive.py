@@ -84,6 +84,9 @@ class local_utility(martian.Directive):
 
 
 class LocalUtilityInfo(object):
+
+    _order = 0
+
     def __init__(self, factory, provides, name=u'',
                  setup=None, public=False, name_in_container=None):
         self.factory = factory
@@ -92,6 +95,15 @@ class LocalUtilityInfo(object):
         self.setup = setup
         self.public = public
         self.name_in_container = name_in_container
+
+        self.order = LocalUtilityInfo._order
+        LocalUtilityInfo._order += 1
+
+    def __cmp__(self, other):
+        # LocalUtilityInfos have an inherit sort order by which the
+        # registrations take place.
+        return cmp(self.order, other.order)
+
 
 class RequireDirectiveStore(StoreMultipleTimes):
 
