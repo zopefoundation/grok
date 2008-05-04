@@ -13,11 +13,13 @@
 ##############################################################################
 """Grok test helpers
 """
+import os.path
+import z3c.testsetup
+import grokcore.component
 from zope.configuration.config import ConfigurationMachine
 from martian import scan
 from grokcore.component import zcml
-import z3c.testsetup
-import os.path
+from grokcore.component.testing import grok_component
 
 class GrokTestCollector(z3c.testsetup.TestCollector):
 
@@ -44,23 +46,3 @@ def grok(module_name):
     zcml.do_grok('grok.templatereg', config)
     zcml.do_grok(module_name, config)
     config.execute_actions()
-
-def grok_component(name, component,
-                   context=None, module_info=None, templates=None):
-    if module_info is None:
-        obj_module = getattr(component, '__grok_module__', None)
-        if obj_module is None:
-            obj_module = getattr(component, '__module__', None)
-        module_info = scan.module_info_from_dotted_name(obj_module)
-
-    module = module_info.getModule()
-    if context is not None:
-        module.__grok_context__ = context
-    if templates is not None:
-        module.__grok_templates__ = templates
-    config = ConfigurationMachine()
-    result = zcml.the_multi_grokker.grok(name, component,
-                                         module_info=module_info,
-                                         config=config)
-    config.execute_actions()    
-    return result

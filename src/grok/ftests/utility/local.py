@@ -8,13 +8,13 @@ grok.local_utility:
   >>> from zope import component
   >>> from zope.app.component.hooks import getSite, setSite
   >>> setSite(cave)
-  
+
   >>> fireplace = component.getUtility(IFireplace)
   >>> IFireplace.providedBy(fireplace)
   True
   >>> isinstance(fireplace, Fireplace)
   True
-  
+
   >>> club = component.getUtility(IClub)
   >>> IClub.providedBy(club)
   True

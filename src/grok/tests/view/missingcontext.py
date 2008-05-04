@@ -5,7 +5,8 @@ Views without a context cannot be grokked:
   Traceback (most recent call last):
     ...
   GrokError: No module-level context for
-  <class 'grok.tests.view.missingcontext.Club'>, please use grok.context.
+  <class 'grok.tests.view.missingcontext.Club'>, please use the
+  'context' directive.
 
 """
 

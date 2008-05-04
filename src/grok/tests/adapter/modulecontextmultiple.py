@@ -4,6 +4,7 @@ You can't call grok.context multiple times on module level:
   >>> import grok.tests.adapter.modulecontextmultiple_fixture
   Traceback (most recent call last):
     ...
-  GrokImportError: grok.context can only be called once per class or module.
+  GrokImportError: The 'context' directive can only be called once per
+  class or module.
 
 """

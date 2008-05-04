@@ -5,7 +5,8 @@ Multiple models lead to ambiguity:
   Traceback (most recent call last):
     ...
   GrokError: Multiple possible contexts for
-  <class 'grok.tests.adapter.multiple.Home'>, please use grok.context.
+  <class 'grok.tests.adapter.multiple.Home'>, please use the
+  'context' directive.
 
 """
 import grok

@@ -7,7 +7,8 @@ whether it's hooked up at all:
   Traceback (most recent call last):
     ...
   GrokError: No module-level context for
-  <class 'grok.tests.json.nocontext.TestJSON'>, please use grok.context.
+  <class 'grok.tests.json.nocontext.TestJSON'>, please use the
+  'context' directive.
 
 """
 import grok

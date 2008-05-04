@@ -7,7 +7,8 @@ whether it's hooked up at all:
   Traceback (most recent call last):
     ...
   GrokError: No module-level context for
-  <class 'grok.tests.xmlrpc.nocontext.HomeRPC'>, please use grok.context.
+  <class 'grok.tests.xmlrpc.nocontext.HomeRPC'>, please use the
+  'context' directive.
 
 """
 import grok

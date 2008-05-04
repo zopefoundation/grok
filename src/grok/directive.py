@@ -14,107 +14,183 @@
 """Grok directives.
 """
 
+import sys
+import grok
+from zope import interface
 from zope.interface.interfaces import IInterface
+from zope.publisher.interfaces.browser import IBrowserView
 
-from martian.error import GrokImportError
-from martian.directive import (Directive, OnceDirective,
-                               MultipleTimesDirective, BaseTextDirective,
-                               SingleValue, SingleTextDirective,
-                               MultipleTextDirective,
-                               MarkerDirective,
-                               InterfaceDirective,
-                               InterfaceOrClassDirective,
-                               ModuleDirectiveContext,
-                               OptionalValueDirective,
-                               ClassDirectiveContext,
-                               ClassOrModuleDirectiveContext)
+import martian
 from martian import util
-from grokcore.component.directive import MultiValueOnceDirective
+from martian.error import GrokImportError, GrokError
+from martian.directive import StoreMultipleTimes
 from grok import components
 
-class LocalUtilityDirective(MultipleTimesDirective):
-    def check_arguments(self, factory, provides=None, name=u'',
-                        setup=None, public=False, name_in_container=None):
+# Define grok directives
+class template(martian.Directive):
+    scope = martian.CLASS
+    store = martian.ONCE
+    validate = martian.validateText
+
+class templatedir(martian.Directive):
+    scope = martian.MODULE
+    store = martian.ONCE
+    validate = martian.validateText
+
+class local_utility(martian.Directive):
+    scope = martian.CLASS
+    store = martian.DICT
+
+    def factory(self, factory, provides=None, name=u'',
+                setup=None, public=False, name_in_container=None):
         if provides is not None and not IInterface.providedBy(provides):
             raise GrokImportError("You can only pass an interface to the "
                                   "provides argument of %s." % self.name)
 
-    def value_factory(self, *args, **kw):
-        return LocalUtilityInfo(*args, **kw)
+        if provides is None:
+            provides = grok.provides.get(factory)
+
+        if provides is None:
+            if util.check_subclass(factory, grok.LocalUtility):
+                baseInterfaces = interface.implementedBy(grok.LocalUtility)
+                utilityInterfaces = interface.implementedBy(factory)
+                provides = list(utilityInterfaces - baseInterfaces)
+
+                if len(provides) == 0 and len(list(utilityInterfaces)) > 0:
+                    raise GrokImportError(
+                        "Cannot determine which interface to use "
+                        "for utility registration of %r. "
+                        "It implements an interface that is a specialization "
+                        "of an interface implemented by grok.LocalUtility. "
+                        "Specify the interface by either using grok.provides "
+                        "on the utility or passing 'provides' to "
+                        "grok.local_utility." % factory, factory)
+            else:
+                provides = list(interface.implementedBy(factory))
+
+            util.check_implements_one_from_list(provides, factory)
+            provides = provides[0]
+
+        if (provides, name) in self.frame.f_locals.get(self.dotted_name(), {}):
+            raise GrokImportError(
+                "Conflicting local utility registration %r. "
+                "Local utilities are registered multiple "
+                "times for interface %r and name %r." %
+                (factory, provides, name), factory)
+
+        info = LocalUtilityInfo(factory, provides, name, setup, public,
+                                name_in_container)
+        return (provides, name), info
 
 
 class LocalUtilityInfo(object):
-    def __init__(self, factory, provides=None, name=u'',
+
+    _order = 0
+
+    def __init__(self, factory, provides, name=u'',
                  setup=None, public=False, name_in_container=None):
         self.factory = factory
-        if provides is None:
-            provides = util.class_annotation(factory, 'grok.provides', None)
         self.provides = provides
         self.name = name
         self.setup = setup
         self.public = public
         self.name_in_container = name_in_container
 
+        self.order = LocalUtilityInfo._order
+        LocalUtilityInfo._order += 1
 
-class MultipleTimesAsDictDirective(Directive):
-    def store(self, frame, value):
-        values = frame.f_locals.get(self.local_name, {})
-        values[value[1]] = value[0]
-        frame.f_locals[self.local_name] = values
-
-
-class TraversableDirective(MultipleTimesAsDictDirective):
-    def check_argument_signature(self, attr, name=None):
-        pass
-    def check_arguments(self, attr, name=None):
-        pass
-    def value_factory(self, attr, name=None):
-        if name is None:
-            name = attr
-        return (attr, name)
+    def __cmp__(self, other):
+        # LocalUtilityInfos have an inherit sort order by which the
+        # registrations take place.
+        return cmp(self.order, other.order)
 
 
-class RequireDirective(SingleValue, MultipleTimesDirective):
-    def check_arguments(self, value):
+class RequireDirectiveStore(StoreMultipleTimes):
+
+    def get(self, directive, component, default):
+        permissions = getattr(component, directive.dotted_name(), default)
+        if (permissions is default) or not permissions:
+            return default
+        if len(permissions) > 1:
+            raise GrokError('grok.require was called multiple times in '
+                            '%r. It may only be set once for a class.'
+                            % component, component)
+        return permissions[0]
+
+    def pop(self, locals_, directive):
+        return locals_[directive.dotted_name()].pop()
+
+class require(martian.Directive):
+    scope = martian.CLASS
+    store = RequireDirectiveStore()
+
+    def validate(self, value):
         if util.check_subclass(value, components.Permission):
             return
         if util.not_unicode_or_ascii(value):
             raise GrokImportError(
                 "You can only pass unicode, ASCII, or a subclass "
-                "of grok.Permission %s." % self.name)
+                "of grok.Permission to the '%s' directive." % self.name)
 
-    def store(self, frame, value):
+    def factory(self, value):
         if util.check_subclass(value, components.Permission):
-            value = getattr(value, '__grok_name__')
+            return grok.name.get(value)
+        return value
 
-        super(RequireDirective, self).store(frame, value)
-        values = frame.f_locals.get(self.local_name, [])
-
+    def __call__(self, func):
         # grok.require can be used both as a class-level directive and
         # as a decorator for methods.  Therefore we return a decorator
         # here, which may be used for methods, or simply ignored when
         # used as a directive.
-        def decorator(func):
-            permission = values.pop()
-            func.__grok_require__ = permission
-            return func
-        return decorator
+        frame = sys._getframe(1)
+        permission = self.store.pop(frame.f_locals, self)
+        self.set(func, [permission])
+        return func
 
+class site(martian.Directive):
+    scope = martian.CLASS
+    store = martian.ONCE
+    validate = martian.validateInterfaceOrClass
 
-# Define grok directives
-template = SingleTextDirective('grok.template', ClassDirectiveContext())
-templatedir = SingleTextDirective('grok.templatedir', ModuleDirectiveContext())
-local_utility = LocalUtilityDirective('grok.local_utility',
-                                      ClassDirectiveContext())
-require = RequireDirective('grok.require', ClassDirectiveContext())
-site = InterfaceOrClassDirective('grok.site',
-                                 ClassDirectiveContext())
-permissions = MultiValueOnceDirective(
-    'grok.permissions', ClassDirectiveContext())
-layer = InterfaceOrClassDirective('grok.layer',
-                           ClassOrModuleDirectiveContext())
-viewletmanager = InterfaceOrClassDirective('grok.viewletmanager',
-                                           ClassOrModuleDirectiveContext())
-view = InterfaceOrClassDirective('grok.view',
-                                 ClassOrModuleDirectiveContext())
-traversable = TraversableDirective('grok.traversable', ClassDirectiveContext())
+class permissions(martian.Directive):
+    scope = martian.CLASS
+    store = martian.ONCE
+    default = []
+
+    def factory(*args):
+        return args
+
+class OneInterfaceOrClassOnClassOrModule(martian.Directive):
+    """Convenience base class.  Not for public use."""
+    scope = martian.CLASS_OR_MODULE
+    store = martian.ONCE
+    validate = martian.validateInterfaceOrClass
+
+class layer(OneInterfaceOrClassOnClassOrModule):
+    pass
+
+class viewletmanager(OneInterfaceOrClassOnClassOrModule):
+    pass
+
+class view(OneInterfaceOrClassOnClassOrModule):
+    default = IBrowserView
+
+class traversable(martian.Directive):
+    scope = martian.CLASS
+    store = martian.DICT
+
+    def factory(self, attr, name=None):
+        if name is None:
+            name = attr
+        return (name, attr)
+
+class order(martian.Directive):
+    scope = martian.CLASS
+    store = martian.ONCE
+    default = 0, 0
+
+    _order = 0
+
+    def factory(self, value=0):
+        order._order += 1
+        return value, order._order

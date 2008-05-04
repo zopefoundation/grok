@@ -52,9 +52,10 @@ from zope.app.component.site import LocalSiteManager
 from zope.viewlet.manager import ViewletManagerBase
 from zope.viewlet.viewlet import ViewletBase
 
+import grok
+import grokcore.component
 import z3c.flashmessage.interfaces
 import martian.util
-import grokcore.component.util
 
 from grok import interfaces, formlib, util
 
@@ -436,7 +437,7 @@ class Traverser(object):
         if subob is not None:
             return util.safely_locate_maybe(subob, self.context, name)
 
-        traversable_dict = getattr(self.context, '__grok_traversable__', None)
+        traversable_dict = grok.traversable.get(self.context)
         if traversable_dict:
             if name in traversable_dict:
                 subob = getattr(self.context, traversable_dict[name])
@@ -621,15 +622,13 @@ class IndexesClass(object):
     def __init__(self, name, bases=(), attrs=None):
         if attrs is None:
             return
-        # make sure we take over a bunch of possible attributes
-        for name in ['__grok_context__', '__grok_name__',
-                     '__grok_site__']:
-            value = attrs.get(name)
-            if value is not None:
-                setattr(self, name, value)
-        # now read and store indexes
         indexes = {}
         for name, value in attrs.items():
+            # Ignore everything that's not an index definition object
+            # except for values set by directives
+            if '.' in name:
+                setattr(self, name, value)
+                continue
             if not interfaces.IIndexDefinition.providedBy(value):
                 continue
             indexes[name] = value
@@ -667,9 +666,8 @@ class ViewletManager(ViewletManagerBase):
 
     def __init__(self, context, request, view):
         super(ViewletManager, self).__init__(context, request, view)
-        self.__name__ = util.class_annotation(self.__class__,
-                                              'grok.name',
-                                              self.__class__.__name__.lower())
+        self.__name__ = util.get_name_classname(self.__class__)
+
         self.static = component.queryAdapter(
             self.request,
             interface.Interface,
@@ -682,7 +680,7 @@ class ViewletManager(ViewletManagerBase):
         if self.template:
             return self.template.render(self)
         else:
-            viewlets = grokcore.component.util.sort_components(self.viewlets)
+            viewlets = util.sort_components(self.viewlets)
             return u'\n'.join([viewlet.render() for viewlet in viewlets])
 
     def namespace(self):
@@ -722,9 +720,8 @@ class Viewlet(ViewletBase):
         super(Viewlet, self).__init__(context, request, view, manager)
         # would be nice to move this to the ViewletGrokker but
         # new objects don't have __name__ of their class
-        self.__name__ = util.class_annotation(self.__class__,
-                                             'grok.name',
-                                              self.__class__.__name__.lower())
+        self.__name__ = util.get_name_classname(self.__class__)
+
         self.static = component.queryAdapter(
             self.request,
             interface.Interface,

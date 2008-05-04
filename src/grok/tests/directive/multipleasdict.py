@@ -3,10 +3,8 @@ The MultipleTimesAsDictDirective is used by grok.traversable so multiple
 attributes can be mentioned.
 
   >>> from martian import scan
-  >>> from grok.tests.directive import multipleasdict
-  >>> module_info = scan.module_info_from_module(multipleasdict)
-
-  >>> g = Club.__grok_traversable__
+  >>> import grok
+  >>> g = grok.traversable.get(Club)
   >>> isinstance(g, dict)
   True
   >>> g['demo']

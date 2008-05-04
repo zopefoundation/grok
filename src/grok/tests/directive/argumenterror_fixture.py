@@ -1,3 +1,4 @@
 import grok
 
-grok.templatedir('too', 'many', 'arguments')
+class Foo(object):
+    grok.name('too', 'many', 'arguments')

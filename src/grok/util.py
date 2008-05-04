@@ -16,6 +16,7 @@
 
 import urllib
 
+import grok
 import zope.location.location
 from zope import component
 from zope import interface
@@ -26,15 +27,13 @@ from zope.security.checker import NamesChecker, defineChecker
 from zope.security.interfaces import IPermission
 
 from martian.error import GrokError
-from martian.util import class_annotation, methods_from_class
+from martian.util import methods_from_class
 
-# BBB backwards-compatibility imports (in case somebody wrote custom
-# grokkers that use these utility functions)
-from grokcore.component.util import check_adapts
-from grokcore.component.util import determine_class_directive
-from grokcore.component.util import sort_components
-from grokcore.component.util import determine_module_component
-from grokcore.component.util import determine_class_component
+def get_name_classname(factory):
+    name = grok.name.get(factory)
+    if not name:
+        name = factory.__name__.lower()
+    return name
 
 def public_methods_from_class(factory):
     return [m for m in methods_from_class(factory) if \
@@ -66,22 +65,6 @@ def check_permission(factory, permission):
        raise GrokError('Undefined permission %r in %r. Use '
                        'grok.Permission first.'
                        % (permission, factory), factory)
-
-def get_default_permission(factory):
-    """Determine the default permission for a view.
-
-    There can be only 0 or 1 default permission.
-    """
-    permissions = class_annotation(factory, 'grok.require', [])
-    if not permissions:
-        return None
-    if len(permissions) > 1:
-        raise GrokError('grok.require was called multiple times in '
-                        '%r. It may only be set once for a class.'
-                        % factory, factory)
-
-    result = permissions[0]
-    return result
 
 def url(request, obj, name=None, data={}):
     url = component.getMultiAdapter((obj, request), IAbsoluteURL)()
@@ -118,3 +101,14 @@ def applySkin(request, skin, skin_type):
     # Add the new skin.
     ifaces.append(skin)
     interface.directlyProvides(request, *ifaces)
+
+def _sort_key(component):
+    explicit_order, implicit_order = grok.order.get(component)
+    return (explicit_order,
+            component.__module__,
+            implicit_order,
+            component.__class__.__name__)
+
+def sort_components(components):
+    # if components have a grok.order directive, sort by that
+    return sorted(components, key=_sort_key)

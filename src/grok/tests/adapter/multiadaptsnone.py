@@ -5,7 +5,7 @@ Subclasses of grok.MultiAdapter must declare what they adapt, using grok.adapts:
   Traceback (most recent call last):
     ...
   GrokError: <class 'grok.tests.adapter.multiadaptsnone.Home'> must specify
-  which contexts it adapts (use grok.adapts to specify).
+  which contexts it adapts (use the 'adapts' directive to specify).
 """
 import grok
 
