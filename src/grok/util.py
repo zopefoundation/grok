@@ -101,3 +101,14 @@ def applySkin(request, skin, skin_type):
     # Add the new skin.
     ifaces.append(skin)
     interface.directlyProvides(request, *ifaces)
+
+def _sort_key(component):
+    explicit_order, implicit_order = grok.order.get(component)
+    return (explicit_order,
+            component.__module__,
+            implicit_order,
+            component.__class__.__name__)
+
+def sort_components(components):
+    # if components have a grok.order directive, sort by that
+    return sorted(components, key=_sort_key)

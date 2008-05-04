@@ -183,3 +183,14 @@ class traversable(martian.Directive):
         if name is None:
             name = attr
         return (name, attr)
+
+class order(martian.Directive):
+    scope = martian.CLASS
+    store = martian.ONCE
+    default = 0, 0
+
+    _order = 0
+
+    def factory(self, value=0):
+        order._order += 1
+        return value, order._order

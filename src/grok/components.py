@@ -53,9 +53,9 @@ from zope.viewlet.manager import ViewletManagerBase
 from zope.viewlet.viewlet import ViewletBase
 
 import grok
+import grokcore.component
 import z3c.flashmessage.interfaces
 import martian.util
-import grokcore.component.util
 
 from grok import interfaces, formlib, util
 
@@ -680,7 +680,7 @@ class ViewletManager(ViewletManagerBase):
         if self.template:
             return self.template.render(self)
         else:
-            viewlets = grokcore.component.util.sort_components(self.viewlets)
+            viewlets = util.sort_components(self.viewlets)
             return u'\n'.join([viewlet.render() for viewlet in viewlets])
 
     def namespace(self):
