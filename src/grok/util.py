@@ -29,12 +29,6 @@ from zope.security.interfaces import IPermission
 from martian.error import GrokError
 from martian.util import class_annotation, methods_from_class
 
-# BBB backwards-compatibility imports (in case somebody wrote custom
-# grokkers that use these utility functions)
-from grokcore.component.util import check_adapts
-from grokcore.component.util import sort_components
-from grokcore.component.util import determine_module_component
-
 def get_name_classname(factory):
     name = grok.name.get(factory)
     if not name:
