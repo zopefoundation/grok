@@ -12,6 +12,11 @@ Restructuring
   directives have been factored out to a reusable
   ``grokcore.component`` package.
 
+* Ported directives to Martian's new directive implementation.  As a
+  result, many helper functions that were available from ``grok.util``
+  were removed.  The functionality is mostly available from the
+  directives themselves now.
+
 Feature changes
 ---------------
 

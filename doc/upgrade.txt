@@ -10,7 +10,87 @@ for those).
 Upgrading to 0.13
 -----------------
 
-- We moved to newer versions of zope packages, using the KGS list for
+* The directive implementations changed tremendously with the upgrade
+  to Martian 0.9.4.  Custom implementations of both directives and
+  grokkers will have to be adjusted.
+
+  - Since directives now have the ability to retrieve the information
+    that was set by them on a component, grokkers need to be adjusted
+    to use the directive's ``get()`` method, rather than the
+    ``class_annotation`` helper.  So instead of::
+
+      name = util.class_annotation(factory, 'grok.name', '')
+
+    you should write::
+
+      name = grok.name.get(factory)
+
+    If the value may have a module-level fall-back, you should also
+    pass in the module.  So instead of writing::
+
+      layer = determine_class_directive('grok.layer', factory, module_info,
+                                        default=IDefaultBrowserLayer)
+
+    you should now write::
+
+      layer = grok.layer.get(factory, module_info.getModule())
+      if layer is None:
+          layer = IDefaultBrowserLayer
+
+  - Custom directives need to be re-implemented using Martian's new
+    ``Directive`` base class.  The directive scope, the type of
+    storage, the validator and a potential default value are all
+    defined as class-level variables:
+
+    o The directive scope can either one of ``martian.CLASS``,
+      ``martian.MODULE``, ``martian.CLASS_OR_MODULE``.
+
+    o The type of storage can be either one of ``martian.ONCE``,
+      ``martian.MULTIPLE``, ``martian.DICT``.
+
+    o An optional validator may be one of ``validateText``,
+      ``validateInterface``, ``validateInterfaceOrClass`` or a custom
+      method.
+
+    o Unless set with a different value, the default value will be
+      ``None``.  You can either set a different default value or
+      override the ``get_default`` method for a computed default.
+
+    For example, consider the implementation of the ``grok.name``
+    directive::
+
+      class name(martian.Directive):
+          scope = martian.CLASS
+          store = martian.ONCE
+          default = u''
+          validate = martian.validateText
+
+    Or a bit more involved (and made-up) example::
+
+      class bases(martian.Directive):
+          scope = martian.CLASS
+          scope = martian.ONCE
+
+          # The factory is called with the parameters of the directive
+          # and may transform the values into whatever should be stored.
+          def factory(self, *values):
+              return list(values)
+
+          # This validator makes sure that the directive can only take
+          # a list of classes an argument
+          def validate(self, *values):
+              for value in values:
+                  if not isinstance(value, type):
+                      raise GrokError("%r is not a class!" % value)
+
+          # If the directive wasn't used on a class, the directive's
+          # getter will return this computed default: a list of the
+          # class's bases
+          def get_default(self, component):
+              return list(component.__bases__)
+
+
+* We moved to newer versions of zope packages, using the KGS list for
   Zope 3.4c1.  This means your code can now get some new deprecation
   warnings for imports that have been moved. Please check your code
   and fix your imports if you get those warnings.
