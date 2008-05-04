@@ -660,6 +660,8 @@ class RESTProtocol(object):
     pass
 
 class ViewletManager(ViewletManagerBase):
+    interface.implements(interfaces.IViewletManager)
+    
     template = None
 
     def __init__(self, context, request, view):

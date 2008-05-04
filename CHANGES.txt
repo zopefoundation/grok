@@ -44,6 +44,12 @@ Feature changes
 
   for details.
 
+* There is now a new ``IContext`` interface available. If you make
+  your class implement that interface, it (and its subclasses) will be
+  candidates for being a context in a module (for automatic context
+  lookup if ``grok.context`` is not present). This relies on a feature
+  introduced in grokcore.component 1.1.
+
 Bug fixes
 ---------
 

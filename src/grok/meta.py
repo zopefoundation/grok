@@ -54,6 +54,7 @@ from grok.util import public_methods_from_class
 from grok.util import get_name_classname
 from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
+from grok.interfaces import IViewletManager as IGrokViewletManager
 
 from grokcore.component.util import determine_module_component
 from grokcore.component.util import check_module_component
@@ -65,7 +66,7 @@ class ViewletManagerContextGrokker(martian.GlobalGrokker):
     def grok(self, name, module, module_info, config, **kw):
         viewletmanager = determine_module_component(module_info,
                                                     grok.viewletmanager,
-                                                    [grok.ViewletManager])
+                                                    IGrokViewletManager)
         grok.viewletmanager.set(module, viewletmanager)
         return True
 
