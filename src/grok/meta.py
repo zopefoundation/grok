@@ -440,8 +440,10 @@ class SiteGrokker(martian.ClassGrokker):
                     "the site (%r) is not a container." %
                     factory, factory)
 
-        # store infos on site class
-        factory.__grok_utilities_to_install__ = infos
+        # Store the list of info objects in their "natural" order on the
+        # site class. They will be picked up by a subscriber doing the
+        # actual registrations in definition order.
+        factory.__grok_utilities_to_install__ = sorted(infos)
         adapts = (factory, grok.IObjectAddedEvent)
 
         config.action(
