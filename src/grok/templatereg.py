@@ -24,7 +24,8 @@ class TemplateRegistry(object):
         return entry['template']
 
     def findFilesystem(self, module_info):
-        template_dir_name = grok.templatedir.get(module_info.getModule())
+        template_dir_name = grok.templatedir.bind().get(
+            module=module_info.getModule())
         if template_dir_name is None:
             template_dir_name = module_info.name + '_templates'
 
@@ -88,7 +89,7 @@ class TemplateRegistry(object):
     def checkTemplates(self, module_info, factory, component_name,
                        has_render, has_no_render):
         factory_name = factory.__name__.lower()
-        template_name = grok.template.get(factory)
+        template_name = grok.template.bind().get(factory)
         if template_name is None:
             template_name = factory_name
 

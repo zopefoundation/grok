@@ -29,12 +29,6 @@ from zope.security.interfaces import IPermission
 from martian.error import GrokError
 from martian.util import methods_from_class
 
-def get_name_classname(factory):
-    name = grok.name.get(factory)
-    if not name:
-        name = factory.__name__.lower()
-    return name
-
 def public_methods_from_class(factory):
     return [m for m in methods_from_class(factory) if \
             not m.__name__.startswith('_')]
@@ -103,7 +97,7 @@ def applySkin(request, skin, skin_type):
     interface.directlyProvides(request, *ifaces)
 
 def _sort_key(component):
-    explicit_order, implicit_order = grok.order.get(component)
+    explicit_order, implicit_order = grok.order.bind().get(component)
     return (explicit_order,
             component.__module__,
             implicit_order,
