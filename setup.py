@@ -55,6 +55,7 @@ setup(
                       'zope.app.publisher',
                       'zope.app.renderer',
                       'zope.app.security',
+                      'zope.app.securitypolicy',
                       'zope.app.testing',
                       'zope.app.twisted',
                       'zope.app.zcmlfiles',
