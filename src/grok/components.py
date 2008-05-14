@@ -437,7 +437,7 @@ class Traverser(object):
         if subob is not None:
             return util.safely_locate_maybe(subob, self.context, name)
 
-        traversable_dict = grok.traversable.get(self.context)
+        traversable_dict = grok.traversable.bind().get(self.context)
         if traversable_dict:
             if name in traversable_dict:
                 subob = getattr(self.context, traversable_dict[name])
@@ -666,8 +666,7 @@ class ViewletManager(ViewletManagerBase):
 
     def __init__(self, context, request, view):
         super(ViewletManager, self).__init__(context, request, view)
-        self.__name__ = util.get_name_classname(self.__class__)
-
+        self.__name__ = self.__view_name__
         self.static = component.queryAdapter(
             self.request,
             interface.Interface,
@@ -718,10 +717,7 @@ class Viewlet(ViewletBase):
 
     def __init__(self, context, request, view, manager):
         super(Viewlet, self).__init__(context, request, view, manager)
-        # would be nice to move this to the ViewletGrokker but
-        # new objects don't have __name__ of their class
-        self.__name__ = util.get_name_classname(self.__class__)
-
+        self.__name__ = self.__view_name__
         self.static = component.queryAdapter(
             self.request,
             interface.Interface,

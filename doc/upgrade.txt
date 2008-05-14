@@ -4,91 +4,140 @@ Upgrade notes
 This document outlines how to update Grok applications so that they
 continue to work with newer versions of Grok.  This document only
 describes changes involving incompatibilities or deprecations, not new
-features (please see :ref:`changes` below or refer to ``CHANGES.txt``
-for those).
+features (please refer to ``CHANGES.txt`` for those).
 
 Upgrading to 0.13
 -----------------
 
 * The directive implementations changed tremendously with the upgrade
-  to Martian 0.9.4.  Custom implementations of both directives and
-  grokkers will have to be adjusted.
+  to Martian 0.9.6.  Custom implementations of both directives (see
+  next bullet point) and grokkers will have to be adjusted.
 
-  - Since directives now have the ability to retrieve the information
-    that was set by them on a component, grokkers need to be adjusted
-    to use the directive's ``get()`` method, rather than the
-    ``class_annotation`` helper.  So instead of::
+  Since the vast majority of directives are class directives, the most
+  common places where information set by directives has to be red are
+  class grokkers (``martian.ClassGrokker``).  For instance, you may
+  have written something like this to implement a custom class
+  grokker previously::
 
-      name = util.class_annotation(factory, 'grok.name', '')
+    class RobotGrokker(martian.ClassGrokker):
+        component_class = Robot
 
-    you should write::
+        def grok(self, name, factory, module_info, config, **kw):
+            robot_name = martian.util.class_annotation(factory, 'grok.name', '')
+            title = martian.util.class_annotation(factory, 'grok.title', 'A robot')
+            provides = martian.util.class_annotation(factory, 'grok.provides', None)
+            if provides is None:
+                martian.util.check_implements_one(factory)
+                provides = list(zope.interface.implementedBy(factory))[0]
+            config.action(
+                descriminator=('robot', provides, robot_name),
+                callable=provideRobot,
+                args=(factory, provides, robot_name, title),
+                )
+            return True
 
-      name = grok.name.get(factory)
+  As you can see, this grokker needs to retrieve three values from the
+  class it's grokking (``factory``) which are all set by directives:
 
-    If the value may have a module-level fall-back, you should also
-    pass in the module.  So instead of writing::
+  - ``grok.name`` with the standard default, an empty string,
 
-      layer = determine_class_directive('grok.layer', factory, module_info,
-                                        default=IDefaultBrowserLayer)
+  - ``grok.title`` with a custom default, the string ``A robot``,
 
-    you should now write::
+  - ``grok.provides`` with a computed default.
 
-      layer = grok.layer.get(factory, module_info.getModule())
-      if layer is None:
-          layer = IDefaultBrowserLayer
+  With the new directive implementation and the extensions to
+  Martian's ``ClassGrokker``, you're now be able to write::
 
-  - Custom directives need to be re-implemented using Martian's new
-    ``Directive`` base class.  The directive scope, the type of
-    storage, the validator and a potential default value are all
-    defined as class-level variables:
+    def default_provides(factory, module, **data):
+        # This function is available for import from grokcore.component.meta.
+        # It's shown here simply to illustrate how the original grokker would
+        # have been refactored.
+        martian.util.check_implements_one(factory)
+        return list(zope.interface.implementedBy(factory))[0]
 
-    o The directive scope can either one of ``martian.CLASS``,
-      ``martian.MODULE``, ``martian.CLASS_OR_MODULE``.
+    class RobotGrokker(martian.ClassGrokker):
+        component_class = Robot
+        directives = [
+            grok.name.bind(name='robot_name'),
+            grok.title.bind(default='A Robot'),
+            grok.provides.bind(get_default=default_provides),
+            ]
 
-    o The type of storage can be either one of ``martian.ONCE``,
-      ``martian.MULTIPLE``, ``martian.DICT``.
+        def execute(self, factory, config, robot_name, title, provides, **kw):
+            config.action(
+                descriminator=('robot', provides, robot_name),
+                callable=provideRobot,
+                args=(factory, provides, robot_name, title),
+                )
+            return True
 
-    o An optional validator may be one of ``validateText``,
-      ``validateInterface``, ``validateInterfaceOrClass`` or a custom
-      method.
+  Basically, all you need to do is provide a list of *bound*
+  directives in the grokker class and then implement the ``execute``
+  method which will get the class (``factory``) and the configuration
+  context (``config``) as positional arguments and then the values of
+  the directives as keyword parameters.  Note that when binding the
+  directives, you may
 
-    o Unless set with a different value, the default value will be
-      ``None``.  You can either set a different default value or
-      override the ``get_default`` method for a computed default.
+  - set the name of the keyword parameter if you want it to be
+    different than the directive's name,
 
-    For example, consider the implementation of the ``grok.name``
-    directive::
+  - set a default value if you want it to be different from the
+    directive's standard default,
 
-      class name(martian.Directive):
-          scope = martian.CLASS
-          store = martian.ONCE
-          default = u''
-          validate = martian.validateText
+  - pass in a factory for a computed default value (``get_default``).
 
-    Or a bit more involved (and made-up) example::
+  If you need still need to manually retrieve directive values from an
+  object (a class, an instance or a module), you can do so by using
+  the ``get`` method of the bound directive, e.g.::
 
-      class bases(martian.Directive):
-          scope = martian.CLASS
-          scope = martian.ONCE
+    class_context = grok.context.bind().get(factory, module=module)
+    just_module_context = grok.context.bind().get(module=module)
 
-          # The factory is called with the parameters of the directive
-          # and may transform the values into whatever should be stored.
-          def factory(self, *values):
-              return list(values)
+* Custom directives need to be re-implemented using Martian's new
+  ``Directive`` base class.  The directive scope, the type of storage,
+  the validator and a potential default value are all defined as
+  class-level variables:
 
-          # This validator makes sure that the directive can only take
-          # a list of classes an argument
-          def validate(self, *values):
-              for value in values:
-                  if not isinstance(value, type):
-                      raise GrokError("%r is not a class!" % value)
+  - The directive scope can either one of ``martian.CLASS``,
+    ``martian.MODULE``, ``martian.CLASS_OR_MODULE``.
 
-          # If the directive wasn't used on a class, the directive's
-          # getter will return this computed default: a list of the
-          # class's bases
-          def get_default(self, component):
-              return list(component.__bases__)
+  - The type of storage can be either one of ``martian.ONCE``,
+    ``martian.MULTIPLE``, ``martian.DICT``.
 
+  - An optional validator may be one of ``validateText``,
+    ``validateInterface``, ``validateInterfaceOrClass`` or a custom
+    method.
+
+  - Unless set with a different value, the standard default value will
+    be ``None``.
+
+  For example, consider the implementation of the ``grok.name``
+  directive::
+
+    class name(martian.Directive):
+        scope = martian.CLASS
+        store = martian.ONCE
+        default = u''
+        validate = martian.validateText
+
+  Or a bit more involved (and made-up) example::
+
+    class bases(martian.Directive):
+        scope = martian.CLASS
+        scope = martian.ONCE
+        default = []
+
+        # The factory is called with the parameters of the directive
+        # and may transform the values into whatever should be stored.
+        def factory(self, *values):
+            return list(values)
+
+        # This validator makes sure that the directive can only take
+        # a list of classes an argument
+        def validate(self, *values):
+            for value in values:
+                if not isinstance(value, type):
+                    raise GrokError("%r is not a class!" % value)
 
 * We moved to newer versions of zope packages, using the KGS list for
   Zope 3.4c1.  This means your code can now get some new deprecation

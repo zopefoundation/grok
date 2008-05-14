@@ -4,7 +4,7 @@ attributes can be mentioned.
 
   >>> from martian import scan
   >>> import grok
-  >>> g = grok.traversable.get(Club)
+  >>> g = grok.traversable.bind().get(Club)
   >>> isinstance(g, dict)
   True
   >>> g['demo']

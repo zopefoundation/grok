@@ -24,6 +24,7 @@ import martian
 from martian import util
 from martian.error import GrokImportError, GrokError
 from martian.directive import StoreMultipleTimes
+from grokcore.component.scan import UnambiguousComponentScope
 from grok import components
 
 # Define grok directives
@@ -48,7 +49,7 @@ class local_utility(martian.Directive):
                                   "provides argument of %s." % self.name)
 
         if provides is None:
-            provides = grok.provides.get(factory)
+            provides = grok.provides.bind().get(factory)
 
         if provides is None:
             if util.check_subclass(factory, grok.LocalUtility):
@@ -134,7 +135,7 @@ class require(martian.Directive):
 
     def factory(self, value):
         if util.check_subclass(value, components.Permission):
-            return grok.name.get(value)
+            return grok.name.bind().get(value)
         return value
 
     def __call__(self, func):
@@ -170,7 +171,7 @@ class layer(OneInterfaceOrClassOnClassOrModule):
     pass
 
 class viewletmanager(OneInterfaceOrClassOnClassOrModule):
-    pass
+    scope = UnambiguousComponentScope('viewletmanager')
 
 class view(OneInterfaceOrClassOnClassOrModule):
     default = IBrowserView

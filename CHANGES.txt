@@ -17,6 +17,9 @@ Restructuring
   were removed.  The functionality is mostly available from the
   directives themselves now.
 
+* Refactored class grokkers to make use of Martian's new declarative
+  way for retrieving directive data from classes.
+
 Feature changes
 ---------------
 
