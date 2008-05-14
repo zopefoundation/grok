@@ -76,6 +76,10 @@ Feature changes
 Bug fixes
 ---------
 
+* Fix https://bugs.launchpad.net/grok/+bug/229677:
+  zope.app.securitypolicy egg missing. Now zope.app.securitypolicy
+  3.4.6 is additionally required by Grok and fetched by buildout.
+
 * Removed first testsetup hack from grok.testing.
 
 * Version 2.1 of z3c.autoinclude contained code that caused Grok to
