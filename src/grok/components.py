@@ -661,7 +661,7 @@ class RESTProtocol(object):
 
 class ViewletManager(ViewletManagerBase):
     interface.implements(interfaces.IViewletManager)
-    
+
     template = None
 
     def __init__(self, context, request, view):
@@ -673,14 +673,29 @@ class ViewletManager(ViewletManagerBase):
             name=self.module_info.package_dotted_name
             )
 
+    def sort(self, viewlets):
+        """Sort the viewlets.
+
+        ``viewlets`` is a list of tuples of the form (name, viewlet).
+        """
+        # In Grok, the default order of the viewlets is determined
+        # by util.sort_components.
+        sorted_components = util.sort_components(
+            (viewlet for name, viewlet in viewlets))
+
+        indexed_viewlets = (
+            (sorted_components.index(viewlet), (name, viewlet)) for
+            name, viewlet in viewlets)
+
+        return [indexed[1] for indexed in sorted(indexed_viewlets)]
+
     def render(self):
         """See zope.contentprovider.interfaces.IContentProvider"""
         # Now render the view
         if self.template:
             return self.template.render(self)
         else:
-            viewlets = util.sort_components(self.viewlets)
-            return u'\n'.join([viewlet.render() for viewlet in viewlets])
+            return u'\n'.join([viewlet.render() for viewlet in self.viewlets])
 
     def namespace(self):
         return {}
