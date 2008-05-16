@@ -10,9 +10,6 @@ Unauthorized:
 
 When we log in (e.g. as a manager), we can access the view just fine:
 
-  >>> from zope.securitypolicy.rolepermission import rolePermissionManager
-  >>> rolePermissionManager.grantPermissionToRole('cave.ViewPainting',
-  ...                                             'zope.Manager')
   >>> browser.addHeader('Authorization', 'Basic mgr:mgrpw')
   >>> browser.handleErrors = False
   >>> browser.open("http://localhost/@@painting")
