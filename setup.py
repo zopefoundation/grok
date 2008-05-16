@@ -70,6 +70,7 @@ setup(
                       'zope.i18nmessageid',
                       'zope.interface',
                       'zope.lifecycleevent',
+                      'zope.location',
                       'zope.pagetemplate',
                       'zope.proxy',
                       'zope.publisher',
