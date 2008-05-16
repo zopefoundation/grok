@@ -56,7 +56,6 @@ from grok.util import check_module_component, determine_module_component
 from grok.util import determine_class_component
 from grok.util import determine_class_directive, public_methods_from_class
 from grok.util import check_provides_one
-from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 
 def get_context(module_info, factory):
@@ -239,10 +238,8 @@ class RESTGrokker(martian.ClassGrokker):
         for method in methods:
             name = method.__name__
 
-            # Make sure that the class inherits RestPublisher, so that the
-            # views have a location
             method_view = type(
-                factory.__name__, (factory, RestPublisher),
+                factory.__name__, (factory,),
                 {'__call__': method }
                 )
 

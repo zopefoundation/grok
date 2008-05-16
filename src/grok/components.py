@@ -21,6 +21,7 @@ import warnings
 import pytz
 import simplejson
 
+import zope.location
 from zope import component
 from zope import interface
 from zope.interface.common import idatetime
@@ -202,11 +203,11 @@ class View(BrowserPage):
 class XMLRPC(object):
     pass
 
-class REST(object):
+class REST(zope.location.Location):
     interface.implements(interfaces.IREST)
 
     def __init__(self, context, request):
-        self.context = context
+        self.context = self.__parent__ = context
         self.request = request
         self.body = request.bodyStream.getCacheStream().read()
 
