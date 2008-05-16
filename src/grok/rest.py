@@ -8,21 +8,11 @@ from zope.traversing.namespace import view
 from zope.interface import Interface
 from zope.interface.interfaces import IInterface
 from zope.publisher.interfaces.browser import IBrowserRequest
-from zope.publisher.interfaces.browser import IBrowserPublisher
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.app.publication.http import MethodNotAllowed
-import zope.location
 
 from grok.interfaces import IRESTSkinType
 from zope.publisher.browser import applySkin
-
-class RestPublisher(zope.location.Location):
-    grok.implements(IBrowserPublisher)
-
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-        self.__parent__ = self.context
 
 class GrokMethodNotAllowed(MethodNotAllowed):
     pass

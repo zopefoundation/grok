@@ -51,7 +51,6 @@ import grok
 from grok import components, formlib, templatereg
 from grok.util import check_permission, make_checker
 from grok.util import public_methods_from_class
-from grok.rest import RestPublisher
 from grok.interfaces import IRESTSkinType
 from grok.interfaces import IViewletManager as IGrokViewletManager
 
@@ -160,10 +159,8 @@ class RESTGrokker(martian.ClassGrokker):
         for method in methods:
             name = method.__name__
 
-            # Make sure that the class inherits RestPublisher, so that the
-            # views have a location
             method_view = type(
-                factory.__name__, (factory, RestPublisher),
+                factory.__name__, (factory,),
                 {'__call__': method }
                 )
 
