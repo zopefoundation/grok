@@ -8,6 +8,7 @@ Meta
 - Check demo applications for issues with patterns (grok wiki, ldap address
   book)
 
+
 Core
 ====
 
@@ -33,6 +34,7 @@ Core
 
 - JSON support similar to XMLRPC.
 
+
 Schema/formlib support
 ----------------------
 
@@ -45,6 +47,7 @@ Schema/formlib support
 - make formlib macros available in some form?
 
 - what about subclassing a model that has a 'fields'?
+
 
 Need to discuss
 ---------------
@@ -103,6 +106,7 @@ Need to discuss
 - Do we want to initialize model attributes for any schema that the model
   implements (in addition to the initialization that is taking place for the
   model-level fields)?
+
 
 Punt
 ----
