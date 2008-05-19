@@ -678,16 +678,24 @@ class ViewletManager(ViewletManagerBase):
 
         ``viewlets`` is a list of tuples of the form (name, viewlet).
         """
-        # In Grok, the default order of the viewlets is determined
-        # by util.sort_components.
-        sorted_components = util.sort_components(
-            (viewlet for name, viewlet in viewlets))
-
-        indexed_viewlets = (
-            (sorted_components.index(viewlet), (name, viewlet)) for
-            name, viewlet in viewlets)
-
-        return [indexed[1] for indexed in sorted(indexed_viewlets)]
+        # In Grok, the default order of the viewlets is determined by
+        # util.sort_components. util.sort_components() however expects
+        # a list of just components, but sort() is supposed to deal
+        # with a list of (name, viewlet) tuples.
+        # To handle this situation we first store the name part on the
+        # viewlet, then use util.sort_components() and then "unpack"
+        # the name from the viewlet and recreate the list of (name,
+        # viewlet) tuples, now in the correct order.
+        s_viewlets = []
+        for name, viewlet in viewlets:
+             # Stuff away viewlet name so we can later retrieve it.
+             # XXX We loose name information in case the same viewlet
+             # is in the viewlets list twice, but with a different
+             # name. Most probably this situation doesn't occur.
+             viewlet.__viewlet_name__ = name
+             s_viewlets.append(viewlet)
+        s_viewlets = util.sort_components(s_viewlets)
+        return [(viewlet.__viewlet_name__, viewlet) for viewlet in s_viewlets]
 
     def render(self):
         """See zope.contentprovider.interfaces.IContentProvider"""
