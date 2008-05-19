@@ -662,7 +662,7 @@ class RESTProtocol(object):
 
 class ViewletManager(ViewletManagerBase):
     interface.implements(interfaces.IViewletManager)
-    
+
     template = None
 
     def __init__(self, context, request, view):
@@ -674,14 +674,37 @@ class ViewletManager(ViewletManagerBase):
             name=self.module_info.package_dotted_name
             )
 
+    def sort(self, viewlets):
+        """Sort the viewlets.
+
+        ``viewlets`` is a list of tuples of the form (name, viewlet).
+        """
+        # In Grok, the default order of the viewlets is determined by
+        # util.sort_components. util.sort_components() however expects
+        # a list of just components, but sort() is supposed to deal
+        # with a list of (name, viewlet) tuples.
+        # To handle this situation we first store the name part on the
+        # viewlet, then use util.sort_components() and then "unpack"
+        # the name from the viewlet and recreate the list of (name,
+        # viewlet) tuples, now in the correct order.
+        s_viewlets = []
+        for name, viewlet in viewlets:
+             # Stuff away viewlet name so we can later retrieve it.
+             # XXX We loose name information in case the same viewlet
+             # is in the viewlets list twice, but with a different
+             # name. Most probably this situation doesn't occur.
+             viewlet.__viewlet_name__ = name
+             s_viewlets.append(viewlet)
+        s_viewlets = util.sort_components(s_viewlets)
+        return [(viewlet.__viewlet_name__, viewlet) for viewlet in s_viewlets]
+
     def render(self):
         """See zope.contentprovider.interfaces.IContentProvider"""
         # Now render the view
         if self.template:
             return self.template.render(self)
         else:
-            viewlets = util.sort_components(self.viewlets)
-            return u'\n'.join([viewlet.render() for viewlet in viewlets])
+            return u'\n'.join([viewlet.render() for viewlet in self.viewlets])
 
     def namespace(self):
         return {}
