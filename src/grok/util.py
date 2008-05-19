@@ -113,16 +113,15 @@ def public_methods_from_class(factory):
             not m.__name__.startswith('_')]
 
 def _sort_key(component):
-    explicit_order, implicit_order = class_annotation(component,
-                                                      'grok.order',
-                                                      (0,0))
+    # If components have a grok.order directive, sort by that.
+    explicit_order, implicit_order = class_annotation(
+        component, 'grok.order', (0,0))
     return (explicit_order,
             component.__module__,
             implicit_order,
             component.__class__.__name__)
 
 def sort_components(components):
-    # if components have a grok.order directive, sort by that
     return sorted(components, key=_sort_key)
 
 AMBIGUOUS_COMPONENT = object()
@@ -144,7 +143,7 @@ def check_module_component(factory, component,
         raise GrokError("Multiple possible %ss for %r, please use "
                         "%s." % (component_name, factory, component_directive),
                         factory)
-    
+
 def determine_module_component(module_info, annotation, classes):
     """Determine module-level component.
 
@@ -169,7 +168,7 @@ def determine_module_component(module_info, annotation, classes):
         component = components[0]
     else:
         component= AMBIGUOUS_COMPONENT
-        
+
     module_component = module_info.getAnnotation(annotation, None)
     if module_component:
         component = module_component
