@@ -7,6 +7,10 @@ Grok changes
 Bug fixes
 ---------
 
+* grok.REST views now have a properly set ``__parent__`` attribute and
+  will correctly allow acquisition from parent objects, as it's used
+  by the security policy for acquiring local grants, for example.
+
 * Fix https://bugs.launchpad.net/grok/+bug/229677:
   zope.app.securitypolicy egg missing. Now zope.app.securitypolicy
   3.4.6 is additionally required by Grok and fetched by buildout.
