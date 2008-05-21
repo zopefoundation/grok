@@ -253,62 +253,42 @@ class ViewGrokker(martian.ClassGrokker):
                                  has_render, has_no_render)
 
 
-class JSONGrokker(martian.ClassGrokker):
+class JSONGrokker(MethodGrokker):
     component_class = grok.JSON
     directives = [
         grok.context.bind(),
-        grok.require.bind(name='class_permission'),
+        grok.require.bind(name='permission'),
         ]
 
     # TODO: this grokker doesn't support layers yet
 
-    def execute(self, factory, config, context, class_permission, **kw):
-        methods = public_methods_from_class(factory)
-        # make sure we issue an action to check whether this permission
-        # exists. That's the only thing that action does
-        if class_permission is not None:
-            config.action(
-                discriminator=None,
-                callable=check_permission,
-                args=(factory, class_permission)
-                )
+    def execute(self, factory, method, config, context, permission, **kw):
+        # The grok.JSON component inherits methods from its baseclass
+        # (being zope.publisher.browser.BrowserPage) with names that
+        # do not start with an underscore, but should still not be
+        # registered as views. Ignore these methods:
+        if method.__name__ in ['browserDefault', 'publishTraverse']:
+            return False
 
-        for method in methods:
-            # The grok.JSON component inherits methods from its baseclass
-            # (being zope.publisher.browser.BrowserPage) with names that
-            # do not start with an underscore, but should still not
-            # be registered as views. Ignore these methods:
-            if method.__name__ in ['browserDefault', 'publishTraverse']:
-                continue
+        # Create a new class with a __view_name__ attribute so the
+        # JSON class knows what method to call.
+        method_view = type(
+            factory.__name__, (factory,),
+            {'__view_name__': method.__name__}
+            )
+        adapts = (context, IDefaultBrowserLayer)
+        name = method.__name__
 
-            # Create a new class with a __view_name__ attribute so the
-            # JSON class knows what method to call.
-            method_view = type(
-                factory.__name__, (factory,),
-                {'__view_name__': method.__name__}
-                )
-            adapts = (context, IDefaultBrowserLayer)
-            name = method.__name__
-
-            config.action(
-                discriminator=('adapter', adapts, interface.Interface, name),
-                callable=component.provideAdapter,
-                args=(method_view, adapts, interface.Interface, name),
-                )
-
-            # Protect method_view with either the permission that was
-            # set on the method, the default permission from the class
-            # level or zope.Public.
-
-            permission = grok.require.bind().get(method)
-            if permission is None:
-                permission = class_permission
-
-            config.action(
-                discriminator=('protectName', method_view, '__call__'),
-                callable=make_checker,
-                args=(factory, method_view, permission),
-                )
+        config.action(
+            discriminator=('adapter', adapts, interface.Interface, name),
+            callable=component.provideAdapter,
+            args=(method_view, adapts, interface.Interface, name),
+            )
+        config.action(
+            discriminator=('protectName', method_view, '__call__'),
+            callable=make_checker,
+            args=(factory, method_view, permission),
+            )
         return True
 
 
