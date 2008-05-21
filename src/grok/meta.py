@@ -87,26 +87,28 @@ class ViewletManagerContextGrokker(martian.GlobalGrokker):
 
 
 class MethodGrokker(martian.ClassGrokker):
-    grok.baseclass() # XXX
-
-    # Use a tuple instead of a list here to make it immutable, just to be safe
-    directives = ()
+    grok.baseclass()
 
     def grok(self, name, class_, module_info=None, **kw):
         module = None
         if module_info is not None:
             module = module_info.getModule()
 
-        # Populate the data dict with information from the directives:
+        # Populate the data dict with information from class or module
         for directive in self.directives:
             kw[directive.name] = directive.get(class_, module, **kw)
 
         results = []
         for method in public_methods_from_class(class_):
+            # Directives may also be applied to methods, so let's
+            # check each directive and potentially override the
+            # class-level value with a value from the method *locally*.
             data = kw.copy()
-            for bound_directive in self.directives:
-                directive = bound_directive.directive
-                data[bound_directive.name] = directive.store.get(directive, method, data[bound_directive.name])
+            for bound_dir in self.directives:
+                directive = bound_dir.directive
+                class_value = data[bound_dir.name]
+                data[bound_dir.name] = directive.store.get(directive, method,
+                                                           default=class_value)
             results.append(self.execute(class_, method, **data))
 
         if not results:
