@@ -86,54 +86,63 @@ class ViewletManagerContextGrokker(martian.GlobalGrokker):
         return True
 
 
-class XMLRPCGrokker(martian.ClassGrokker):
+class MethodGrokker(martian.ClassGrokker):
+    grok.baseclass() # XXX
+
+    # Use a tuple instead of a list here to make it immutable, just to be safe
+    directives = ()
+
+    def grok(self, name, class_, module_info=None, **kw):
+        module = None
+        if module_info is not None:
+            module = module_info.getModule()
+
+        # Populate the data dict with information from the directives:
+        for directive in self.directives:
+            kw[directive.name] = directive.get(class_, module, **kw)
+
+        results = []
+        for method in public_methods_from_class(class_):
+            data = kw.copy()
+            for bound_directive in self.directives:
+                directive = bound_directive.directive
+                data[bound_directive.name] = directive.store.get(directive, method, data[bound_directive.name])
+            results.append(self.execute(class_, method, **data))
+
+        return max(results)
+
+    def execute(self, class_, method, **data):
+        raise NotImplementedError
+
+
+class XMLRPCGrokker(MethodGrokker):
     component_class = grok.XMLRPC
     directives = [
         grok.context.bind(),
-        grok.require.bind(name='class_permission'),
+        grok.require.bind(name='permission'),
         ]
 
-    def execute(self, factory, config, class_permission, context, **kw):
-        methods = public_methods_from_class(factory)
+    def execute(self, factory, method, config, context, permission, **kw):
+        name = method.__name__
 
-        # make sure we issue an action to check whether this permission
-        # exists. That's the only thing that action does
-        if class_permission is not None:
-            config.action(
-                discriminator=None,
-                callable=check_permission,
-                args=(factory, class_permission)
-                )
+        # Make sure that the class inherits MethodPublisher, so that the
+        # views have a location
+        method_view = type(
+            factory.__name__, (factory, MethodPublisher),
+            {'__call__': method}
+            )
 
-        for method in methods:
-            name = method.__name__
-
-            # Make sure that the class inherits MethodPublisher, so that the
-            # views have a location
-            method_view = type(
-                factory.__name__, (factory, MethodPublisher),
-                {'__call__': method}
-                )
-
-            adapts = (context, IXMLRPCRequest)
-            config.action(
-                discriminator=('adapter', adapts, interface.Interface, name),
-                callable=component.provideAdapter,
-                args=(method_view, adapts, interface.Interface, name),
-                )
-
-            # Protect method_view with either the permission that was
-            # set on the method, the default permission from the class
-            # level or zope.Public.
-            permission = grok.require.bind().get(method)
-            if permission is None:
-                permission = class_permission
-
-            config.action(
-                discriminator=('protectName', method_view, '__call__'),
-                callable=make_checker,
-                args=(factory, method_view, permission),
-                )
+        adapts = (context, IXMLRPCRequest)
+        config.action(
+            discriminator=('adapter', adapts, interface.Interface, name),
+            callable=component.provideAdapter,
+            args=(method_view, adapts, interface.Interface, name),
+            )
+        config.action(
+            discriminator=('protectName', method_view, '__call__'),
+            callable=make_checker,
+            args=(factory, method_view, permission),
+            )
         return True
 
 
