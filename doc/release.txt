@@ -1,27 +1,24 @@
-Continuous releases from SVN
-----------------------------
+Release information
+===================
 
-A note from Philipp to the mailing list, put here so we don't forget this
-useful information:
+This document aims to collect information about Grok's release procedure.
 
-I've now enabled grok and grokproject to register themselves as
-revision number-based releases from SVN. That means the version number
-is now composed the following way:
+Binary eggs on Windows
+----------------------
 
-  ${next_stable_release_version}dev-r{svn_revision_number}
+Grok aims to work on Windows as well. This is not a problem for the
+most part, but takes special attention when updating the list of
+dependencies.  The follow eggs need a compiler on Unixy platforms, and
+a binary egg on Windows::
 
-The advantage of that is that we can now receive automatic updates
-whenever we reregister a newer "version" of grok (based on a higher
-revision number).
+  zope.i18nmessageid 
+  zope.interface
+  zope.security
+  zope.app.container
+  ZODB3
+  zope.hookable
+  zope.proxy
 
-I've also uploaded eggs and tarballs so that people who don't have
-subversion can still install grok and grokproject (useful for Windows
-folks). That means if you easy_install grok right now, it will install
-it from the uploaded egg (you won't get the subversion HEAD
-anymore). If you still want to get it straight from subversion,
-easy_install grok==dev.
+Please make sure a Windows version of the egg is available when you
+update a dependency!
 
-After changes to grok itself, you can register and upload a new
-"release" to the Cheeseshop with
-
-  python setup.py register sdist bdist_egg upload
