@@ -109,6 +109,8 @@ class MethodGrokker(martian.ClassGrokker):
                 data[bound_directive.name] = directive.store.get(directive, method, data[bound_directive.name])
             results.append(self.execute(class_, method, **data))
 
+        if not results:
+            return False
         return max(results)
 
     def execute(self, class_, method, **data):
@@ -146,52 +148,33 @@ class XMLRPCGrokker(MethodGrokker):
         return True
 
 
-class RESTGrokker(martian.ClassGrokker):
+class RESTGrokker(MethodGrokker):
     component_class = grok.REST
     directives = [
         grok.context.bind(),
         grok.layer.bind(default=grok.IRESTLayer),
-        grok.require.bind(name='class_permission'),
+        grok.require.bind(name='permission'),
         ]
 
-    def execute(self, factory, config, class_permission, context, layer, **kw):
-        methods = public_methods_from_class(factory)
-        # make sure we issue an action to check whether this permission
-        # exists. That's the only thing that action does
-        if class_permission is not None:
-            config.action(
-                discriminator=None,
-                callable=check_permission,
-                args=(factory, class_permission)
-                )
+    def execute(self, factory, method, config, permission, context, layer, **kw):
+        name = method.__name__
 
-        for method in methods:
-            name = method.__name__
+        method_view = type(
+            factory.__name__, (factory,),
+            {'__call__': method }
+            )
 
-            method_view = type(
-                factory.__name__, (factory,),
-                {'__call__': method }
-                )
-
-            adapts = (context, layer)
-            config.action(
-                discriminator=('adapter', adapts, interface.Interface, name),
-                callable=component.provideAdapter,
-                args=(method_view, adapts, interface.Interface, name),
-                )
-
-            # Protect method_view with either the permission that was
-            # set on the method, the default permission from the class
-            # level or zope.Public.
-            permission = grok.require.bind().get(method)
-            if permission is None:
-                permission = class_permission
-
-            config.action(
-                discriminator=('protectName', method_view, '__call__'),
-                callable=make_checker,
-                args=(factory, method_view, permission),
-                )
+        adapts = (context, layer)
+        config.action(
+            discriminator=('adapter', adapts, interface.Interface, name),
+            callable=component.provideAdapter,
+            args=(method_view, adapts, interface.Interface, name),
+            )
+        config.action(
+            discriminator=('protectName', method_view, '__call__'),
+            callable=make_checker,
+            args=(factory, method_view, permission),
+            )
         return True
 
 
