@@ -7,6 +7,10 @@ Grok changes
 Bug fixes
 ---------
 
+* Fix https://bugs.launchpad.net/grok/+bug/231106: Use the
+  viewletmanager.sort() method for sorting viewlets by using
+  util.sort_components().
+
 * grok.REST views now have a properly set ``__parent__`` attribute and
   will correctly allow acquisition from parent objects, as it's used
   by the security policy for acquiring local grants, for example.
