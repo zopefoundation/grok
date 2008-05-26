@@ -60,9 +60,6 @@ class rest_skin(view):
         applySkin(self.request, skin)
         return self.context
 
-class DefaultRest(grok.REST):
-    grok.context(Interface)
-    grok.layer(grok.IRESTLayer)
 
 class NotAllowedREST(grok.REST):
     """These are registered for everything by default to cause the correct
