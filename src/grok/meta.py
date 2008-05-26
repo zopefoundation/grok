@@ -50,7 +50,6 @@ from martian import util
 import grok
 from grok import components, formlib, templatereg
 from grok.util import check_permission, make_checker
-from grok.util import public_methods_from_class
 from grok.interfaces import IRESTSkinType
 from grok.interfaces import IViewletManager as IGrokViewletManager
 
@@ -86,46 +85,7 @@ class ViewletManagerContextGrokker(martian.GlobalGrokker):
         return True
 
 
-class MethodGrokker(martian.ClassGrokker):
-    grok.baseclass()
-
-    def grok(self, name, class_, module_info=None, **kw):
-        module = None
-        if module_info is not None:
-            module = module_info.getModule()
-
-        # Populate the data dict with information from class or module
-        for directive in self.directives:
-            kw[directive.name] = directive.get(class_, module, **kw)
-
-        # Ignore methods that are present on the component baseclass.
-        basemethods = set(public_methods_from_class(self.component_class))
-        methods = set(public_methods_from_class(class_)) - basemethods
-        if not methods:
-            raise GrokError("%r does not define any public methods. "
-                            "Please add methods to this class to enable "
-                            "its registration." % class_, class_)
-
-        results = []
-        for method in methods:
-            # Directives may also be applied to methods, so let's
-            # check each directive and potentially override the
-            # class-level value with a value from the method *locally*.
-            data = kw.copy()
-            for bound_dir in self.directives:
-                directive = bound_dir.directive
-                class_value = data[bound_dir.name]
-                data[bound_dir.name] = directive.store.get(directive, method,
-                                                           default=class_value)
-            results.append(self.execute(class_, method, **data))
-
-        return max(results)
-
-    def execute(self, class_, method, **data):
-        raise NotImplementedError
-
-
-class XMLRPCGrokker(MethodGrokker):
+class XMLRPCGrokker(martian.MethodGrokker):
     component_class = grok.XMLRPC
     directives = [
         grok.context.bind(),
@@ -156,7 +116,7 @@ class XMLRPCGrokker(MethodGrokker):
         return True
 
 
-class RESTGrokker(MethodGrokker):
+class RESTGrokker(martian.MethodGrokker):
     component_class = grok.REST
     directives = [
         grok.context.bind(),
@@ -261,7 +221,7 @@ class ViewGrokker(martian.ClassGrokker):
                                  has_render, has_no_render)
 
 
-class JSONGrokker(MethodGrokker):
+class JSONGrokker(martian.MethodGrokker):
     component_class = grok.JSON
     directives = [
         grok.context.bind(),
