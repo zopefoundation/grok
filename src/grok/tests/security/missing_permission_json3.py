@@ -1,12 +1,8 @@
 """
-Make sure we get an error for a missing permission even if that permission
-isn't actually used (as there are more specific permissions)::
+An undefined permission that's never used (because it's being shadowed
+by a method-level directive) doesn't raise an error:
 
   >>> grok.testing.grok(__name__)
-  Traceback (most recent call last):
-    ...
-  ConfigurationExecutionError: martian.error.GrokError: Undefined permission
-  'doesnt.exist' in ...
 
 """
 

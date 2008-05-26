@@ -1,13 +1,10 @@
 """
-A permission has to be defined first (using grok.Permission for example)
-before it can be used in grok.require() in an XMLRPC class. This is even the
-case for a default permission that is never used.
+A permission has to be defined first (using grok.Permission for
+example) before it can be used in grok.require() in an XMLRPC
+class. However, this is *not* the the case for a default permission
+that is never used.
 
   >>> grok.testing.grok(__name__)
-  Traceback (most recent call last):
-   ...
-  ConfigurationExecutionError: martian.error.GrokError: Undefined permission 'doesnt.exist' in <class 'grok.tests.security.missing_permission_xmlrpc3.MissingPermission'>. Use grok.Permission first.
-  ...
 
 """
 
