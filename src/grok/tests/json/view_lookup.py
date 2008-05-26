@@ -31,8 +31,9 @@ methods with names that start with an underscore are not::
   <zope.publisher.browser.TestRequest instance URL=http://127.0.0.1>),
   <InterfaceClass zope.interface.Interface>, '_private')
 
-Even more important, special methods like __call__ are not registered as viewws
-too. This test is here to make sure a previous bug has been fixed::
+Even more important, special methods like __call__ are not registered
+as views either. This test is here to make sure a previous bug has
+been fixed::
 
   >>> view = getMultiAdapter((mammoth, request), name='__call__')
   Traceback (most recent call last):
@@ -78,3 +79,6 @@ class SecondMammothView(grok.JSON):
 
     def _private(self):
         return {'should': 'not be registered'}
+
+    def public(self):
+        return {'will': 'be registered'}

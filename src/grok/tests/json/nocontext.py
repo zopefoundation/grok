@@ -14,4 +14,6 @@ whether it's hooked up at all:
 import grok
 
 class TestJSON(grok.JSON):
-    pass
+
+    def foo(self):
+        pass

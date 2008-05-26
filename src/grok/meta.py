@@ -98,8 +98,16 @@ class MethodGrokker(martian.ClassGrokker):
         for directive in self.directives:
             kw[directive.name] = directive.get(class_, module, **kw)
 
+        # Ignore methods that are present on the component baseclass.
+        basemethods = set(public_methods_from_class(self.component_class))
+        methods = set(public_methods_from_class(class_)) - basemethods
+        if not methods:
+            raise GrokError("%r does not define any public methods. "
+                            "Please add methods to this class to enable "
+                            "its registration." % class_, class_)
+
         results = []
-        for method in public_methods_from_class(class_):
+        for method in methods:
             # Directives may also be applied to methods, so let's
             # check each directive and potentially override the
             # class-level value with a value from the method *locally*.
@@ -111,8 +119,6 @@ class MethodGrokker(martian.ClassGrokker):
                                                            default=class_value)
             results.append(self.execute(class_, method, **data))
 
-        if not results:
-            return False
         return max(results)
 
     def execute(self, class_, method, **data):
@@ -265,13 +271,6 @@ class JSONGrokker(MethodGrokker):
     # TODO: this grokker doesn't support layers yet
 
     def execute(self, factory, method, config, context, permission, **kw):
-        # The grok.JSON component inherits methods from its baseclass
-        # (being zope.publisher.browser.BrowserPage) with names that
-        # do not start with an underscore, but should still not be
-        # registered as views. Ignore these methods:
-        if method.__name__ in ['browserDefault', 'publishTraverse']:
-            return False
-
         # Create a new class with a __view_name__ attribute so the
         # JSON class knows what method to call.
         method_view = type(
