@@ -371,6 +371,9 @@ class CRest(grok.REST):
     grok.layer(LayerC)
     grok.context(MyApp)
 
+    def some_method_thats_not_in_HTTP(self):
+        pass
+
 class DRest(grok.REST):
     grok.context(MyContent)
 

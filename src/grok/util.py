@@ -29,10 +29,6 @@ from zope.security.interfaces import IPermission
 from martian.error import GrokError
 from martian.util import methods_from_class
 
-def public_methods_from_class(factory):
-    return [m for m in methods_from_class(factory) if \
-            not m.__name__.startswith('_')]
-
 def make_checker(factory, view_factory, permission, method_names=None):
     """Make a checker for a view_factory associated with factory.
 
