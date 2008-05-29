@@ -14,10 +14,10 @@ Upgrading to 0.13
   next bullet point) and grokkers will have to be adjusted.
 
   Since the vast majority of directives are class directives, the most
-  common places where information set by directives has to be red are
+  common places where information set by directives has to be read are
   class grokkers (``martian.ClassGrokker``).  For instance, you may
-  have written something like this to implement a custom class
-  grokker previously::
+  have written something like this to implement a custom class grokker
+  previously::
 
     class RobotGrokker(martian.ClassGrokker):
         component_class = Robot
