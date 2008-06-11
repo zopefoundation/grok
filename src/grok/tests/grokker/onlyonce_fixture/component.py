@@ -1,4 +1,4 @@
-import grok
+import martian
 
 class Alpha(object):
-    grok.baseclass()
+    martian.baseclass()

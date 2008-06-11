@@ -45,6 +45,7 @@ from zope.app.apidoc.utilities import isReferencable
 
 import grok.interfaces
 from grok.interfaces import IApplication
+import martian
 from martian.scan import is_package, ModuleInfo
 from martian import ClassGrokker, ModuleGrokker
 from grok.admin.objectinfo import ZopeObjectInfo
@@ -287,7 +288,7 @@ class DocGrokGrokker(ClassGrokker):
     That's it.
 
     """
-    component_class = DocGrokHandler
+    martian.component(DocGrokHandler)
 
     def grok(self, name, obj, **kw):
         if not issubclass(obj, DocGrokHandler):

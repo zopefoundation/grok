@@ -75,7 +75,7 @@ def default_annotation_name(factory, module, **data):
 
 class ViewletManagerContextGrokker(martian.GlobalGrokker):
 
-    priority = 1001
+    martian.priority(1001)
 
     def grok(self, name, module, module_info, config, **kw):
         viewletmanager = determine_module_component(module_info,
@@ -86,11 +86,9 @@ class ViewletManagerContextGrokker(martian.GlobalGrokker):
 
 
 class XMLRPCGrokker(martian.MethodGrokker):
-    component_class = grok.XMLRPC
-    directives = [
-        grok.context.bind(),
-        grok.require.bind(name='permission'),
-        ]
+    martian.component(grok.XMLRPC)
+    martian.directive(grok.context)
+    martian.directive(grok.require, name='permission')
 
     def execute(self, factory, method, config, context, permission, **kw):
         name = method.__name__
@@ -117,12 +115,10 @@ class XMLRPCGrokker(martian.MethodGrokker):
 
 
 class RESTGrokker(martian.MethodGrokker):
-    component_class = grok.REST
-    directives = [
-        grok.context.bind(),
-        grok.layer.bind(default=grok.IRESTLayer),
-        grok.require.bind(name='permission'),
-        ]
+    martian.component(grok.REST)
+    martian.directive(grok.context)
+    martian.directive(grok.layer, default=grok.IRESTLayer)
+    martian.directive(grok.require, name='permission')
 
     def execute(self, factory, method, config, permission, context, layer, **kw):
         name = method.__name__
@@ -147,13 +143,11 @@ class RESTGrokker(martian.MethodGrokker):
 
 
 class ViewGrokker(martian.ClassGrokker):
-    component_class = grok.View
-    directives = [
-        grok.context.bind(),
-        grok.layer.bind(default=IDefaultBrowserLayer),
-        grok.name.bind(get_default=default_view_name),
-        grok.require.bind(name='permission'),
-        ]
+    martian.component(grok.View)
+    martian.directive(grok.context)
+    martian.directive(grok.layer, default=IDefaultBrowserLayer)
+    martian.directive(grok.name, get_default=default_view_name)
+    martian.directive(grok.require, name='permission')
 
     def grok(self, name, factory, module_info, **kw):
         # Need to store the module info object on the view class so that it
@@ -222,11 +216,9 @@ class ViewGrokker(martian.ClassGrokker):
 
 
 class JSONGrokker(martian.MethodGrokker):
-    component_class = grok.JSON
-    directives = [
-        grok.context.bind(),
-        grok.require.bind(name='permission'),
-        ]
+    martian.component(grok.JSON)
+    martian.directive(grok.context)
+    martian.directive(grok.require, name='permission')
 
     # TODO: this grokker doesn't support layers yet
 
@@ -254,10 +246,8 @@ class JSONGrokker(martian.MethodGrokker):
 
 
 class TraverserGrokker(martian.ClassGrokker):
-    component_class = grok.Traverser
-    directives = [
-        grok.context.bind()
-        ]
+    martian.component(grok.Traverser)
+    martian.directive(grok.context)
 
     def execute(self, factory, config, context, **kw):
         adapts = (context, IHTTPRequest)
@@ -272,7 +262,7 @@ class TraverserGrokker(martian.ClassGrokker):
 class TemplateGrokker(martian.GlobalGrokker):
     # this needs to happen before any other grokkers execute that use
     # the template registry
-    priority = 1001
+    martian.priority(1001)
 
     def grok(self, name, module, module_info, config, **kw):
         module.__grok_templates__ = templatereg.TemplateRegistry()
@@ -280,12 +270,11 @@ class TemplateGrokker(martian.GlobalGrokker):
 
 
 class ModulePageTemplateGrokker(martian.InstanceGrokker):
+    martian.component(grok.components.BaseTemplate)
     # this needs to happen before any other grokkers execute that actually
     # use the templates
-    priority = 1000
-
-    component_class = grok.components.BaseTemplate
-
+    martian.priority(1000)
+    
     def grok(self, name, instance, module_info, config, **kw):
         templates = module_info.getAnnotation('grok.templates', None)
         if templates is None:
@@ -307,7 +296,7 @@ class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
     # do this early on, but after ModulePageTemplateGrokker, as
     # findFilesystem depends on module-level templates to be
     # already grokked for error reporting
-    priority = 999
+    martian.priority(999)
 
     def grok(self, name, module, module_info, config, **kw):
         templates = module_info.getAnnotation('grok.templates', None)
@@ -322,7 +311,7 @@ class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
 
 
 class UnassociatedTemplatesGrokker(martian.GlobalGrokker):
-    priority = -1001
+    martian.priority(-1001)
 
     def grok(self, name, module, module_info, config, **kw):
         templates = module_info.getAnnotation('grok.templates', None)
@@ -374,11 +363,9 @@ class StaticResourcesGrokker(martian.GlobalGrokker):
 
 
 class SiteGrokker(martian.ClassGrokker):
-    component_class = grok.Site
-    priority = 500
-    directives = [
-        grok.local_utility.bind(name='infos'),
-        ]
+    martian.component(grok.Site)
+    martian.priority(500)
+    martian.directive(grok.local_utility, name='infos')
 
     def execute(self, factory, config, infos, **kw):
         if not infos:
@@ -461,13 +448,11 @@ def setupUtility(site, utility, provides, name=u'',
 
 
 class PermissionGrokker(martian.ClassGrokker):
-    component_class = grok.Permission
-    priority = 1500
-    directives = [
-        grok.name.bind(),
-        grok.title.bind(get_default=default_fallback_to_name),
-        grok.description.bind(),
-        ]
+    martian.component(grok.Permission)
+    martian.priority(1500)
+    martian.directive(grok.name)
+    martian.directive(grok.title, get_default=default_fallback_to_name)
+    martian.directive(grok.description)
 
     def execute(self, factory, config, name, title, description, **kw):
         if not name:
@@ -489,14 +474,12 @@ class PermissionGrokker(martian.ClassGrokker):
 
 
 class RoleGrokker(martian.ClassGrokker):
-    component_class = grok.Role
-    priority = PermissionGrokker.priority - 1
-    directives = [
-        grok.name.bind(),
-        grok.title.bind(get_default=default_fallback_to_name),
-        grok.description.bind(),
-        grok.permissions.bind(),
-        ]
+    martian.component(grok.Role)
+    martian.priority(martian.priority.bind().get(PermissionGrokker()) - 1)
+    martian.directive(grok.name)
+    martian.directive(grok.title, get_default=default_fallback_to_name)
+    martian.directive(grok.description)
+    martian.directive(grok.permissions)
 
     def execute(self, factory, config, name, title, description,
                 permissions, **kw):
@@ -524,12 +507,10 @@ class RoleGrokker(martian.ClassGrokker):
 
 
 class AnnotationGrokker(martian.ClassGrokker):
-    component_class = grok.Annotation
-    directives = [
-        grok.context.bind(name='adapter_context'),
-        grok.provides.bind(get_default=default_annotation_provides),
-        grok.name.bind(get_default=default_annotation_name),
-        ]
+    martian.component(grok.Annotation)
+    martian.directive(grok.context, name='adapter_context')
+    martian.directive(grok.provides, get_default=default_annotation_provides)
+    martian.directive(grok.name, get_default=default_annotation_name)
 
     def execute(self, factory, config, adapter_context, provides, name, **kw):
         @component.adapter(adapter_context)
@@ -558,8 +539,8 @@ class AnnotationGrokker(martian.ClassGrokker):
 
 
 class ApplicationGrokker(martian.ClassGrokker):
-    component_class = grok.Application
-    priority = 500
+    martian.component(grok.Application)
+    martian.priority(500)
 
     def grok(self, name, factory, module_info, config, **kw):
         # XXX fail loudly if the same application name is used twice.
@@ -574,7 +555,7 @@ class ApplicationGrokker(martian.ClassGrokker):
 
 
 class IndexesGrokker(martian.InstanceGrokker):
-    component_class = components.IndexesClass
+    martian.component(components.IndexesClass)
 
     def grok(self, name, factory, module_info, config, **kw):
         site = grok.site.bind().get(factory)
@@ -654,11 +635,9 @@ class IndexesSetupSubscriber(object):
 
 
 class SkinGrokker(martian.ClassGrokker):
-    component_class = grok.Skin
-    directives = [
-        grok.layer.bind(default=IBrowserRequest),
-        grok.name.bind(get_default=default_view_name),
-        ]
+    martian.component(grok.Skin)
+    martian.directive(grok.layer, default=IBrowserRequest)
+    martian.directive(grok.name, get_default=default_view_name)
 
     def execute(self, factory, config, name, layer, **kw):
         config.action(
@@ -669,11 +648,9 @@ class SkinGrokker(martian.ClassGrokker):
         return True
 
 class RESTProtocolGrokker(martian.ClassGrokker):
-    component_class = grok.RESTProtocol
-    directives = [
-        grok.layer.bind(default=IBrowserRequest),
-        grok.name.bind(get_default=default_view_name),
-        ]
+    martian.component(grok.RESTProtocol)
+    martian.directive(grok.layer, default=IBrowserRequest)
+    martian.directive(grok.name, get_default=default_view_name)
 
     def execute(self, factory, config, name, layer, **kw):
         config.action(
@@ -684,13 +661,11 @@ class RESTProtocolGrokker(martian.ClassGrokker):
         return True
 
 class ViewletManagerGrokker(martian.ClassGrokker):
-    component_class = grok.ViewletManager
-    directives = [
-        grok.context.bind(),
-        grok.layer.bind(default=IDefaultBrowserLayer),
-        grok.view.bind(),
-        grok.name.bind(),
-        ]
+    martian.component(grok.ViewletManager)
+    martian.directive(grok.context)
+    martian.directive(grok.layer, default=IDefaultBrowserLayer)
+    martian.directive(grok.view)
+    martian.directive(grok.name)
 
     def grok(self, name, factory, module_info, **kw):
         # Need to store the module info object on the view class so that it
@@ -729,15 +704,13 @@ class ViewletManagerGrokker(martian.ClassGrokker):
                                  has_render, has_no_render)
 
 class ViewletGrokker(martian.ClassGrokker):
-    component_class = grok.Viewlet
-    directives = [
-        grok.context.bind(),
-        grok.layer.bind(default=IDefaultBrowserLayer),
-        grok.view.bind(),
-        grok.viewletmanager.bind(),
-        grok.name.bind(get_default=default_view_name),
-        grok.require.bind(name='permission'),
-        ]
+    martian.component(grok.Viewlet)
+    martian.directive(grok.context)
+    martian.directive(grok.layer, default=IDefaultBrowserLayer)
+    martian.directive(grok.view)
+    martian.directive(grok.viewletmanager)
+    martian.directive(grok.name, get_default=default_view_name)
+    martian.directive(grok.require, name='permission')
 
     def grok(self, name, factory, module_info, **kw):
         # Need to store the module info object on the view class so that it
