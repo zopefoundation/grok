@@ -991,7 +991,7 @@ subscribers as well::
   class MyEvent(zope.component.interfaces.ObjectEvent):
       grok.implements(IMyEvent)
 
-  grok.subscribe(SomeClass, IMyEvent):
+  @grok.subscribe(SomeClass, IMyEvent):
   def handle_my_event(obj, event):
       pass
 
