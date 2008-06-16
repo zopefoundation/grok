@@ -965,7 +965,7 @@ You can then send it like this::
 
 And listen for it like this::
 
-  grok.subscribe(SomeClass, MyEvent)
+  @grok.subscribe(SomeClass, MyEvent)
   def handle_my_event(obj, event):
       pass
 
