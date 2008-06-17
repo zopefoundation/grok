@@ -1,7 +1,0 @@
-<ul>
-  <li
-    tal:repeat="message view/messages"
-    tal:attributes="class message/type"
-    tal:content="message/message">Sauron will arrive soon!
-  </li>
-</ul>
