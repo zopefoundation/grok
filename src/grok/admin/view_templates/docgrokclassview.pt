@@ -1,0 +1,236 @@
+<html metal:use-macro="view/app_root/@@grokadminmacros/macros/gaia-page">
+  <head>
+    <title>DocGrok page title</title>
+  </head>
+  <body>
+    <div metal:fill-slot="content">
+
+      <h1>
+	Class
+	<span class="docgrok-pathvalue">
+	  <span class="docgrok-elemname1">
+	    <span tal:replace="context/name">ClassName</span>
+	  </span>
+	</span> in <span class="docgrok-pathvalue">
+	  <span tal:repeat="part python: view.getPathParts()[:-1]"><a href=""
+	       tal:attributes="href string:${view/root_url}${part/url}"
+	       tal:content="part/name">part</a></span></span> (Python Class)
+      </h1>
+      <div class="docgrok-entry" 
+	   tal:content="structure python: view.getDoc(context.getDocString())">
+	Documentation string.
+      </div>
+      <div>
+	<h2>Paths</h2>
+
+	<div class="docgrok-entry">
+	  <span class="docgrok-description1">Python path:</span>
+	  <span class="docgrok-pathvalue" 
+		tal:content="context/path">path.in.python</span>
+	</div>
+
+	<div class="docgrok-entry">
+	  <span class="docgrok-description1">Absolute file path: </span>
+	  <span class="docgrok-pathvalue" 
+		tal:content="context/getFilePath">/absolute/file/path</span>
+	</div>
+
+      </div>
+      <div>
+
+	<h2>Base Classes</h2>
+
+	<div class="docgrok-entry" tal:repeat="item view/getBases">
+	  class
+	  <span class="docgrok-pathvalue">
+	    <a href=""
+	       tal:attributes="href string:${view/root_url}/docgrok/${item/url}" 
+	       tal:content="item/name">
+	      ClassName
+	    </a>
+	  </span>
+	  in
+	  <span class="docgrok-pathvalue">
+	    <a href=""
+	       tal:repeat="part item/path_parts"
+	       tal:attributes="href string:${view/root_url}${part/url}">
+
+	      <span tal:replace="part/name" />
+	    </a>
+	  </span>
+	  <div class="docgrok-annotation2"
+	       tal:condition="item/doc"
+	       tal:content="structure item/doc">
+	  </div>
+	</div>
+
+	<h2>Interfaces</h2>
+
+	<div class="docgrok-annotation1">
+	  This class implements the following interfaces:
+	</div>
+
+	<div class="docgrok-entry" tal:repeat="item view/getInterfaces">
+	  interface
+	  <span class="docgrok-pathvalue">
+	    <a href=""
+	       tal:attributes="href string:${view/root_url}/docgrok/${item/url}" 
+	       tal:content="item/name">
+	      ClassName
+	    </a>
+	  </span>
+	  in
+	  <span class="docgrok-pathvalue">
+	    <a href=""
+	       tal:repeat="part item/path_parts"
+	       tal:attributes="href string:${view/root_url}${part/url}">
+
+	      <span tal:replace="part/name" />
+	    </a>
+	  </span>
+	  <div class="docgrok-annotation2"
+	       tal:condition="item/doc"
+	       tal:content="structure item/doc">
+	  </div>
+	</div>
+
+
+	<h2>Attributes:</h2>
+	<div class="docgrok-entry" tal:repeat="item view/getAttributes">
+	  <div class="docgrok-description2">
+	    <span class="docgrok-description1">
+	      <span class="docgrok-pathvalue">
+		<span tal:content="item/name">attributename</span> 
+	      </span>
+	    </span>
+	    (type: <span class="docgrok-description2" tal:content="item/type">type</span>)
+	  </div>
+
+	  <div class="docgrok-annotation2">
+	    <span class="docgrok-description2">value:</span>
+	    <span class="docgrok-pathvalue" tal:content="item/value">value</span>
+	  </div>
+
+	  <div class="docgrok-annotation2">
+	    <div class="docgrok-entry" tal:repeat="iface item/interface">
+	      <span class="docgrok-description2">interface:</span>
+	      <span class="docgrok-pathvalue">
+		<a href=""
+		   tal:attributes="href string:${view/root_url}/docgrok/${iface/url}" 
+		   tal:content="iface/name">
+		  ClassName
+		</a>
+	      </span>
+	      in
+	      <span class="docgrok-pathvalue">
+		<a href=""
+		   tal:repeat="part iface/path_parts"
+		   tal:attributes="href string:${view/root_url}${part/url}">
+		  
+		  <span tal:replace="part/name" />
+		</a>
+	      </span>
+	      <div class="docgrok-annotation2"
+		   tal:condition="iface/doc"
+		   tal:content="structure iface/doc">
+	      </div>
+	    </div>
+	    
+	  </div>
+
+	  <div class="docgrok-annotation2">
+	    <span class="docgrok-description2">permissions:</span>
+	    <div class="docgrok-annotation2">
+	      read: 
+	      <span tal:content="item/read_perm">None</span>
+	    </div>
+	    <div class="docgrok-annotation2">
+	      write: 
+	      <span tal:content="item/write_perm">None</span>
+	    </div>
+	  </div>
+
+
+	</div>
+
+
+	<h2>Functions:</h2>
+
+	<div class="docgrok-entry" tal:repeat="item view/getEntries">
+	  <div tal:condition="item/isfunction">
+	    <div class="docgrok-pathvalue">
+	      function
+	      <a href=""
+		 tal:attributes="href 
+				 string:${view/root_url}/docgrok/${item/url}" >
+		<span tal:content="item/name">function_name</span><span tal:content="item/signature">(signature)</span>
+	      </a>
+	    </div>
+	    <div class="docgrok-annotation2"
+		 tal:condition="item/doc"
+		 tal:content="structure item/doc">
+	    </div>
+	  </div>
+	</div>
+
+	<h2>Methods:</h2>
+	<div class="docgrok-entry" tal:repeat="item view/getMethods">
+	  <div class="docgrok-description1">
+	    <div class="docgrok-pathvalue">
+	      <span tal:content="item/name">methodname</span><span tal:content="item/signature">(signature)</span>
+	    </div>
+	  </div>
+	  <div class="docgrok-annotation2"
+	       tal:condition="item/doc"
+	       tal:content="structure item/doc">
+	    Doc
+	  </div>
+	  <div class="docgrok-annotation2">
+	    <div class="docgrok-entry" tal:repeat="iface item/interface">
+	      <span class="docgrok-description2">interface:</span>
+	      <span class="docgrok-pathvalue">
+		<a href=""
+		   tal:attributes="href string:${view/root_url}/docgrok/${iface/url}" 
+		   tal:content="iface/name">
+		  ClassName
+		</a>
+	      </span>
+	      in
+	      <span class="docgrok-pathvalue">
+		<a href=""
+		   tal:repeat="part iface/path_parts"
+		   tal:attributes="href string:${view/root_url}${part/url}">
+		  
+		  <span tal:replace="part/name" />
+		</a>
+	      </span>
+	      <div class="docgrok-annotation2"
+		   tal:condition="iface/doc"
+		   tal:content="structure iface/doc">
+	      </div>
+	    </div>
+	    
+	  </div>
+
+
+	  <div class="docgrok-annotation2">
+	    <span class="docgrok-description2">permissions:</span>
+	    <div class="docgrok-annotation2">
+	      read: 
+	      <span tal:content="item/read_perm">None</span>
+	    </div>
+	    <div class="docgrok-annotation2">
+	      write: 
+	      <span tal:content="item/write_perm">None</span>
+	    </div>
+	  </div>
+
+
+	</div>
+
+
+      </div>
+
+    </div>
+  </body>
+</html>

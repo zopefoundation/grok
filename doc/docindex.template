@@ -1,0 +1,65 @@
+  <p><strong>Parts of the documentation:</strong></p>
+  <table class="contentstable" align="center"><tr>
+    <td width="50%">
+      <p class="biglink"><a class="biglink" href="{{ pathto("changes") }}"
+      >What's new in Grok {{ version }}?</a><br>
+      <span class="linkdescr">changes during the releases</span></p>
+
+      <p class="biglink"><a class="biglink" href="{{ pathto("tutorial") }}"
+      >Tutorial</a><br>
+      <span class="linkdescr">Get started with Grok</span></p>
+
+      <p class="biglink"><a class="biglink" href="{{ pathto("grok_overview") }}"
+      >Grok Developer Notes</a><br>
+      <span class="linkdescr">Learn more about Grok</span></p>
+
+    </td><td width="50%">
+
+      <p class="biglink"><a class="biglink" href="{{ pathto("about") }}"
+      >About Grok</a><br>
+      <span class="linkdescr">now even Cavemen can use Zope 3</span></p>
+
+      <p class="biglink"><a class="biglink" href="{{ pathto("reference/index") }}">The Grok Reference</a><br>
+         <span class="linkdescr">describes syntax and package elements</span></p>
+
+      <p class="biglink"><a class="biglink" href="{{ pathto("naming_conventions") }}">Naming Conventions</a><br>
+         <span class="linkdescr">how to name your stuff correctly</span></p>
+
+
+    </td></tr>
+  </table>
+  <p><strong>Indices and tables:</strong></p>
+  <table class="contentstable" align="center"><tr>
+    <td width="50%">
+      <p class="biglink"><a class="biglink" href="{{ pathto("contents") }}">Complete Table of Contents</a><br>
+         <span class="linkdescr">lists all sections and subsections</span></p>
+<!--
+      <p class="biglink"><a class="biglink" href="{{ pathto("search") }}">Search page</a><br>
+         <span class="linkdescr">search this documentation</span></p>
+-->
+    </td><td width="50%">
+      <p class="biglink"><a class="biglink" href="{{ pathto("genindex") }}">General Index</a><br>
+         <span class="linkdescr">all functions, classes, terms</span></p>
+    </td></tr>
+  </table>
+
+  <p><strong>Meta information:</strong></p>
+  <table class="contentstable" align="center"><tr>
+    <td width="50%">
+
+      <p class="biglink"><a class="biglink" href="{{ pathto("bugs") }}"
+      >Reporting bugs</a><br>
+
+      <p class="biglink"><a class="biglink" href="{{ pathto("README") }}"
+      >About the documentation</a><br>
+
+    </td><td width="50%">
+
+      <p class="biglink"><a class="biglink" href="{{ pathto("license") }}"
+      >License</a><br>
+
+      <p class="biglink"><a class="biglink" href="{{ pathto("copyright") }}"
+      >Copyright</a><br>
+
+    </td></tr>
+  </table>

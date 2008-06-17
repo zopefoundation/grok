@@ -1,0 +1,41 @@
+Grok Tutorial Samples installation
+----------------------------------
+
+The Grok tutorial samples make use of a system called buildout. First,
+we'll set up a buildout script that can be reused by all tutorials. Just
+type this in the ``groktut`` directory::
+
+  $ python2.4 bootstrap.py
+
+This will download and install buildout. It will create various
+directories, only one of which, ``eggs``, is important. This directory
+contains all Python eggs shared by the tutorial samples.  If you
+already have a directory for sharing eggs with other buildouts, you
+can edit ``buildout_tut.cfg`` and change the ``eggs-directory`` option
+to point to this directory, e.g.::
+
+  [buildout]
+  eggs-directory = /home/me/shared-eggs
+
+Now go to the tutorial sample you'd like to look at and launch
+buildout::
+
+  $ cd an_empty_grok_project
+  $ ../buildout -N
+
+The -N option tells the buildout_ system not to look for newer files
+on the network. This greatly speeds up the buildout process if you
+have all required eggs already available, like the second time you run
+the buildout of a sample, as it skips network access.
+
+.. _buildout: http://cheeseshop.python.org/pypi/zc.buildout
+
+You will have a separate Zope instance created for you in each
+tutorial directory you run the buildout script. From the specific
+tutorial directory, you can start up Zope like this::
+
+  $ bin/instance fg
+
+Zope should then be running on port 8080 (http://localhost:8080).
+
+Just Ctrl-C when you're done.

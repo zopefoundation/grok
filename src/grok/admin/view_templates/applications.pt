@@ -1,0 +1,79 @@
+<html metal:use-macro="context/@@grokadminmacros/macros/gaia-page">
+  <div metal:fill-slot="content">
+
+    <form tal:define="apps context/values"
+	  tal:attributes="action string:${context/@@absolute_url}/delete">
+
+      <fieldset>
+        <legend>Installed applications</legend>
+
+	<div tal:condition="not: python: len(view.installed_applications)">
+	  <p class="menu-description1">Currently no working applications are 
+	  installed.</p>
+	</div>
+
+	<div tal:condition="python: len(view.installed_applications) or True" 
+	     tal:repeat="app view/installed_applications">
+	  <input type="checkbox" 
+		 class="checkbox" 
+		 tal:attributes="value app/__name__;
+				 name string:items" />
+	  <a tal:attributes="href string:${context/@@absolute_url}/${app/__name__}">
+	    <span tal:replace="app/__name__"/>
+	    (<span tal:replace="app/__class__/__name__"/>)
+	  </a>
+	  &nbsp;&nbsp;
+	  [<a href=""
+	  tal:attributes="href string:${context/@@absolute_url}/${app/__name__}/@@inspect.html"
+	  >object browser</a>]
+	</div>
+
+	<div tal:condition="view/broken_applications">
+	  <br/><div class="emph">Broken applications:</div>
+	</div>
+        <div tal:repeat="app view/broken_applications">
+	  <input type="checkbox" 
+		 class="checkbox" 
+		 tal:attributes="value app/name;
+				 name string:items" />
+	  <span tal:content="app/name" />
+	  (broken type: <span tal:replace="string:${app/obj/__class__/__module__}.${app/obj/__class__/__name__}"/>). This application is broken!
+	</div>
+
+	<p>
+	  <input tal:condition="python:len(view.installed_applications)+len(view.broken_applications) > 0"
+	      class="button" type="submit" value="Delete Selected"/></p>
+      </fieldset>
+    </form>
+
+    <fieldset>	
+      <legend>Add application</legend>
+
+      <div class="menu-box1"
+	   tal:repeat="app view/applications">
+	<form action="" tal:attributes="action string:${context/@@absolute_url}/add;
+                                        name python: app['name'].split('.')[-1]">
+	  <div class="menu-box2">
+	    <div class="menu-head1"><a href=""
+				       tal:attributes="href string:${context/@@absolute_url}/docgrok/${app/docurl}"
+				       tal:content="app/name">Application Name</a></div>
+	    <div class="menu-description1">
+	      <span tal:replace="structure python: view.getDocOfApp(app['name']) or ''">
+		Application description here.
+	      </span>
+	    </div>
+	    <div class="menu-box3">
+	      <label>Name your new app: <input type="text" name="name"/></label>
+	      <input type="hidden" name="application" value=""
+		     tal:attributes="value app/name" />
+	      <input class="button" type="submit" name="Add" value="Create"/>
+	    </div>
+	  </div>
+	</form>
+      </div>
+
+    </fieldset>
+
+  </div>
+
+</html>

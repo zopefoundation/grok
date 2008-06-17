@@ -1,0 +1,121 @@
+====
+TODO
+====
+
+Meta
+====
+
+- Check demo applications for issues with patterns (grok wiki, ldap address
+  book)
+
+
+Core
+====
+
+- choice fields / sources (theuni)
+
+- testing strategy for the tutorial (faassen)
+
+- make it easier to write tests (wosc, faassen)
+
+- error reporting during grokking (provide file/line-number information
+  on our extrinsically generated errors) (philikon)
+
+- What will happen if we make a utility a old style class and use the
+  MRO stuff. Since we don't support non-persistent local utilities yet this
+  may be a rare case.
+
+- What about local utilities that don't subclass persistent? Perhaps we 
+  can look for IPersistent and give an error if the utility doesn't
+  state it is.
+
+- Change error messages: whenever we report about a callable, add
+  () to the name. Core Python expections do this.
+
+- JSON support similar to XMLRPC.
+
+
+Schema/formlib support
+----------------------
+
+- support nested class 'fields' directly on a view (do we really want this?)
+
+- list form for grok.Container (w/ zc.table?)
+
+- delete action on list form
+
+- make formlib macros available in some form?
+
+- what about subclassing a model that has a 'fields'?
+
+
+Need to discuss
+---------------
+
+- Do we want to ship Grok with a javascript library dependency such as
+  MochiKit, to enable out of-the-box AJAX?
+
+- Make it even easier to set up the catalog (intids should be set up
+  automatically if not already present. Perhaps Index grokkers?).
+
+- Testing support. Test grokkers?
+
+- Error pages: make it easy to register application-specific error
+  pages for exceptions.
+
+- Easier queries: integrate hurry.query in some way?
+
+- fall back to a static resource that is defined in a package on a higher
+  level if no static resource directory is defined locally in a package?
+
+- grok.grokkable (to allow grokking of imported things)
+
+- skins
+
+- form redirect
+
+- authentication (pau integration) (faassen)
+
+- sessions (get the session information for something, similar to
+  annotations?)
+
+- menus - define a menu, associate a view with a menu (module-level,
+  class-level)
+
+- making new widgets (faassen, philikon)
+
+- IMPORTANT: different strategies: grok.definefoo() versus n =
+  grok.Foo(), watch out for consistency/symmetry/...
+
+- use ZCML's conflict resolution machinery; actions for Grok.
+
+- do not accept automatic template directory guessing convention for
+  __init__.py, bail out with grok error instead?
+
+- grok.name, grok.template class restrictions (e.g. grok.template
+  should only be usable from grok.View subclasses)
+
+- support grok.template(template) in addition to
+  grok.template('name_of_template')?
+
+- support grok.resource on view class level?
+
+- should grok.context and grok.Model be order-dependent?
+  (so their meaning becomes "below here, this is the context")
+
+- Do we want to initialize model attributes for any schema that the model
+  implements (in addition to the initialization that is taking place for the
+  model-level fields)?
+
+
+Punt
+----
+
+- making new fields
+
+- viewlets / content providers (LATER)
+
+- RDB - via extension: megrok.sqlalchemy for example - make it easy to
+  go between the different schema implementations
+
+- containment constraints (wait for zope 3 to do them right)

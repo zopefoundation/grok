@@ -1,0 +1,87 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:grok="http://namespaces.zope.org/grok">
+
+  <include package="zope.security" file="meta.zcml" />
+  <include package="zope.i18n" file="meta.zcml" />
+  <include package="zope.securitypolicy" file="meta.zcml" />
+  <include package="zope.app.zcmlfiles" file="meta.zcml" />
+  <include package="grok" file="meta.zcml" />
+
+  <include package="zope.annotation" />
+  <include package="zope.copypastemove" />
+  <include package="zope.contentprovider" />
+  <include package="zope.formlib" />
+  <include package="zope.i18n.locales" />
+  <include package="zope.publisher" />
+  <include package="zope.securitypolicy" />
+  <include package="zope.size" />
+  <include package="zope.traversing" />
+  <include package="zope.traversing.browser" />
+  <include package="zope.app.zcmlfiles" />
+  <include package="zope.app.authentication" />
+  <include package="zope.app.intid" />
+  <include package="zope.app.keyreference" />
+  <include package="zope.app.catalog" />
+  <include package="zope.app.renderer" />
+  <include package="zope.app.session" />
+
+  <securityPolicy
+      component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
+
+  <adapter factory=".components.ContextTraverser" />
+  <adapter factory=".components.ContainerTraverser" />
+
+  <browser:defaultView
+      for=".interfaces.IContext"
+      name="index"
+      />
+
+  <subscriber handler=".components.addSiteHandler" />
+
+  <!-- we register a ++rest++ traversal namespace -->
+  <adapter
+      factory=".rest.rest_skin"
+      for="* zope.publisher.interfaces.browser.IHTTPRequest"
+      provides="zope.traversing.interfaces.ITraversable"
+      name="rest"
+      />
+
+  <!-- this overrides Zope 3's publication factories because they have
+       the same name; we also need to change the priority because of
+       the ZCML discriminator -->
+  <publisher
+      name="XMLRPC"
+      factory=".publication.GrokXMLRPCFactory"
+      methods="POST"
+      mimetypes="text/xml"
+      priority="21"
+      />
+
+  <publisher
+      name="BROWSER"
+      factory=".publication.GrokBrowserFactory"
+      methods="GET POST HEAD"
+      mimetypes="*"
+      priority="11"
+      />
+
+  <publisher
+      name="HTTP"
+      factory=".publication.GrokHTTPFactory"
+      methods="*"
+      mimetypes="*"
+      priority="1"
+      />
+
+  <!-- need to grok this for some basic REST support -->
+  <grok:grok package=".rest" />
+
+  <!-- ZPT support -->
+  <grok:grok package=".templatereg" />
+
+  <!-- The admin interface -->
+  <grok:grok package=".admin" />
+
+</configure>

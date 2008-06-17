@@ -1,0 +1,292 @@
+=======
+DocGrok
+=======
+
+The Grok's personal doctor.
+
+DocGrok is meant as a friendly extension of the Zope 3 'builtin'
+apidoc feature. It should be easy to handle and informative in
+content. Main target are developers new to Grok.
+
+DocGrok is a helper to generate documentation for nearly everything
+living in a running Zope 3 instance. Basically it provides
+'information'-objects for different types of things, like modules,
+classes, functions, textfiles etc.
+
+A ``DocGrok`` therefore is an object wich normally is bound to a
+certain entity, which is describable by a dotted path. It provides
+special methods to get information about the thing, a certain
+``DocGrok`` is bound to.
+
+.. contents::
+
+
+How to Use it
+-------------
+
+DocGrok documentation can be accessed through the web, calling special
+URL paths in your Zope 3 instance or (surprise!) directly via Python.
+
+
+Calling DocGrok through the web
++++++++++++++++++++++++++++++++
+
+To get documentation about a special element, call docgrok simply with
+`docgrok` as first part of the URL path.
+
+For example documentation about the grok package can be reached using
+
+    http://localhost:8080/docgrok/grok
+
+The admin package, which is located in the grok package can be
+accessed directly such:
+
+    http://localhost:8080/docgrok/grok/admin
+
+In this way nearly all things can be described, which can be described
+by a dotted name notation and which are accessible at runtime.
+
+
+Calling the doctor directly
++++++++++++++++++++++++++++
+
+The doctor can also be reached via Python, naturally:
+
+   >>> import grok
+   >>> from grok.admin import docgrok
+   >>> doctor = docgrok.DocGrok('grok.admin.docgrok')
+
+This doctor has immediatly a patient, which is denoted by the dotted
+path `grok.admin.docgrok`. The dotted path might reference any thing
+which lives in the Python environment: a package, a module, a class, a
+function or even a file or some interface attribute:
+
+   >>> doctor.getPath()
+   'grok.admin.docgrok'
+
+We can also get a filepath, using the `getFilePath()` method. Objects,
+which have no filepath always return `None`.
+
+There is not much more information to get from Doc Grok. This is,
+because a `DocGrok` only knows very little about the objects. The base
+doc is not a specialist, but cares for all objects and elements, which
+can not be handled by other specialists.
+
+If we like to get more detailed information, we have to call a
+specialist. For example a package doctor, who happens to be called
+`DocGrokPackage` :
+
+    >>> from grok.admin.docgrok import DocGrokPackage
+    >>> doctor = DocGrokPackage('grok')
+    >>> doctor
+    <grok.admin.docgrok.DocGrokPackage ...>
+
+Using ``getPath()`` we get the dotted path of the thing, the doctor
+cares for:
+
+    >>> doctor.getPath()
+    'grok'
+
+Fine. Obviously DocGrokPackages know as much as DocGroks. That's
+little. But a ``DocGrokPackage`` knows also about package-things:
+
+    >>> info = doctor.getSubPackageInfos()
+
+will generate infos subpackages contained in the package we are
+examining. The ``info`` here is basically a list of dictionaries,
+where each dictionary contains a the keys ``url``, ``name`` and
+``dotted_name``:
+
+    >>> info
+    [{'url': '...', 'dotted_name': '...', 'name': '...'}...]
+
+The ``url`` element is meant as the path 'inside' the
+``docgrok``-browser, when ``docgrok`` documentation is watched in a
+browser. ``dotted_name`` and ``name`` give the dotted path of a
+subpackage and last element of this path respectively.
+
+As said, ``DocGrokPackage`` is only one possible type of 'documenter'
+already included in the docgrok module. The different ``DocGroks``
+included are documented below in section `the specialists`_ in detail.
+
+So, this is allright if we already know, what kind of thing (a module,
+package, etc.) the doctor should examine. Then we can create an
+appropriate doctor and retrieve all information we like.
+
+But how can we find out, what kind of thing we examine? Shouldn't this
+be a doctors job as well? Right! This is possible and you should *use*
+the possibility to determine the most appropriate doctor
+automatically.
+
+
+Getting the right specialist directly
++++++++++++++++++++++++++++++++++++++
+
+Often we don't want to visit the base doctor, but a specialist
+directly. But how can we tell, what specialist we need? Easy. We use
+the function ``docgrok_handle()`` which delivers us a doctor, who
+can tell us more:
+
+    >>> from grok.admin.docgrok import docgrok_handle
+    >>> thedoc = docgrok_handle('grok.admin.docgrok')
+    >>> thedoc
+    <grok.admin.docgrok.DocGrokModule ...>
+
+This is correct. `docgrok` of course *is* a python module, so the best
+specialist we can get is a `DocGrokModule`. The mentioned function
+therefore is some kind of factory, which always gives us a doctor most
+appropriate for the kind of thing specified by a dotted path.
+
+We can, for example ask for a different doc like this:
+
+    >>> thedoc = docgrok_handle('grok.admin.docgrok.DocGrok')
+    >>> thedoc
+    <grok.admin.docgrok.DocGrokClass ...>
+
+and get a class-specific doctor. Because
+``grok.admin.docgrok.DocGrok`` *is* a class, this is again the most
+appropriate doc we could get.
+
+
+How to create your own specialist docgrok
+-----------------------------------------
+
+At times you might want to create your own sort of DocGrok. This might
+be due to the fact, that you have written a special kind of 'thing' (a
+special class, module, whatever), whose special attributes, methods,
+etc. should be made available in documentation in a special way.
+
+Thanks to Martijn Faassens ``martian`` package, this can be done very
+easily. All you need is a handler function, which is able to determine
+from a dotted path, whether some 'thing' is of the type you want
+special documentation for, and, of course, a special docgrok, which is
+able to deliver the special information about your new 'thing'.
+
+Let's see how this works.
+
+Writing new DocGroks
+++++++++++++++++++++
+
+Consider we want to document ``grok.View`` classes. Since
+``grok.View`` is a class, we choose the DocGrokClass as base for our
+new DocGrok:
+
+    >>> from grok.admin.docgrok import DocGrokClass
+
+    >>> class DocGrokGrokView(DocGrokClass):
+    ...     """"This doctor cares for grok.Views."""
+    ...     pass
+
+Now we create a doctor:
+
+    >>> doctor = DocGrokGrokView()
+    Traceback (most recent call last):
+        [...]
+    TypeError: __init__() takes exactly 2 arguments (1 given)
+
+Oops! Well, we didn't specify, what kind of DocGrokView we want to
+examine. We can do that, giving a dotted name:
+
+    >>> doctor = DocGrokGrokView('grok.View')
+    >>> doctor
+    <DocGrokGrokView ...>
+
+The doctor is in. Fine. So let's see, what he can tell us about
+``grok.View``.
+
+    >>> doctor.getPath()
+    'grok.View'
+
+Ah, yes, very interesting. We got the dotted path of the examined
+class. But, where can we find the definition of it in file system? Ask
+the doc:
+
+    >>> pnorm(doctor.getFilePath())
+    '.../grok/__init__.py'
+
+This is not exactly, what we wanted to know, is it? We got the package
+location instead of the module. So the path is wrong. Really? When you
+have a look at the specified ``__init__.py``, you will discover, that
+there is indeed an assignment, which says, that ``grok.View`` is
+another name for ``grok.components.View``. It is simply a shortcut. So,
+as we asked for ``grok.View`` the answer was correct.
+
+To check it, let's see, what happens, if we give the real dotted path:
+
+    >>> doctor = DocGrokGrokView('grok.components.View')
+    >>> pnorm(doctor.getFilePath())
+    '.../grok/components.py'
+
+Ah, right. This is, what we wanted. Now we can use some of the derived
+methods to gather some more information about this class:
+
+    >>> methods = doctor.getMethods()
+
+delivers us a list of all public methods defined in this class. Each
+list entry being a dictionary with keys ``name``, ``signature``,
+``doc``, ``interface``, ``attr``, ``read_perm`` and `` write_perm``.
+
+    >>> entry = [x for x in methods if x['name'] == 'url'][0]
+    >>> entry['name']
+    'url'
+    >>> print entry['doc'].strip()
+    Return string for the URL based on the obj and name. The data
+    argument is used to form a CGI query string.
+    >>> entry['signature']
+    '(obj=None, name=None, data=None)'
+
+The other methods work as described in the ``DocGrokClass``
+documentation.
+
+This is all very well, but not too impressive. We could gather the
+information delivered relatively easy writing some simple
+snippets. So, what is it all about?
+
+One main reason is, that ``DocGroks`` are used by the Grok admin
+interface to provide easy accessible API documentation. Those
+documentation is basically able, to give some information about
+everything, which is describable as a dotted path. But some of the
+information is not very descriptive. That's it, why ``docgrok`` uses a
+set of helpers, to give more detailed information. If you, for
+instance, want that instead of the standard class-related docgrok your
+own docgrok is displayed, whenever a user wants to know something
+about ``grok.View`` and related classes, then you can register your
+docgrok and let it display documentation for ``grok.View``.
+
+The selection to register a docgrok for ``grok.View`` was very
+arbitrary. You can also register a docgrok, that handles all elements,
+whose name starts with the letter 'a' or those elements, which are
+classes and implement at least three different interfaces. It's
+completely up to you.
+
+To choose, which API elements your docgrok is able to handle, you have
+to define a handler class. This is what we want to do next.
+
+
+Create a handler and register your new docgrok
+++++++++++++++++++++++++++++++++++++++++++++++
+
+Those steps are described in the ftests for the docgrok module in
+grok.ftests.admin.docgrok. There you can also find examples, how to
+create own docgrok documentation (see the lower parts of the file).
+
+
+The Specialists
+---------------
+
+``DocGrokPackage`` - The package doctor
++++++++++++++++++++++++++++++++++++++++
+
+XXX: to be written.
+
+
+``DocGrokModule`` - The module doctor
++++++++++++++++++++++++++++++++++++++
+
+XXX: to be written.
+
+
+``DocGrokClass`` - The class doctor
++++++++++++++++++++++++++++++++++++
+
+XXX: to be written.

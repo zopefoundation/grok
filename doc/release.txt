@@ -1,0 +1,24 @@
+Release information
+===================
+
+This document aims to collect information about Grok's release procedure.
+
+Binary eggs on Windows
+----------------------
+
+Grok aims to work on Windows as well. This is not a problem for the
+most part, but takes special attention when updating the list of
+dependencies.  The follow eggs need a compiler on Unixy platforms, and
+a binary egg on Windows::
+
+  zope.i18nmessageid 
+  zope.interface
+  zope.security
+  zope.app.container
+  ZODB3
+  zope.hookable
+  zope.proxy
+
+Please make sure a Windows version of the egg is available when you
+update a dependency!
+

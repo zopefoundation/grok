@@ -1,0 +1,253 @@
+Upgrade notes
+=============
+
+This document outlines how to update Grok applications so that they
+continue to work with newer versions of Grok.  This document only
+describes changes involving incompatibilities or deprecations, not new
+features (please refer to ``CHANGES.txt`` for those).
+
+Upgrading to 0.13
+-----------------
+
+* The directive implementations changed tremendously with the upgrade
+  to Martian 0.9.6.  Custom implementations of both directives (see
+  next bullet point) and grokkers will have to be adjusted.
+
+  Since the vast majority of directives are class directives, the most
+  common places where information set by directives has to be read are
+  class grokkers (``martian.ClassGrokker``).  For instance, you may
+  have written something like this to implement a custom class grokker
+  previously::
+
+    class RobotGrokker(martian.ClassGrokker):
+        component_class = Robot
+
+        def grok(self, name, factory, module_info, config, **kw):
+            robot_name = martian.util.class_annotation(factory, 'grok.name', '')
+            title = martian.util.class_annotation(factory, 'grok.title', 'A robot')
+            provides = martian.util.class_annotation(factory, 'grok.provides', None)
+            if provides is None:
+                martian.util.check_implements_one(factory)
+                provides = list(zope.interface.implementedBy(factory))[0]
+            config.action(
+                descriminator=('robot', provides, robot_name),
+                callable=provideRobot,
+                args=(factory, provides, robot_name, title),
+                )
+            return True
+
+  As you can see, this grokker needs to retrieve three values from the
+  class it's grokking (``factory``) which are all set by directives:
+
+  - ``grok.name`` with the standard default, an empty string,
+
+  - ``grok.title`` with a custom default, the string ``A robot``,
+
+  - ``grok.provides`` with a computed default.
+
+  With the new directive implementation and the extensions to
+  Martian's ``ClassGrokker``, you're now be able to write::
+
+    def default_provides(factory, module, **data):
+        # This function is available for import from grokcore.component.meta.
+        # It's shown here simply to illustrate how the original grokker would
+        # have been refactored.
+        martian.util.check_implements_one(factory)
+        return list(zope.interface.implementedBy(factory))[0]
+
+    class RobotGrokker(martian.ClassGrokker):
+        component_class = Robot
+        directives = [
+            grok.name.bind(name='robot_name'),
+            grok.title.bind(default='A Robot'),
+            grok.provides.bind(get_default=default_provides),
+            ]
+
+        def execute(self, factory, config, robot_name, title, provides, **kw):
+            config.action(
+                descriminator=('robot', provides, robot_name),
+                callable=provideRobot,
+                args=(factory, provides, robot_name, title),
+                )
+            return True
+
+  Basically, all you need to do is provide a list of *bound*
+  directives in the grokker class and then implement the ``execute``
+  method which will get the class (``factory``) and the configuration
+  context (``config``) as positional arguments and then the values of
+  the directives as keyword parameters.  Note that when binding the
+  directives, you may
+
+  - set the name of the keyword parameter if you want it to be
+    different than the directive's name,
+
+  - set a default value if you want it to be different from the
+    directive's standard default,
+
+  - pass in a factory for a computed default value (``get_default``).
+
+  If you need still need to manually retrieve directive values from an
+  object (a class, an instance or a module), you can do so by using
+  the ``get`` method of the bound directive, e.g.::
+
+    class_context = grok.context.bind().get(factory, module=module)
+    just_module_context = grok.context.bind().get(module=module)
+
+* Custom directives need to be re-implemented using Martian's new
+  ``Directive`` base class.  The directive scope, the type of storage,
+  the validator and a potential default value are all defined as
+  class-level variables:
+
+  - The directive scope can either one of ``martian.CLASS``,
+    ``martian.MODULE``, ``martian.CLASS_OR_MODULE``.
+
+  - The type of storage can be either one of ``martian.ONCE``,
+    ``martian.MULTIPLE``, ``martian.DICT``.
+
+  - An optional validator may be one of ``validateText``,
+    ``validateInterface``, ``validateInterfaceOrClass`` or a custom
+    method.
+
+  - Unless set with a different value, the standard default value will
+    be ``None``.
+
+  For example, consider the implementation of the ``grok.name``
+  directive::
+
+    class name(martian.Directive):
+        scope = martian.CLASS
+        store = martian.ONCE
+        default = u''
+        validate = martian.validateText
+
+  Or a bit more involved (and made-up) example::
+
+    class bases(martian.Directive):
+        scope = martian.CLASS
+        scope = martian.ONCE
+        default = []
+
+        # The factory is called with the parameters of the directive
+        # and may transform the values into whatever should be stored.
+        def factory(self, *values):
+            return list(values)
+
+        # This validator makes sure that the directive can only take
+        # a list of classes an argument
+        def validate(self, *values):
+            for value in values:
+                if not isinstance(value, type):
+                    raise GrokError("%r is not a class!" % value)
+
+* We moved to newer versions of zope packages, using the KGS list for
+  Zope 3.4c1.  This means your code can now get some new deprecation
+  warnings for imports that have been moved. Please check your code
+  and fix your imports if you get those warnings.
+
+  If you were using ``zope.publisher.http.applySkin``, you now must
+  use ``grok.util.applySkin``.
+
+Upgrading to 0.12
+-----------------
+
+* Please upgrade grokproject::
+
+    $ easy_install -U grokproject
+
+* If you have existing Grok projects and you want to make use of 
+  Grok's new autoinclusion functionality in them, you can place
+  the following line in your project's ``configure.zcml``:
+
+    <includeDependencies package="." />
+
+  This will cause the ZCML for ``setup.py`` dependencies of your
+  package to be loaded automatically. You can now get rid of any
+  manual ``include`` statements (except the one that includes ``grok``
+  itself).
+
+  For new projects created by ``grokproject``, this line will be
+  automatically be added for you and you don't have to do anything except
+  to upgrade ``grokproject``::
+
+    $ easy_install -U grokproject
+
+* The convention that classes ending with -Base automatically become base
+  classes has been removed with martian 0.9.4. Please add the grok.baseclass()
+  directive to these classes explicitly where the 'Base' class convention was
+  relied upon to preserve existing functionality.
+
+
+Upgrading to 0.11
+-----------------
+
+* ``grok.define_permission`` has been removed in favour of a
+  ``grok.Permission`` base class, for reasons of symmetry.  Instead of
+  writing::
+
+    grok.define_permission('myapp.ViewCavePainting')
+
+  you should now write::
+
+    class View(grok.Permission):
+        grok.name('myapp.ViewCavePainting')
+
+  If you also want to supply a title and description for the
+  permission, use the ``grok.title()`` and ``grok.description()``
+  directives on the class.
+
+* ``grok.grok`` and ``grok.grok_component`` have been deprecated.  If
+  you need them for tests (which is their only legimitate use), you
+  should import them both from ``grok.testing``.
+
+* Grokkers should now emit configuration actions instead of
+  registering components right away.  For that they now get a new
+  keyword argument called ``config``, the configuration context.  For
+  example, a grokker that used to do this::
+
+    registerSomeComponent(foo, name)
+
+  should now be doing this::
+
+    config.action(
+        discriminator=('somecomponent', name),
+        callable=registerSomeComponent,
+        args=(name,)
+        )
+
+  The discriminator should be chosen so that registrations with the
+  same discriminator conflict (in the above example, if somebody tried
+  to register two different components under the same name, you'd get
+  a conflict).
+
+* Grokkers no longer get the ``context`` and ``templates`` keyword
+  arguments.  If they need access to these values, they can now get
+  them as module annotations from the ``module_info`` object like
+  this::
+
+      context = module_info.getAnnotation('grok.context')
+      templates = module_info.getAnnotation('grok.templates')
+
+* Note that grokkers must always take arbitrary keyword arguments
+  (``**kw``), as specified by the ``martian.interfaces.IGrokker``
+  interface.  A minimal specification of the ``grok()`` method is
+  therefore::
+
+    def grok(self, name, obj, **kw):
+        ...
+
+  though grokkers will likely want to take ``module_info`` as well as
+  ``config`` explicitly::
+
+    def grok(self, name, obj, module_info, config, **kw):
+        ...
+
+  If your application defines custom grokkers and you're getting a
+  ``TypeError`` about unexpected arguments to ``grok``, you likely
+  need to update the signature of the ``grok()`` method like described
+  above.
+
+
+Upgrading to 0.10
+-----------------
+
+There were no incompatible changes.

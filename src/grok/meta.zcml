@@ -1,0 +1,12 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:meta="http://namespaces.zope.org/meta"
+    xmlns:grok="http://namespaces.zope.org/grok">
+
+  <include package="z3c.autoinclude" file="meta.zcml" />
+
+  <!-- Load the grokkers -->
+  <include package="grokcore.component" file="meta.zcml" />
+  <grok:grok package=".meta" />
+
+</configure>

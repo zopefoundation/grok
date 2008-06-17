@@ -1,0 +1,651 @@
+============
+Object Infos
+============
+
+Retrieve information about objects. 
+
+ObjectInfos are used by the Grok object browser to retrieve the data
+displayed in the ``inspect.html`` view. See inspect.txt to learn more
+about using the inspector.
+
+.. contents::
+
+
+ObjectInfo:
+-----------
+
+Object infos are in fact wrappers for the functionality offered by the
+Python standard library ``inspect``.
+
+Let's create a simple class:
+
+  >>> class Mammoth(object):
+  ...    """A mammoth."""
+  ...    pass
+
+Now create an object. Meet Manfred:
+
+  >>> manfred = Mammoth()
+  >>> manfred
+  <Mammoth object at ...>
+
+An ObjectInfo's job is it, to find out as much as possible about
+Manfred. We create an ObjectInfo by giving the object to examine as
+parameter: 
+
+  >>> from grok.admin.objectinfo import ObjectInfo
+  >>> info = ObjectInfo(manfred)
+  >>> info
+  <grok.admin.objectinfo.ObjectInfo object at ...>
+
+What can we know about Manfred now?
+
+  >>> members = info.getmembers()
+  >>> ('__class__', Mammoth) in members
+  True
+
+  >>> info.getmoduleinfo() is None
+  True
+
+A Mammoth is not a module. Let's see, what happens when we examine a
+real module:
+
+  >>> import grok.admin.objectinfo
+  >>> ObjectInfo(grok.admin).getmoduleinfo() in [('__init__', '.pyc',
+  ... 'rb', 2), ('__init__', '.py', 'U', 1)]
+  True
+
+  >>> info.getmodulename() is None
+  True
+
+  >>> ObjectInfo(grok.admin.objectinfo).getmodulename()
+  'objectinfo'
+
+  >>> info.isclass()
+  False
+
+manfred is not a class, but an instance of a class. This information
+is correct.
+
+  >>> ObjectInfo(Mammoth).isclass()
+  True
+
+  >>> info.ismethod()
+  False
+
+  >>> ObjectInfo(info.ismethod).ismethod()
+  True
+
+  >>> info.isfunction()
+  False
+
+  >>> def f():
+  ...    pass
+
+  >>> ObjectInfo(f).isfunction()
+  True
+
+  >>> info.istraceback()
+  False
+
+  >>> info.isframe()
+  False
+
+  >>> info.iscode()
+  False
+
+  >>> info.isbuiltin()
+  False
+
+  >>> ObjectInfo(dir).isbuiltin()
+  True
+
+  >>> info.isroutine()
+  False
+
+  >>> info.ismethoddescriptor()
+  False
+
+  >>> info.isdatadescriptor()
+  False
+
+  >>> info.getdoc()
+  'A mammoth.'
+
+  >>> info.getcomments() is None
+  True
+
+We have a comment in the sources of ObjectInfo:
+
+  >>> ObjectInfo(grok.admin.objectinfo.ObjectInfo.getdoc).getcomments()
+  '# Source code related...\n'
+
+A bug in ``inspect.getcomments()`` causes objects with regular
+expression chars ('+', '*', etc.) in their name to fail. A workaround
+should check this and give ``None`` instead:
+
+  >>> evil_obj = Mammoth()
+  >>> evil_obj.__str__ = '+++evil+++'
+  >>> ObjectInfo(evil_obj).getcomments() is None
+  True
+
+``getfile()`` gives the name of the file the object was defined
+in. Contrary to the inspect method, this one returns None, if the
+object is a built-in module, class or function.
+
+  >>> info.getfile() is None
+  True
+
+The filename can be a compiled file ('.pyc') or a Python source file
+('.py'):
+
+  >>> filename = ObjectInfo(grok.admin.objectinfo.ObjectInfo).getfile()
+  >>> filename = filename[-1] == 'c' and filename or filename + 'c'
+  >>> pnorm(filename)
+  '.../grok/admin/objectinfo.pyc'
+
+
+  >>> info.getmodule()
+  <module '__builtin__' (built-in)>
+
+
+Here the same applies as for getfile().
+
+  >>> info.getsourcefile() is None
+  True
+
+  >>> pnorm(ObjectInfo(grok.admin.objectinfo.ObjectInfo).getsourcefile())
+  '.../grok/admin/objectinfo.py'
+
+  >>> info.getsourcelines() is None
+  True
+
+  >>> ObjectInfo(grok.admin.objectinfo.ObjectInfo.isclass).getsourcelines()
+  (['    def isclass(self):\n',...)
+
+  >>> ObjectInfo(len).getsourcefile() is None
+  True
+
+  >>> info.getsource() is None
+  True
+
+  >>> ObjectInfo(grok.admin.objectinfo.ObjectInfo.isclass).getsource()
+  '    def isclass(self):\n...'
+
+A bug in ``inspect.getsource()`` causes objects with regular
+expression chars ('+', '*', etc.) in their name to fail. This is true
+for objects like '+++etc++site' and friends. A workaround should check
+this and give ``None`` instead:
+
+  >>> evil_obj = Mammoth()
+  >>> evil_obj.__str__ = '+++evil+++'
+  >>> ObjectInfo(evil_obj).getsource() is None
+  True
+
+
+ZopeObjectInfo
+--------------
+
+All information, which is special for Zope objects, can be digged
+using ``ZopeObjectInfo``. Zope specific are especially things related
+to the ZODB or interfaces.
+
+
+Preliminaries
++++++++++++++
+
+We first setup some objects, that we can examine thereafter. Let's
+create a ZopeObjectInfo for a typical Zope object, the root
+folder. First get the root folder:
+
+  >>> from zope.app.folder import rootFolder
+  >>> root = rootFolder()
+  >>> root
+  <zope.app.folder.folder.Folder object at ...>
+
+Then get an associated ZopeObjectInfo:
+
+  >>> from grok.admin.objectinfo import ZopeObjectInfo
+  >>> root_info = ZopeObjectInfo(root)
+  >>> root_info
+  <grok.admin.objectinfo.ZopeObjectInfo object at ...>
+
+We create a folder in the root:
+
+  >>> from zope.app.folder.folder import Folder
+  >>> subfolder = Folder()
+  >>> root['Savannah'] = subfolder
+
+and get a ZopeObjectInfo for it as well:
+
+  >>> subfolder_info = ZopeObjectInfo(subfolder)
+  >>> subfolder_info
+  <grok.admin.objectinfo.ZopeObjectInfo object at ...>
+
+Finally, we create some content in the subfolder. A cave, where
+Manfred can stay
+
+  >>> class Cave(grok.Container):
+  ...    """A home, sweet home."""
+  ...    pass
+
+  >>> import grok
+  >>> sweethome = Cave()
+  >>> subfolder['SweetHome'] = sweethome
+  >>> sweethome_info = ZopeObjectInfo(sweethome)
+  >>> sweethome_info
+  <grok.admin.objectinfo.ZopeObjectInfo object at ...>
+
+and put Manfred into the cave:
+
+  >>> sweethome['Owner'] = manfred
+  >>> manfred_info = ZopeObjectInfo(manfred)
+  >>> manfred_info
+   <grok.admin.objectinfo.ZopeObjectInfo object at ...>
+
+Now we can examine the objects further.
+
+getId()
++++++++
+
+Objects' names can be stored in a variety of attributes. It is
+therefore a bit difficult to get the right name (if any). ``getId``
+looks currently for ``__name__``, ``id`` and ``_o_id``. If all fails,
+``None`` is returned.
+
+  >>> root_info.getId() is None
+  True
+
+  >>> subfolder_info.getId()
+  u'Savannah'
+
+  >>> manfred_info.getId() is None
+  True
+
+getParent()
++++++++++++
+
+What is the parent object of the
+root?
+
+  >>> root_info.getParent() is None
+  True
+
+  >>> subfolder_info.getParent()
+  <zope.app.folder.folder.Folder object at ...>
+
+Oh, a folder. Is it the root?
+
+  >>> subfolder_info.getParent() == root
+  True
+
+What about the sweet home?
+
+  >>> sweethome_info.getParent()
+  <zope.app.folder.folder.Folder object at ...>
+
+  >>> sweethome_info.getParent() == subfolder
+  True
+
+Last not least, Manfred:
+
+  >>> manfred_info.getParent()
+  Traceback (most recent call last):
+  ...
+  TypeError: ('Not enough context information to get parent', <Mammoth object at ...>)
+
+Oops! Well, mammoths are not too smart. They wander around all the
+time and so sometimes they forget where they are. Technically,
+Mammoths are not locatable in sense of ILocatable. We can make them
+locatable setting two attributes:
+
+  >>> manfred.__parent__ = sweethome
+  >>> manfred.__name__ = u'Manfred'
+
+Afterwards we can tell, where Manfred lives:
+
+  >>> manfred_info.getParent()
+  <Cave object at ...>
+
+
+getDirectlyProvidedInterfaces()
++++++++++++++++++++++++++++++++
+
+Gives a list of interfaces provided *directly* by the objects in
+dotted-path notation.
+
+  >>> root_info.getDirectlyProvidedInterfaces()
+  ['zope.app.folder.interfaces.IRootFolder']
+
+  >>> subfolder_info.getDirectlyProvidedInterfaces()
+  []
+
+  >>> sweethome_info.getDirectlyProvidedInterfaces()
+  []
+
+  >>> manfred_info.getDirectlyProvidedInterfaces()
+  []
+
+
+getInterfaces()
++++++++++++++++
+
+Gives a tuple of all interfaces provided by the object, not only the
+directly provided ones.
+
+  >>> root_info.getProvidedInterfaces()
+  (<InterfaceClass zope.app.folder.interfaces.IFolder>, <InterfaceClass persistent.interfaces.IPersistent>, <InterfaceClass zope.location.interfaces.IPossibleSite>, <InterfaceClass zope.app.container.interfaces.IContained>)
+
+  >>> sweethome_info.getProvidedInterfaces()
+  (<InterfaceClass zope.annotation.interfaces.IAttributeAnnotatable>, <InterfaceClass grok.interfaces.IContainer>, <InterfaceClass zope.app.container.interfaces.IContainer>, <InterfaceClass zope.app.container.interfaces.IContained>, <InterfaceClass persistent.interfaces.IPersistent>)
+
+Manfred again, is a bit too plain to give us interesting information:
+
+  >>> manfred_info.getProvidedInterfaces()
+  ()
+
+
+getBases()
+++++++++++
+
+What bases built our objects?
+
+  >>> root_info.getBases()
+  (<type 'persistent.Persistent'>, <class 'zope.app.component.site.SiteManagerContainer'>, <class 'zope.app.container.contained.Contained'>)
+
+  >>> sweethome_info.getBases()
+  (<class 'grok.components.Container'>,)
+
+  >>> manfred_info.getBases()
+  (<type 'object'>,)
+
+
+getAttributes()
++++++++++++++++
+
+Attributes are members, which are not methods nor methoddescriptors
+(according to ``inspect`` package). This method gives (contrary to the
+apidoc method with same name) *all* attributes, also the 'private'
+ones, because some private attributes can be of interest, when
+debugging happens.
+
+Attributes are given as an iterator over dicts, each dict containing
+the keys 
+
+- ``name``: name of attribute.
+
+- ``value``: value of attribute as string.
+
+- ``value_linkable``: 
+
+  a boolean indicating, whether the attribute is reachable directly,
+  for instance calling a special URL. Linkable values can be examined
+  further by calling the current URL and inserting the name of
+  attribute. Example: an object examined by
+
+	     http://localhost:8080/someobj/inspect.html
+
+  which owns a linkable attribute ``myattr`` can be examined by
+
+             http://localhost:8080/someobj/myattr/inspect.html
+
+- ``type``: type of value as string.
+
+- ``type_link``: link to the type documentation as str.
+
+- ``interface``: name of the interface, this attribute was defined in
+  or ``None``.
+
+- ``read_perm`` and ``write_perm``: permissions to read/write the
+  attribute. 
+
+To get the attributes as a list, you can use ``list()`` as shown
+below.
+
+We now look for the attributes of the root folder:
+
+  >>> attrs = list(root_info.getAttributes())
+
+There should be a ``data`` attribute available:
+
+  >>> attr_names = [x['name'] for x in attrs]
+  >>> 'data' in attr_names
+  True
+
+And the ``data`` attribute should have eight entries (as described
+above): 
+
+  >>> data_attr = [x for x in attrs if x['name'] == 'data'][0]
+  >>> len(data_attr)
+  8
+
+First, let's determine the name of the attribute:
+
+  >>> data_attr['name']
+  'data'
+
+The value of the attribute:
+
+  >>> data_attr['value']
+  '<BTrees.OOBTree.OOBTree object at ...>'
+
+The value is directly reachable using the traverser:
+
+  >>> data_attr['value_linkable']
+  True
+
+We can get some information about the type of the value:
+
+  >>> data_attr['type']
+  <type 'BTrees.OOBTree.OOBTree'>
+
+  >>> data_attr['type_link']
+  'BTrees/OOBTree/OOBTree'
+
+Is there an interface this attribute was defined in?
+
+  >>> data_attr['interface'] is None
+  True
+
+There are no special permissions defined to read or write the 'data'
+attribute. 
+
+  >>> data_attr['read_perm'] is None
+  True
+
+  >>> data_attr['write_perm'] is None
+  True
+
+
+getMethods()
+++++++++++++
+
+This method gives (contrary to the apidoc method with same name) *all*
+methods, also the 'private' ones, because some private attributes can
+be of interest, when debugging happens.
+
+Methods are given as an iterator over dicts, each dict containing
+the keys 
+
+- ``name``: the name of the method.
+
+- ``signature``: the signature of the methods as string.
+
+- ``doc``: an doc string of the method (if one exists)
+
+- ``interface``: the interface this method was implemented at (if
+  any).
+
+- ``read_perm`` and ``write_perm``: permissions to read/write the
+  method. 
+
+We first get the methods of the root object. Because ``getMethods``
+returns an iterable, we form a list, using ``list()``:
+
+  >>> methods = list(root_info.getMethods())
+
+  >>> len(methods)
+  13
+
+Okay, there are 13 methods defined in this object. We pick one to
+examine it further:
+
+  >>> items_method = [x for x in methods if x['name'] == 'items'][0]
+  >>> len(items_method)
+  7
+
+There are six keys in the dict describing the ``items()`` method of
+the root folder.
+
+  >>> items_method['name']
+  'items'
+
+The ``items()`` method takes no parameters:
+
+  >>> items_method['signature']
+  '()'
+
+The method is documented:
+
+  >>> items_method['doc']
+  'Return a sequence-like object containing tuples of the form\n           (name, object) for the objects that appear in the folder.\n        '
+
+This is the raw documentation string, obviously. It can be formatted
+using render methods defined in the inspect view class.
+
+The method has no special interface where it was defined:
+
+  >>> items_method['interface'] is None
+  True
+
+And there are no special permissions set on this method:
+
+  >>> items_method['read_perm'] is None
+  True
+
+  >>> items_method['write_perm'] is None
+  True
+
+
+isSequence()
+++++++++++++
+
+Sequences are those objects, which provide the IExtendedReadSequence
+interface, are of tuple type or of list type.
+
+  >>> root_info.isSequence()
+  False
+
+  >>> ZopeObjectInfo(['a', 'list', 'of', 'values']).isSequence()
+  True
+
+  >>> ZopeObjectInfo(('a', 'tuple', 'of', 'values')).isSequence()
+  True
+
+  >>> ZopeObjectInfo({'a': 'dict', 'of': 'values'}).isSequence()
+  False
+
+
+getSequenceItems()
+++++++++++++++++++
+
+  >>> testlist = ['a', 'list', 'of', 'values']
+  >>> list_info = ZopeObjectInfo(testlist).getSequenceItems()
+  >>> len(list_info)
+  4
+
+  >>> first_elem = list_info[0]
+  >>> first_elem['index']
+  0
+
+  >>> first_elem['value_type']
+  <type 'str'>
+
+  >>> first_elem['value_type_link']
+  '__builtin__/str'
+
+  >>> first_elem['value']
+  'a'
+
+
+isMapping()
++++++++++++
+
+  >>> root_info.isMapping()
+  True
+
+  >>> ZopeObjectInfo(['a', 'list', 'of', 'values']).isMapping()
+  False
+
+  >>> ZopeObjectInfo(('a', 'tuple', 'of', 'values')).isMapping()
+  False
+
+  >>> ZopeObjectInfo({'a': 'dict', 'of': 'values'}).isMapping()
+  True
+
+  >>> ZopeObjectInfo(root.data).isMapping()
+  False
+
+
+getMappingItems()
++++++++++++++++++
+
+  >>> map_elems = root_info.getMappingItems()
+  >>> u'Savannah' in [x['key'] for x in map_elems]
+  True
+
+  >>> map_elem = [x for x in map_elems if x['key'] == u'Savannah'][0]
+  >>> map_elem['key']
+  u'Savannah'
+
+  >>> map_elem['key_string']
+  "u'Savannah'"
+
+  >>> map_elem['value']
+  <zope.app.folder.folder.Folder object at ...>
+
+  >>> map_elem['value_type']
+  <class 'zope.app.folder.folder.Folder'>
+
+  >>> map_elem['value_type_link']
+  'zope/app/folder/folder/Folder'
+
+Objects, which are not mappings, should return the empty list:
+
+  >>> ZopeObjectInfo('a string').getMappingItems()
+  []
+
+isAnnotatable()
++++++++++++++++
+
+Checks for the interface IAnnotatable. Most 'usual' Zope objects are
+annotatable...
+
+  >>> root_info.isAnnotatable()
+  True
+
+  >>> sweethome_info.isAnnotatable()
+  True
+
+...but some very simple ones are not (or have not declared to be
+annotatable although they are):
+
+  >>> manfred_info.isAnnotatable()
+  False
+
+
+getAnnotationsInfo()
+++++++++++++++++++++
+
+  >>> root_info.getAnnotationsInfo()
+  []
+
+  >>> sweethome_info.getAnnotationsInfo()
+  []
+
+Manfred is not annotatable, but instead of an error we get an empty
+list:
+
+  >>> manfred_info.getAnnotationsInfo()
+  []
+
