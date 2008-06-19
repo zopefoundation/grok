@@ -24,6 +24,11 @@ Restructuring
 Feature changes
 ---------------
 
+* GrokTemplate sets up the namespaces for the template by calling
+  default_namespace() on the view component the template is associated
+  with. As a result, ViewletManagers and Viewlets can now push in the
+  viewletmanager and viewlet namespace into the template.
+
 * Updated tutorial section about grokproject to fit the latest changes.
 
 * Added ``grok.traversable`` directive for easy traversal to attributes and
@@ -75,6 +80,10 @@ Feature changes
 
 Bug fixes
 ---------
+
+* Fix https://bugs.launchpad.net/grok/+bug/226555: the url() method on
+  ViewletManager and Viewlet has been removed now that there's easy
+  access to the view component the viewlet(manager) is registered for.
 
 * Fix https://bugs.launchpad.net/grok/+bug/231106: Use the
   viewletmanager.sort() method for sorting viewlets by using

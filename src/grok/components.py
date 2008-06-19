@@ -175,6 +175,14 @@ class View(BrowserPage):
     def _render_template(self):
         return self.template.render(self)
 
+    def default_namespace(self):
+        namespace = {}
+        namespace['context'] = self.context
+        namespace['request'] = self.request
+        namespace['static'] = self.static
+        namespace['view'] = self
+        return namespace
+
     def namespace(self):
         return {}
 
@@ -312,7 +320,8 @@ class GrokTemplate(BaseTemplate):
         self.__grok_module__ = martian.util.caller_module()
 
         if not (string is None) ^ (filename is None):
-            raise AssertionError("You must pass in template or filename, but not both.")
+            raise AssertionError(
+                "You must pass in template or filename, but not both.")
 
         if string:
             self.setFromString(string)
@@ -334,14 +343,9 @@ class GrokTemplate(BaseTemplate):
         pass
 
     def namespace(self, view):
-        namespace = {}
-        namespace['request'] = view.request
-        namespace['view'] = view
-        namespace['context'] = view.context
-        # XXX need to check whether we really want to put None here if missing
-        namespace['static'] = view.static
-
-        return namespace
+        # By default use the namespaces that are defined as the
+        # default by the view implementation.
+        return view.default_namespace()
 
     def getNamespace(self, view):
         namespace = self.namespace(view)
@@ -667,6 +671,9 @@ class ViewletManager(ViewletManagerBase):
 
     def __init__(self, context, request, view):
         super(ViewletManager, self).__init__(context, request, view)
+        self.context = context
+        self.request = request
+        self.view = view
         self.__name__ = self.__view_name__
         self.static = component.queryAdapter(
             self.request,
@@ -698,6 +705,18 @@ class ViewletManager(ViewletManagerBase):
         s_viewlets = util.sort_components(s_viewlets)
         return [(viewlet.__viewlet_name__, viewlet) for viewlet in s_viewlets]
 
+    def default_namespace(self):
+        namespace = {}
+        namespace['context'] = self.context
+        namespace['request'] = self.request
+        namespace['static'] = self.static
+        namespace['view'] = self.view
+        namespace['viewletmanager'] = self
+        return namespace
+
+    def namespace(self):
+        return {}
+
     def render(self):
         """See zope.contentprovider.interfaces.IContentProvider"""
         # Now render the view
@@ -706,41 +725,17 @@ class ViewletManager(ViewletManagerBase):
         else:
             return u'\n'.join([viewlet.render() for viewlet in self.viewlets])
 
-    def namespace(self):
-        return {}
-
-    @property
-    def response(self):
-        return self.request.response
-
-    def url(self, obj=None, name=None):
-        # if the first argument is a string, that's the name. There should
-        # be no second argument
-        if isinstance(obj, basestring):
-            if name is not None:
-                raise TypeError(
-                    'url() takes either obj argument, obj, string arguments, '
-                    'or string argument')
-            name = obj
-            obj = None
-
-        if name is None and obj is None:
-            # create URL to view itself
-            obj = self
-        elif name is not None and obj is None:
-            # create URL to view on context
-            obj = self.context
-        return util.url(self.request, obj, name)
-
-    def redirect(self, url):
-        return self.request.response.redirect(url)
 
 class Viewlet(ViewletBase):
-    """ Batteries included viewlet """
-
+    """Batteries included viewlet.
+    """
 
     def __init__(self, context, request, view, manager):
         super(Viewlet, self).__init__(context, request, view, manager)
+        self.context = context
+        self.request = request
+        self.view = view
+        self.viewletmanager = manager
         self.__name__ = self.__view_name__
         self.static = component.queryAdapter(
             self.request,
@@ -748,34 +743,21 @@ class Viewlet(ViewletBase):
             name=self.module_info.package_dotted_name
             )
 
-    @property
-    def response(self):
-        return self.request.response
-
-    def render(self):
-        return self.template.render(self)
+    def default_namespace(self):
+        namespace = {}
+        namespace['context'] = self.context
+        namespace['request'] = self.request
+        namespace['static'] = self.static
+        namespace['view'] = self.view
+        namespace['viewlet'] = self
+        namespace['viewletmanager'] = self.manager
+        return namespace
 
     def namespace(self):
         return {}
 
-    def url(self, obj=None, name=None):
-        # if the first argument is a string, that's the name. There should
-        # be no second argument
-        if isinstance(obj, basestring):
-            if name is not None:
-                raise TypeError(
-                    'url() takes either obj argument, obj, string arguments, '
-                    'or string argument')
-            name = obj
-            obj = None
-
-        if name is None and obj is None:
-            # create URL to view itself
-            obj = self
-        elif name is not None and obj is None:
-            # create URL to view on context
-            obj = self.context
-        return util.url(self.request, obj, name)
-
     def update(self):
         pass
+
+    def render(self):
+        return self.template.render(self)
