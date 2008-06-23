@@ -1,7 +1,13 @@
 """
+Let's check that the viewlet namespaces are correct. In particular,
+``view`` in a template should refer to the namespace of the view the
+viewlet is defined on, not the actual viewlet itself.
 
   >>> root = getRootFolder()
   >>> root['cave'] = Cave()
+
+Let's look at the first template, which includes the viewlet::
+
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
@@ -11,6 +17,10 @@
   <grok.ftests.viewlet.template_namespaces.Index object at ...>
   <grok.ftests.viewlet.template_namespaces.MirandaViewlet object at ...>
   <grok.ftests.viewlet.template_namespaces.CavewomenViewletManager object at ...>
+
+This is indeed what we expected from the viewlet.
+
+Let's look at a template for the viewlet manager too::
 
   >>> browser.open("http://localhost/cave/@@necklace")
   >>> print browser.contents
