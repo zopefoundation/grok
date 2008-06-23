@@ -10,7 +10,7 @@ Upgrading to 0.13
 -----------------
 
 * The directive implementations changed tremendously with the upgrade
-  to Martian 0.9.6.  Custom implementations of both directives (see
+  to Martian 0.10.  Custom implementations of both directives (see
   next bullet point) and grokkers will have to be adjusted.
 
   Since the vast majority of directives are class directives, the most
