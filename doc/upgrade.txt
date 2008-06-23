@@ -46,7 +46,8 @@ Upgrading to 0.13
   - ``grok.provides`` with a computed default.
 
   With the new directive implementation and the extensions to
-  Martian's ``ClassGrokker``, you're now be able to write::
+  Martian's ``ClassGrokker``, you are now able to write (and you
+  should write!)::
 
     def default_provides(factory, module, **data):
         # This function is available for import from grokcore.component.meta.
