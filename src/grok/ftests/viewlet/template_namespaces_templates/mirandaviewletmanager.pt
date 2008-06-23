@@ -1,0 +1,3 @@
+<tal:block replace="structure python: repr(context)" />
+<tal:block replace="structure python: repr(view)" />
+<tal:block replace="structure python: repr(viewletmanager)" />
