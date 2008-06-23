@@ -19,7 +19,8 @@ Restructuring
 
 * Refactored class grokkers to make use of Martian's new declarative
   way for retrieving directive data from classes, and Martian's new
-  declarative way to write grokkers.
+  declarative way to write grokkers. See the `upgrade notes`_
+  (``doc/upgrade.txt``) for more information.
 
 Feature changes
 ---------------
