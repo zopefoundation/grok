@@ -1,7 +1,7 @@
 """
 Let's check that the viewlet namespaces are correct. In particular,
 ``view`` in a template should refer to the namespace of the view the
-viewlet is defined on, not the actual viewlet itself.
+viewlet is registered for, not the actual viewlet itself.
 
   >>> root = getRootFolder()
   >>> root['cave'] = Cave()
