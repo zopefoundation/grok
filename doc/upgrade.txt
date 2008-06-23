@@ -165,7 +165,12 @@ Upgrading to 0.13
 * The ``url`` method on ``ViewletManager`` and ``Viewlet`` was
   removed. Instead you can easily access the ``url`` method of the
   view itself from within a viewlet or viewlet manager, and the
-  ``view`` name is also available in viewlet templates.
+  ``view`` name is also available in viewlet templates. There are also
+  new ``viewlet`` and ``viewletmanager`` namespaces in the viewlet
+  templates. Note that ``view`` in a viewlet thus means something else
+  than what it does before. Previous uses of ``view`` in a viewlet
+  template should be renamed to ``viewlet``.
+
 
 Upgrading to 0.12
 -----------------
