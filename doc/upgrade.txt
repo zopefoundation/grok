@@ -162,6 +162,11 @@ Upgrading to 0.13
   ``zope.publisher.http.appySkin`` was removed again in later versions
   of ``zope.publisher``.
 
+* The ``url`` method on ``ViewletManager`` and ``Viewlet`` was
+  removed. Instead you can easily access the ``url`` method of the
+  view itself from within a viewlet or viewlet manager, and the
+  ``view`` name is also available in viewlet templates.
+
 Upgrading to 0.12
 -----------------
 

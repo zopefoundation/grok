@@ -25,10 +25,11 @@ Restructuring
 Feature changes
 ---------------
 
-* GrokTemplate sets up the namespaces for the template by calling
-  default_namespace() on the view component the template is associated
-  with. As a result, ViewletManagers and Viewlets can now push in the
-  viewletmanager and viewlet namespace into the template.
+* ``GrokTemplate`` sets up the namespaces for the template by calling
+  ``default_namespace() ``on the view component the template is
+  associated with. As a result, ``ViewletManagers`` and ``Viewlet``
+  can now push in the ``viewletmanager`` and ``viewlet`` namespaces
+  into the template.
 
 * Updated tutorial section about grokproject to fit the latest changes.
 
@@ -40,8 +41,8 @@ Feature changes
   permission ids. Permission components *do* still need the
   grok.name() directive for defining the permission's id.
 
-* Added an optional parameter 'data' to the method 'url()' that accepts
-  a dictionary that is then converted to a query string. See
+* Added an optional parameter ``data`` to the method ``url()`` that
+  accepts a dictionary that is then converted to a query string. See
 
   http://grok.zope.org/documentation/how-to/generate-urls-with-the-url-function-in-views/view
 
@@ -56,9 +57,9 @@ Feature changes
   We are now using the latest Zope 3 releases for all Zope packages.
   For upgrade notes, see doc/upgrade.txt for more information.
 
-* Added support for easier test setup based on z3c.testsetup. This is a
-  more stable and more powerful implementation of
-  grok.testing.register_all_tests(). See
+* Added support for easier test setup based on ``z3c.testsetup``. This
+  is a more stable and more powerful implementation of
+  ``grok.testing.register_all_tests()``. See
 
     http://grok.zope.org/documentation/how-to/tests-with-grok-testing
 
@@ -68,7 +69,7 @@ Feature changes
   your class implement that interface, it (and its subclasses) will be
   candidates for being a context in a module (for automatic context
   lookup if ``grok.context`` is not present). This relies on a feature
-  introduced in grokcore.component 1.1.
+  introduced in ``grokcore.component`` 1.1.
 
 * ``grok.Model`` implements ``grok.interfaces.IContext`` now (which is
   imported from ``grokcore.component``). ``grok.Container`` now
@@ -82,8 +83,8 @@ Feature changes
 Bug fixes
 ---------
 
-* Fix https://bugs.launchpad.net/grok/+bug/226555: the url() method on
-  ViewletManager and Viewlet has been removed now that there's easy
+* Fix https://bugs.launchpad.net/grok/+bug/226555: the ``url()`` method on
+  ``ViewletManager`` and ``Viewlet`` has been removed now that there's easy
   access to the view component the viewlet(manager) is registered for.
 
 * Fix https://bugs.launchpad.net/grok/+bug/231106: Use the
