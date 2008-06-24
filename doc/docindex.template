@@ -1,9 +1,9 @@
-  <p><strong>Parts of the documentation:</strong></p>
+  <p><strong>Sections</strong></p>
   <table class="contentstable" align="center"><tr>
     <td width="50%">
       <p class="biglink"><a class="biglink" href="{{ pathto("changes") }}"
-      >What's new in Grok {{ version }}?</a><br>
-      <span class="linkdescr">changes during the releases</span></p>
+      >What's new in Grok?</a><br>
+      <span class="linkdescr">Changes between each Grok release</span></p>
 
       <p class="biglink"><a class="biglink" href="{{ pathto("tutorial") }}"
       >Tutorial</a><br>
@@ -15,10 +15,6 @@
 
     </td><td width="50%">
 
-      <p class="biglink"><a class="biglink" href="{{ pathto("about") }}"
-      >About Grok</a><br>
-      <span class="linkdescr">now even Cavemen can use Zope 3</span></p>
-
       <p class="biglink"><a class="biglink" href="{{ pathto("reference/index") }}">The Grok Reference</a><br>
          <span class="linkdescr">describes syntax and package elements</span></p>
 
@@ -28,7 +24,7 @@
 
     </td></tr>
   </table>
-  <p><strong>Indices and tables:</strong></p>
+  <p><strong>Indices and tables</strong></p>
   <table class="contentstable" align="center"><tr>
     <td width="50%">
       <p class="biglink"><a class="biglink" href="{{ pathto("contents") }}">Complete Table of Contents</a><br>
@@ -43,7 +39,7 @@
     </td></tr>
   </table>
 
-  <p><strong>Meta information:</strong></p>
+  <p><strong>Further information</strong></p>
   <table class="contentstable" align="center"><tr>
     <td width="50%">
 
