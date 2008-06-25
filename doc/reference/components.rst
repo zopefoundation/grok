@@ -76,7 +76,10 @@ Adapters
 :class:`grok.Adapter`
 =====================
 
-Implementation, configuration, and registration of Zope 3 adapters.
+Implementation, configuration, and registration of Zope 3 Adapters.
+
+Adapters are components that are constructed from other components. They
+take an existing interface and extend it to provide a new interface.
 
 .. class:: grok.Adapter
 
@@ -122,7 +125,7 @@ Implementation, configuration, and registration of Zope 3 adapters.
 
       :func:`grok.provides`
 
-**Example 1:**
+**Example 1: Simple adaptation example**
 
 .. code-block:: python
 
@@ -130,14 +133,17 @@ Implementation, configuration, and registration of Zope 3 adapters.
    from zope import interface
 
    class Cave(grok.Model):
-       pass
+      "start with a cave objects (the adaptee)"
 
    class IHome(interface.Interface):
-       pass
+      "we want to extend caves with the IHome interface"
 
    class Home(grok.Adapter):
-       grok.implements(IHome)
+      "the home adapter turns caves into habitable homes!"
+      grok.implements(IHome)
 
+   # Adapation (component look-up) is invoked by passing the adaptee
+   # to the interface as a constructor and returns the component adapted to   
    home = IHome(cave)
 
 
@@ -149,13 +155,13 @@ Implementation, configuration, and registration of Zope 3 adapters.
    from zope import interface
 
    class Cave(grok.Model):
-       pass
-    class IHome(interface.Interface):
-       pass
+      pass
+   class IHome(interface.Interface):
+      pass
 
    class Home(grok.Adapter):
-       grok.implements(IHome)
-       grok.name('home')
+      grok.implements(IHome)
+      grok.name('home')
 
    from zope.component import getAdapter
    home = getAdapter(cave, IHome, name='home')
@@ -166,8 +172,11 @@ Implementation, configuration, and registration of Zope 3 adapters.
 
 .. class:: grok.MultiAdapter
 
-   Base class to define a multi adapter. MultiAdapters are automatically
-   registered when a module is "grokked".
+   Base class to define a Multi Adapter.
+   
+   A simple adapter normally adapts only one object, but an adapter may
+   adapt more than one object. If an adapter adapts more than one objects,
+   it is called multi-adapter.
 
    **Directives:**
 
@@ -186,11 +195,11 @@ Implementation, configuration, and registration of Zope 3 adapters.
       retrieved by explicitely using its name.
 
    :func:`grok.provides(name)`
-      Maybe required. If the adapter implements more than one interface,
-      :func:`grok.provides` is required to disambiguate for what interface the
-      adapter will be registered.
+      Only required if the adapter implements more than one interface.
+      :func:`grok.provides` is required to disambiguate for which interface the
+      adapter will be registered for.
 
-**Example:**
+**Example: A home is made from a cave and a fireplace.**
 
 .. code-block:: python
 
@@ -219,6 +228,44 @@ Implementation, configuration, and registration of Zope 3 adapters.
 :class:`grok.Annotation`
 ========================
 
+Annotation components are persistent writeable adapters.
+
+.. class:: grok.Annotation
+
+   Base class to declare an Annotation. Inherits from the
+   persistent.Persistent class.
+
+**Example: Storing annotations on model objects**
+
+.. code-block:: python
+
+   import grok
+   from zope import interface
+
+   # Create a model and an interface you want to adapt it to
+   # and an annotation class to implement the persistent adapter.
+   class Mammoth(grok.Model):
+      pass
+
+   class ISerialBrand(interface.Interface):
+      unique = interface.Attribute("Brands")
+
+   class Branding(grok.Annotation):
+      grok.implements(IBranding)
+      unqiue = 0
+   
+   # Grok the above code, then create some mammoths
+   manfred = Mammoth()
+   mumbles = Mammoth()
+   
+   # creating Annotations work just like Adapters
+   livestock1 = ISerialBrand(manfred)
+   livestock2 = ISerialBrand(mumbles)
+   
+   # except you can store data in them, this data will transparently persist
+   # in the database for as long as the object exists
+   livestock1.serial = 101
+   livestock2.serial = 102
 
 Utilities
 ~~~~~~~~~
