@@ -7,12 +7,19 @@ Components
    for each component we document only the specific within its context. We then
    refer to the directives documented in the directives.rst file.
 
-The :mod:`grok` module defines a set of components that provide basic Zope 3
-functionality in a convenient way. Grok applications are built by subclassing
-these components.
+The :mod:`grok` module defines a set of base classes for creating new 
+components of different types, that provide basic Zope 3 functionality in a convenient way. Grok applications are built by subclassing these components.
+
+Components in Grok and Zope 3 can be any plain Python object, that you have declared implements one or more Interface(s). The inclusion of these Grok base classes in your own Python classes inheritance automatically handles the component registration with the Zope Component Architecture. This process of introspecting your Grok code during initialization and wiring together components based on common conventions that you follow in the structure of your source code is called "grokking".
+
 
 Core components
 ~~~~~~~~~~~~~~~
+
+:class:`grok.Application`
+=========================
+
+Base class for applications. Inherits from :class:`grok.Site`.
 
 :class:`grok.Model`
 ===================
@@ -23,12 +30,45 @@ provide persistence and containment.
 :class:`grok.Container`
 =======================
 
-Mixin base class to define a container object. The container implements the
+Mixin base class to define a container object. Objects in a container are 
+manipulated using the same syntax as you would with the standard
+Python Dictionary object. The container implements the
 zope.app.container.interfaces.IContainer interface using a BTree, providing
 reasonable performance for large collections of objects.
 
-:class:`grok.Application`
-=========================
+**Example 1: Perform Create, Read, Update and Delete (CRUD) on a container**
+
+.. code-block:: python
+
+    # define a container and a model and then create them
+    class BoneBag(grok.Container): pass
+    class Bone(grok.Model): pass    
+    bag = BoneBag()
+    skull = Bone()
+    
+    # ... your classes are then "grokked" by Grok ...
+    
+    # store an object in a container
+    bag['bone1'] = skull
+    
+    # test for containment
+    bag.has_key('bone1')
+    
+    # retrieve an object from a container
+    first_bone = bag['bone1'] 
+    
+    # iterate through objects in a container with .values()
+    # you can also use .keys() and .items()
+    for bone in bag.values():
+        bone.marks = 'teeth'
+    
+    # delete objects using the del keyword
+    del bag['bone1']
+
+:class:`grok.Indexes`
+=====================
+
+Base class for catalog index definitions.
 
 Adapters
 ~~~~~~~~
@@ -250,6 +290,102 @@ Views
 :class:`grok.View`
 ==================
 
+View components provide context and request attributes. 
+
+The determination of what View gets used for what Model is made by walking the URL in the HTTP Request object sepearted by the / character. This process is
+called Traversal.
+
+.. class:: grok.View
+
+   Base class to define a View.
+
+   .. attribute:: grok.View.context
+
+      The object that the view is presenting. This is often an instance of
+      a grok.Model class, but can also be a grok.Application or grok.Container
+      object.
+
+   .. attribute:: grok.View.request
+   
+      The HTTP Request object.
+
+   .. attribute:: grok.View.response
+
+      The HTTP Response object that is associated with the request.
+
+   .. attribute:: grok.View.static
+
+      Directory resource containing the static files of the view's package.
+
+   .. method:: redirect(url):
+   
+      Redirect to given URL
+
+   .. method:: url(obj=None, name=None, data=None):
+   
+      Construct URL.
+
+      If no arguments given, construct URL to view itself.
+
+      If only obj argument is given, construct URL to obj.
+
+      If only name is given as the first argument, construct URL
+      to context/name.
+
+      If both object and name arguments are supplied, construct
+      URL to obj/name.
+
+      Optionally pass a 'data' keyword argument which gets added to the URL
+      as a cgi query string.
+
+   .. method:: default_namespace():
+
+      Returns a dictionary of namespaces that the template
+      implementation expects to always be available.
+
+      This method is *not* intended to be overridden by application
+      developers.
+
+   .. method:: namespace():
+   
+      Returns a dictionary that is injected in the template
+      namespace in addition to the default namespace.
+
+      This method *is* intended to be overridden by the application
+      developer.
+
+   .. method:: update(**kw):
+   
+      This method is meant to be implemented by grok.View
+      subclasses.  It will be called *before* the view's associated
+      template is rendered and can be used to pre-compute values
+      for the template.
+
+      update() can take arbitrary keyword parameters which will be
+      filled in from the request (in that case they *must* be
+      present in the request).
+
+   .. method:: render(**kw):
+   
+      A view can either be rendered by an associated template, or
+      it can implement this method to render itself from Python.
+      This is useful if the view's output isn't XML/HTML but
+      something computed in Python (plain text, PDF, etc.)
+
+      render() can take arbitrary keyword parameters which will be
+      filled in from the request (in that case they *must* be
+      present in the request).
+
+   .. method:: application_url(name=None):
+   
+      Return the URL of the closest application object in the
+      hierarchy or the URL of a named object (``name`` parameter)
+      relative to the closest application object.
+
+   .. method:: flash(message, type='message'):
+      
+      Send a short message to the user.
+
 :class:`grok.JSON`
 ==================
 
@@ -319,11 +455,3 @@ Security
 
 :class:`Role`
 =============
-
-Uncategorized
-~~~~~~~~~~~~~
-
-.. The weird classes we couldn' categorize yet
-
-:class:`grok.Indexes`
-=====================
