@@ -569,7 +569,6 @@ a.headerlink:hover {
 }
 
 div.body p, div.body dd, div.body li {
-    text-align: justify;
     line-height: 130%;
 }
 
@@ -637,6 +636,37 @@ div.warning {
 div.note {
     background-color: #eeeeee;
     border: 1px solid #dddddd;
+}
+
+dl.class {
+    color: #555555;
+    background: #fafaf8;
+    padding: 0 1em 1em 1em;
+    border: 1px solid #eed;
+}
+
+dl.class dt {
+    margin: 0;
+    padding: 0;
+}
+
+/* only applies to the class name */
+dl.class > dt {
+    padding: 0.5em;
+    margin: 0 -1em;
+    background-color: #eed;
+}
+
+dl.class dd {
+    color: black;
+    font-size: 100%;
+    padding: 0;
+    margin: 0.5em 1em 0.5em 1em;
+}
+
+dl.class > dd {
+    margin: 0.5em 0 0 0;
+    padding: 0;
 }
 
 p.admonition-title {
@@ -723,8 +753,7 @@ pre {
 
 tt {
     background-color: #ecf0f3;
-    padding: 0 1px 0 1px;
-    font-size: 0.95em;
+    padding: 0;
 }
 
 tt.descname {
@@ -735,6 +764,10 @@ tt.descname {
 
 tt.descclassname {
     background-color: transparent;
+    font-weight: bold;
+    font-size: 1.2em;
+    /* a little hand kerning for grok.Whatever typography */
+    margin-right: -1px;
 }
 
 tt.xref, a tt {
