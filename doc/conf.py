@@ -48,7 +48,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General substitutions.
-project = 'Grok'
+project = 'Official Grok'
 copyright = '2006-2008, The Zope Foundation'
 
 # The default replacements for |version| and |release|, also used in various
