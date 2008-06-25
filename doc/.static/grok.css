@@ -1,31 +1,29 @@
-/**
- * Sphinx Doc Design
+/*
+ * Grok Official Documentation CSS
+ *
+ * (clean me up! improve me! make me look nicer!)
+ *
  */
 
-/*
-
-Dunkelblau: #11303d
-Hellblau Rahmen: #1c4e63
-Mittelblau Rahmen: #133f52
-*/
 body {
     font-family: sans-serif;
     font-size: 100%;
-    backg/round-color: #11303d;
-    background-color: #ccc;
+    background-color: #11303d;
+    background-color: #dddddd;
     background: #cfcccc url("top_bg.jpg") repeat-x;
     color: #000;
     margin: 0;
     padding: 0;
 }
 
+td {
+    vertical-align: top;
+}
+
 /* :::: LAYOUT :::: */
 
 div.document {
-    backg/round: #1c4e63 url("top_bg.jpg") repeat-x;
-    background-color: #cccccc;
-    background-color: #eee;
-    ba/ckground-color: #1c4e63;
+    background-color: #dddddd;
 }
 
 div.documentwrapper {
@@ -42,25 +40,12 @@ div.body {
     padding: 0 20px 30px 20px;
 }
 
-div.sidebarwrapper {
-    padding: 10px 5px 0 10px;
-}
-
-div.sidebar {
-    float: left;
-    width: 230px;
-    margin-left: -100%;
-    font-size: 90%;
-}
-
 div.clearer {
     clear: both;
 }
 
 div.footer {
-    c/olor: #fff;
     color: #740;
-    co/lor: #000;
     width: 100%;
     padding: 9px 0 9px 0;
     text-align: center;
@@ -68,9 +53,7 @@ div.footer {
 }
 
 div.footer a {
-    co/lor: #fff;
     color: #740;
-    co/lor: #000;
     text-decoration: underline;
 }
 
@@ -78,7 +61,6 @@ div.related {
     background-color: #133f52;
     background-color: #999999;
     background: #999999 url("top_bg.jpg") repeat-x;
-    c/olor: #fff;
     color: #000;
     color: #740;
     width: 100%;
@@ -107,17 +89,30 @@ div.related li.right {
 }
 
 div.related a {
-    co/lor: white;
-    ba/ckground-color: #bbb;
     color: #000;
     color: #520;
 }
 
-/* ::: TOC :::: */
+/* ::: Table of Contents :::: */
+
+div.sidebarwrapper {
+    padding: 10px 5px 0 10px;
+}
+
+div.sidebar {
+    float: left;
+    width: 230px;
+    margin-left: -100%;
+    font-size: 90%;
+    color: #333333;
+}
+
+div.sidebar a {
+    color: #436976;
+}
+
 div.sidebar h3 {
     font-family: 'Trebuchet MS', sans-serif;
-    co/lor: white;
-    color: #960;
     font-size: 1.4em;
     font-weight: normal;
     margin: 0;
@@ -126,17 +121,10 @@ div.sidebar h3 {
 
 div.sidebar h4 {
     font-family: 'Trebuchet MS', sans-serif;
-    c/olor: white;
-    color: #960;
     font-size: 1.3em;
     font-weight: normal;
     margin: 5px 0 0 0;
     padding: 0;
-}
-
-div.sidebar p {
-    co/lor: white;
-    color: #960;
 }
 
 div.sidebar p.topless {
@@ -147,7 +135,6 @@ div.sidebar ul {
     margin: 10px;
     padding: 0;
     list-style: none;
-    co/lor: white;
     color: #c90;
 }
 
@@ -155,6 +142,7 @@ div.sidebar ul ul,
 div.sidebar ul.want-points {
     margin-left: 20px;
     list-style: square;
+    color: #436976;
 }
 
 div.sidebar ul ul {
@@ -162,9 +150,8 @@ div.sidebar ul ul {
     margin-bottom: 0;
 }
 
-div.sidebar a {
-    color: #98dbcc;
-color: #a70;
+div.sidebar ul li {
+    margin: 0.25em 0 0.5em 0;
 }
 
 div.sidebar form {
@@ -172,7 +159,7 @@ div.sidebar form {
 }
 
 div.sidebar input {
-    border: 1px solid #98dbcc;
+    border: 1px solid #555555;
     font-family: sans-serif;
     font-size: 1em;
 }
@@ -440,7 +427,7 @@ div.commentwindow div.preview div.comment h4 {
 
 /* :::: SUGGEST CHANGES :::: */
 div#suggest-changes-box input, div#suggest-changes-box textarea {
-    border: 1px solid #ccc;
+    border: 1px solid #dddddd;
     background-color: white;
     color: black;
 }
@@ -463,6 +450,8 @@ div.preview {
 
 table.contentstable {
     width: 90%;
+    margin-top: -1em;
+    margin-left: 2em;
 }
 
 table.contentstable p.biglink {
@@ -474,8 +463,8 @@ a.biglink {
 }
 
 span.linkdescr {
-    font-style: italic;
-    padding-top: 5px;
+    color: #555;
+    padding-top: 0.25em;
     font-size: 90%;
 }
 
@@ -543,10 +532,9 @@ div.body h6 {
     font-family: 'Trebuchet MS', sans-serif;
     background-color: #f2f2f2;
     font-weight: normal;
-    fo/nt-weight: bold;
     color: #20435c;
     color: #c90;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #dddddd;
     margin: 20px -20px 10px -20px;
     padding: 3px 0 3px 10px;
 }
@@ -559,7 +547,7 @@ div.body h5 { font-size: 110%; }
 div.body h6 { font-size: 100%; }
 
 a.headerlink {
-    color: #c60f0f;
+    color: #dddddd;
     font-size: 0.8em;
     padding: 0 4px 0 4px;
     text-decoration: none;
@@ -577,9 +565,7 @@ dt:hover > a.headerlink {
 }
 
 a.headerlink:hover {
-    background-color: #c60f0f;
-    background-color: #000f0f;
-    color: white;
+    color: #555555;
 }
 
 div.body p, div.body dd, div.body li {
@@ -606,8 +592,8 @@ p.rubric {
 /* "Topics" */
 
 div.topic {
-    background-color: #eee;
-    border: 1px solid #ccc;
+    background-color: #eeeeee;
+    border: 1px solid #dddddd;
     padding: 0 7px 0 7px;
     margin: 10px 0 10px 0;
 }
@@ -649,8 +635,8 @@ div.warning {
 }
 
 div.note {
-    background-color: #eee;
-    border: 1px solid #ccc;
+    background-color: #eeeeee;
+    border: 1px solid #dddddd;
 }
 
 p.admonition-title {
@@ -786,7 +772,7 @@ form.comment h3 {
 
 form.comment input,
 form.comment textarea {
-    border: 1px solid #ccc;
+    border: 1px solid #dddddd;
     padding: 2px;
     font-family: sans-serif;
     font-size: 100%;
