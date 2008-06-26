@@ -15,8 +15,9 @@
 Test setup for grok.admin.introspector.
 """
 from grok.testing import register_all_tests
-
+from grok.ftests.test_grok_functional import GrokFunctionalLayer
 # This we say: include all testfiles in or below the
 # grok.admin.introspector package in the tests.
 #
-test_suite = register_all_tests('grok.admin.introspector')
+test_suite = register_all_tests('grok.admin.introspector',
+                                layer=GrokFunctionalLayer)
