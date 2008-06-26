@@ -8,9 +8,16 @@ Components
    refer to the directives documented in the directives.rst file.
 
 The :mod:`grok` module defines a set of base classes for creating new 
-components of different types, that provide basic Zope 3 functionality in a convenient way. Grok applications are built by subclassing these components.
+components of different types, that provide basic Zope 3 functionality in a
+convenient way. Grok applications are built by subclassing these components.
 
-Components in Grok and Zope 3 can be any plain Python object, that you have declared implements one or more Interface(s). The inclusion of these Grok base classes in your own Python classes inheritance automatically handles the component registration with the Zope Component Architecture. This process of introspecting your Grok code during initialization and wiring together components based on common conventions that you follow in the structure of your source code is called "grokking".
+Components in Grok and Zope 3 can be any plain Python object, that you have
+declared implements one or more Interface(s). The inclusion of these Grok base
+classes in your own Python classes inheritance automatically handles the
+component registration with the Zope Component Architecture. This process of
+introspecting your Grok code during initialization and wiring together
+components based on common conventions that you follow in the structure
+of your source code is called "grokking".
 
 
 Core components
@@ -339,7 +346,8 @@ Views
 
 View components provide context and request attributes. 
 
-The determination of what View gets used for what Model is made by walking the URL in the HTTP Request object sepearted by the / character. This process is
+The determination of what View gets used for what Model is made by walking the
+URL in the HTTP Request object sepearted by the / character. This process is
 called Traversal.
 
 .. class:: grok.View
@@ -436,11 +444,142 @@ called Traversal.
 :class:`grok.JSON`
 ==================
 
+Specialized View that returns data in JSON format.
+
+Python data returned is automatically converted into JSON format using
+the simplejson library. Every method name in a grok.JSON component is
+registered as the name of a JSON View. The exceptions are names that
+begin with an _ or special names such as __call__. The grok.require
+decorator can be used to protect methods with a permission.
+
+.. class:: grok.JSON
+
+   Base class for JSON methods.
+
+**Example 1: Create a public and a protected JSON view.**
+
+.. code-block:: python
+
+   class MammothJSON(grok.JSON):
+      """
+      Returns JSON from URLs in the form of:
+      
+      http://localhost/stomp
+      http://localhost/dance
+      """
+
+      grok.context(zope.interface.Interface)
+
+      def stomp(self):
+         return {'Manfred stomped.': ''}
+
+      @grok.require('zope.ManageContent')
+      def dance(self):
+         return {'Manfred does not like to dance.': ''}
+
+
 :class:`grok.XMLRPC`
 ====================
 
+Specialized View that responds to XML-RPC.
+
+The grok.require decorator can be used to protect methods with a permission.
+
+.. class:: grok.JSON
+
+   Base class for XML-RPC methods.
+
+**Example 1: Create a public and a protected XML-RPC view.**
+
+.. code-block:: python
+
+   from zope import interface
+   
+   class FooXMLRPC(grok.XMLRPC):
+      """
+      The methods in this class will be available as XML-RPC methods.
+      
+      http://localhost/say will return 'Hello world!' encoded in XML-RPC.
+      """
+      grok.context(interface.Interface)
+
+      def say(self):
+         return 'Hello world!'
+
+
 :class:`grok.Traverser`
 =======================
+
+Specialized View that responds to XML-RPC.
+
+.. class:: grok.Traverser
+
+   Base class for custom traversers.
+
+   .. method:: traverse(self, name):
+      
+      You must provide your own implementation of this method to do what
+      you want. If you return None, Grok will use the default traversal
+      behaviour.
+
+   .. method:: browserDefault(request):
+   
+      Provide the default object
+
+      The default object is expressed as a (possibly different)
+      object and/or additional traversal steps.
+
+      Returns an object and a sequence of names.  If the sequence of
+      names is not empty, then a traversal step is made for each name.
+      After the publisher gets to the end of the sequence, it will
+      call browserDefault on the last traversed object.
+
+      Normal usage is to return self for object and a default view name.
+
+      The publisher calls this method at the end of each traversal path. If
+      a non-empty sequence of names is returned, the publisher will traverse
+      those names and call browserDefault again at the end.
+
+      Note that if additional traversal steps are indicated (via a
+      nonempty sequence of names), then the publisher will try to adjust
+      the base href.
+
+   .. method:: publishTraverse(request, name):
+
+      Lookup a name
+
+      The 'request' argument is the publisher request object. The
+      'name' argument is the name that is to be looked up. It must
+      be an ASCII string or Unicode object.
+
+      If a lookup is not possible, raise a NotFound error.
+
+      This method should return an object having the specified name and
+      `self` as parent. The method can use the request to determine the
+      correct object.
+
+**Example 1: Traverse into a Herd Model and return a Mammoth Model**
+
+.. code-block:: python
+
+   import grok
+
+   class Herd(grok.Model):
+
+       def __init__(self, name):
+           self.name = name
+
+   class HerdTraverser(grok.Traverser):
+       grok.context(Herd)
+
+       def traverse(self, name):
+           return Mammoth(name)
+
+   class Mammoth(grok.Model):
+
+       def __init__(self, name):
+           self.name = name
+
 
 :class:`grok.PageTemplate`
 ==========================
