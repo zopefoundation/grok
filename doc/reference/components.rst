@@ -4,8 +4,8 @@ Components
 **********
 
 .. Here we documented the component base classes. For the directive possible
-   for each component we document only the specific within its context. We then
-   refer to the directives documented in the directives.rst file.
+    for each component we document only the specific within its context. We then
+    refer to the directives documented in the directives.rst file.
 
 The :mod:`grok` module defines a set of base classes for creating new 
 components of different types, that provide basic Zope 3 functionality in a
@@ -90,88 +90,88 @@ take an existing interface and extend it to provide a new interface.
 
 .. class:: grok.Adapter
 
-   Base class to define an adapter. Adapters are automatically
-   registered when a module is "grokked".
+    Base class to define an adapter. Adapters are automatically
+    registered when a module is "grokked".
 
-   .. attribute:: grok.Adapter.context
+    .. attribute:: grok.Adapter.context
 
-      The adapted object.
+        The adapted object.
 
-   **Directives:**
+    **Directives:**
 
-   :func:`grok.context(context_obj_or_interface)`
-      Maybe required. Identifies the type of objects or interface for
-      the adaptation.
+    :func:`grok.context(context_obj_or_interface)`
+        Maybe required. Identifies the type of objects or interface for
+        the adaptation.
 
-   .. seealso::
+    .. seealso::
 
-      :func:`grok.context`
+        :func:`grok.context`
 
-   :func:`grok.implements(\*interfaces)`
-      Required. Identifies the interface(s) the adapter implements.
+    :func:`grok.implements(\*interfaces)`
+        Required. Identifies the interface(s) the adapter implements.
 
-   .. seealso::
+    .. seealso::
 
-      :func:`grok.implements`
+        :func:`grok.implements`
 
-   :func:`grok.name(name)`
-      Optional. Identifies the name used for the adapter
-      registration. If ommitted, no name will be used.
+    :func:`grok.name(name)`
+        Optional. Identifies the name used for the adapter
+        registration. If ommitted, no name will be used.
 
-      When a name is used for the adapter registration, the adapter
-      can only be retrieved by explicitely using its name.
+        When a name is used for the adapter registration, the adapter
+        can only be retrieved by explicitely using its name.
 
-   .. seealso::
+    .. seealso::
 
-      :func:`grok.name`
+        :func:`grok.name`
 
-   :func:`grok.provides(name)`
-      Maybe required.
+    :func:`grok.provides(name)`
+        Maybe required.
 
-   .. seealso::
+    .. seealso::
 
-      :func:`grok.provides`
+        :func:`grok.provides`
 
 **Example 1: Simple adaptation example**
 
 .. code-block:: python
 
-   import grok
-   from zope import interface
+    import grok
+    from zope import interface
 
-   class Cave(grok.Model):
-      "start with a cave objects (the adaptee)"
+    class Cave(grok.Model):
+        "start with a cave objects (the adaptee)"
 
-   class IHome(interface.Interface):
-      "we want to extend caves with the IHome interface"
+    class IHome(interface.Interface):
+        "we want to extend caves with the IHome interface"
 
-   class Home(grok.Adapter):
-      "the home adapter turns caves into habitable homes!"
-      grok.implements(IHome)
+    class Home(grok.Adapter):
+        "the home adapter turns caves into habitable homes!"
+        grok.implements(IHome)
 
-   # Adapation (component look-up) is invoked by passing the adaptee
-   # to the interface as a constructor and returns the component adapted to   
-   home = IHome(cave)
+    # Adapation (component look-up) is invoked by passing the adaptee
+    # to the interface as a constructor and returns the component adapted to   
+    home = IHome(cave)
 
 
 **Example 2: Register and retrieve the adapter under a specific name**
 
 .. code-block:: python
 
-   import grok
-   from zope import interface
+    import grok
+    from zope import interface
 
-   class Cave(grok.Model):
-      pass
-   class IHome(interface.Interface):
-      pass
+    class Cave(grok.Model):
+        pass
+    class IHome(interface.Interface):
+        pass
 
-   class Home(grok.Adapter):
-      grok.implements(IHome)
-      grok.name('home')
+    class Home(grok.Adapter):
+        grok.implements(IHome)
+        grok.name('home')
 
-   from zope.component import getAdapter
-   home = getAdapter(cave, IHome, name='home')
+    from zope.component import getAdapter
+    home = getAdapter(cave, IHome, name='home')
 
 
 :class:`grok.MultiAdapter`
@@ -179,50 +179,50 @@ take an existing interface and extend it to provide a new interface.
 
 .. class:: grok.MultiAdapter
 
-   Base class to define a Multi Adapter.
+    Base class to define a Multi Adapter.
    
-   A simple adapter normally adapts only one object, but an adapter may
-   adapt more than one object. If an adapter adapts more than one objects,
-   it is called multi-adapter.
+    A simple adapter normally adapts only one object, but an adapter may
+    adapt more than one object. If an adapter adapts more than one objects,
+    it is called multi-adapter.
 
-   **Directives:**
+    **Directives:**
 
-   :func:`grok.adapts(\*objects_or_interfaces)`
-      Required. Identifies the combination of types of objects or interfaces
-      for the adaptation.
+    :func:`grok.adapts(\*objects_or_interfaces)`
+        Required. Identifies the combination of types of objects or interfaces
+        for the adaptation.
 
-   :func:`grok.implements(\*interfaces)`
-      Required. Identifies the interfaces(s) the adapter implements.
+    :func:`grok.implements(\*interfaces)`
+        Required. Identifies the interfaces(s) the adapter implements.
 
-   :func:`grok.name(name)`
-      Optional. Identifies the name used for the adapter registration. If
-      ommitted, no name will be used.
+    :func:`grok.name(name)`
+        Optional. Identifies the name used for the adapter registration. If
+        ommitted, no name will be used.
 
-      When a name is used for the adapter registration, the adapter can only be
-      retrieved by explicitely using its name.
+        When a name is used for the adapter registration, the adapter can only be
+        retrieved by explicitely using its name.
 
-   :func:`grok.provides(name)`
-      Only required if the adapter implements more than one interface.
-      :func:`grok.provides` is required to disambiguate for which interface the
-      adapter will be registered for.
+    :func:`grok.provides(name)`
+        Only required if the adapter implements more than one interface.
+        :func:`grok.provides` is required to disambiguate for which interface the
+        adapter will be registered for.
 
 **Example: A home is made from a cave and a fireplace.**
 
 .. code-block:: python
 
-   import grok
-   from zope import interface
+    import grok
+    from zope import interface
 
-   class Fireplace(grok.Model):
+    class Fireplace(grok.Model):
        pass
 
-   class Cave(grok.Model):
+    class Cave(grok.Model):
        pass
 
-   class IHome(interface.Interface):
+    class IHome(interface.Interface):
        pass
 
-   class Home(grok.MultiAdapter):
+    class Home(grok.MultiAdapter):
        grok.adapts(Cave, Fireplace)
        grok.implements(IHome)
 
@@ -230,7 +230,7 @@ take an existing interface and extend it to provide a new interface.
            self.cave = cave
            self.fireplace = fireplace
 
-   home = IHome(cave, fireplace)
+    home = IHome(cave, fireplace)
 
 :class:`grok.Annotation`
 ========================
@@ -239,40 +239,40 @@ Annotation components are persistent writeable adapters.
 
 .. class:: grok.Annotation
 
-   Base class to declare an Annotation. Inherits from the
-   persistent.Persistent class.
+    Base class to declare an Annotation. Inherits from the
+    persistent.Persistent class.
 
 **Example: Storing annotations on model objects**
 
 .. code-block:: python
 
-   import grok
-   from zope import interface
+    import grok
+    from zope import interface
 
-   # Create a model and an interface you want to adapt it to
-   # and an annotation class to implement the persistent adapter.
-   class Mammoth(grok.Model):
-      pass
+    # Create a model and an interface you want to adapt it to
+    # and an annotation class to implement the persistent adapter.
+    class Mammoth(grok.Model):
+        pass
 
-   class ISerialBrand(interface.Interface):
-      unique = interface.Attribute("Brands")
+    class ISerialBrand(interface.Interface):
+        unique = interface.Attribute("Brands")
 
-   class Branding(grok.Annotation):
-      grok.implements(IBranding)
-      unqiue = 0
+    class Branding(grok.Annotation):
+        grok.implements(IBranding)
+        unqiue = 0
    
-   # Grok the above code, then create some mammoths
-   manfred = Mammoth()
-   mumbles = Mammoth()
+    # Grok the above code, then create some mammoths
+    manfred = Mammoth()
+    mumbles = Mammoth()
    
-   # creating Annotations work just like Adapters
-   livestock1 = ISerialBrand(manfred)
-   livestock2 = ISerialBrand(mumbles)
+    # creating Annotations work just like Adapters
+    livestock1 = ISerialBrand(manfred)
+    livestock2 = ISerialBrand(mumbles)
    
-   # except you can store data in them, this data will transparently persist
-   # in the database for as long as the object exists
-   livestock1.serial = 101
-   livestock2.serial = 102
+    # except you can store data in them, this data will transparently persist
+    # in the database for as long as the object exists
+    livestock1.serial = 101
+    livestock2.serial = 102
 
 Utilities
 ~~~~~~~~~
@@ -282,25 +282,25 @@ Utilities
 
 .. class:: grok.GlobalUtility
 
-   Base class to define a globally registered utility. Global utilities are
-   automatically registered when a module is "grokked".
+    Base class to define a globally registered utility. Global utilities are
+    automatically registered when a module is "grokked".
 
-   **Directives:**
+    **Directives:**
 
-   :func:`grok.implements(\*interfaces)`
-      Required. Identifies the interfaces(s) the utility implements.
+    :func:`grok.implements(\*interfaces)`
+        Required. Identifies the interfaces(s) the utility implements.
 
-   :func:`grok.name(name)`
-      Optional. Identifies the name used for the adapter registration. If
-      ommitted, no name will be used.
+    :func:`grok.name(name)`
+        Optional. Identifies the name used for the adapter registration. If
+        ommitted, no name will be used.
 
-      When a name is used for the global utility registration, the global
-      utility can only be retrieved by explicitely using its name.
+        When a name is used for the global utility registration, the global
+        utility can only be retrieved by explicitely using its name.
 
-   :func:`grok.provides(name)`
-      Maybe required. If the global utility implements more than one interface,
-      :func:`grok.provides` is required to disambiguate for what interface the
-      global utility will be registered.
+    :func:`grok.provides(name)`
+        Maybe required. If the global utility implements more than one interface,
+        :func:`grok.provides` is required to disambiguate for what interface the
+        global utility will be registered.
 
 
 :class:`grok.LocalUtility`
@@ -308,35 +308,55 @@ Utilities
 
 .. class:: grok.LocalUtility
 
-   Base class to define a utility that will be registered local to a
-   :class:`grok.Site` or :class:`grok.Application` object by using the
-   :func:`grok.local_utility` directive.
+    Base class to define a utility that will be registered local to a
+    :class:`grok.Site` or :class:`grok.Application` object by using the
+    :func:`grok.local_utility` directive.
 
-   **Directives:**
+    **Directives:**
 
-   :func:`grok.implements(\*interfaces)`
-      Optional. Identifies the interfaces(s) the utility implements.
+    :func:`grok.implements(\*interfaces)`
+        Optional. Identifies the interfaces(s) the utility implements.
 
-   :func:`grok.name(name)`
-      Optional. Identifies the name used for the adapter registration. If
-      ommitted, no name will be used.
+    :func:`grok.name(name)`
+        Optional. Identifies the name used for the adapter registration. If
+        ommitted, no name will be used.
 
-      When a name is used for the local utility registration, the local utility
-      can only be retrieved by explicitely using its name.
+        When a name is used for the local utility registration, the local utility
+        can only be retrieved by explicitely using its name.
 
-   :func:`grok.provides(name)`
-      Maybe required. If the local utility implements more than one interface
-      or if the implemented interface cannot be determined,
-      :func:`grok.provides` is required to disambiguate for what interface the
-      local utility will be registered.
+    :func:`grok.provides(name)`
+        Maybe required. If the local utility implements more than one interface
+        or if the implemented interface cannot be determined,
+        :func:`grok.provides` is required to disambiguate for what interface the
+        local utility will be registered.
 
-  .. seealso::
+  	.. seealso::
 
-    Local utilities need to be registered in the context of :class:`grok.Site`
-    or :class:`grok.Application` using the :func:`grok.local_utility` directive.
+	    Local utilities need to be registered in the context of :class:`grok.Site`
+	    or :class:`grok.Application` using the :func:`grok.local_utility` directive.
 
 :class:`grok.Site`
 ==================
+
+Contains a Site Manager. Site Managers act as containers for registerable
+components.
+
+If a Site Manager is asked for an adapter or utility, it checks for those
+it contains before using a context-based lookup to find another site
+manager to delegate to. If no other site manager is found they defer to
+the global site manager which contains file based utilities and adapters.
+
+.. class:: grok.Site
+
+	.. method:: getSiteManager():
+
+		Returns the site manager contained in this object.
+
+		If there isn't a site manager, raise a component lookup.
+
+	.. method:: setSiteManager(sitemanager):
+	
+		Sets the site manager for this object.
 
 Views
 ~~~~~
@@ -352,94 +372,96 @@ called Traversal.
 
 .. class:: grok.View
 
-   Base class to define a View.
+    Base class to define a View.
 
-   .. attribute:: grok.View.context
+    .. attribute:: context
 
-      The object that the view is presenting. This is often an instance of
-      a grok.Model class, but can also be a grok.Application or grok.Container
-      object.
+        The object that the view is presenting. This is often an instance of
+        a grok.Model class, but can also be a grok.Application or grok.Container
+        object.
 
-   .. attribute:: grok.View.request
+    .. attribute:: request
    
-      The HTTP Request object.
+        The HTTP Request object.
 
-   .. attribute:: grok.View.response
+    .. attribute:: response
 
-      The HTTP Response object that is associated with the request.
+        The HTTP Response object that is associated with the request. This
+        is also available as self.request.response, but the response attribute
+        is provided as a convenience.
 
-   .. attribute:: grok.View.static
+    .. attribute:: static
 
-      Directory resource containing the static files of the view's package.
+        Directory resource containing the static files of the view's package.
 
-   .. method:: redirect(url):
+    .. method:: redirect(url):
    
-      Redirect to given URL
+        Redirect to given URL
 
-   .. method:: url(obj=None, name=None, data=None):
+    .. method:: url(obj=None, name=None, data=None):
    
-      Construct URL.
+        Construct URL.
 
-      If no arguments given, construct URL to view itself.
+        If no arguments given, construct URL to view itself.
 
-      If only obj argument is given, construct URL to obj.
+        If only obj argument is given, construct URL to obj.
 
-      If only name is given as the first argument, construct URL
-      to context/name.
+        If only name is given as the first argument, construct URL
+        to context/name.
 
-      If both object and name arguments are supplied, construct
-      URL to obj/name.
+        If both object and name arguments are supplied, construct
+        URL to obj/name.
 
-      Optionally pass a 'data' keyword argument which gets added to the URL
-      as a cgi query string.
+        Optionally pass a 'data' keyword argument which gets added to the URL
+        as a cgi query string.
 
-   .. method:: default_namespace():
+    .. method:: default_namespace():
 
-      Returns a dictionary of namespaces that the template
-      implementation expects to always be available.
+        Returns a dictionary of namespaces that the template
+        implementation expects to always be available.
 
-      This method is *not* intended to be overridden by application
-      developers.
+        This method is *not* intended to be overridden by application
+        developers.
 
-   .. method:: namespace():
+    .. method:: namespace():
    
-      Returns a dictionary that is injected in the template
-      namespace in addition to the default namespace.
+        Returns a dictionary that is injected in the template
+        namespace in addition to the default namespace.
 
-      This method *is* intended to be overridden by the application
-      developer.
+        This method *is* intended to be overridden by the application
+        developer.
 
-   .. method:: update(**kw):
+    .. method:: update(**kw):
    
-      This method is meant to be implemented by grok.View
-      subclasses.  It will be called *before* the view's associated
-      template is rendered and can be used to pre-compute values
-      for the template.
+        This method is meant to be implemented by grok.View
+        subclasses.  It will be called *before* the view's associated
+        template is rendered and can be used to pre-compute values
+        for the template.
 
-      update() can take arbitrary keyword parameters which will be
-      filled in from the request (in that case they *must* be
-      present in the request).
+        update() can take arbitrary keyword parameters which will be
+        filled in from the request (in that case they *must* be
+        present in the request).
 
-   .. method:: render(**kw):
+    .. method:: render(**kw):
    
-      A view can either be rendered by an associated template, or
-      it can implement this method to render itself from Python.
-      This is useful if the view's output isn't XML/HTML but
-      something computed in Python (plain text, PDF, etc.)
+        A view can either be rendered by an associated template, or
+        it can implement this method to render itself from Python.
+        This is useful if the view's output isn't XML/HTML but
+        something computed in Python (plain text, PDF, etc.)
 
-      render() can take arbitrary keyword parameters which will be
-      filled in from the request (in that case they *must* be
-      present in the request).
+        render() can take arbitrary keyword parameters which will be
+        filled in from the request (in that case they *must* be
+        present in the request).
 
-   .. method:: application_url(name=None):
+    .. method:: application_url(name=None):
    
-      Return the URL of the closest application object in the
-      hierarchy or the URL of a named object (``name`` parameter)
-      relative to the closest application object.
+        Return the URL of the closest application object in the
+        hierarchy or the URL of a named object (``name`` parameter)
+        relative to the closest application object.
 
-   .. method:: flash(message, type='message'):
+    .. method:: flash(message, type='message'):
       
-      Send a short message to the user.
+        Send a short message to the user.
 
 :class:`grok.JSON`
 ==================
@@ -454,28 +476,28 @@ decorator can be used to protect methods with a permission.
 
 .. class:: grok.JSON
 
-   Base class for JSON methods.
+    Base class for JSON methods.
 
 **Example 1: Create a public and a protected JSON view.**
 
 .. code-block:: python
 
-   class MammothJSON(grok.JSON):
-      """
-      Returns JSON from URLs in the form of:
+    class MammothJSON(grok.JSON):
+        """
+        Returns JSON from URLs in the form of:
       
-      http://localhost/stomp
-      http://localhost/dance
-      """
+        http://localhost/stomp
+        http://localhost/dance
+        """
 
-      grok.context(zope.interface.Interface)
+        grok.context(zope.interface.Interface)
 
-      def stomp(self):
-         return {'Manfred stomped.': ''}
+        def stomp(self):
+            return {'Manfred stomped.': ''}
 
-      @grok.require('zope.ManageContent')
-      def dance(self):
-         return {'Manfred does not like to dance.': ''}
+        @grok.require('zope.ManageContent')
+        def dance(self):
+            return {'Manfred does not like to dance.': ''}
 
 
 :class:`grok.XMLRPC`
@@ -487,95 +509,96 @@ The grok.require decorator can be used to protect methods with a permission.
 
 .. class:: grok.JSON
 
-   Base class for XML-RPC methods.
+    Base class for XML-RPC methods.
 
 **Example 1: Create a public and a protected XML-RPC view.**
 
 .. code-block:: python
 
-   from zope import interface
+    from zope import interface
    
-   class FooXMLRPC(grok.XMLRPC):
-      """
-      The methods in this class will be available as XML-RPC methods.
+    class FooXMLRPC(grok.XMLRPC):
+        """
+        The methods in this class will be available as XML-RPC methods.
       
-      http://localhost/say will return 'Hello world!' encoded in XML-RPC.
-      """
-      grok.context(interface.Interface)
+        http://localhost/say will return 'Hello world!' encoded in XML-RPC.
+        """
+        grok.context(interface.Interface)
 
-      def say(self):
-         return 'Hello world!'
+        def say(self):
+            return 'Hello world!'
 
 
 :class:`grok.Traverser`
 =======================
 
-Specialized View that responds to XML-RPC.
+A Traverser is used to map from a URL to an object being published (Model)
+and the View used to interact with that object.
 
 .. class:: grok.Traverser
 
-   Base class for custom traversers.
+    Base class for custom traversers. Override the traverse method to 
+    supply the desired custom traversal behaviour.
 
-   .. method:: traverse(self, name):
-      
-      You must provide your own implementation of this method to do what
-      you want. If you return None, Grok will use the default traversal
-      behaviour.
+    .. attribute:: context
 
-   .. method:: browserDefault(request):
+        The object that is being traversed.
+
+    .. attribute:: request
    
-      Provide the default object
+        The HTTP Request object.
 
-      The default object is expressed as a (possibly different)
-      object and/or additional traversal steps.
+    .. method:: traverse(self, name):
+      
+        You must provide your own implementation of this method to do what
+        you want. If you return None, Grok will use the default traversal
+        behaviour.
 
-      Returns an object and a sequence of names.  If the sequence of
-      names is not empty, then a traversal step is made for each name.
-      After the publisher gets to the end of the sequence, it will
-      call browserDefault on the last traversed object.
+    .. method:: browserDefault(request):
+   
+        Returns an object and a sequence of names.
+	  
+        The publisher calls this method at the end of each traversal path.
+	  	If the sequence of names is not empty, then a traversal step is made
+	  	for each name. After the publisher gets to the end of the sequence,
+	  	it will call browserDefault on the last traversed object.
+	  
+        The default behaviour in Grok is to return self.context for the object
+        and 'index' for the default view name.
+	  
+        Note that if additional traversal steps are indicated (via a
+        nonempty sequence of names), then the publisher will try to adjust
+        the base href.
 
-      Normal usage is to return self for object and a default view name.
+    .. method:: publishTraverse(request, name):
 
-      The publisher calls this method at the end of each traversal path. If
-      a non-empty sequence of names is returned, the publisher will traverse
-      those names and call browserDefault again at the end.
-
-      Note that if additional traversal steps are indicated (via a
-      nonempty sequence of names), then the publisher will try to adjust
-      the base href.
-
-   .. method:: publishTraverse(request, name):
-
-      Lookup a name
-
-      The 'request' argument is the publisher request object. The
-      'name' argument is the name that is to be looked up. It must
-      be an ASCII string or Unicode object.
-
-      If a lookup is not possible, raise a NotFound error.
-
-      This method should return an object having the specified name and
-      `self` as parent. The method can use the request to determine the
-      correct object.
+        Lookup a name and return an object with `self.context` as it's parent.
+        The method can use the request to determine the correct object.
+	  
+        The 'request' argument is the publisher request object. The
+        'name' argument is the name that is to be looked up. It must
+        be an ASCII string or Unicode object.
+	  
+        If a lookup is not possible, raise a NotFound error.
 
 **Example 1: Traverse into a Herd Model and return a Mammoth Model**
 
 .. code-block:: python
 
-   import grok
+    import grok
 
-   class Herd(grok.Model):
+    class Herd(grok.Model):
 
        def __init__(self, name):
            self.name = name
 
-   class HerdTraverser(grok.Traverser):
+    class HerdTraverser(grok.Traverser):
        grok.context(Herd)
 
        def traverse(self, name):
            return Mammoth(name)
 
-   class Mammoth(grok.Model):
+    class Mammoth(grok.Model):
 
        def __init__(self, name):
            self.name = name
@@ -615,29 +638,29 @@ Security
 
 .. function:: grok.define_permission(name)
 
-   A module-level directive to define a permission with name
-   `name`. Usually permission names are prefixed by a component- or
-   application name and a dot to keep them unique.
+    A module-level directive to define a permission with name
+    `name`. Usually permission names are prefixed by a component- or
+    application name and a dot to keep them unique.
 
-   Because in Grok by default everything is accessible by everybody,
-   it is important to define permissions, which restrict access to
-   certain principals or roles.
+    Because in Grok by default everything is accessible by everybody,
+    it is important to define permissions, which restrict access to
+    certain principals or roles.
 
-   **Example:**
+    **Example:**
 
-   .. code-block:: python
+    .. code-block:: python
 
-      import grok
-      grok.define_permission('cave.enter')
+        import grok
+        grok.define_permission('cave.enter')
 
 
-   .. seealso::
+    .. seealso::
 
-      :func:`grok.require`, :class:`grok.Permission`, :class:`grok.Role`
+        :func:`grok.require`, :class:`grok.Permission`, :class:`grok.Role`
 
-   .. versionchanged:: 0.11
+    .. versionchanged:: 0.11
 
-      replaced by :class:`grok.Permission`.
+        replaced by :class:`grok.Permission`.
 
 :class:`Role`
 =============
