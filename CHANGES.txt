@@ -4,7 +4,17 @@ Grok changes
 0.14 (unreleased)
 =================
 
-...
+Bug fixes
+---------
+
+* Replace zope.deprecation.tests.warn with grok.testing.warn to:
+
+    * Make the signature identical to warnings.warn
+
+    * To check for *.pyc and *.pyo files.
+
+  When zope.deprecation is fixed this warn() function can be removed again.
+  Makes all the tests pass under Python-2.5.
 
 0.13 (2008-06-23)
 =================
