@@ -32,7 +32,7 @@ div.documentwrapper {
 }
 
 div.bodywrapper {
-    margin: 0 0 0 230px;
+    margin: 0 0 0 250px;
 }
 
 div.body {
@@ -101,10 +101,11 @@ div.related a {
 
 .document > div.sidebar {
     float: left;
-    width: 230px;
+    width: 250px;
     margin-left: -100%;
-    font-size: 90%;
+    font-size: small;
     color: #333333;
+    padding: 8px;
 }
 
 .document > div.sidebar a {
