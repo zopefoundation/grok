@@ -39,7 +39,7 @@ for line in open(setupfilepath, 'r').read().split():
 #extensions = []
 
 # Add any paths that contain templates here, relative to this directory.
-#templates_path = []
+templates_path = ['.']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
@@ -87,16 +87,12 @@ html_last_updated_fmt = '%b %d, %Y'
 # typographically correct entities.
 html_use_smartypants = True
 
-# Content template for the index page, filename relative to this file.
-#html_index = ''
-html_index = path.join(path.abspath(curdir), 'docindex.template')
-
 # Custom sidebar templates, maps page names to filenames relative to this file.
 #html_sidebars = {}
 
 # Additional templates that should be rendered to pages, maps page names to
 # filenames relative to this file.
-#html_additional_pages = {}
+html_additional_pages = {'index':'docindex.template'}
 
 # If true, the reST sources are included in the HTML build as _sources/<name>.
 #html_copy_source = True

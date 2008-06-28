@@ -99,7 +99,7 @@ div.related a {
     padding: 10px 5px 0 10px;
 }
 
-.document > div.sidebar {
+.sphinxsidebar {
     float: left;
     width: 250px;
     margin-left: -100%;
@@ -108,11 +108,11 @@ div.related a {
     padding: 8px;
 }
 
-.document > div.sidebar a {
+.sphinxsidebar a {
     color: #436976;
 }
 
-.document > div.sidebar h3 {
+.sphinxsidebar h3 {
     font-family: 'Trebuchet MS', sans-serif;
     font-size: 1.4em;
     font-weight: normal;
@@ -120,7 +120,7 @@ div.related a {
     padding: 0;
 }
 
-.document > div.sidebar h4 {
+.sphinxsidebar h4 {
     font-family: 'Trebuchet MS', sans-serif;
     font-size: 1.3em;
     font-weight: normal;
@@ -128,38 +128,38 @@ div.related a {
     padding: 0;
 }
 
-.document > div.sidebar p.topless {
+.sphinxsidebar p.topless {
     margin: 5px 10px 10px 10px;
 }
 
-.document > div.sidebar ul {
+.sphinxsidebar ul {
     margin: 10px;
     padding: 0;
     list-style: none;
     color: #c90;
 }
 
-.document > div.sidebar ul ul,
-.document > div.sidebar ul.want-points {
+.sphinxsidebar ul ul,
+.sphinxsidebar ul.want-points {
     margin-left: 20px;
     list-style: square;
     color: #436976;
 }
 
-.document > div.sidebar ul ul {
+.sphinxsidebar ul ul {
     margin-top: 0;
     margin-bottom: 0;
 }
 
-.document > div.sidebar ul li {
+.sphinxsidebar ul li {
     margin: 0.25em 0 0.5em 0;
 }
 
-.document > div.sidebar form {
+.sphinxsidebar form {
     margin-top: 10px;
 }
 
-.document > div.sidebar input {
+.sphinxsidebar input {
     border: 1px solid #555555;
     font-family: sans-serif;
     font-size: 1em;
