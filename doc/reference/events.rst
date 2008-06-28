@@ -5,140 +5,364 @@ Events
 
 Grok provides convenient access to a set of often-used events from
 Zope 3. Those events include object and containment events. All events
-are available as interface and implemented class. All events interfaces
-inherit from the base interface of `zope.component.interfaces.IObjectEvent`,
-this interface has an attribute named object which is the subject of the
-event taking place.
+are available as interface and implemented class.
 
-grok.IObjectModifiedEvent
-=========================
+Subscription: Event interfaces
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All events interfaces inherit from the base interface of IObjectEvent.
+
+.. class:: zope.component.interfaces.IObjectEvent
+
+    .. attribute:: object
+
+        The subject of the event taking place.
+
+
+:class:`IObjectModifiedEvent`
+=============================
 
 An object has been modified. This is a general event that encompasses any
 change to a persistent object, such as adding, moving, copying, and removing
 of objects.
 
-grok.IContainerModifiedEvent
-============================
+.. class:: grok.IObjectModifiedEvent
+
+    Interface to subscribe to for object modifications.
+
+    .. attribute:: object
+
+        The subject of the event.
+
+    .. attribute:: descriptions
+
+        A list of descriptions of the modifications.
+
+:class:`IContainerModifiedEvent`
+================================
 
 The container has been modified. Container modifications is specific to
 addition, removal or reordering of sub-objects. Inherits from
 `grok.IObjectModifiedEvent`.
 
-grok.IObjectMovedEvent
-======================
+.. class:: grok.IContainerModifiedEvent
 
-An object has been moved. This event provides attributes named oldParent, oldName,
-newParent and newName that refer to the parent and name of the object both
-before (old) and after (new) moving.
+    Interface to subscribe to for container object modifications.
 
-grok.IObjectAddedEvent
-======================
+    .. attribute:: object
 
-An object has been added to a container. At this point the object provides
-persistent location attributes (__name__ and __parent__). Inherits from
-the `grok.IObjectMovedEvent`.
+        The subject of the event.
 
-grok.IObjectCopiedEvent
-=======================
+    .. attribute:: descriptions
 
-An object has been copied. The event provides an attribute named `original`
-which is a reference to the original object from which the copy was made.
-Inherits from `grok.IObjectCreatedEvent`.
+        A list of descriptions of the modifications.
 
-grok.IObjectCreatedEvent
-========================
 
-An object has been created. This event is intended to happen before an
-object has been made persistent, so the object being created **does not**
-yet provide location attributes (__name__ and __parent__).
+:class:`IObjectMovedEvent`
+==========================
 
-grok.IObjectRemovedEvent
-========================
+An object has been moved.
 
-An object has been removed from a container. Inherits from
-`grok.IObjectMovedEvent`.
+.. class:: grok.IObjectMovedEvent
 
-grok.ObjectModifiedEvent
-========================
+   Interface to subscribe to for when an object is moved.
 
-Default event implementation of the `grok.IObjectMovedEvent` interface.
+   .. attribute:: object
+      
+      The subject of the event.
+   
+   .. attribute:: oldParent
 
-Initialize this event with a list of modification descriptions::
+      The container stored in before moving.
 
-	>>> import grok
-	>>> from zope import event
-	>>> from zope.interface import implements, Interface, Attribute
-	>>> class ISample(Interface) :
-	...     field = Attribute("A test field")
-	>>> class Sample(object) :
-	...     implements(ISample)
+   .. attribute:: oldName
 
-	>>> obj = Sample()
-	>>> obj.field = 42
-	>>> event.notify(
-	... 	grok.ObjectModifiedEvent(
-	... 		obj, Attributes(ISample, "field")
-	... 	)
-	... )
+      The name before moving.
+   
+   .. attribute:: newParent
 
-grok.ContainerModifiedEvent
+      The container stored in after moving.
+
+   .. attribute:: newName
+   
+      The name after moving.
+
+:class:`IObjectAddedEvent`
+==========================
+
+An object has been added to a container.
+
+.. class:: grok.IObjectAddedEvent
+
+   Interface to subscribe to for when an object is added to the database.
+   
+   Inherits from the `grok.IObjectMovedEvent` interface.
+
+   .. attribute:: object
+      
+      The subject of the event.
+   
+   .. attribute:: oldParent
+
+      The container stored in before moving.
+
+   .. attribute:: oldName
+
+      The name before moving.
+   
+   .. attribute:: newParent
+
+      The container stored in after moving.
+
+   .. attribute:: newName
+   
+      The name after moving.
+
+:class:`IObjectCopiedEvent`
 ===========================
 
-Default event implementation of the `grok.IContainerModifiedEvent` interface.
+An object has been copied.
 
-Initialize this event with a list of modification descriptions, the same as
-you would for a `grok.ObjectModifiedEvent`.
+.. class:: grok.IObjectCopiedEvent
 
-grok.ObjectMovedEvent
-=====================
+   Interface to subscribe to for when an object is cloned.
 
-Default event implementation of the `grok.IObjectMovedEvent` interface.
+   Inherits from `grok.IObjectCreatedEvent` interface.
 
-Initialize this event with object, oldParent, oldName, newParent and newName
-as positional arguments::
+   .. attribute:: object
+   
+      The subject of the event.
 
-	>>> event.notify(
-	... 	grok.ObjectMovedEvent(
-	... 		obj, oldParent, oldName, newParent, newName
-	... 	)
-	... )
+   .. attribute:: original
 
-grok.ObjectAddedEvent
-=====================
+      The original object from which the copy was made.
 
-Default event implementation of the `grok.IObjectAddedEvent` interface.
 
-Initialize this event with object, newParent and newName as positional
-arguments::
+:class:`IObjectCreatedEvent`
+============================
 
-	>>> event.notify(
-	... 	grok.ObjectAddedEvent(obj, newParent, newName)
-	... )
+An object has been created. This event is intended to happen before an
+object has been made persistent, that is it's location attributes
+(__name__ and __parent__) will usually be None.
 
-grok.ObjectCopiedEvent
-======================
+.. class:: grok.IObjectCreatedEvent
 
-Default event implementation of the `grok.IObjectCopiedEvent` interface.
+   Interface to subscribe to for when an object is created.
 
-Initialize this event with the new copy and the original object as positional
-arguments::
+   .. attribute:: object
+   
+      The subject of the event.
 
-	>>> event.notify(
-	... 	grok.ObjectCopiedEvent(copiedObject, originalObject)
-	... )
 
-grok.ObjectCreatedEvent
-=======================
+:class:`IObjectRemovedEvent`
+============================
 
-Default event implementation of the `grok.IObjectCreatedEvent` interface.
+An object has been removed from a container.
 
-Initialize this event with the object created.
+.. class:: grok.IObjectRemovedEvent
 
-grok.ObjectRemovedEvent
-=======================
+   Interface to subscribe to for object deletions.
 
-Default event implementation of the `grok.IObjectRemovedEvent` interface.
+   Inherits from `grok.IObjectMovedEvent`.
 
-Initialize this event with the object, oldParent, and oldName as
-positional arguments.
+   .. attribute:: object
+      
+      The subject of the event.
+   
+   .. attribute:: oldParent
+
+      The container stored in before removal.
+
+   .. attribute:: oldName
+
+      The name of the removed object.
+
+
+Notification: Event implementations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Event objects are notifications that are sent when need to "fire off" an event.
+
+All of these event objects share the same minimal implementation of an event.
+This class is defined at zope.component.interfaces.ObjectEvent and looks like
+this:
+
+.. code-block:: python
+
+    from zope import interface
+    
+    class ObjectEvent(object):
+        interface.implements(IObjectEvent)
+
+        def __init__(self, object):
+            self.object = object
+
+
+:class:`ObjectModifiedEvent`
+============================
+
+Event object to send as a notification when an object is modified.
+
+.. class:: grok.ObjectModifiedEvent(object, *descriptions)
+
+    Default event implementation of the `grok.IObjectMovedEvent` interface.
+
+    .. attribute:: object
+
+       The subject of the event.
+
+    .. attribute:: descriptions
+    
+        A list of descriptions of the modifications.
+
+**Example 1: Send an object modification event with a modified attribute
+named "field".**
+
+.. code-block:: python
+
+    import grok
+    import zope.event
+    import zope.lifecycleevent.Attributes
+    from zope.interface import Interface
+    
+    class ISample(Interface) :
+        field = Attribute("A test field")
+    
+    class Sample(object) :
+        grok.implements(ISample)
+
+    obj = Sample()
+    obj.field = 42
+    zope.event.notify(
+    	grok.ObjectModifiedEvent(obj,
+    	zope.lifecycleevent.Attributes(ISample, "field"))
+    )
+
+:class:`ContainerModifiedEvent`
+===============================
+
+Event object to send as a notification when a container object modified.
+
+.. class:: grok.ContainerModifiedEvent(object, *descriptions)
+
+    Default event implementation of the `grok.IContainerModifiedEvent`
+    interface.
+
+    .. attribute:: object
+
+       The subject of the event.
+
+    .. attribute:: descriptions
+
+        A list of descriptions of the modifications.
+
+
+:class:`ObjectMovedEvent`
+=========================
+
+Event object to send as a notification of when an object is moved.
+
+.. class:: grok.ObjectMovedEvent(object, oldParent, oldName, newParent, newName)
+
+    Default event implementation of the `grok.IObjectMovedEvent` interface.
+
+    .. attribute:: object
+
+       The subject of the event.
+
+    .. attribute:: oldParent
+
+       The container stored in before moving.
+
+    .. attribute:: oldName
+
+       The name before moving.
+
+    .. attribute:: newParent
+
+       The container stored in after moving.
+
+    .. attribute:: newName
+
+       The name after moving.
+
+
+:class:`ObjectAddedEvent`
+=========================
+
+Event object to send as a notification of when an object is added.
+
+.. class:: grok.ObjectAddedEvent(object, newParent, newName)
+
+    Default event implementation of the `grok.IObjectAddedEvent` interface.
+
+    .. attribute:: object
+
+       The subject of the event.
+
+    .. attribute:: newParent
+
+       The container stored in after moving.
+
+    .. attribute:: newName
+
+       The name after moving.
+
+
+:class:`ObjectCopiedEvent`
+==========================
+
+Event object to send as a notification of when an object is copied.
+
+.. class:: grok.ObjectCopiedEvent(object, original)
+
+    Default event implementation of the `grok.IObjectCopiedEvent` interface.
+
+    Initialize this event with the new copy and the original object as positional
+    arguments.
+    
+    .. attribute:: object
+
+       The subject of the event.
+
+    .. attribute:: original
+
+       The original object from which the copy was made.
+
+
+:class:`ObjectCreatedEvent`
+===========================
+
+Event object to send as a notification of when an object is created.
+
+.. class:: grok.ObjectCreatedEvent(object)
+
+    Default event implementation of the `grok.IObjectCreatedEvent` interface.
+
+    Initialize this event with the object created.
+
+    .. attribute:: object
+
+       The subject of the event.
+
+:class:`grok.ObjectRemovedEvent`
+================================
+
+Event object to send as a notification of when an object is removed.
+
+.. class:: grok.ObjectRemovedEvent*(object, oldParent, oldName)
+
+    Default event implementation of the `grok.IObjectRemovedEvent` interface.
+
+    .. attribute:: object
+    
+        The subject of the event.
+
+    .. attribute:: oldParent
+
+       The container stored in before removal.
+
+    .. attribute:: oldName
+
+       The name of the removed object.
 
