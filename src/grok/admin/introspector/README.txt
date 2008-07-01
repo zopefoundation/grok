@@ -36,6 +36,7 @@ browser::
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
   >>> browser.addHeader('Authorization', 'Basic mgr:mgrpw')
+  >>> browser.handleErrors = False
 
 All introspector related content is shown in a special skin called
 ``introspector``, so that you can enter the follwing URL to access the
@@ -43,7 +44,9 @@ overview page::
 
   >>> browser.open('http://localhost/++skin++introspector/')
   >>> print browser.contents
-  The Overview
+  <!DOCTYPE html...
+  <h1>The Grok Introspector</h1>
+  ...
 
 Note the `++skin++introspector` marker in the URL.
 
