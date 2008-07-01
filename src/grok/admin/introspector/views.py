@@ -18,12 +18,12 @@ Views for the grok introspector.
 import grok
 from zope.app.basicskin import IBasicSkin
 from zope.app.folder.interfaces import IRootFolder
-from grok.admin.view import GAIAView
+from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 # BBB: This will change after decoupling grok.admin from grok...
 grok.context(IRootFolder)
 
-class IntrospectorLayer(grok.IGrokLayer):
+class IntrospectorLayer(IDefaultBrowserLayer):
     """A basic layer for all introspection stuff.
     """
     pass
@@ -66,10 +66,6 @@ class PageFooterManager(grok.ViewletManager):
     grok.name('footer')
     
 # The default viewlets...
-class DefaultHeaderViewlet(grok.Viewlet):
-    grok.viewletmanager(HeaderManager)
-    def render(self):
-        return "<!-- header -->"
 
 class Overview(grok.Viewlet):
     """A default viewlet that displays an overview page.
