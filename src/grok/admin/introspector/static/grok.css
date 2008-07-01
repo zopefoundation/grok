@@ -1,0 +1,327 @@
+/* @override http://www.urbantalk.se/DEVELOPER/grok_2/grok.css */
+
+/* ---- general styling elements ---- */
+body {
+background:#fff;
+color:#555;
+font-family:verdana;
+font-size:0.8em;
+margin:0;
+}
+
+h1 {
+border-bottom:1px solid #C90;
+color:#C90;
+font-family:verdana;
+font-size:1.5em;
+text-align:left;
+width:100%;
+}
+
+h2 {
+border-bottom:1px dotted #ccc;
+color:#C90;
+font-family:verdana;
+font-size:1.3em;
+width:100%;
+}
+
+h3 {
+color:#555;
+font-family:verdana;
+font-size:1.2em;
+width:100%;
+}
+
+p {
+color:#555;
+font-family:verdana;
+font-size:1em;
+}
+
+a:link,a:visited {
+border-bottom-style:dotted;
+border-bottom-width:1px;
+color:#555;
+text-decoration:none;
+}
+
+a:hover {
+background-color:#fff;
+border-bottom-style:dotted;
+border-width:0.1em;
+color:#C90;
+}
+
+img {
+  border:none;
+}
+
+pre {
+background:#eee;
+border-bottom:1px solid #ddd;
+border-top:1px solid #ccc;
+color:#A90101;
+font-family:courier;
+font-size:1.1em;
+margin:0.8em auto;
+padding:1.6em 0.8em;
+}
+
+ul {
+color:#555;
+font-family:verdana;
+font-size:1.1em;
+list-style-type:none;
+margin:1.6em auto;
+}
+
+li {
+left:0;
+margin:0 5em 0 0;
+padding:0;
+}
+
+div#banner {
+background:#cc9900 url("GROK_Ornament3.jpg") repeat-x;
+height:40px;
+}
+
+div#banner-shadow {
+margin-left:1.3em;
+}
+
+div#banner a,div#banner a:hover,div#banner a:visited, div#banner a:link {
+border:none;
+}
+
+div#logo {
+border:none;
+}
+
+div#fireplace {
+position: absolute;
+right: 0px;
+top: 5px;
+width: 160px;
+height: 75px;
+}
+
+div#breadcrumbs {
+}
+
+div#content {
+margin-left:5%;
+margin-right:5%;
+text-align:left;
+}
+
+#footer-copyright {
+font-size:0.9em;
+text-align:center;
+}
+
+/* ---- form and form-like elements ----- */
+form {
+clear:both;
+}
+
+input, select {
+border:1px solid #C90;
+margin:0;
+padding:0;
+}
+
+.button {
+background-color:#ccc;
+font-size:1em;
+padding:0;
+margin:0;
+}
+
+fieldset {
+position: relative;
+margin-top:1em;
+padding:0.75em;
+border:1px solid #c90;
+text-align:left;
+background-color:#f9f9D4;
+}
+
+legend {
+position:absolute;
+top:-0.8em;
+left:0.5em;
+color:#C90;
+font-family:verdana;
+font-size:1.2em;
+font-weight:700;
+background-color:#fff;
+}
+
+a.button {
+border-bottom:groove #C90 2px;
+color:#000;
+padding:0 0.2em 0.2em;
+}
+
+a:hover.button {
+background-color:#ccc;
+border:groove #C90 2px;
+border-bottom:groove #C90 2px;
+color:#000;
+padding:0 0.2em 0.2em;
+}
+
+.checkbox {
+border:groove #C90 2px;
+}
+
+/* ----- menu elements ----- */
+#menu {
+color:#A90101;
+font-family:verdana;
+font-size:1.1em;
+}
+
+div#menu-links {
+margin-left:5%;
+margin-right:5%;
+text-align:center;
+}
+
+.menu-box1 {
+padding:0.5em;
+}
+
+.menu-box2 {
+background-color:#fff4be;
+border:1px solid #fc9;
+padding:0.5em;
+}
+
+.menu-description1 {
+margin-left:1.5em;
+}
+
+.menu-label1 { 
+width: 40em;
+}
+
+/* ---- docgrok related ---- */
+.docgrok-entry {
+margin-bottom:0.5em;
+}
+
+.docgrok-value { 
+margin-left:2em;
+}
+
+.docgrok-pathvalue {
+font-family:courier;
+}
+
+.docgrok-annotation1 {
+margin-left:2em;
+}
+
+.docgrok-annotation2 {
+margin-left:5em;
+}
+
+.docgrok-pycode1 {
+color:#00f;
+font-family:courier;
+}
+
+.docgrok-sourcetext {
+background-color:#f8f8f8;
+border:2px groove #eee;
+margin:1em;
+padding:1.5em;
+}
+
+.docgrok-sourceheader {
+background-color:#fff;
+}
+
+.docgrok-table { 
+font-size:1.0em;
+empty-cells:show;
+border-collapse:separate;
+}
+.docgrok-table th { 
+padding-left:3px;
+padding-right:3px;
+border:1px solid #eee;
+}
+.docgrok-table td {
+min-height:1.0em;
+padding-left:5px;
+padding-right:5px;
+
+}
+
+/* --- system proces related --- */
+div#server-processes {
+background-color:#f9f9D4;
+border:1px solid #cc9900;
+padding:0.75em;
+}
+
+div#server-processes dl {
+margin-top:-0.5em;
+padding-top:0;
+}
+
+div#server-processes dt.emph {
+background:url(banner-shadow.jpg) top left repeat-x;
+border:1px solid grey;
+margin-left:0;
+margin-top:0.5em;
+padding-left:0.75em;
+}
+
+div#server-processes dd {
+border:1px solid grey;
+border-top:none;
+margin-left:0;
+padding-left:0.75em;
+}
+
+div#server-processes ul {
+margin:0;
+padding:0;
+}
+
+/* ----- misc elements ----- */
+.huge {
+font-size:1.6em;
+text-align:center;
+}
+
+.rightalign {
+text-align:right;
+}
+
+.emph,.menu-head1,.docgrok-description1 {
+font-weight:700;
+}
+
+.header {
+color:#C90;
+clear:both;
+display:block;
+font-family:verdana;
+font-size:1.2em;
+font-weight:700;
+padding-top:1em;
+padding-left:0.8em;
+}
+
+#logout { 
+padding:1px;
+padding-right:150px;
+background-color:#ddd;
+text-align:right;
+}
