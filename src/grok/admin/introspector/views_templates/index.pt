@@ -1,48 +1,32 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
-      lang="en">
-  <head>
-    <meta http-equiv="Content-Type"
-	  content="text/html;;charset=utf-8" />
+<html metal:use-macro="context/@@master/macros/page">
+  <div metal:fill-slot="main">
+    <h1>The Grok Introspector</h1>
 
-    <link rel="stylesheet" type="text/css"
-	  tal:attributes="href static/grok.css" />
+    <h2>Registries</h2>
 
-    <tal:head content="structure provider:header" />
-  </head>
-  <body>
-
-    <div id="banner">
-      <a href="/" id="logo"
-	 tal:attributes="href python:view.url(context)">
-	<img alt="Grok" height="40"
-	     tal:attributes="src static/grok-admin.jpg" />
+    <div class="docgrok-annotation1">
+      <a tal:attributes="href string:registries">
+	Browse the registries (utilitites, adapters, etc.)
       </a>
     </div>
 
-    <div id="logout">
-      <span i18n:translate="">User:
-      <span tal:replace="request/principal/title"
-	    i18n:name="user_title">User</span>
-      </span>
+    <h2>Code</h2>
+
+    <div class="docgrok-annotation1">
+      <a tal:attributes="href string:code">
+	Browse classes, packages and other filesystem based information
+      </a>
+    </div>
+    
+    <h2>ZODB</h2>
+    
+    <div class="docgrok-annotation1">
+      <a tal:attributes="href string:zodb">
+	Browse the ZODB
+      </a>
     </div>
 
-    <div id="breadcrumbs">
-      <div id="banner-shadow">
-	&nbsp;
-      </div>
-    </div>
-
-    <div id="top">
-      <tal:header content="structure provider:top" />
-    </div>
-
-    <div id="main" class="docgrok-annotation1">
-      <tal:left content="structure provider:main" />
-    </div>
-    <div id="footer">
-      <tal:footer content="structure provider:footer" />
-    </div>
-</body>
+  </div>
 </html>
