@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en">
+  <head>
+    <meta http-equiv="Content-Type"
+	  content="text/html;;charset=utf-8" />
+    <tal:head content="structure provider:header" />
+  </head>
+  <body>
+
+    <div id="top">
+      <tal:header content="structure provider:top" />
+    </div>
+    <div id="main">
+      <tal:left content="structure provider:main" />
+    </div>
+    <div id="footer">
+      <tal:footer content="structure provider:footer" />
+    </div>
+</body>
+</html>
