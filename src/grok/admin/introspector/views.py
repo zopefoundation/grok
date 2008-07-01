@@ -37,11 +37,26 @@ class IntrospectorSkin(grok.Skin):
     grok.name('introspector')
     grok.layer(IntrospectorLayer)
 
+class Master(grok.View):
+    """The Macro page that defines the default look and feel.
+    """
+
 class Index(grok.View):
     """The overview page.
     """
     grok.name('index.html')
 
+class RegistryOverview(grok.View):
+    grok.name('registries')
+    grok.template('registries')
+
+class CodeOverview(grok.View):
+    grok.name('code')
+    grok.template('code')
+
+class ZODBOverview(grok.View):
+    grok.name('zodb')
+    grok.template('zodb')
 
 # The viewlet managers...
 
@@ -64,11 +79,4 @@ class PageFooterManager(grok.ViewletManager):
     """This viewlet manager cares for the page footer.
     """
     grok.name('footer')
-    
-# The default viewlets...
-
-class Overview(grok.Viewlet):
-    """A default viewlet that displays an overview page.
-    """
-    grok.viewletmanager(PageContentManager)
     
