@@ -18,8 +18,9 @@ Views for the grok introspector.
 import grok
 from zope.app.basicskin import IBasicSkin
 from zope.app.folder.interfaces import IRootFolder
+from grok.admin.view import GAIAView
 
-# This will change after decoupling grok.admin from grok...
+# BBB: This will change after decoupling grok.admin from grok...
 grok.context(IRootFolder)
 
 class IntrospectorLayer(grok.IGrokLayer):
@@ -30,9 +31,10 @@ class IntrospectorLayer(grok.IGrokLayer):
 # This is the default layer for all views herein...
 grok.layer(IntrospectorLayer)
 
-class Introspector(grok.Skin):
+class IntrospectorSkin(grok.Skin):
     """A skin for all introspection stuff.
     """
+    grok.name('introspector')
     grok.layer(IntrospectorLayer)
 
 class Index(grok.View):
@@ -40,5 +42,37 @@ class Index(grok.View):
     """
     grok.name('index.html')
 
+
+# The viewlet managers...
+
+class HeaderManager(grok.ViewletManager):
+    """This viewlet manager cares for things inside the HTML header.
+    """
+    grok.name('header')
+
+class PageTopManager(grok.ViewletManager):
+    """This viewlet manager cares for the upper page.
+    """
+    grok.name('top')
+
+class PageContentManager(grok.ViewletManager):
+    """This viewlet manager cares for the main content section of a page.
+    """
+    grok.name('main')
+
+class PageFooterManager(grok.ViewletManager):
+    """This viewlet manager cares for the page footer.
+    """
+    grok.name('footer')
+    
+# The default viewlets...
+class DefaultHeaderViewlet(grok.Viewlet):
+    grok.viewletmanager(HeaderManager)
     def render(self):
-        return "The Overview"
+        return "<!-- header -->"
+
+class Overview(grok.Viewlet):
+    """A default viewlet that displays an overview page.
+    """
+    grok.viewletmanager(PageContentManager)
+    
