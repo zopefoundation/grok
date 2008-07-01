@@ -1,1 +1,25 @@
 <h1>The Grok Introspector</h1>
+
+<h2>Registries</h2>
+
+<div class="docgrok-annotation1">
+  <a tal:attributes="href string:registries">
+    Browse the registries (utilitites, adapters, etc.)
+  </a>
+</div>
+
+<h2>Code</h2>
+
+<div class="docgrok-annotation1">
+  <a tal:attributes="href string:code">
+    Browse classes, packages and other filesystem based information
+  </a>
+</div>
+
+<h2>ZODB</h2>
+
+<div class="docgrok-annotation1">
+  <a tal:attributes="href string:db">
+    Browse the ZODB
+  </a>
+</div>
