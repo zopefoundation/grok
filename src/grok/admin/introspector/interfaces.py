@@ -18,3 +18,15 @@ from zope.interface import Interface
 class IGrokIntrospector(Interface):
     """An introspector for scanning the runtime system.
     """
+
+class IGrokRegistryIntrospector(IGrokIntrospector):
+    """An introspector for registries.
+    """
+
+class IGrokCodeIntrospector(IGrokIntrospector):
+    """An introspector for packages, classes and other code.
+    """
+
+class IGrokZODBBrowser(IGrokIntrospector):
+    """A ZODB browser
+    """
