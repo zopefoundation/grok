@@ -19,9 +19,10 @@ import grok
 from zope.app.basicskin import IBasicSkin
 from zope.app.folder.interfaces import IRootFolder
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+from grok.admin.introspector.interfaces import IGrokIntrospector
 
 # BBB: This will change after decoupling grok.admin from grok...
-grok.context(IRootFolder)
+grok.context(IGrokIntrospector)
 
 class IntrospectorLayer(IDefaultBrowserLayer):
     """A basic layer for all introspection stuff.

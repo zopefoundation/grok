@@ -12,3 +12,4 @@
 #
 ##############################################################################
 # a package
+from grok.admin.introspector.introspector import Introspector
