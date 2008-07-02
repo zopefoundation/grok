@@ -14,6 +14,7 @@
 """A traverser and other other central stuff for introspecting.
 """
 import grok
+from zope.introspector import UtilityInfo
 from grok.admin.introspector.interfaces import (IGrokIntrospector,
                                                 IGrokRegistryIntrospector,
                                                 IGrokCodeIntrospector,
@@ -33,6 +34,11 @@ class Introspector(grok.Model):
 
 class RegistryIntrospector(grok.Model):
     grok.implements(IGrokRegistryIntrospector)
+
+    def getUtilities(self):
+        uinfo = UtilityInfo()
+        return uinfo.getAllUtilities()
+        
 
 class CodeIntrospector(grok.Model):
     grok.implements(IGrokCodeIntrospector)
