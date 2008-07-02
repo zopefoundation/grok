@@ -50,3 +50,56 @@ overview page::
 
 Note the `++skin++introspector` marker in the URL.
 
+The overview page provides three main sections to start browsing: 
+
+- the registries
+
+- code
+
+- ZODB
+
+Browsing the registries
+=======================
+
+We can browse the registries by clicking on the provided link::
+
+  >>> browser.getLink(
+  ...  "Browse the registries (utilitites, adapters, etc.)").click()
+  >>> print browser.contents
+  <!DOCTYPE html...
+  <h1>Registries</h1>
+  ...
+
+We get back to introspector home page::
+
+  >>> browser.open('http://localhost/++skin++introspector/')
+
+
+Browsing code (classes, packages, etc.)
+=======================================
+
+  >>> browser.getLink(
+  ... "Browse classes, packages and other filesystem based information"
+  ... ).click()
+  >>> print browser.contents
+  <!DOCTYPE html...
+  <h1>Code</h1>
+  ...
+
+We get back to introspector home page::
+
+  >>> browser.open('http://localhost/++skin++introspector/')
+
+
+Browsing the ZODB
+=================
+
+  >>> browser.getLink("Browse the ZODB").click()
+  >>> print browser.contents
+  <!DOCTYPE html...
+  <h1>ZODB browser</h1>
+  ...
+
+We get back to introspector home page::
+
+  >>> browser.open('http://localhost/++skin++introspector/')
