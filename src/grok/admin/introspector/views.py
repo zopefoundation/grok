@@ -19,7 +19,10 @@ import grok
 from zope.app.basicskin import IBasicSkin
 from zope.app.folder.interfaces import IRootFolder
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
-from grok.admin.introspector.interfaces import IGrokIntrospector
+from grok.admin.introspector.interfaces import (IGrokIntrospector,
+                                                IGrokRegistryIntrospector,
+                                                IGrokCodeIntrospector,
+                                                IGrokZODBBrowser)
 
 # BBB: This will change after decoupling grok.admin from grok...
 grok.context(IGrokIntrospector)
@@ -45,19 +48,22 @@ class Master(grok.View):
 class Index(grok.View):
     """The overview page.
     """
-    grok.name('index.html')
+    #grok.name('index.html')
 
 class RegistryOverview(grok.View):
-    grok.name('registries')
+    grok.name('index')
     grok.template('registries')
+    grok.context(IGrokRegistryIntrospector)
 
 class CodeOverview(grok.View):
-    grok.name('code')
+    grok.name('index')
     grok.template('code')
+    grok.context(IGrokCodeIntrospector)
 
 class ZODBOverview(grok.View):
-    grok.name('zodb')
+    grok.name('index')
     grok.template('zodb')
+    grok.context(IGrokZODBBrowser)
 
 # The viewlet managers...
 
