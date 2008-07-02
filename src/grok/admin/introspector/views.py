@@ -55,6 +55,10 @@ class RegistryOverview(grok.View):
     grok.template('registries')
     grok.context(IGrokRegistryIntrospector)
 
+    def getUtilities(self):
+        utils = self.context.getUtilities()
+        return utils
+
 class CodeOverview(grok.View):
     grok.name('index')
     grok.template('code')

@@ -4,7 +4,28 @@
   <div metal:fill-slot="main">
     <h1>Registries</h1>
 
-    <h2>Registries</h2>
+    <h2>Utilities</h2>
+
+    <div>
+      The following utilities are currently registered:
+      <div tal:repeat="util python:view.getUtilities()">
+	<!-- div tal:content="util" / -->
+	<div>
+	  Component: <span tal:content="python:util['component']" />
+	</div>
+	<div>
+	  Name: <span tal:content="python:util['name']" />
+	</div>
+	<div>
+	  Provided: <span tal:content="python:util['provided']" />
+	</div>
+	<div>
+	  Registry: <span tal:content="python:util['registry']" />
+	</div>
+	<div>&nbsp;</div>
+
+      </div>
+    </div>
 
 
   </div>
