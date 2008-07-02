@@ -1,0 +1,59 @@
+The Grok introspectors
+**********************
+
+:Test-Layer: unit
+
+The Grok introspectors provide methods and functions to introspect
+registries, code and the ZODB.
+
+Introspecting Registries
+========================
+
+There is a registry introspector available for getting insight infos
+about locally registered components like utilities, adapters, event
+handlers and other stuff. This specialized introspector is called
+``RegistryIntrospector``.
+
+We can create a registry introspector::
+
+  >>> from grok.admin.introspector.introspector import RegistryIntrospector
+  >>> introspector = RegistryIntrospector()
+
+
+Introspecting Utilities
+-----------------------
+
+The introspector can give us all utilities registered. In the
+beginning, there are no utilities registered::
+
+  >>> introspector.getUtilities()
+  []
+
+We now register a utility, that can be found afterwards::
+
+  >>> from zope.interface import Interface, implements
+  >>> from zope.component import provideUtility
+  >>> import persistent
+  >>> from zope.app.container.contained import Contained
+
+  >>> class ITestUtility(Interface):
+  ...   pass
+
+  >>> class TestUtility(persistent.Persistent, Contained):
+  ...   implements(ITestUtility)
+
+We register this utility globally and unnamed::
+
+  >>> provideUtility(TestUtility(), provides=ITestUtility, name='')
+
+If we now ask the introspector again for utilities, it provides the
+newly registered one::
+
+  >>> info = introspector.getUtilities()
+  >>> from pprint import pprint
+  >>> pprint(sorted(info))
+  [{'component': <TestUtility object at 0x...>,
+    'name': '',
+    'provided': <InterfaceClass __builtin__.ITestUtility>,
+    'registry': <BaseGlobalComponents base>}]
+
