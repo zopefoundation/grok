@@ -49,6 +49,7 @@ import martian
 from martian.scan import is_package, ModuleInfo
 from martian import ClassGrokker, ModuleGrokker
 from grok.admin.objectinfo import ZopeObjectInfo
+from grok.admin.introspector import Introspector
 
 # This is the name under which the docgrok object-browser can be
 # reached.
@@ -415,7 +416,12 @@ class DocGrokTraverser(grok.Traverser):
     """
     grok.context(IRootFolder)
 
-    def traverse(self,path):
+    def traverse(self,path, *args, **kw):
+        path_info = self.request.get('PATH_INFO', None)
+        if '++skin++introspector/' in path_info:
+            # The introspector is called...
+            introspector = Introspector()
+            return introspector
         if path == DOCGROK_ITEM_NAMESPACE:
             # The objectbrowser is called...
             obj_info = ZopeObjectInfo(self.context)
