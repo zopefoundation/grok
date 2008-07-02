@@ -14,8 +14,28 @@
 """A traverser and other other central stuff for introspecting.
 """
 import grok
-from grok.admin.introspector.interfaces import IGrokIntrospector
+from grok.admin.introspector.interfaces import (IGrokIntrospector,
+                                                IGrokRegistryIntrospector,
+                                                IGrokCodeIntrospector,
+                                                IGrokZODBBrowser)
 
-class Introspector(object):
+class Introspector(grok.Model):
     grok.implements(IGrokIntrospector)
 
+    def traverse(self, path, *args, **kw):
+        if path == 'registries':
+            return RegistryIntrospector()
+        if path == 'code':
+            return CodeIntrospector()
+        if path == 'zodb':
+            return ZODBBrowser()
+        return self
+
+class RegistryIntrospector(grok.Model):
+    grok.implements(IGrokRegistryIntrospector)
+
+class CodeIntrospector(grok.Model):
+    grok.implements(IGrokCodeIntrospector)
+
+class ZODBBrowser(grok.Model):
+    grok.implements(IGrokZODBBrowser)
