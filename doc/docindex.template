@@ -1,5 +1,12 @@
-{% extends "defindex.html" %}
-{% block tables %}
+{% extends "layout.html" %}
+{% set title = 'Overview' %}
+{% block body %}
+
+  <h1>{{ docstitle }}</h1>
+  <p>
+  This is official documentation for Grok {{ release }}.
+  {% if last_updated %}Last modifed on {{ last_updated }}.{% endif %}
+  </p>
 
   <p><strong>Sections</strong></p>
   <table class="contentstable" align="center"><tr>

@@ -57,40 +57,54 @@ div.footer a {
     text-decoration: underline;
 }
 
-div.related {
-    background-color: #133f52;
-    background-color: #999999;
+div.header {
     background: #999999 url("top_bg.jpg") repeat-x;
-    color: #000;
-    color: #740;
-    width: 100%;
-    height: 30px;
-    line-height: 30px;
-    font-size: 90%;
+    padding: 0.5em 1em 0 1em; 
 }
 
-div.related h3 {
+div.header a{
+    color: #520;
+    padding: 0.5em;
+    text-decoration: none;
+}
+
+div.globalnav {
+    color: #740;
+    border-bottom: 1px solid #aaa;
+    width: 100%;
+    font-size: small;
+}
+
+div.globalnav h3 {
     display: none;
 }
 
-div.related ul {
-    margin: 0;
-    padding: 0 0 0 10px;
+#globalnavwrapper {
+   padding: 2px;
+   margin: 0.5em 0 0 0;
+}
+
+div.globalnav ul {
+    margin: 0 0 0 0;
+    padding: 0;
     list-style: none;
 }
 
-div.related li {
+div.globalnav li {
     display: inline;
+    padding: 2px 0.5em;
+    margin: 0 1px;
+    background-color: #eee;
+    border: 1px solid #999;
 }
 
-div.related li.right {
-    float: right;
-    margin-right: 5px;
+div.globalnav a {
+    color: #436976;
+    text-decoration: none;
 }
 
-div.related a {
-    color: #000;
-    color: #520;
+div.globalnav li:hover {
+    background-color: white;
 }
 
 /* ::: Table of Contents :::: */
@@ -167,11 +181,10 @@ div.related a {
 
 /* Grok Tutorial style sidebar */
 .section div.sidebar {
-    font-size: 95%;
     margin: 1em 2em;
     padding: 0.5em 2em 1em 100px;
-    background-color: #f2f2f2;
-    border: 1px solid #777;
+    background-color: #fafaf8;
+    border: 1px solid #aaa;
     border-top-width: 6px;
     background-image: url(grok_club.gif);
     background-repeat: no-repeat;
@@ -621,12 +634,24 @@ p.topic-title {
     margin-top: 10px;
 }
 
+.topic ul {
+    margin: 0 0 0.5em 1.5em;
+    padding: 0;
+}
+
+.topic > ul {
+    margin-left: 0;
+}
+
+.simple li {
+    list-style: none;
+}
+
 /* Admonitions */
 
 div.admonition {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 7px;
+    margin: 0.5em 0;
+    padding: 0.5em;
 }
 
 div.admonition dt {
@@ -642,8 +667,23 @@ div.admonition p {
 }
 
 div.seealso {
+    padding: 0;
     background-color: #ffc;
     border: 1px solid #ff6;
+}
+
+div.seealso .first {
+    background-color: #ffa;
+    padding: 0.25em 0.5em;
+    display: block;
+    float: left;
+    margin: 0 0.5em 0 0;
+}
+
+div.seealso .last {
+    padding: 0.25em 0;
+    display: block;
+    margin: 0;
 }
 
 div.warning {
@@ -688,8 +728,7 @@ dl.class > dd {
 }
 
 p.admonition-title {
-    margin: 0px 10px 5px 0px;
-    font-weight: bold;
+    margin: 0 0.5em 0.5em 0;
     display: inline;
 }
 
@@ -761,12 +800,13 @@ th {
 }
 
 pre {
-    padding: 5px;
+    padding: 1em;
     background-color: #fafafa;
     color: #333333;
-    border: 1px solid #bbb;
+    border: 2px dotted #eee;
     border-left: none;
     border-right: none;
+    font-size: medium;
 }
 
 tt {
@@ -855,7 +895,7 @@ form.comment textarea {
     }
 
     div.sidebar,
-    div.related,
+    div.globalnav,
     div.footer,
     div#comments div.new-comment-box,
     #top-link {
