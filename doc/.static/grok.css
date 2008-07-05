@@ -886,6 +886,11 @@ form.comment textarea {
     border: 3px solid red;
 }
 
+img.logo {
+    border-width: 0;
+    margin-bottom: 1em;
+}
+
 /* :::: PRINT :::: */
 @media print {
     div.document, 
