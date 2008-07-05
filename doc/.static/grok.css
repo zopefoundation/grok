@@ -37,7 +37,9 @@ div.bodywrapper {
 
 div.body {
     background-color: white;
-    padding: 0 20px 30px 20px;
+    padding: 1.5em;
+    border-left: 1px solid #999;
+    
 }
 
 div.clearer {
@@ -561,21 +563,19 @@ div.body h4,
 div.body h5,
 div.body h6 {
     font-family: 'Trebuchet MS', sans-serif;
-    background-color: #f2f2f2;
     font-weight: normal;
-    color: #20435c;
     color: #c90;
-    border-bottom: 1px solid #dddddd;
-    margin: 20px -20px 10px -20px;
-    padding: 3px 0 3px 10px;
+    border-bottom: 1px solid #ddd;
+    margin: 1em 0 0.5em 0;
+    padding: 3px 1em 3px 0.25em;
 }
 
-div.body h1 { margin-top: 0; font-size: 200%; }
-div.body h2 { font-size: 160%; }
-div.body h3 { font-size: 140%; }
-div.body h4 { font-size: 120%; }
-div.body h5 { font-size: 110%; }
-div.body h6 { font-size: 100%; }
+div.body h1 { margin-top: 0; background-color: #f2f2f2; font-size: 200%; }
+div.body h2 { font-size: 160%; background-color: #f2f2f2; }
+div.body h3 { font-size: 140%; border-bottom-width: 0; padding-left: 0;  }
+div.body h4 { font-size: 120%; border-bottom-width: 0; padding-left: 0;  }
+div.body h5 { font-size: 110%; border-bottom-width: 0; padding-left: 0;  }
+div.body h6 { font-size: 100%; border-bottom-width: 0; padding-left: 0;  }
 
 a.headerlink {
     color: #dddddd;
@@ -600,7 +600,7 @@ a.headerlink:hover {
 }
 
 div.body p, div.body dd, div.body li {
-    line-height: 130%;
+    line-height: 150%;
 }
 
 div.body td {
@@ -807,6 +807,7 @@ pre {
     border-left: none;
     border-right: none;
     font-size: medium;
+    line-height: 150%;
 }
 
 tt {
