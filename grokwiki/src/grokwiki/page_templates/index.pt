@@ -1,4 +1,4 @@
-<html metal:use-macro="context/@@layout/main">
+<html metal:use-macro="context/@@layout/macros/main">
     <div metal:fill-slot="content">
         <h1 tal:content="context/__name__">WikiPage</h1>
 
