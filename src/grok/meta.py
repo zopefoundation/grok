@@ -49,7 +49,7 @@ from martian import util
 
 import grok
 from grok import components, formlib, templatereg
-from grok.util import check_permission, make_checker
+from grok.util import make_checker
 from grok.interfaces import IRESTSkinType
 from grok.interfaces import IViewletManager as IGrokViewletManager
 
