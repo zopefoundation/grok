@@ -320,6 +320,22 @@ class IGrokView(IBrowserPage, IBrowserView):
         as a cgi query string.
         """
 
+    def default_namespace():
+        """Returns a dictionary of namespaces that the template
+        implementation expects to always be available.
+
+        This method is *not* intended to be overridden by application
+        developers.
+        """
+
+    def namespace():
+        """Returns a dictionary that is injected in the template
+        namespace in addition to the default namespace.
+
+        This method *is* intended to be overridden by the application
+        developer.
+        """
+
     def update(**kw):
         """This method is meant to be implemented by grok.View
         subclasses.  It will be called *before* the view's associated
@@ -507,4 +523,3 @@ class IContainer(IContext, IContainerBase):
 class IViewletManager(IViewletManagerBase):
     """The Grok viewlet manager.
     """
-

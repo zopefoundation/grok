@@ -21,7 +21,7 @@ Views without a template do not support macros:
   Traceback (most recent call last):
   AttributeError: 'DancingHall' object has no attribute 'template'
 
-If the view has an attribute with the same name as a macro, the macro 
+If the view has an attribute with the same name as a macro, the macro
 shadows the view. XXX This should probably generate a warning at runtime.
 
   >>> browser.open("http://localhost/manfred/@@grilldish")
@@ -29,19 +29,19 @@ shadows the view. XXX This should probably generate a warning at runtime.
   <html>
   Curry
   </html>
-  
+
 You can skip the "macro" part of the macro call, but this is deprecated:
 
-  >>> from zope.deprecation.tests import warn
+  >>> from grok.testing import warn
   >>> import warnings
   >>> saved_warn = warnings.warn
   >>> warnings.warn = warn
 
   >>> browser.open("http://localhost/manfred/@@burnt")
-  From tests.py's showwarning():
+  From grok.testing's warn():
   ... DeprecationWarning: Calling macros directly on the view is deprecated. Please use context/@@viewname/macros/macroname
   ...
-  
+
   >>> warnings.warn = saved_warn
 
 """

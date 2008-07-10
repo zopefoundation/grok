@@ -10,7 +10,7 @@ Upgrading to 0.13
 -----------------
 
 * The directive implementations changed tremendously with the upgrade
-  to Martian 0.9.6.  Custom implementations of both directives (see
+  to Martian 0.10.  Custom implementations of both directives (see
   next bullet point) and grokkers will have to be adjusted.
 
   Since the vast majority of directives are class directives, the most
@@ -46,7 +46,8 @@ Upgrading to 0.13
   - ``grok.provides`` with a computed default.
 
   With the new directive implementation and the extensions to
-  Martian's ``ClassGrokker``, you're now be able to write::
+  Martian's ``ClassGrokker``, you are now able to write (and you
+  should write!)::
 
     def default_provides(factory, module, **data):
         # This function is available for import from grokcore.component.meta.
@@ -56,12 +57,10 @@ Upgrading to 0.13
         return list(zope.interface.implementedBy(factory))[0]
 
     class RobotGrokker(martian.ClassGrokker):
-        component_class = Robot
-        directives = [
-            grok.name.bind(name='robot_name'),
-            grok.title.bind(default='A Robot'),
-            grok.provides.bind(get_default=default_provides),
-            ]
+        martian.component(Robot)
+        martian.directive(grok.name, name='robot_name')
+        martian.directive(grok.title, default='A Robot')
+        martian.directive(grok.provides, get_default=default_provides)
 
         def execute(self, factory, config, robot_name, title, provides, **kw):
             config.action(
@@ -71,12 +70,13 @@ Upgrading to 0.13
                 )
             return True
 
-  Basically, all you need to do is provide a list of *bound*
-  directives in the grokker class and then implement the ``execute``
+  What you need to do is provide the directives in the grokker class
+  using ``martian.directive`` and then implement the ``execute``
   method which will get the class (``factory``) and the configuration
   context (``config``) as positional arguments and then the values of
-  the directives as keyword parameters.  Note that when binding the
-  directives, you may
+  the directives as keyword parameters.
+
+  Note that when using ``martian.directive``, you may
 
   - set the name of the keyword parameter if you want it to be
     different than the directive's name,
@@ -87,12 +87,25 @@ Upgrading to 0.13
   - pass in a factory for a computed default value (``get_default``).
 
   If you need still need to manually retrieve directive values from an
-  object (a class, an instance or a module), you can do so by using
-  the ``get`` method of the bound directive, e.g.::
+  object (a class, an instance or a module), you can do so by
+  explicitly calling ``bind`` on the directive (which accepts the same
+  optional parameters as ``martian.directive``), and then the ``get``
+  method of the bound directive, e.g.::
 
     class_context = grok.context.bind().get(factory, module=module)
     just_module_context = grok.context.bind().get(module=module)
 
+  In most cases it's possible to avoid this though, and use the
+  ``martian.directive`` directive on the class level.
+
+  You can look at ``src/grok/meta.py`` in Grok to see examples.
+
+* Your custom grokker could previously use ``component_class`` and
+  ``priority`` as class-level variables. These have been changed to
+  the ``martian.component`` and the ``martian.priority`` directives
+  that take the value as its first argument. The new
+  ``martian.directive`` directive was introduced above.
+ 
 * Custom directives need to be re-implemented using Martian's new
   ``Directive`` base class.  The directive scope, the type of storage,
   the validator and a potential default value are all defined as
@@ -139,13 +152,26 @@ Upgrading to 0.13
                 if not isinstance(value, type):
                     raise GrokError("%r is not a class!" % value)
 
-* We moved to newer versions of zope packages, using the KGS list for
-  Zope 3.4c1.  This means your code can now get some new deprecation
+* We moved to newer versions of zope packages. Grok's versions for
+  Zope packages are now based on the KGS list for Zope 3.4c1 (the
+  latest list).  This means your code can now get some new deprecation
   warnings for imports that have been moved. Please check your code
   and fix your imports if you get those warnings.
 
-  If you were using ``zope.publisher.http.applySkin``, you now must
-  use ``grok.util.applySkin``.
+* If you were using ``zope.publisher.http.applySkin``, you now must
+  use ``grok.util.applySkin``. This because
+  ``zope.publisher.http.appySkin`` was removed again in later versions
+  of ``zope.publisher``.
+
+* The ``url`` method on ``ViewletManager`` and ``Viewlet`` was
+  removed. Instead you can easily access the ``url`` method of the
+  view itself from within a viewlet or viewlet manager, and the
+  ``view`` name is also available in viewlet templates. There are also
+  new ``viewlet`` and ``viewletmanager`` namespaces in the viewlet
+  templates. Note that ``view`` in a viewlet thus means something else
+  than what it does before. Previous uses of ``view`` in a viewlet
+  template should be renamed to ``viewlet``.
+
 
 Upgrading to 0.12
 -----------------

@@ -691,7 +691,7 @@ We need an ``index.pt`` that uses ``sum``:
 .. include:: groktut/reading_url_parameters/src/sample/app_templates/index.pt
   :literal:
 
-Restart Zope. Now going to the folllowing URL should display 8:
+Restart Zope. Now going to the following URL should display 8:
 
   http://localhost:8080/test?value1=3&value2=5
 

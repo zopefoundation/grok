@@ -15,7 +15,7 @@ long_description = (
 
 setup(
     name='grok',
-    version='0.13dev',
+    version='0.14dev',
     author='Grok Team',
     author_email='grok-dev@zope.org',
     url='http://grok.zope.org',
@@ -56,7 +56,6 @@ setup(
                       'zope.app.publisher',
                       'zope.app.renderer',
                       'zope.app.security',
-                      'zope.app.securitypolicy',
                       'zope.app.testing',
                       'zope.app.twisted',
                       'zope.app.zcmlfiles',
@@ -85,5 +84,9 @@ setup(
                       'z3c.flashmessage',
                       'z3c.autoinclude',
                       'z3c.testsetup',
+                      # deprecated packages, there for backwards compatibility
+                      'zope.app.error',
+                      'zope.app.securitypolicy',
+                      'zope.app.session',
                       ],
 )

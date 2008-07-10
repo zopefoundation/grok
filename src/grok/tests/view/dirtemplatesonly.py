@@ -1,13 +1,13 @@
 """
 A template directory may only contain recognized template files::
 
-  >>> from zope.deprecation.tests import warn
+  >>> from grok.testing import warn
   >>> import warnings
   >>> saved_warn = warnings.warn
   >>> warnings.warn = warn
 
   >>> grok.testing.grok(__name__)
-  From tests.py's showwarning():
+  From grok.testing's warn():
   ... UserWarning: File 'invalid.txt' has an unrecognized extension in
   directory '...dirtemplatesonly_templates'...
 

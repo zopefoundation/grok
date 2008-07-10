@@ -1,31 +1,29 @@
-/**
- * Sphinx Doc Design
+/*
+ * Grok Official Documentation CSS
+ *
+ * (clean me up! improve me! make me look nicer!)
+ *
  */
 
-/*
-
-Dunkelblau: #11303d
-Hellblau Rahmen: #1c4e63
-Mittelblau Rahmen: #133f52
-*/
 body {
     font-family: sans-serif;
     font-size: 100%;
-    backg/round-color: #11303d;
-    background-color: #ccc;
+    background-color: #11303d;
+    background-color: #dddddd;
     background: #cfcccc url("top_bg.jpg") repeat-x;
     color: #000;
     margin: 0;
     padding: 0;
 }
 
+td {
+    vertical-align: top;
+}
+
 /* :::: LAYOUT :::: */
 
 div.document {
-    backg/round: #1c4e63 url("top_bg.jpg") repeat-x;
-    background-color: #cccccc;
-    background-color: #eee;
-    ba/ckground-color: #1c4e63;
+    background-color: #dddddd;
 }
 
 div.documentwrapper {
@@ -34,23 +32,14 @@ div.documentwrapper {
 }
 
 div.bodywrapper {
-    margin: 0 0 0 230px;
+    margin: 0 0 0 250px;
 }
 
 div.body {
     background-color: white;
-    padding: 0 20px 30px 20px;
-}
-
-div.sidebarwrapper {
-    padding: 10px 5px 0 10px;
-}
-
-div.sidebar {
-    float: left;
-    width: 230px;
-    margin-left: -100%;
-    font-size: 90%;
+    padding: 1.5em;
+    border-left: 1px solid #999;
+    
 }
 
 div.clearer {
@@ -58,9 +47,7 @@ div.clearer {
 }
 
 div.footer {
-    c/olor: #fff;
     color: #740;
-    co/lor: #000;
     width: 100%;
     padding: 9px 0 9px 0;
     text-align: center;
@@ -68,113 +55,146 @@ div.footer {
 }
 
 div.footer a {
-    co/lor: #fff;
     color: #740;
-    co/lor: #000;
     text-decoration: underline;
 }
 
-div.related {
-    background-color: #133f52;
-    background-color: #999999;
+div.header {
     background: #999999 url("top_bg.jpg") repeat-x;
-    c/olor: #fff;
-    color: #000;
-    color: #740;
-    width: 100%;
-    height: 30px;
-    line-height: 30px;
-    font-size: 90%;
+    padding: 0.5em 1em 0 1em; 
 }
 
-div.related h3 {
+div.header a{
+    color: #520;
+    padding: 0.5em;
+    text-decoration: none;
+}
+
+div.globalnav {
+    color: #740;
+    border-bottom: 1px solid #aaa;
+    width: 100%;
+    font-size: small;
+}
+
+div.globalnav h3 {
     display: none;
 }
 
-div.related ul {
-    margin: 0;
-    padding: 0 0 0 10px;
+#globalnavwrapper {
+   padding: 2px;
+   margin: 0.5em 0 0 0;
+}
+
+div.globalnav ul {
+    margin: 0 0 0 0;
+    padding: 0;
     list-style: none;
 }
 
-div.related li {
+div.globalnav li {
     display: inline;
+    padding: 2px 0.5em;
+    margin: 0 1px;
+    background-color: #eee;
+    border: 1px solid #999;
 }
 
-div.related li.right {
-    float: right;
-    margin-right: 5px;
+div.globalnav a {
+    color: #436976;
+    text-decoration: none;
 }
 
-div.related a {
-    co/lor: white;
-    ba/ckground-color: #bbb;
-    color: #000;
-    color: #520;
+div.globalnav li:hover {
+    background-color: white;
 }
 
-/* ::: TOC :::: */
-div.sidebar h3 {
+/* ::: Table of Contents :::: */
+
+.document > div.sidebarwrapper {
+    padding: 10px 5px 0 10px;
+}
+
+.sphinxsidebar {
+    float: left;
+    width: 250px;
+    margin-left: -100%;
+    font-size: small;
+    color: #333333;
+    padding: 8px;
+}
+
+.sphinxsidebar a {
+    color: #436976;
+}
+
+.sphinxsidebar h3 {
     font-family: 'Trebuchet MS', sans-serif;
-    co/lor: white;
-    color: #960;
     font-size: 1.4em;
     font-weight: normal;
     margin: 0;
     padding: 0;
 }
 
-div.sidebar h4 {
+.sphinxsidebar h4 {
     font-family: 'Trebuchet MS', sans-serif;
-    c/olor: white;
-    color: #960;
     font-size: 1.3em;
     font-weight: normal;
     margin: 5px 0 0 0;
     padding: 0;
 }
 
-div.sidebar p {
-    co/lor: white;
-    color: #960;
-}
-
-div.sidebar p.topless {
+.sphinxsidebar p.topless {
     margin: 5px 10px 10px 10px;
 }
 
-div.sidebar ul {
+.sphinxsidebar ul {
     margin: 10px;
     padding: 0;
     list-style: none;
-    co/lor: white;
     color: #c90;
 }
 
-div.sidebar ul ul,
-div.sidebar ul.want-points {
+.sphinxsidebar ul ul,
+.sphinxsidebar ul.want-points {
     margin-left: 20px;
     list-style: square;
+    color: #436976;
 }
 
-div.sidebar ul ul {
+.sphinxsidebar ul ul {
     margin-top: 0;
     margin-bottom: 0;
 }
 
-div.sidebar a {
-    color: #98dbcc;
-color: #a70;
+.sphinxsidebar ul li {
+    margin: 0.25em 0 0.5em 0;
 }
 
-div.sidebar form {
+.sphinxsidebar form {
     margin-top: 10px;
 }
 
-div.sidebar input {
-    border: 1px solid #98dbcc;
+.sphinxsidebar input {
+    border: 1px solid #555555;
     font-family: sans-serif;
     font-size: 1em;
+}
+
+/* Grok Tutorial style sidebar */
+.section div.sidebar {
+    margin: 1em 2em;
+    padding: 0.5em 2em 1em 100px;
+    background-color: #fafaf8;
+    border: 1px solid #aaa;
+    border-top-width: 6px;
+    background-image: url(grok_club.gif);
+    background-repeat: no-repeat;
+}
+
+.section .sidebar-title {
+    font-weight: bold;
+    font-size: 110%;
 }
 
 /* :::: MODULE CLOUD :::: */
@@ -440,7 +460,7 @@ div.commentwindow div.preview div.comment h4 {
 
 /* :::: SUGGEST CHANGES :::: */
 div#suggest-changes-box input, div#suggest-changes-box textarea {
-    border: 1px solid #ccc;
+    border: 1px solid #dddddd;
     background-color: white;
     color: black;
 }
@@ -463,6 +483,8 @@ div.preview {
 
 table.contentstable {
     width: 90%;
+    margin-top: -1em;
+    margin-left: 2em;
 }
 
 table.contentstable p.biglink {
@@ -474,8 +496,8 @@ a.biglink {
 }
 
 span.linkdescr {
-    font-style: italic;
-    padding-top: 5px;
+    color: #555;
+    padding-top: 0.25em;
     font-size: 90%;
 }
 
@@ -541,25 +563,22 @@ div.body h4,
 div.body h5,
 div.body h6 {
     font-family: 'Trebuchet MS', sans-serif;
-    background-color: #f2f2f2;
     font-weight: normal;
-    fo/nt-weight: bold;
-    color: #20435c;
     color: #c90;
-    border-bottom: 1px solid #ccc;
-    margin: 20px -20px 10px -20px;
-    padding: 3px 0 3px 10px;
+    border-bottom: 1px solid #ddd;
+    margin: 1em 0 0.5em 0;
+    padding: 3px 1em 3px 0.25em;
 }
 
-div.body h1 { margin-top: 0; font-size: 200%; }
-div.body h2 { font-size: 160%; }
-div.body h3 { font-size: 140%; }
-div.body h4 { font-size: 120%; }
-div.body h5 { font-size: 110%; }
-div.body h6 { font-size: 100%; }
+div.body h1 { margin-top: 0; background-color: #f2f2f2; font-size: 200%; }
+div.body h2 { font-size: 160%; background-color: #f2f2f2; }
+div.body h3 { font-size: 140%; border-bottom-width: 0; padding-left: 0;  }
+div.body h4 { font-size: 120%; border-bottom-width: 0; padding-left: 0;  }
+div.body h5 { font-size: 110%; border-bottom-width: 0; padding-left: 0;  }
+div.body h6 { font-size: 100%; border-bottom-width: 0; padding-left: 0;  }
 
 a.headerlink {
-    color: #c60f0f;
+    color: #dddddd;
     font-size: 0.8em;
     padding: 0 4px 0 4px;
     text-decoration: none;
@@ -577,14 +596,11 @@ dt:hover > a.headerlink {
 }
 
 a.headerlink:hover {
-    background-color: #c60f0f;
-    background-color: #000f0f;
-    color: white;
+    color: #555555;
 }
 
 div.body p, div.body dd, div.body li {
-    text-align: justify;
-    line-height: 130%;
+    line-height: 150%;
 }
 
 div.body td {
@@ -606,8 +622,8 @@ p.rubric {
 /* "Topics" */
 
 div.topic {
-    background-color: #eee;
-    border: 1px solid #ccc;
+    background-color: #eeeeee;
+    border: 1px solid #dddddd;
     padding: 0 7px 0 7px;
     margin: 10px 0 10px 0;
 }
@@ -618,12 +634,24 @@ p.topic-title {
     margin-top: 10px;
 }
 
+.topic ul {
+    margin: 0 0 0.5em 1.5em;
+    padding: 0;
+}
+
+.topic > ul {
+    margin-left: 0;
+}
+
+.simple li {
+    list-style: none;
+}
+
 /* Admonitions */
 
 div.admonition {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 7px;
+    margin: 0.5em 0;
+    padding: 0.5em;
 }
 
 div.admonition dt {
@@ -639,8 +667,23 @@ div.admonition p {
 }
 
 div.seealso {
+    padding: 0;
     background-color: #ffc;
     border: 1px solid #ff6;
+}
+
+div.seealso .first {
+    background-color: #ffa;
+    padding: 0.25em 0.5em;
+    display: block;
+    float: left;
+    margin: 0 0.5em 0 0;
+}
+
+div.seealso .last {
+    padding: 0.25em 0;
+    display: block;
+    margin: 0;
 }
 
 div.warning {
@@ -649,13 +692,43 @@ div.warning {
 }
 
 div.note {
-    background-color: #eee;
-    border: 1px solid #ccc;
+    background-color: #eeeeee;
+    border: 1px solid #dddddd;
+}
+
+dl.class {
+    color: #555555;
+    background: #fafaf8;
+    padding: 0 1em 1em 1em;
+    border: 1px solid #eed;
+}
+
+dl.class dt {
+    margin: 0;
+    padding: 0;
+}
+
+/* only applies to the class name */
+dl.class > dt {
+    padding: 0.5em;
+    margin: 0 -1em;
+    background-color: #eed;
+}
+
+dl.class dd {
+    color: black;
+    font-size: 100%;
+    padding: 0;
+    margin: 0.5em 1em 0.5em 1em;
+}
+
+dl.class > dd {
+    margin: 0.5em 0 0 0;
+    padding: 0;
 }
 
 p.admonition-title {
-    margin: 0px 10px 5px 0px;
-    font-weight: bold;
+    margin: 0 0.5em 0.5em 0;
     display: inline;
 }
 
@@ -727,18 +800,19 @@ th {
 }
 
 pre {
-    padding: 5px;
-    background-color: #efc;
-    color: #333;
-    border: 1px solid #ac9;
+    padding: 1em;
+    background-color: #fafafa;
+    color: #333333;
+    border: 2px dotted #eee;
     border-left: none;
     border-right: none;
+    font-size: medium;
+    line-height: 150%;
 }
 
 tt {
     background-color: #ecf0f3;
-    padding: 0 1px 0 1px;
-    font-size: 0.95em;
+    padding: 0;
 }
 
 tt.descname {
@@ -749,6 +823,10 @@ tt.descname {
 
 tt.descclassname {
     background-color: transparent;
+    font-weight: bold;
+    font-size: 1.2em;
+    /* a little hand kerning for grok.Whatever typography */
+    margin-right: -1px;
 }
 
 tt.xref, a tt {
@@ -786,7 +864,7 @@ form.comment h3 {
 
 form.comment input,
 form.comment textarea {
-    border: 1px solid #ccc;
+    border: 1px solid #dddddd;
     padding: 2px;
     font-family: sans-serif;
     font-size: 100%;
@@ -808,6 +886,11 @@ form.comment textarea {
     border: 3px solid red;
 }
 
+img.logo {
+    border-width: 0;
+    margin-bottom: 1em;
+}
+
 /* :::: PRINT :::: */
 @media print {
     div.document, 
@@ -818,7 +901,7 @@ form.comment textarea {
     }
 
     div.sidebar,
-    div.related,
+    div.globalnav,
     div.footer,
     div#comments div.new-comment-box,
     #top-link {
