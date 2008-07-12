@@ -16,10 +16,9 @@
 import sys
 import os.path
 import z3c.testsetup
-import grokcore.component
 from zope.configuration.config import ConfigurationMachine
-from martian import scan
 from grokcore.component import zcml
+# Provide this import here for BBB reasons:
 from grokcore.component.testing import grok_component
 
 class GrokTestCollector(z3c.testsetup.TestCollector):
