@@ -81,7 +81,4 @@
   <!-- ZPT support -->
   <grok:grok package=".templatereg" />
 
-  <!-- The admin interface -->
-  <grok:grok package=".admin" />
-
 </configure>
