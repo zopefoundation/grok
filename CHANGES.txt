@@ -4,6 +4,14 @@ Grok changes
 0.14 (unreleased)
 =================
 
+Restructuring
+-------------
+
+* The ``grok.admin`` subpackage has been factored out to a separate
+  package ``grokui.admin``. To have the Grok admin UI available in
+  your environment, add ``grokui.admin`` to the required packages in
+  the ``setup.py`` of your package.
+
 Bug fixes
 ---------
 
