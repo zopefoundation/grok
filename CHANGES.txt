@@ -19,7 +19,7 @@ Bug fixes
 
     * Make the signature identical to warnings.warn
 
-    * To check for *.pyc and *.pyo files.
+    * To check for \*.pyc and \*.pyo files.
 
   When zope.deprecation is fixed this warn() function can be removed again.
   Makes all the tests pass under Python-2.5.
