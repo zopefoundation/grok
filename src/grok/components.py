@@ -54,7 +54,6 @@ from zope.viewlet.manager import ViewletManagerBase
 from zope.viewlet.viewlet import ViewletBase
 
 import grok
-import grokcore.component
 import z3c.flashmessage.interfaces
 import martian.util
 
