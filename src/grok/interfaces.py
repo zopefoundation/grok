@@ -20,25 +20,21 @@ from zope.interface.interfaces import IInterface
 from zope.viewlet.interfaces import IViewletManager as IViewletManagerBase
 from zope.app.container.interfaces import IContainer as IContainerBase
 
-from grokcore.component.interfaces import IContext
+import grokcore.component.interfaces
 
-class IGrokBaseClasses(interface.Interface):
-    ClassGrokker = interface.Attribute("Base class to define a class "
-                                       "grokker.")
-    InstanceGrokker = interface.Attribute("Base class to define an "
-                                          "instance grokker.")
-    ModuleGrokker = interface.Attribute("Base class to define a "
-                                        "module grokker.")
+# Expose interfaces from grok.interfaces as well:
+from grokcore.component.interfaces import IContext
+from grokcore.component.interfaces import IGrokErrors
+
+
+class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses):
     Model = interface.Attribute("Base class for persistent content objects "
                                 "(models).")
     Container = interface.Attribute("Base class for containers.")
     OrderedContainer = interface.Attribute("Base class for ordered containers.")
     Site = interface.Attribute("Mixin class for sites.")
     Application = interface.Attribute("Base class for applications.")
-    Adapter = interface.Attribute("Base class for adapters.")
-    MultiAdapter = interface.Attribute("Base class for multi-adapters.")
     Annotation = interface.Attribute("Base class for persistent annotations.")
-    GlobalUtility = interface.Attribute("Base class for global utilities.")
     LocalUtility = interface.Attribute("Base class for local utilities.")
     View = interface.Attribute("Base class for browser views.")
     XMLRPC = interface.Attribute("Base class for XML-RPC methods.")
@@ -59,37 +55,7 @@ class IGrokBaseClasses(interface.Interface):
     Public = interface.Attribute("Marker for explicitly not requiring a permission.")
 
 
-class IGrokErrors(interface.Interface):
-
-    def GrokError(message, component):
-        """Error indicating that a problem occurrend during the
-        grokking of a module (at "grok time")."""
-
-    def GrokImportError(*args):
-        """Error indicating a problem at import time."""
-
-
-class IGrokDirectives(interface.Interface):
-
-    def implements(*interfaces):
-        """Declare that a class implements the given interfaces."""
-
-    def adapts(*classes_or_interfaces):
-        """Declare that a class adapts objects of the given classes or
-        interfaces."""
-
-    def context(class_or_interface):
-        """Declare the context for views, adapters, etc.
-
-        This directive can be used on module and class level.  When
-        used on module level, it will set the context for all views,
-        adapters, etc. in that module.  When used on class level, it
-        will set the context for that particular class."""
-
-    def name(name):
-        """Declare the name of a view or adapter/multi-adapter.
-
-        This directive can only be used on class level."""
+class IGrokDirectives(grokcore.component.interfaces.IDirectives):
 
     def layer(layer):
         """Declare the layer for the view.
@@ -113,25 +79,6 @@ class IGrokDirectives(interface.Interface):
         By default, grok will take the name of the module as the name
         of the directory.  This can be overridden using
         ``templatedir``."""
-
-    def provides(interface):
-        """Explicitly specify with which interface a component will be
-        looked up."""
-
-    def baseclass():
-        """Mark this class as a base class.
-
-        This means it won't be grokked, though if it's a possible context,
-        it can still serve as a context.
-        """
-
-    def global_utility(factory, provides=None, name=u''):
-        """Register a global utility.
-
-        factory - the factory that creates the global utility
-        provides - the interface the utility should be looked up with
-        name - the name of the utility
-        """
 
     def local_utility(factory, provides=None, name=u'',
                       setup=None, public=False, name_in_container=None):
@@ -187,11 +134,7 @@ class IGrokDirectives(interface.Interface):
         """
 
 
-class IGrokDecorators(interface.Interface):
-
-    def subscribe(*classes_or_interfaces):
-        """Declare that a function subscribes to an event or a
-        combination of objects and events."""
+class IGrokDecorators(grokcore.component.interfaces.IDecorators):
 
     def action(label, **options):
         """Decorator that defines an action factory based on a form
@@ -233,9 +176,16 @@ class IGrokEvents(interface.Interface):
 class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
                IGrokEvents, IGrokErrors):
 
+    # BBB this is deprecated
     def grok(dotted_name):
-        """Grok a module or package specified by ``dotted_name``."""
+        """Grok a module or package specified by ``dotted_name``.
 
+        NOTE: This function will be removed from the public Grok
+        public API.  For tests and interpreter sessions, use
+        grok.testing.grok().
+        """
+
+    # BBB this is deprecated
     def grok_component(name, component, context=None, module_info=None,
                        templates=None):
         """Grok an arbitrary object. Can be useful during testing.
@@ -249,6 +199,10 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
 
         Note that context, module_info and templates might be required
         for some grokkers which rely on them.
+
+        NOTE: This function will be removed from the public Grok
+        public API.  For tests and interpreter sessions, use
+        grok.testing.grok_component().
         """
 
     def url(request, obj, name=None, data=None):
