@@ -23,7 +23,7 @@ from zope.publisher.interfaces.browser import IBrowserView
 import martian
 from martian import util
 from martian.error import GrokImportError, GrokError
-from martian.directive import StoreMultipleTimes
+from martian.directive import StoreOnce, StoreMultipleTimes
 from grokcore.component.scan import UnambiguousComponentScope
 from grok import components
 
@@ -195,3 +195,32 @@ class order(martian.Directive):
     def factory(self, value=0):
         order._order += 1
         return value, order._order
+
+_taggedvaluekey = '__tagged_value_key__'
+
+class TaggedValueStoreOnce(StoreOnce):
+    """Stores the directive value in a interface tagged value.
+    """
+
+    def get(self, directive, component, default):
+        return component.queryTaggedValue(_taggedvaluekey, default)
+
+    def setattr(self, context, directive, value):
+        context.setTaggedValue(_taggedvaluekey, value)
+
+TAGGEDVALUEONCE = TaggedValueStoreOnce()
+
+class InterfaceScope(object):
+    description = 'interface'
+
+    def check(self, frame):
+        return IInterface.providedBy(frame)
+
+    def get(self, directive, component, module, default):
+        return directive.store.get(directive, component, default)
+
+INTERFACE_SCOPE = InterfaceScope()
+
+class skin(martian.Directive):
+    scope = INTERFACE_SCOPE
+    store = TAGGEDVALUEONCE
