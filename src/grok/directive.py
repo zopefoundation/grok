@@ -198,14 +198,12 @@ class order(martian.Directive):
         order._order += 1
         return value, order._order
 
-_taggedvaluekey = '__tagged_value_key__'
-
 class TaggedValueStoreOnce(StoreOnce):
     """Stores the directive value in a interface tagged value.
     """
 
     def get(self, directive, component, default):
-        return component.queryTaggedValue(_taggedvaluekey, default)
+        return component.queryTaggedValue(directive.dotted_name(), default)
 
     def set(self, locals_, directive, value):
         if directive.dotted_name() in locals_:
@@ -213,31 +211,18 @@ class TaggedValueStoreOnce(StoreOnce):
                 "The '%s' directive can only be called once per %s." %
                 (directive.name, directive.scope.description))
         # Make use of the implementation details of interface tagged
-        # values.  Instead of being able to call 'setTaggedValue()'
-        # on an interface object, we only have access to the locals
-        # of the interface object.  We inject whatever setTaggedValue
+        # values.  Instead of being able to call "setTaggedValue()"
+        # on an interface object, we only have access to the "locals"
+        # of the interface object.  We inject whatever setTaggedValue()
         # would've injected.
         taggeddata = locals_.setdefault(TAGGED_DATA, {})
-        taggeddata[_taggedvaluekey] = value
+        taggeddata[directive.dotted_name()] = value
 
     def setattr(self, context, directive, value):
         raise NotImplementedError, 'Do we need this?'
 
-TAGGEDVALUEONCE = TaggedValueStoreOnce()
-
-class InterfaceScope(object):
-    description = 'interface'
-
-    def check(self, frame):
-        # Wraaah - How can we check we're in an Interface, not just
-        # some class???
-        return util.frame_is_class(frame)
-
-    def get(self, directive, component, module, default):
-        return directive.store.get(directive, component, default)
-
-INTERFACE_SCOPE = InterfaceScope()
-
 class skin(martian.Directive):
-    scope = INTERFACE_SCOPE
+    # We cannot do any better than to check for a class scope. Ideally we
+    # would've checked whether the context is indeed an Interface class.
+    scope = martian.CLASS
     store = TAGGEDVALUEONCE
