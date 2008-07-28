@@ -18,6 +18,8 @@ import sys
 import grok
 from zope import interface
 from zope.interface.interfaces import IInterface
+from zope.interface.interface import TAGGED_DATA
+
 from zope.publisher.interfaces.browser import IBrowserView
 
 import martian
@@ -205,8 +207,21 @@ class TaggedValueStoreOnce(StoreOnce):
     def get(self, directive, component, default):
         return component.queryTaggedValue(_taggedvaluekey, default)
 
+    def set(self, locals_, directive, value):
+        if directive.dotted_name() in locals_:
+            raise GrokImportError(
+                "The '%s' directive can only be called once per %s." %
+                (directive.name, directive.scope.description))
+        # Make use of the implementation details of interface tagged
+        # values.  Instead of being able to call 'setTaggedValue()'
+        # on an interface object, we only have access to the locals
+        # of the interface object.  We inject whatever setTaggedValue
+        # would've injected.
+        taggeddata = locals_.setdefault(TAGGED_DATA, {})
+        taggeddata[_taggedvaluekey] = value
+
     def setattr(self, context, directive, value):
-        context.setTaggedValue(_taggedvaluekey, value)
+        raise NotImplementedError, 'Do we need this?'
 
 TAGGEDVALUEONCE = TaggedValueStoreOnce()
 
@@ -214,7 +229,9 @@ class InterfaceScope(object):
     description = 'interface'
 
     def check(self, frame):
-        return IInterface.providedBy(frame)
+        # Wraaah - How can we check we're in an Interface, not just
+        # some class???
+        return util.frame_is_class(frame)
 
     def get(self, directive, component, module, default):
         return directive.store.get(directive, component, default)

@@ -49,7 +49,7 @@ from grokcore.component.directive import (
     context, name, title, description, provides, global_utility, direct)
 from grok.directive import (
     template, templatedir, local_utility, permissions, require, site,
-    layer, viewletmanager, view, traversable, order)
+    layer, viewletmanager, view, traversable, order, skin)
 from grokcore.component.decorators import subscribe, adapter, implementer
 from martian.error import GrokError, GrokImportError
 
