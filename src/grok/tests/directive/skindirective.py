@@ -25,4 +25,15 @@ to the way the directive's store is implemented::
    ...
    AttributeError: type object 'NotAnInterfaceClass' has no attribute
    'queryTaggedValue'
+
+In certain cases we need to set a value on a component as if the directive was
+actually used::
+
+  >>> from zope import interface
+  >>> class IFoo(interface.Interface):
+  ...     pass
+  >>> grok.skin.set(IFoo, u'value as set')
+  >>> grok.skin.bind().get(IFoo)
+  u'value as set'
+
 """

@@ -219,7 +219,7 @@ class TaggedValueStoreOnce(StoreOnce):
         taggeddata[directive.dotted_name()] = value
 
     def setattr(self, context, directive, value):
-        raise NotImplementedError, 'Do we need this?'
+        context.setTaggedValue(directive.dotted_name(), value)
 
 TAGGEDVALUEONCE = TaggedValueStoreOnce()
 
