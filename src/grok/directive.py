@@ -221,6 +221,8 @@ class TaggedValueStoreOnce(StoreOnce):
     def setattr(self, context, directive, value):
         raise NotImplementedError, 'Do we need this?'
 
+TAGGEDVALUEONCE = TaggedValueStoreOnce()
+
 class skin(martian.Directive):
     # We cannot do any better than to check for a class scope. Ideally we
     # would've checked whether the context is indeed an Interface class.
