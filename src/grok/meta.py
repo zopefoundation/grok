@@ -17,6 +17,7 @@ import os
 
 import zope.component.interface
 from zope import interface, component
+from zope.interface.interface import InterfaceClass
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher,
@@ -274,7 +275,7 @@ class ModulePageTemplateGrokker(martian.InstanceGrokker):
     # this needs to happen before any other grokkers execute that actually
     # use the templates
     martian.priority(1000)
-    
+
     def grok(self, name, instance, module_info, config, **kw):
         templates = module_info.getAnnotation('grok.templates', None)
         if templates is None:
@@ -756,3 +757,26 @@ class ViewletGrokker(martian.ClassGrokker):
             return not has_render(factory)
         templates.checkTemplates(module_info, factory, 'viewlet',
                                  has_render, has_no_render)
+
+_skin_not_used = object()
+
+class SkinAsDirectiveGrokker(martian.InstanceGrokker):
+    martian.component(InterfaceClass)
+
+    def grok(self, name, factory, module_info, config, **kw):
+        skin = grok.skin.bind(default=_skin_not_used).get(factory)
+        if skin is _skin_not_used:
+            # The skin directive is not actually used on the found interface.
+            return False
+
+        if not issubclass(factory, IBrowserRequest):
+            # For layers it is required to subclass IBrowserRequest.
+            raise GrokError(
+                "The grok.skin() directive is used on interface %s. "
+                "However, %s does not subclass IBrowserRequest which is "
+                "required for interfaces that are used as layers and are to "
+                "be registered as a skin" % (factory, factory), factory)
+
+        # Now do the real stuff..
+
+        return True

@@ -1,6 +1,6 @@
 """
   >>> getRootFolder()["manfred"] = Mammoth()
- 
+
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
@@ -11,7 +11,7 @@
   <h1>Hello, world!</h1>
   </body>
   </html>
-  
+
   >>> browser.open("http://localhost/++skin++Rotterdam/manfred/@@moredrawings")
   >>> print browser.contents
   Pretty
@@ -61,3 +61,6 @@ class EvenMoreDrawings(grok.View):
 
     def render(self):
         return "Awesome"
+
+class IFoo(IBrowserRequest):
+    grok.skin('foo')
