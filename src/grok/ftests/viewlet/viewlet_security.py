@@ -154,7 +154,7 @@ class GoldBone(grok.Viewlet):
     def render(self):
         return 'Gold Bone'
 
-class IBoneLayer(grok.IGrokLayer, IDefaultBrowserLayer):
+class IBoneLayer(IDefaultBrowserLayer):
     pass
 
 class LayeredBone(grok.Viewlet):
