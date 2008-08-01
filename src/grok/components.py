@@ -651,12 +651,14 @@ Public = 'zope.Public'
 class Role(Role):
     pass
 
-class IGrokLayer(interface.Interface):
-    pass
-
 class IRESTLayer(interface.Interface):
     pass
 
+# BBB This interface is deprecated
+class IGrokLayer(interface.Interface):
+    pass
+
+# BBB This interface is deprecated
 class Skin(object):
     pass
 

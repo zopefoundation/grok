@@ -664,6 +664,7 @@ class SkinInterfaceDirectiveGrokker(martian.InstanceGrokker):
         return True
 
 
+# BBB Support for grok.Skin is deprecated
 class SkinGrokker(martian.ClassGrokker):
     martian.component(grok.Skin)
     martian.directive(grok.layer, default=IBrowserRequest)
