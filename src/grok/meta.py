@@ -760,7 +760,7 @@ class ViewletGrokker(martian.ClassGrokker):
 
 _skin_not_used = object()
 
-class SkinAsDirectiveGrokker(martian.InstanceGrokker):
+class SkinInterfaceDirectiveGrokker(martian.InstanceGrokker):
     martian.component(InterfaceClass)
 
     def grok(self, name, factory, module_info, config, **kw):
