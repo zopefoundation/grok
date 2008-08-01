@@ -25,7 +25,6 @@ import grok
 from zope.app.basicskin import IBasicSkin
 from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.app.rotterdam import rotterdam
-from zope import interface
 
 grok.layer(IBasicSkin)
 
