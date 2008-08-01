@@ -642,7 +642,7 @@ class SkinGrokker(martian.ClassGrokker):
 
     def execute(self, factory, config, name, layer, **kw):
         config.action(
-            discriminator=('skin', name),
+            discriminator=('utility', IBrowserSkinType, name),
             callable=zope.component.interface.provideInterface,
             args=(name, layer, IBrowserSkinType)
             )
