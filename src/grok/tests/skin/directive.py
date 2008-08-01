@@ -9,8 +9,8 @@ have effect::
    >>> from grok.tests.skin import directive_fixture
 
    >>> import grok
-   >>> print grok.skin.bind().get(directive_fixture.IIsAnInterface)
-   skin_name
+   >>> grok.skin.bind().get(directive_fixture.IIsAnInterface)
+   'skin_name'
 
 Unfortunately it is not possible to check whether the directive isn't used on a
 "normal" class instead of an interface class. This means, the directive can be
