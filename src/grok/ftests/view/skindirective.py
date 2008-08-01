@@ -59,6 +59,3 @@ class EvenMoreDrawings(grok.View):
 
     def render(self):
         return "Awesome"
-
-class IFoo(grok.IBrowserRequest):
-    grok.skin('foo')
