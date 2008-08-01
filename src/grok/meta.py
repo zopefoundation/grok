@@ -650,9 +650,9 @@ class SkinInterfaceDirectiveGrokker(martian.InstanceGrokker):
             # For layers it is required to extend IBrowserRequest.
             raise GrokError(
                 "The grok.skin() directive is used on interface %r. "
-                "However, %r does not subclass IBrowserRequest which is "
+                "However, %r does not extend IBrowserRequest which is "
                 "required for interfaces that are used as layers and are to "
-                "be registered as a skin"
+                "be registered as a skin."
                 % (interface.__identifier__, interface.__identifier__),
                 interface
                 )
