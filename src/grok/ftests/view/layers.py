@@ -23,12 +23,11 @@
 """
 import grok
 from zope.app.basicskin import IBasicSkin
-from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.app.rotterdam import rotterdam
 
 grok.layer(IBasicSkin)
 
-class MySkinLayer(grok.IGrokLayer):
+class MySkinLayer(grok.IBrowserRequest):
     pass
 
 class MySkin(grok.Skin):
@@ -61,5 +60,5 @@ class EvenMoreDrawings(grok.View):
     def render(self):
         return "Awesome"
 
-class IFoo(IBrowserRequest):
+class IFoo(grok.IBrowserRequest):
     grok.skin('foo')

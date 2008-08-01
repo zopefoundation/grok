@@ -23,6 +23,9 @@ from zope.lifecycleevent import (
     IObjectModifiedEvent, ObjectModifiedEvent,
     IObjectCopiedEvent, ObjectCopiedEvent)
 
+from zope.publisher.interfaces.browser import IBrowserRequest
+from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+
 from zope.app.container.contained import (
     IObjectAddedEvent, ObjectAddedEvent,
     IObjectMovedEvent, ObjectMovedEvent,
