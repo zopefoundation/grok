@@ -635,6 +635,35 @@ class IndexesSetupSubscriber(object):
         return intids
 
 
+_skin_not_used = object()
+
+class SkinInterfaceDirectiveGrokker(martian.InstanceGrokker):
+    martian.component(InterfaceClass)
+
+    def grok(self, name, interface, module_info, config, **kw):
+        skin = grok.skin.bind(default=_skin_not_used).get(interface)
+        if skin is _skin_not_used:
+            # The skin directive is not actually used on the found interface.
+            return False
+
+        if not interface.extends(IBrowserRequest):
+            # For layers it is required to extend IBrowserRequest.
+            raise GrokError(
+                "The grok.skin() directive is used on interface %r. "
+                "However, %r does not subclass IBrowserRequest which is "
+                "required for interfaces that are used as layers and are to "
+                "be registered as a skin"
+                % (interface.__identifier__, interface.__identifier__),
+                interface
+                )
+        config.action(
+            discriminator=('utility', IBrowserSkinType, skin),
+            callable=zope.component.interface.provideInterface,
+            args=(skin, interface, IBrowserSkinType)
+            )
+        return True
+
+
 class SkinGrokker(martian.ClassGrokker):
     martian.component(grok.Skin)
     martian.directive(grok.layer, default=IBrowserRequest)
@@ -757,31 +786,3 @@ class ViewletGrokker(martian.ClassGrokker):
             return not has_render(factory)
         templates.checkTemplates(module_info, factory, 'viewlet',
                                  has_render, has_no_render)
-
-_skin_not_used = object()
-
-class SkinInterfaceDirectiveGrokker(martian.InstanceGrokker):
-    martian.component(InterfaceClass)
-
-    def grok(self, name, interface, module_info, config, **kw):
-        skin = grok.skin.bind(default=_skin_not_used).get(interface)
-        if skin is _skin_not_used:
-            # The skin directive is not actually used on the found interface.
-            return False
-
-        if not interface.extends(IBrowserRequest):
-            # For layers it is required to extend IBrowserRequest.
-            raise GrokError(
-                "The grok.skin() directive is used on interface %r. "
-                "However, %r does not subclass IBrowserRequest which is "
-                "required for interfaces that are used as layers and are to "
-                "be registered as a skin"
-                % (interface.__identifier__, interface.__identifier__),
-                interface
-                )
-        config.action(
-            discriminator=('utility', IBrowserSkinType, skin),
-            callable=zope.component.interface.provideInterface,
-            args=(skin, interface, IBrowserSkinType)
-            )
-        return True
