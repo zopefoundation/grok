@@ -221,10 +221,9 @@ class TaggedValueStoreOnce(StoreOnce):
     def setattr(self, context, directive, value):
         context.setTaggedValue(directive.dotted_name(), value)
 
-TAGGEDVALUEONCE = TaggedValueStoreOnce()
-
 class skin(martian.Directive):
     # We cannot do any better than to check for a class scope. Ideally we
     # would've checked whether the context is indeed an Interface class.
     scope = martian.CLASS
-    store = TAGGEDVALUEONCE
+    store = TaggedValueStoreOnce()
+    validate = martian.validateText
