@@ -16,7 +16,7 @@
   >>> print browser.contents
   Pretty
 
-  >>> browser.open("http://localhost/++skin++myskin/manfred/@@evenmoredrawings")
+  >>> browser.open("http://localhost/++skin++skinfromclass/manfred/@@evenmoredrawings")
   >>> print browser.contents
   Awesome
 
@@ -30,7 +30,7 @@ grok.layer(IBasicSkin)
 class MySkinLayer(grok.IBrowserRequest):
     pass
 
-class MySkin(grok.Skin):
+class SkinFromClass(grok.Skin):
     grok.layer(MySkinLayer)
 
 class Mammoth(grok.Model):
