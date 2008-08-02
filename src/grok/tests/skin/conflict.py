@@ -5,13 +5,13 @@ We cannot register two skins under the same name::
   Traceback (most recent call last):
     ...
   ConfigurationConflictError: Conflicting configuration actions
-    For: ('skin', 'foo')
+    For: ('utility', <InterfaceClass zope.publisher.interfaces.browser.IBrowserSkinType>, 'foo')
 """
 
 import grok
 
-class Skin1(grok.Skin):
-    grok.name('foo')
+class Skin1(grok.IBrowserRequest):
+    grok.skin('foo')
 
-class Skin2(grok.Skin):
-    grok.name('foo')
+class Skin2(grok.IBrowserRequest):
+    grok.skin('foo')

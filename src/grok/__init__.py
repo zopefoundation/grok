@@ -23,6 +23,9 @@ from zope.lifecycleevent import (
     IObjectModifiedEvent, ObjectModifiedEvent,
     IObjectCopiedEvent, ObjectCopiedEvent)
 
+from zope.publisher.interfaces.browser import IBrowserRequest
+from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+
 from zope.app.container.contained import (
     IObjectAddedEvent, ObjectAddedEvent,
     IObjectMovedEvent, ObjectMovedEvent,
@@ -39,7 +42,6 @@ from grok.components import Site, LocalUtility, Annotation
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Permission, Role, Public
-from grok.components import Skin, IGrokLayer
 from grok.components import RESTProtocol, IRESTLayer
 from grok.interfaces import IRESTSkinType
 from grok.components import ViewletManager, Viewlet
@@ -49,7 +51,7 @@ from grokcore.component.directive import (
     context, name, title, description, provides, global_utility, direct)
 from grok.directive import (
     template, templatedir, local_utility, permissions, require, site,
-    layer, viewletmanager, view, traversable, order)
+    layer, viewletmanager, view, traversable, order, skin)
 from grokcore.component.decorators import subscribe, adapter, implementer
 from martian.error import GrokError, GrokImportError
 

@@ -17,6 +17,7 @@ import os
 
 import zope.component.interface
 from zope import interface, component
+from zope.interface.interface import InterfaceClass
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher,
@@ -274,7 +275,7 @@ class ModulePageTemplateGrokker(martian.InstanceGrokker):
     # this needs to happen before any other grokkers execute that actually
     # use the templates
     martian.priority(1000)
-    
+
     def grok(self, name, instance, module_info, config, **kw):
         templates = module_info.getAnnotation('grok.templates', None)
         if templates is None:
@@ -634,18 +635,34 @@ class IndexesSetupSubscriber(object):
         return intids
 
 
-class SkinGrokker(martian.ClassGrokker):
-    martian.component(grok.Skin)
-    martian.directive(grok.layer, default=IBrowserRequest)
-    martian.directive(grok.name, get_default=default_view_name)
+_skin_not_used = object()
 
-    def execute(self, factory, config, name, layer, **kw):
+class SkinInterfaceDirectiveGrokker(martian.InstanceGrokker):
+    martian.component(InterfaceClass)
+
+    def grok(self, name, interface, module_info, config, **kw):
+        skin = grok.skin.bind(default=_skin_not_used).get(interface)
+        if skin is _skin_not_used:
+            # The skin directive is not actually used on the found interface.
+            return False
+
+        if not interface.extends(IBrowserRequest):
+            # For layers it is required to extend IBrowserRequest.
+            raise GrokError(
+                "The grok.skin() directive is used on interface %r. "
+                "However, %r does not extend IBrowserRequest which is "
+                "required for interfaces that are used as layers and are to "
+                "be registered as a skin."
+                % (interface.__identifier__, interface.__identifier__),
+                interface
+                )
         config.action(
-            discriminator=('skin', name),
+            discriminator=('utility', IBrowserSkinType, skin),
             callable=zope.component.interface.provideInterface,
-            args=(name, layer, IBrowserSkinType)
+            args=(skin, interface, IBrowserSkinType)
             )
         return True
+
 
 class RESTProtocolGrokker(martian.ClassGrokker):
     martian.component(grok.RESTProtocol)

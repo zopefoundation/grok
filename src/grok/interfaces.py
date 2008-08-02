@@ -238,6 +238,8 @@ class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
         """
 
     IRESTSkinType = interface.Attribute('The REST skin type')
+    IBrowserRequest = interface.Attribute('Browser request interface')
+    IDefaultBrowserLayer = interface.Attribute('Default layer for browser views.')
 
 class IGrokView(IBrowserPage, IBrowserView):
     """Grok views all provide this interface."""

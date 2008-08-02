@@ -12,6 +12,11 @@ Restructuring
   your environment, add ``grokui.admin`` to the required packages in
   the ``setup.py`` of your package.
 
+* Removed ``grok.Skin`` baseclass in favour of a ``grok.skin(name)``
+  directive that can be used on layer interfaces.  Also removed the
+  ``IGrokLayer`` interface in favour of exposing ``IBrowserRequest``
+  from the grok package.
+
 Bug fixes
 ---------
 

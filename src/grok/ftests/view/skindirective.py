@@ -1,6 +1,6 @@
 """
   >>> getRootFolder()["manfred"] = Mammoth()
- 
+
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
@@ -11,7 +11,7 @@
   <h1>Hello, world!</h1>
   </body>
   </html>
-  
+
   >>> browser.open("http://localhost/++skin++Rotterdam/manfred/@@moredrawings")
   >>> print browser.contents
   Pretty
@@ -23,17 +23,15 @@
 """
 import grok
 from zope.app.basicskin import IBasicSkin
-from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.app.rotterdam import rotterdam
-from zope import interface
 
 grok.layer(IBasicSkin)
 
-class MySkinLayer(grok.IGrokLayer):
+class MySkinLayer(grok.IBrowserRequest):
     pass
 
-class MySkin(grok.Skin):
-    grok.layer(MySkinLayer)
+class MySkin(MySkinLayer):
+    grok.skin('myskin')
 
 class Mammoth(grok.Model):
     pass
