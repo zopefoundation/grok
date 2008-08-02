@@ -155,7 +155,7 @@ class GoldBone(grok.Viewlet):
         return 'Gold Bone'
 
 class IBoneLayer(IDefaultBrowserLayer):
-    pass
+    grok.skin('boneskin')
 
 class LayeredBone(grok.Viewlet):
     grok.context(Interface)
@@ -179,9 +179,6 @@ class LadyViewlet(grok.Viewlet):
 
     def render(self):
         return 'Lady Viewlet'
-
-class BoneSkin(grok.Skin):
-    grok.layer(IBoneLayer)
 
 class NamedViewletManager(grok.ViewletManager):
     grok.context(Interface)

@@ -654,14 +654,6 @@ class Role(Role):
 class IRESTLayer(interface.Interface):
     pass
 
-# BBB This interface is deprecated
-class IGrokLayer(interface.Interface):
-    pass
-
-# BBB This interface is deprecated
-class Skin(object):
-    pass
-
 class RESTProtocol(object):
     pass
 

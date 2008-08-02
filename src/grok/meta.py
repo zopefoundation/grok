@@ -664,20 +664,6 @@ class SkinInterfaceDirectiveGrokker(martian.InstanceGrokker):
         return True
 
 
-# BBB Support for grok.Skin is deprecated
-class SkinGrokker(martian.ClassGrokker):
-    martian.component(grok.Skin)
-    martian.directive(grok.layer, default=IBrowserRequest)
-    martian.directive(grok.name, get_default=default_view_name)
-
-    def execute(self, factory, config, name, layer, **kw):
-        config.action(
-            discriminator=('utility', IBrowserSkinType, name),
-            callable=zope.component.interface.provideInterface,
-            args=(name, layer, IBrowserSkinType)
-            )
-        return True
-
 class RESTProtocolGrokker(martian.ClassGrokker):
     martian.component(grok.RESTProtocol)
     martian.directive(grok.layer, default=IBrowserRequest)

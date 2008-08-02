@@ -46,9 +46,6 @@ from grok.components import RESTProtocol, IRESTLayer
 from grok.interfaces import IRESTSkinType
 from grok.components import ViewletManager, Viewlet
 
-# BBB These are deprecated.
-from grok.components import Skin, IGrokLayer
-
 from martian import baseclass
 from grokcore.component.directive import (
     context, name, title, description, provides, global_utility, direct)
