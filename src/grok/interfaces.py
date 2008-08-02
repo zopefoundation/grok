@@ -46,7 +46,6 @@ class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses):
     EditForm = interface.Attribute("Base class for edit forms.")
     DisplayForm = interface.Attribute("Base class for display forms.")
     Indexes = interface.Attribute("Base class for catalog index definitions.")
-    Skin = interface.Attribute("Base class for skin.")
     ViewletManager = interface.Attribute("Base class for viewletmanager.")
     Viewlet = interface.Attribute("Base class for viewlet.")
     Permission = interface.Attribute("Base class for permissions.")
