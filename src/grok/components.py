@@ -29,6 +29,7 @@ from zope.security.permission import Permission
 from zope.securitypolicy.role import Role
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
+from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.publisher.interfaces.browser import IBrowserPublisher
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.publisher.publish import mapply
@@ -651,7 +652,7 @@ Public = 'zope.Public'
 class Role(Role):
     pass
 
-class IRESTLayer(interface.Interface):
+class IRESTLayer(IBrowserRequest):
     pass
 
 class RESTProtocol(object):
