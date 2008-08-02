@@ -33,7 +33,7 @@ from zope.app.container.contained import (
     IContainerModifiedEvent, ContainerModifiedEvent)
 
 from martian import ClassGrokker, InstanceGrokker, GlobalGrokker
-from grokcore.component import Adapter, MultiAdapter, GlobalUtility
+from grokcore.component import Adapter, MultiAdapter, GlobalUtility, Context
 from grok.components import Model, View
 from grok.components import XMLRPC, REST, JSON
 from grok.components import PageTemplate, PageTemplateFile, Traverser
