@@ -6,6 +6,28 @@ continue to work with newer versions of Grok.  This document only
 describes changes involving incompatibilities or deprecations, not new
 features (please refer to ``CHANGES.txt`` for those).
 
+Upgrading to 0.14
+-----------------
+
+* The ``grok.Skin`` class has been removed in favour of a
+  ``grok.skin()`` directive for interfaces.  For instance, if you
+  previously registered a browser layer as a skin like so::
+
+    class IMyLayer(grok.IGrokLayer):
+        pass
+
+    class MySkin(grok.Skin):
+        grok.layer(IMyLayer)
+
+  you can now simply write::
+
+    class IMyLayer(grok.IBrowserRequest):
+        grok.skin('myskin')
+
+  As you can see, ``IGrokLayer`` has also been removed, in favour of
+  the exposure of ``IBrowserRequest``.
+
+
 Upgrading to 0.13
 -----------------
 
