@@ -25,7 +25,6 @@ import zope.location
 from zope import component
 from zope import interface
 from zope.interface.common import idatetime
-from zope.security.permission import Permission
 from zope.securitypolicy.role import Role
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
@@ -644,10 +643,6 @@ class IndexesClass(object):
 
 Indexes = IndexesClass('Indexes')
 
-class Permission(Permission):
-    pass
-
-Public = 'zope.Public'
 
 class Role(Role):
     pass

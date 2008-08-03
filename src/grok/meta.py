@@ -26,7 +26,6 @@ from zope.publisher.interfaces.http import IHTTPRequest
 
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.viewlet.interfaces import IViewletManager, IViewlet
-from zope.security.interfaces import IPermission
 from zope.securitypolicy.interfaces import IRole
 from zope.securitypolicy.rolepermission import rolePermissionManager
 
@@ -55,6 +54,7 @@ from grok.interfaces import IRESTSkinType
 from grok.interfaces import IViewletManager as IGrokViewletManager
 
 from grokcore.component.scan import determine_module_component
+from grokcore.security.meta import PermissionGrokker
 
 
 def default_view_name(factory, module=None, **data):
@@ -446,32 +446,6 @@ def setupUtility(site, utility, provides, name=u'',
 
     site_manager.registerUtility(utility, provided=provides,
                                  name=name)
-
-
-class PermissionGrokker(martian.ClassGrokker):
-    martian.component(grok.Permission)
-    martian.priority(1500)
-    martian.directive(grok.name)
-    martian.directive(grok.title, get_default=default_fallback_to_name)
-    martian.directive(grok.description)
-
-    def execute(self, factory, config, name, title, description, **kw):
-        if not name:
-            raise GrokError(
-                "A permission needs to have a dotted name for its id. Use "
-                "grok.name to specify one.", factory)
-        # We can safely convert to unicode, since the directives make sure
-        # it is either unicode already or ASCII.
-        permission = factory(unicode(name), unicode(title),
-                             unicode(description))
-
-        config.action(
-            discriminator=('utility', IPermission, name),
-            callable=component.provideUtility,
-            args=(permission, IPermission, name),
-            order=-1 # need to do this early in the process
-            )
-        return True
 
 
 class RoleGrokker(martian.ClassGrokker):

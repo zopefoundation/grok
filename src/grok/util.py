@@ -13,7 +13,6 @@
 ##############################################################################
 """Grok utility functions.
 """
-
 import urllib
 
 import grok
@@ -22,12 +21,9 @@ from zope import component
 from zope import interface
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
-
 from zope.security.checker import NamesChecker, defineChecker
-from zope.security.interfaces import IPermission
 
-from martian.error import GrokError
-from martian.util import methods_from_class
+from grokcore.security.util import check_permission
 
 def make_checker(factory, view_factory, permission, method_names=None):
     """Make a checker for a view_factory associated with factory.
@@ -44,17 +40,6 @@ def make_checker(factory, view_factory, permission, method_names=None):
     else:
         checker = NamesChecker(method_names, permission)
     defineChecker(view_factory, checker)
-
-def check_permission(factory, permission):
-    """Check whether a permission is defined.
-
-    If not, raise error for factory.
-    """
-    if component.queryUtility(IPermission,
-                              name=permission) is None:
-       raise GrokError('Undefined permission %r in %r. Use '
-                       'grok.Permission first.'
-                       % (permission, factory), factory)
 
 def url(request, obj, name=None, data={}):
     url = component.getMultiAdapter((obj, request), IAbsoluteURL)()
