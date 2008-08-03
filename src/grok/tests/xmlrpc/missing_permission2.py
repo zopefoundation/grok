@@ -1,11 +1,11 @@
 """
 A permission has to be defined first (using grok.Permission for example)
-before it can be used in grok.require() in an XMLRPC class.
+before it can be used in @grok.require().
 
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
   ...
-  ConfigurationExecutionError: martian.error.GrokError: Undefined permission 'doesnt.exist' in <class 'grok.tests.security.missing_permission_xmlrpc.MissingPermission'>. Use grok.Permission first.
+  ConfigurationExecutionError: martian.error.GrokError: Undefined permission 'doesnt.exist' in <class 'grok.tests.xmlrpc.missing_permission2.MissingPermission'>. Use grok.Permission first.
   ...
 
 """
@@ -15,8 +15,8 @@ import zope.interface
 
 class MissingPermission(grok.XMLRPC):
     grok.context(zope.interface.Interface)
-    grok.require('doesnt.exist')
 
+    @grok.require('doesnt.exist')
     def foo(self):
         pass
 
