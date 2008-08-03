@@ -13,9 +13,18 @@
 ##############################################################################
 """Grok
 """
-
 from zope.interface import implements
 from zope.component import adapts
+
+from martian import ClassGrokker, InstanceGrokker, GlobalGrokker
+from martian import baseclass
+from martian.error import GrokError, GrokImportError
+
+from grokcore.component import Adapter, MultiAdapter, GlobalUtility, Context
+from grokcore.component.decorators import subscribe, adapter, implementer
+from grokcore.component.directive import (
+    context, name, title, description, provides, global_utility, direct)
+
 from zope.event import notify
 from zope.app.component.hooks import getSite
 from zope.lifecycleevent import (
@@ -32,8 +41,6 @@ from zope.app.container.contained import (
     IObjectRemovedEvent, ObjectRemovedEvent,
     IContainerModifiedEvent, ContainerModifiedEvent)
 
-from martian import ClassGrokker, InstanceGrokker, GlobalGrokker
-from grokcore.component import Adapter, MultiAdapter, GlobalUtility, Context
 from grok.components import Model, View
 from grok.components import XMLRPC, REST, JSON
 from grok.components import PageTemplate, PageTemplateFile, Traverser
@@ -46,14 +53,9 @@ from grok.components import RESTProtocol, IRESTLayer
 from grok.interfaces import IRESTSkinType
 from grok.components import ViewletManager, Viewlet
 
-from martian import baseclass
-from grokcore.component.directive import (
-    context, name, title, description, provides, global_utility, direct)
 from grok.directive import (
     template, templatedir, local_utility, permissions, require, site,
     layer, viewletmanager, view, traversable, order, skin)
-from grokcore.component.decorators import subscribe, adapter, implementer
-from martian.error import GrokError, GrokImportError
 
 # BBB These two functions are meant for test fixtures and should be
 # imported from grok.testing, not from grok.
