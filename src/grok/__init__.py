@@ -29,6 +29,14 @@ from grokcore.security import Permission
 from grokcore.security import Public
 from grokcore.security import require
 
+from grokcore.view import PageTemplate
+from grokcore.view import PageTemplateFile
+from grokcore.view import layer
+from grokcore.view import template
+from grokcore.view import templatedir
+from grokcore.view import skin
+from grokcore.view import url
+
 from zope.event import notify
 from zope.app.component.hooks import getSite
 from zope.lifecycleevent import (
@@ -47,7 +55,7 @@ from zope.app.container.contained import (
 
 from grok.components import Model, View
 from grok.components import XMLRPC, REST, JSON
-from grok.components import PageTemplate, PageTemplateFile, Traverser
+from grok.components import Traverser
 from grok.components import Container, OrderedContainer
 from grok.components import Site, LocalUtility, Annotation
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
@@ -57,16 +65,15 @@ from grok.components import RESTProtocol, IRESTLayer
 from grok.interfaces import IRESTSkinType
 from grok.components import ViewletManager, Viewlet
 
-from grok.directive import (
-    template, templatedir, local_utility, permissions, site,
-    layer, viewletmanager, view, traversable, order, skin)
+from grok.directive import (local_utility, permissions, site,
+                            viewletmanager, view, traversable, order)
+
+from grok.formlib import action, AutoFields, Fields
+
 
 # BBB These two functions are meant for test fixtures and should be
 # imported from grok.testing, not from grok.
 from grok.testing import grok, grok_component
-
-from grok.formlib import action, AutoFields, Fields
-from grok.util import url
 
 # Our __init__ provides the grok API directly so using 'import grok' is enough.
 from grok.interfaces import IGrokAPI

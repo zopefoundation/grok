@@ -13,14 +13,9 @@
 ##############################################################################
 """Grok utility functions.
 """
-import urllib
-
 import grok
 import zope.location.location
-from zope import component
 from zope import interface
-from zope.traversing.browser.interfaces import IAbsoluteURL
-from zope.traversing.browser.absoluteurl import _safe as SAFE_URL_CHARACTERS
 from zope.security.checker import NamesChecker, defineChecker
 
 from grokcore.security.util import check_permission
@@ -40,20 +35,6 @@ def make_checker(factory, view_factory, permission, method_names=None):
     else:
         checker = NamesChecker(method_names, permission)
     defineChecker(view_factory, checker)
-
-def url(request, obj, name=None, data={}):
-    url = component.getMultiAdapter((obj, request), IAbsoluteURL)()
-    if name is not None:
-        url += '/' + urllib.quote(name.encode('utf-8'), SAFE_URL_CHARACTERS)
-    if data:
-        for k,v in data.items():
-            if isinstance(v, unicode):
-                data[k] = v.encode('utf-8')
-            if isinstance(v, (list, set, tuple)):
-                data[k] = [isinstance(item, unicode) and item.encode('utf-8')
-                or item for item in v]
-        url += '?' + urllib.urlencode(data, doseq=True)
-    return url
 
 def safely_locate_maybe(obj, parent, name):
     """Set an object's __parent__ (and __name__) if the object's

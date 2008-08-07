@@ -13,15 +13,11 @@
 ##############################################################################
 """Grokkers for the various components."""
 
-import os
-
 import zope.component.interface
 from zope import interface, component
-from zope.interface.interface import InterfaceClass
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
-                                               IBrowserPublisher,
-                                               IBrowserSkinType)
+                                               IBrowserPublisher)
 from zope.publisher.interfaces.http import IHTTPRequest
 
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
@@ -48,7 +44,7 @@ from martian.error import GrokError
 from martian import util
 
 import grok
-from grok import components, formlib, templatereg
+from grok import components, formlib
 from grok.util import make_checker
 from grok.interfaces import IRESTSkinType
 from grok.interfaces import IViewletManager as IGrokViewletManager
@@ -143,77 +139,23 @@ class RESTGrokker(martian.MethodGrokker):
         return True
 
 
-class ViewGrokker(martian.ClassGrokker):
-    martian.component(grok.View)
+class FormGrokker(martian.ClassGrokker):
+    martian.component(components.GrokForm)
     martian.directive(grok.context)
-    martian.directive(grok.layer, default=IDefaultBrowserLayer)
-    martian.directive(grok.name, get_default=default_view_name)
-    martian.directive(grok.require, name='permission')
 
-    def grok(self, name, factory, module_info, **kw):
-        # Need to store the module info object on the view class so that it
-        # can look up the 'static' resource directory.
-        factory.module_info = module_info
-        return super(ViewGrokker, self).grok(name, factory, module_info, **kw)
+    def execute(self, factory, config, context, **kw):
+        # Set up form_fields from context class if they haven't been
+        # configured manually already.
+        if getattr(factory, 'form_fields', None) is None:
+            factory.form_fields = formlib.get_auto_fields(context)
 
-    def execute(self, factory, config, context, layer, name, permission, **kw):
-        if util.check_subclass(factory, components.GrokForm):
-            # setup form_fields from context class if we've encountered a form
-            if getattr(factory, 'form_fields', None) is None:
-                factory.form_fields = formlib.get_auto_fields(context)
-
-            if not getattr(factory.render, 'base_method', False):
-                raise GrokError(
-                    "It is not allowed to specify a custom 'render' "
-                    "method for form %r. Forms either use the default "
-                    "template or a custom-supplied one." % factory,
-                    factory)
-
-        # find templates
-        templates = factory.module_info.getAnnotation('grok.templates', None)
-        if templates is not None:
-            config.action(
-                discriminator=None,
-                callable=self.checkTemplates,
-                args=(templates, factory.module_info, factory)
-                )
-
-        # safety belt: make sure that the programmer didn't use
-        # @grok.require on any of the view's methods.
-        methods = util.methods_from_class(factory)
-        for method in methods:
-            if grok.require.bind().get(method) is not None:
-                raise GrokError('The @grok.require decorator is used for '
-                                'method %r in view %r. It may only be used '
-                                'for XML-RPC methods.'
-                                % (method.__name__, factory), factory)
-
-        # __view_name__ is needed to support IAbsoluteURL on views
-        factory.__view_name__ = name
-        adapts = (context, layer)
-
-        config.action(
-            discriminator=('adapter', adapts, interface.Interface, name),
-            callable=component.provideAdapter,
-            args=(factory, adapts, interface.Interface, name),
-            )
-
-        config.action(
-            discriminator=('protectName', factory, '__call__'),
-            callable=make_checker,
-            args=(factory, factory, permission),
-            )
-
+        if not getattr(factory.render, 'base_method', False):
+            raise GrokError(
+                "It is not allowed to specify a custom 'render' "
+                "method for form %r. Forms either use the default "
+                "template or a custom-supplied one." % factory,
+                factory)
         return True
-
-    def checkTemplates(self, templates, module_info, factory):
-        def has_render(factory):
-            return (getattr(factory, 'render', None) and
-                    not util.check_subclass(factory, grok.components.GrokForm))
-        def has_no_render(factory):
-            return not getattr(factory, 'render', None)
-        templates.checkTemplates(module_info, factory, 'view',
-                                 has_render, has_no_render)
 
 
 class JSONGrokker(martian.MethodGrokker):
@@ -256,109 +198,6 @@ class TraverserGrokker(martian.ClassGrokker):
             discriminator=('adapter', adapts, IBrowserPublisher, ''),
             callable=component.provideAdapter,
             args=(factory, adapts, IBrowserPublisher),
-            )
-        return True
-
-
-class TemplateGrokker(martian.GlobalGrokker):
-    # this needs to happen before any other grokkers execute that use
-    # the template registry
-    martian.priority(1001)
-
-    def grok(self, name, module, module_info, config, **kw):
-        module.__grok_templates__ = templatereg.TemplateRegistry()
-        return True
-
-
-class ModulePageTemplateGrokker(martian.InstanceGrokker):
-    martian.component(grok.components.BaseTemplate)
-    # this needs to happen before any other grokkers execute that actually
-    # use the templates
-    martian.priority(1000)
-
-    def grok(self, name, instance, module_info, config, **kw):
-        templates = module_info.getAnnotation('grok.templates', None)
-        if templates is None:
-            return False
-        config.action(
-            discriminator=None,
-            callable=templates.register,
-            args=(name, instance)
-            )
-        config.action(
-            discriminator=None,
-            callable=instance._annotateGrokInfo,
-            args=(name, module_info.dotted_name)
-            )
-        return True
-
-
-class FilesystemPageTemplateGrokker(martian.GlobalGrokker):
-    # do this early on, but after ModulePageTemplateGrokker, as
-    # findFilesystem depends on module-level templates to be
-    # already grokked for error reporting
-    martian.priority(999)
-
-    def grok(self, name, module, module_info, config, **kw):
-        templates = module_info.getAnnotation('grok.templates', None)
-        if templates is None:
-            return False
-        config.action(
-            discriminator=None,
-            callable=templates.findFilesystem,
-            args=(module_info,)
-            )
-        return True
-
-
-class UnassociatedTemplatesGrokker(martian.GlobalGrokker):
-    martian.priority(-1001)
-
-    def grok(self, name, module, module_info, config, **kw):
-        templates = module_info.getAnnotation('grok.templates', None)
-        if templates is None:
-            return False
-
-        config.action(
-            discriminator=None,
-            callable=templates.checkUnassociated,
-            args=(module_info,)
-            )
-        return True
-
-
-class StaticResourcesGrokker(martian.GlobalGrokker):
-
-    def grok(self, name, module, module_info, config, **kw):
-        # we're only interested in static resources if this module
-        # happens to be a package
-        if not module_info.isPackage():
-            return False
-
-        resource_path = module_info.getResourcePath('static')
-        if os.path.isdir(resource_path):
-            static_module = module_info.getSubModuleInfo('static')
-            if static_module is not None:
-                if static_module.isPackage():
-                    raise GrokError(
-                        "The 'static' resource directory must not "
-                        "be a python package.",
-                        module_info.getModule())
-                else:
-                    raise GrokError(
-                        "A package can not contain both a 'static' "
-                        "resource directory and a module named "
-                        "'static.py'", module_info.getModule())
-
-        resource_factory = components.DirectoryResourceFactory(
-            resource_path, module_info.dotted_name)
-        adapts = (IDefaultBrowserLayer,)
-        provides = interface.Interface
-        name = module_info.dotted_name
-        config.action(
-            discriminator=('adapter', adapts, provides, name),
-            callable=component.provideAdapter,
-            args=(resource_factory, adapts, provides, name),
             )
         return True
 
@@ -607,35 +446,6 @@ class IndexesSetupSubscriber(object):
         intids = IntIds()
         setupUtility(site, intids, IIntIds)
         return intids
-
-
-_skin_not_used = object()
-
-class SkinInterfaceDirectiveGrokker(martian.InstanceGrokker):
-    martian.component(InterfaceClass)
-
-    def grok(self, name, interface, module_info, config, **kw):
-        skin = grok.skin.bind(default=_skin_not_used).get(interface)
-        if skin is _skin_not_used:
-            # The skin directive is not actually used on the found interface.
-            return False
-
-        if not interface.extends(IBrowserRequest):
-            # For layers it is required to extend IBrowserRequest.
-            raise GrokError(
-                "The grok.skin() directive is used on interface %r. "
-                "However, %r does not extend IBrowserRequest which is "
-                "required for interfaces that are used as layers and are to "
-                "be registered as a skin."
-                % (interface.__identifier__, interface.__identifier__),
-                interface
-                )
-        config.action(
-            discriminator=('utility', IBrowserSkinType, skin),
-            callable=zope.component.interface.provideInterface,
-            args=(skin, interface, IBrowserSkinType)
-            )
-        return True
 
 
 class RESTProtocolGrokker(martian.ClassGrokker):

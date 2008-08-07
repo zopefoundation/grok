@@ -38,6 +38,7 @@ setup(
                       'martian >= 0.10',
                       'grokcore.component >= 1.5',
                       'grokcore.security',
+                      'grokcore.view',
                       'simplejson',
                       'pytz',
                       'ZODB3',

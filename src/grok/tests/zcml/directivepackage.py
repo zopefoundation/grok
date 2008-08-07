@@ -1,16 +1,16 @@
 """
   >>> import grok
   >>> from zope.configuration import xmlconfig
-  >>> context = xmlconfig.file('meta.zcml', grok)
 
   >>> ignored = xmlconfig.string('''
   ... <configure
   ...     xmlns="http://namespaces.zope.org/zope"
   ...     xmlns:grok="http://namespaces.zope.org/grok"
   ...     >
-  ...     <grok:grok package="grok.templatereg"/>
+  ...     <include package="grok" file="meta.zcml" />
+  ...     <grok:grok package="grokcore.view.templatereg" />
   ...     <grok:grok package="grok.tests.zcml.stoneage"/>
-  ... </configure>''', context=context)
+  ... </configure>''')
 
   >>> from grok.tests.zcml.stoneage.cave import Cave
   >>> from grok.tests.zcml.stoneage.hunt.mammoth import Mammoth
