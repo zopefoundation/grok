@@ -1,3 +1,0 @@
-This template does not have an associated view class (in other words,
-there's no grok.tests.view.unassociated.Index class), therefore it
-provokes a GrokError.
