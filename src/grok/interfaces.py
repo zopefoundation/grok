@@ -29,7 +29,8 @@ from grokcore.component.interfaces import IGrokErrors
 
 
 class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses,
-                       grokcore.security.interfaces.IBaseClasses):
+                       grokcore.security.interfaces.IBaseClasses,
+                       grokcore.view.interfaces.IBaseClasses):
     Model = interface.Attribute("Base class for persistent content objects "
                                 "(models).")
     Container = interface.Attribute("Base class for containers.")
@@ -38,7 +39,6 @@ class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses,
     Application = interface.Attribute("Base class for applications.")
     Annotation = interface.Attribute("Base class for persistent annotations.")
     LocalUtility = interface.Attribute("Base class for local utilities.")
-    View = interface.Attribute("Base class for browser views.")
     XMLRPC = interface.Attribute("Base class for XML-RPC methods.")
     JSON = interface.Attribute("Base class for JSON methods.")
     REST = interface.Attribute("Base class for REST views.")
@@ -54,30 +54,8 @@ class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses,
 
 
 class IGrokDirectives(grokcore.component.interfaces.IDirectives,
-                      grokcore.security.interfaces.IDirectives):
-
-    def layer(layer):
-        """Declare the layer for the view.
-
-        This directive acts as a contraint on the 'request' of
-        grok.View. This directive can only be used on class level."""
-
-    def skin(skin):
-        """Declare this layer as a named skin.
-
-        This directive can only be used on class level."""
-
-    def template(template):
-        """Declare the template name for a view.
-
-        This directive can only be used on class level."""
-
-    def templatedir(directory):
-        """Declare a directory to be searched for templates.
-
-        By default, grok will take the name of the module as the name
-        of the directory.  This can be overridden using
-        ``templatedir``."""
+                      grokcore.security.interfaces.IDirectives,
+                      grokcore.view.interfaces.IDirectives):
 
     def local_utility(factory, provides=None, name=u'',
                       setup=None, public=False, name_in_container=None):
@@ -164,6 +142,7 @@ class IGrokEvents(interface.Interface):
 
 
 class IGrokAPI(grokcore.security.interfaces.IGrokcoreSecurityAPI,
+               grokcore.view.interfaces.IGrokcoreViewAPI,
                IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
                IGrokEvents, IGrokErrors):
 
@@ -196,26 +175,11 @@ class IGrokAPI(grokcore.security.interfaces.IGrokcoreSecurityAPI,
         grok.testing.grok_component().
         """
 
-    def url(request, obj, name=None, data=None):
-        """Generate the URL to an object with optional name attached.
-        An optional argument 'data' can be a dictionary that is converted
-        into a query string appended to the URL.
-        """
-
     def notify(event):
         """Send ``event`` to event subscribers."""
 
     def getSite():
         """Get the current site."""
-
-    def PageTemplate(template):
-        """Create a Grok PageTemplate object from ``template`` source
-        text.  This can be used for inline PageTemplates."""
-
-    def PageTemplateFile(filename):
-        """Create a Grok PageTemplate object from a file specified by
-        ``filename``.  It will be treated like an inline template
-        created with ``PageTemplate``."""
 
     def Fields(*args, **kw):
         """Return a list of formlib fields based on interfaces and/or schema
@@ -230,8 +194,7 @@ class IGrokAPI(grokcore.security.interfaces.IGrokcoreSecurityAPI,
         """
 
     IRESTSkinType = interface.Attribute('The REST skin type')
-    IBrowserRequest = interface.Attribute('Browser request interface')
-    IDefaultBrowserLayer = interface.Attribute('Default layer for browser views.')
+
 
 class IGrokView(grokcore.view.interfaces.IGrokView):
     """Grok views all provide this interface."""
