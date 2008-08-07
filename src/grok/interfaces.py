@@ -20,6 +20,7 @@ from zope.viewlet.interfaces import IViewletManager as IViewletManagerBase
 from zope.app.container.interfaces import IContainer as IContainerBase
 
 import grokcore.component.interfaces
+import grokcore.security.interfaces
 import grokcore.view.interfaces
 
 # Expose interfaces from grok.interfaces as well:
@@ -27,7 +28,8 @@ from grokcore.component.interfaces import IContext
 from grokcore.component.interfaces import IGrokErrors
 
 
-class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses):
+class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses,
+                       grokcore.security.interfaces.IBaseClasses):
     Model = interface.Attribute("Base class for persistent content objects "
                                 "(models).")
     Container = interface.Attribute("Base class for containers.")
@@ -48,12 +50,11 @@ class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses):
     Indexes = interface.Attribute("Base class for catalog index definitions.")
     ViewletManager = interface.Attribute("Base class for viewletmanager.")
     Viewlet = interface.Attribute("Base class for viewlet.")
-    Permission = interface.Attribute("Base class for permissions.")
     Role = interface.Attribute("Base class for roles.")
-    Public = interface.Attribute("Marker for explicitly not requiring a permission.")
 
 
-class IGrokDirectives(grokcore.component.interfaces.IDirectives):
+class IGrokDirectives(grokcore.component.interfaces.IDirectives,
+                      grokcore.security.interfaces.IDirectives):
 
     def layer(layer):
         """Declare the layer for the view.
@@ -96,15 +97,6 @@ class IGrokDirectives(grokcore.component.interfaces.IDirectives):
     def permissions(permissions):
         """Specify the permissions that comprise a role.
         """
-
-    def require(permission):
-        """Protect a view class or an XMLRPC method with ``permision``.
-
-        ``permission`` must already be defined, e.g. using
-        grok.Permission.
-
-        grok.require can be used as a class-level directive or as a
-        method decorator."""
 
     def site(class_or_interface):
         """Specifies the site that an indexes definition is for.
@@ -171,7 +163,8 @@ class IGrokEvents(interface.Interface):
     ContainerModifiedEvent = interface.Attribute("")
 
 
-class IGrokAPI(IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
+class IGrokAPI(grokcore.security.interfaces.IGrokcoreSecurityAPI,
+               IGrokBaseClasses, IGrokDirectives, IGrokDecorators,
                IGrokEvents, IGrokErrors):
 
     # BBB this is deprecated
