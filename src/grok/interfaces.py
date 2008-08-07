@@ -23,9 +23,11 @@ import grokcore.component.interfaces
 import grokcore.security.interfaces
 import grokcore.view.interfaces
 
-# Expose interfaces from grok.interfaces as well:
+# Expose interfaces from grokcore.* packages as well:
 from grokcore.component.interfaces import IContext
 from grokcore.component.interfaces import IGrokErrors
+from grokcore.view.interfaces import ITemplateFileFactory
+from grokcore.view.interfaces import ITemplate
 
 
 class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses,
