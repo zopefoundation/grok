@@ -9,15 +9,17 @@ CREDITS
 
 * Philipp von Weitershausen (original developer)
 
-* Jan-Wijbrand Kolman (Grok Zwei sprint, meta grokker improvements)
+* Jan-Wijbrand Kolman (early developer (Grok Zwei sprint), release manager)
 
-* Uli Fouquet (admin interface, summer of code student)
+* Uli Fouquet (admin interface, introspector, summer of code student)
 
 * Darryl Cousins (website, admin interface)
 
-* Kevin Teague (website)
+* Kevin Teague (website, documentation)
 
-* Tim Terlegård (JSON support)
+* Tim Terlegård (JSON support, viewlets, grokproject)
+
+* Maurits van Rees (grokproject, eggbasket)
 
 * Sebastian Ware (website effort, documentation)
 
@@ -27,7 +29,7 @@ CREDITS
 
 * Wim Boucqaert (admin interface layout improvements)
 
-* Kevin M. Smith (skins and layers support)
+* Kevin M. Smith (skins and layers support, viewlets)
 
 * Luciano Ramalho
 
@@ -35,7 +37,7 @@ CREDITS
 
 * Guido Wesdorp (template pluggability)
 
-* Brandon Rhodes (template pluggability)
+* Brandon Rhodes (template pluggability, grokcore.component)
 
 * Godefroid Chapelle (conversion to Z3 configuration actions)
 
