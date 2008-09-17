@@ -24,6 +24,12 @@ Restructuring
   ``IGrokLayer`` interface in favour of exposing ``IBrowserRequest``
   from the grok package.
 
+* Security-related directives and helpers have been moved out to a
+  ``grokcore.security`` package.
+
+* View-related base classes, directives and grokkers have been moved
+  out to a ``grokcore.view`` package.
+
 Bug fixes
 ---------
 
