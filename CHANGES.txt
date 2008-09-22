@@ -7,8 +7,8 @@ Grok changes
 Feature changes
 ---------------
 
-* Merged the versions from the zope 3.4c5 KGS (known good set):
-  http://download.zope.org/zope3.4/versions-3.4.0c5.cfg
+* Merged the versions from the zope 3.4c7 KGS (known good set):
+  http://download.zope.org/zope3.4/versions-3.4.0c7.cfg
   So we are now using the latest Zope 3 releases for all Zope packages.
 
 Restructuring
