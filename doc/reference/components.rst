@@ -26,22 +26,75 @@ Core components
 :class:`grok.Application`
 =========================
 
-Base class for applications. Inherits from :class:`grok.Site`.
+Applications are top-level objects. They are typically used to hold global
+configuration and behaviour for an application instance, as well as holding
+data objects such as :class:`grok.Container` and :class:`grok.Model` object
+instances.
+
+When a new Grok application is installed using the Grok Admin interface, it
+creates an instance of the :class:`grok.Application` class and saves it in
+the root of the main ZODB database.
+
+.. class:: grok.Application
+
+    Base class for applications. Inherits from :class:`grok.Site`.
+
 
 :class:`grok.Model`
 ===================
 
-Base class to define an application "content" or model object. Model objects
-provide persistence and containment.
+Model objects provide persistence and containment. Model in Grok refers to
+an applications data model - that is data which is persistently saved to
+disk, by default in the Zope Object Dataabse (ZODB).
+
+.. class:: grok.Model
+
+    Base class to define a content or model object.
+
+    .. attribute:: __parent__
+
+       The parent in the location hierarchy.
+       
+       If you recursively follow the `__parent__` attribute, you will always
+       reach a reference to a top-level grok.Application object instance.
+
+    .. attribute:: __name__
+    
+        The name within the parent.
+        
+        Traverse the parent with this name to get the object.
+
+        Name in Grok means "human-readable identifier" as the `__name__`
+        attribute is used to reference the object within an URL.
+
 
 :class:`grok.Container`
 =======================
 
-Mixin base class to define a container object. Objects in a container are 
-manipulated using the same syntax as you would with the standard
-Python Dictionary object. The container implements the
+Objects in a container are manipulated using the same syntax as you would
+with a standard Python Dictionary object. The container implements the
 zope.app.container.interfaces.IContainer interface using a BTree, providing
 reasonable performance for large collections of objects.
+
+.. class:: grok.Container
+
+    Base class to define a container object.
+
+    .. attribute:: __parent__
+
+       The parent in the location hierarchy.
+       
+       If you recursively follow the `__parent__` attribute, you will always
+       reach a reference to a top-level grok.Application object instance.
+
+    .. attribute:: __name__
+    
+        The name within the parent.
+        
+        Traverse the parent with this name to get the object.
+
+        Name in Grok means "human-readable identifier" as the `__name__`
+        attribute is used to reference the object within an URL.
 
 **Example 1: Perform Create, Read, Update and Delete (CRUD) on a container**
 
@@ -75,7 +128,64 @@ reasonable performance for large collections of objects.
 :class:`grok.Indexes`
 =====================
 
-Base class for catalog index definitions.
+Indexes are data structures that provide a way of quickly finding
+data model objects.
+
+.. class:: grok.Indexes
+
+    Base class for catalog index definitions.
+
+**Example 1: Index the Mammoths in a Herd**
+
+Imagine you have a herd of mammoths, and you wish to quickly find a 
+mammoth based on their last name. First we will create a simple Grok
+application that defines a Herd and some Mammoths:
+
+.. code-block:: python
+
+    import grok
+    from grok import index
+    from zope.interface import Interface
+    from zope import schema
+
+    class Herd(grok.Container, grok.Application):
+        pass
+
+    class IMammoth(Interface):
+        name = schema.TextLine(title=u'Full Name')
+
+    class MammothIndexes(grok.Indexes):
+        grok.site(Herd)
+        grok.context(IMammoth)
+
+        full_name = index.Text()
+
+    class Mammoth(grok.Model):
+        grok.implements(IMammoth)
+
+        def __init__(self, full_name):
+            self.full_name = full_name
+
+We can now create a Herd application, add some Mammoths to the Herd, and
+query for those Mammoths by their last name:
+
+.. code-block:: python
+
+    # imagine herd is an already created Herd application instance
+    herd['one'] = Mammoth('Manfred Mammoth')
+    herd['two'] = Mammoth('Joe Mammoth')
+    herd['three'] = Mammoth('Marty the Wooly')
+
+    from zope.app.catalog.interfaces import ICatalog
+    from zope.component import getUtility
+    catalog = getUtility(ICatalog)
+    mammoths = catalog.searchResults(full_name='Mammoth')
+    # mammoths would be a list containing 'Manfred Mammoth' and 'Joe Mammoth'
+    # but not 'Marty the Wooly'
+
+Indexes can index on multiple fields. A single index can be of either `Field`,
+`Text`, or `Set`.
+
 
 Adapters
 ~~~~~~~~
