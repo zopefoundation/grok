@@ -617,7 +617,7 @@ Specialized View that responds to XML-RPC.
 
 The grok.require decorator can be used to protect methods with a permission.
 
-.. class:: grok.JSON
+.. class:: grok.XMLRPC
 
     Base class for XML-RPC methods.
 
@@ -717,8 +717,44 @@ and the View used to interact with that object.
 :class:`grok.PageTemplate`
 ==========================
 
+Page Templates are the default templating system for Grok, they are an
+implementation of the Template Attribute Language (TAL). Page Templates
+are typically created from a string.
+
+.. code-block:: python
+
+    grok.PageTemplate("<h1>Hello World!</h1>")
+
+.. class:: grok.PageTemplate
+
+    .. method:: _initFactory(factory)
+    
+        Template language specific initializations on the view factory.
+
+    .. method:: render(view)
+        
+        Renders the template
+
+
 :class:`grok.PageTemplateFile`
 ==============================
+
+Creates a Page Template from a filename.
+
+.. code-block:: python
+
+    grok.PageTemplateFile("my_page_template.pt")
+
+.. class:: grok.PageTemplateFile
+
+    .. method:: _initFactory(factory)
+
+        Template language specific initializations on the view factory.
+
+    .. method:: render(view)
+        
+        Renders the template
+
 
 Forms
 ~~~~~
@@ -827,7 +863,7 @@ are not bound to any existing content or model object.
 
 .. class:: grok.AddForm
 
-    Base class for add forms.
+    Base class for add forms. Inherits from :class:`grok.Form`.
 
 :class:`grok.EditForm`
 ======================
@@ -837,7 +873,7 @@ are bound to the object set in the `context` attribute.
 
 .. class:: grok.EditForm
 
-    Base class for edit forms.
+    Base class for edit forms. Inherits from :class:`grok.Form`.
 
 :class:`grok.DisplayForm`
 =========================
@@ -847,13 +883,14 @@ form are bound to the object set in the `context` attribute.
 
 .. class:: grok.DisplayForm
 
-    Base class for display forms.
+    Base class for display forms. Inherits from :class:`grok.Form`.
+
 
 Security
 ~~~~~~~~
 
-:class:`Permission`
-===================
+:class:`grok.Permission`
+========================
 
 Permissions are used to protect Views so that they can only be called by
 an authenticated principal. If a View in Grok does not have a `grok.require`
@@ -909,37 +946,9 @@ be public.
         grok.context(zope.interface.Interface)
         grok.require('mypackage.Read')
 
-:func:`grok.define_permission` -- define a permission
-=====================================================
 
-.. function:: grok.define_permission(name)
-
-    A module-level directive to define a permission with name
-    `name`. Usually permission names are prefixed by a component- or
-    application name and a dot to keep them unique.
-
-    Because in Grok by default everything is accessible by everybody,
-    it is important to define permissions, which restrict access to
-    certain principals or roles.
-
-    **Example:**
-
-    .. code-block:: python
-
-        import grok
-        grok.define_permission('cave.enter')
-
-
-    .. seealso::
-
-        :func:`grok.require`, :class:`grok.Permission`, :class:`grok.Role`
-
-    .. versionchanged:: 0.11
-
-        replaced by :class:`grok.Permission`.
-
-:class:`Role`
-=============
+:class:`grok.Role`
+==================
 
 Roles provide a way to group together a collection of permissions. Principals
 (aka Users) can be granted a Role which will allow them to access all Views

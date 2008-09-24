@@ -12,7 +12,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Build grok authorative documentaion.
+"""Builds HTML and Latex versions of the Official Grok Documentation using Sphinx.
 """
 import sys
 import os.path
