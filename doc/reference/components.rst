@@ -11,9 +11,9 @@ The :mod:`grok` module defines a set of base classes for creating new
 components of different types, that provide basic Zope 3 functionality in a
 convenient way. Grok applications are built by subclassing these components.
 
-Components in Grok and Zope 3 can be any plain Python object, that you have
-declared implements one or more Interface(s). The inclusion of these Grok base
-classes in your own Python classes inheritance automatically handles the
+Components in Grok and Zope 3 are any plain Python object, that declare they
+provide one or more Interface(s). The inclusion of these Grok base
+classes in your own class inheritance automatically handles the
 component registration with the Zope Component Architecture. This process of
 introspecting your Grok code during initialization and wiring together
 components based on common conventions that you follow in the structure
