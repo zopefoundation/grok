@@ -96,6 +96,133 @@ reasonable performance for large collections of objects.
         Name in Grok means "human-readable identifier" as the `__name__`
         attribute is used to reference the object within an URL.
 
+    .. method:: items(key=None)
+    
+        Return an iterator over the key-value pairs in the container.
+
+        If ``None`` is passed as `key`, this method behaves as if no argument
+        were passed.
+
+        If `key` is in the container, the first item provided by the iterator
+        will correspond to that key.  Otherwise, the first item will be for
+        the key that would come next if `key` were in the container.
+
+    .. method:: keys(key=None)
+    
+        Return an iterator over the keys in the container.
+
+        If ``None`` is passed as `key`, this method behaves as if no argument
+        were passed.
+
+        If `key` is in the container, the first key provided by the iterator
+        will be that key.  Otherwise, the first key will be the one that would
+        come next if `key` were in the container.
+
+    .. method:: values(key=None)
+    
+        Return an iterator over the values in the container.
+
+        If ``None`` is passed as `key`, this method behaves as if no argument
+        were passed.
+
+        If `key` is in the container, the first value provided by the iterator
+        will correspond to that key.  Otherwise, the first value will be for
+        the key that would come next if `key` were in the container.
+
+
+    .. method:: __getitem__(key)
+        
+        Get a value for a key
+
+        A KeyError is raised if there is no value for the key.
+
+    .. method:: get(key, default=None)
+        
+        Get a value for a key
+
+        The default is returned if there is no value for the key.
+
+    .. method:: __contains__(key)
+        
+        Tell if a key exists in the mapping.
+
+
+    .. method:: __iter__()
+    
+        Return an iterator for the keys of the mapping object.
+
+    .. method:: values()
+        
+        Return the values of the mapping object.
+
+    .. method:: items()
+        
+        Return the items of the mapping object.
+
+    .. method:: __len__()
+        
+        Return the number of items.
+
+    .. method:: has_key(key)
+    
+        Tell if a key exists in the mapping.
+    
+    .. method:: __setitem__(name, object)
+        
+        Add the given `object` to the container under the given name.
+
+        Raises a ``TypeError`` if the key is not a unicode or ascii string.
+        Raises a ``ValueError`` if key is empty.
+
+        The container might choose to add a different object than the
+        one passed to this method.
+
+        If the object doesn't implement `IContained`, then one of two
+        things must be done:
+
+        1. If the object implements `ILocation`, then the `IContained`
+           interface must be declared for the object.
+
+        2. Otherwise, a `ContainedProxy` is created for the object and
+           stored.
+
+        The object's `__parent__` and `__name__` attributes are set to the
+        container and the given name.
+
+        If the old parent was ``None``, then an `IObjectAddedEvent` is
+        generated, otherwise, an `IObjectMovedEvent` is generated.  An
+        `IContainerModifiedEvent` is generated for the container.
+
+        If the object replaces another object, then the old object is
+        deleted before the new object is added, unless the container
+        vetos the replacement by raising an exception.
+
+        If the object's `__parent__` and `__name__` were already set to
+        the container and the name, then no events are generated and
+        no hooks.  This allows advanced clients to take over event
+        generation.
+
+    .. method:: __delitem__(name)
+        
+        Delete the named object from the container.
+
+        Raises a ``KeyError`` if the object is not found.
+
+        If the deleted object's `__parent__` and `__name__` match the
+        container and given name, then an `IObjectRemovedEvent` is
+        generated and the attributes are set to ``None``. If the object
+        can be adapted to `IObjectMovedEvent`, then the adapter's
+        `moveNotify` method is called with the event.
+
+        Unless the object's `__parent__` and `__name__` attributes were
+        initially ``None``, generate an `IContainerModifiedEvent` for the
+        container.
+
+        If the object's `__parent__` and `__name__` were already set to
+        ``None``, then no events are generated.  This allows advanced
+        clients to take over event generation.
+
+
 **Example 1: Perform Create, Read, Update and Delete (CRUD) on a container**
 
 .. code-block:: python
@@ -124,6 +251,34 @@ reasonable performance for large collections of objects.
     
     # delete objects using the del keyword
     del bag['bone1']
+
+
+:class:`grok.OrderedContainer`
+==============================
+
+OrderedContainers act just like Containers, but also support the ability
+to maintain order on the items within the container. This implementation
+maintains a persistent list of keys on a private attribute, so it's 
+important to note that OrderedContainers will have poorer performance than
+a normal Container.
+
+.. class:: grok.OrderedContainer
+
+    Base class for an OrderedContainer. OrderedContainer inherits from
+    Container and supports the API.
+    
+    .. method:: updateOrder(order)
+    
+        Revise the order of keys, replacing the current ordering.
+
+        order is a list or a tuple containing the set of existing keys in
+        the new order. `order` must contain ``len(keys())`` items and cannot
+        contain duplicate keys.
+
+        Raises ``TypeError`` if order is not a tuple or a list.
+
+        Raises ``ValueError`` if order contains an invalid set of keys.
+
 
 :class:`grok.Indexes`
 =====================
@@ -458,13 +613,13 @@ the global site manager which contains file based utilities and adapters.
 
 .. class:: grok.Site
 
-	.. method:: getSiteManager():
+	.. method:: getSiteManager()
 
 		Returns the site manager contained in this object.
 
 		If there isn't a site manager, raise a component lookup.
 
-	.. method:: setSiteManager(sitemanager):
+	.. method:: setSiteManager(sitemanager)
 	
 		Sets the site manager for this object.
 
@@ -504,11 +659,11 @@ called Traversal.
 
         Directory resource containing the static files of the view's package.
 
-    .. method:: redirect(url):
+    .. method:: redirect(url)
    
         Redirect to given URL
 
-    .. method:: url(obj=None, name=None, data=None):
+    .. method:: url(obj=None, name=None, data=None)
    
         Construct URL.
 
@@ -525,7 +680,7 @@ called Traversal.
         Optionally pass a 'data' keyword argument which gets added to the URL
         as a cgi query string.
 
-    .. method:: default_namespace():
+    .. method:: default_namespace()
 
         Returns a dictionary of namespaces that the template
         implementation expects to always be available.
@@ -533,7 +688,7 @@ called Traversal.
         This method is *not* intended to be overridden by application
         developers.
 
-    .. method:: namespace():
+    .. method:: namespace()
    
         Returns a dictionary that is injected in the template
         namespace in addition to the default namespace.
@@ -541,7 +696,7 @@ called Traversal.
         This method *is* intended to be overridden by the application
         developer.
 
-    .. method:: update(**kw):
+    .. method:: update(**kw)
    
         This method is meant to be implemented by grok.View
         subclasses.  It will be called *before* the view's associated
@@ -552,7 +707,7 @@ called Traversal.
         filled in from the request (in that case they *must* be
         present in the request).
 
-    .. method:: render(**kw):
+    .. method:: render(**kw)
    
         A view can either be rendered by an associated template, or
         it can implement this method to render itself from Python.
@@ -563,15 +718,136 @@ called Traversal.
         filled in from the request (in that case they *must* be
         present in the request).
 
-    .. method:: application_url(name=None):
+    .. method:: application_url(name=None)
    
         Return the URL of the closest application object in the
         hierarchy or the URL of a named object (``name`` parameter)
         relative to the closest application object.
 
-    .. method:: flash(message, type='message'):
+    .. method:: flash(message, type='message')
       
         Send a short message to the user.
+
+
+:class:`grok.ViewletManager`
+============================
+
+A ViewletManager is a component that provides access to a set of
+content providers (Viewlets). The ViewletManager's responsibilities are:
+
+  * Aggregation of all viewlets registered for the manager.
+
+  * Apply a set of filters to determine the availability of the viewlets.
+
+  * Sort the viewlets based on some implemented policy. The default is to
+    numerically sort accoring to the `grok.order([number])` directive on a
+    Viewlet.
+
+  * Provide an environment in which the viewlets are rendered.
+
+  * Render itself containing the HTML content of the viewlets.
+
+ViewletManager's also implement a read-only mapping API, so the Viewlet's
+that they contain can be read like a normal Python dictionary.
+
+.. class:: grok.ViewletManager
+
+    Base class for a ViewletManager.
+    
+    .. attribute:: context
+
+        Typically the Model object for which this ViewletManager is being
+        rendered in the context of.
+        
+    .. attribute:: request
+    
+        The Request object.
+    
+    .. attribute:: view
+    
+        Reference to the View that the ViewletManager is being provided in.
+
+    .. method::  update()
+
+        This method is called before the ViewletManager is rendered, and
+        can be used to perfrom pre-computation.
+    
+    .. method:: render(*args, **kw)
+
+        This method renders the content provided by this ViewletManager.
+        Typically this will mean rendering and concatenating all of the
+        Viewlets managed by this ViewletManager.
+
+**Example: Register a ViewletManager and Viewlet and use them from a template for a View**
+
+This is a very simple example, ViewletManagers and Viewlets can be used to
+support more complex HTML layout use cases, such as discriminating on the
+view or context in which a particular ViewletManager will be rendered. For
+example, a web site about caves and herds might want to show information in
+the sidebar specific to either a cave or a herd, depending upon whether a page
+is displaying information about a cave or a herd.
+
+.. code-block:: python
+
+    class ViewForACave(grok.View):
+        def render():
+            return grok.PageTemplate("""
+            <html><body>
+                <div tal:content="structure provider:cave" />
+            </body></html>
+            """)
+    
+    class CaveManager(grok.ViewletManager):
+        grok.view(ViewForACave)
+        grok.name('cave')
+
+    class CaveViewlet(grok.Viewlet):
+        grok.order(30)
+        grok.viewletmanager(CaveManager)
+
+        def render(self):
+            return "Cave"
+
+
+:class:`grok.Viewlet`
+=====================
+
+Viewlets are a flexible way to compound HTML snippets.
+
+Viewlets are typically used for the layout of the web site. Often all the
+pages of the site have the same layout with header, one or two columns, the
+main content area and a footer.
+
+.. class:: grok.Viewlet
+
+    Base class for a Viewlet.
+
+    .. attribute:: context
+
+        Typically the Model object for which this Viewlet is being
+        rendered in the context of.
+    
+    .. attribute:: request
+    
+        The Request object.
+    
+    .. attribute:: view
+    
+        Reference to the View that the Viewlet is being provided in.
+
+    .. attribute:: viewletmanager
+    
+        Reference to the ViewletManager that is rendering this Viewlet.
+    
+    .. method::  update()
+
+        This method is called before the Viewlet is rendered, and
+        can be used to perfrom pre-computation.
+
+    .. method:: render(*args, **kw)
+
+        This method renders the content provided by this Viewlet.
+
 
 :class:`grok.JSON`
 ==================
@@ -608,6 +884,30 @@ decorator can be used to protect methods with a permission.
         @grok.require('zope.ManageContent')
         def dance(self):
             return {'Manfred does not like to dance.': ''}
+
+
+:class:`grok.REST`
+==================
+
+Specialized View for making web services that conform to the REST style.
+These Views can define methods named GET, PUT, POST and DELETE, which will
+be invoked based on the Request type.
+
+.. class:: grok.REST
+
+    Base class for REST.
+    
+    .. attribute:: context
+    
+        Object that the REST handler presents.
+
+    .. attribute:: request
+    
+        Request that REST handler was looked up with.
+    
+    .. attribute:: body
+    
+        The text of the request body.
 
 
 :class:`grok.XMLRPC`
