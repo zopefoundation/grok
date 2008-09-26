@@ -46,6 +46,7 @@ import z3c.flashmessage.interfaces
 import martian.util
 
 import grokcore.view
+import grokcore.formlib
 from grok import interfaces, util
 
 
@@ -142,6 +143,22 @@ class View(grokcore.view.View):
         source = component.getUtility(
             z3c.flashmessage.interfaces.IMessageSource, name='session')
         source.send(message, type)
+
+
+class Form(grokcore.formlib.Form, View):
+    interface.implements(interfaces.IGrokForm)
+
+
+class AddForm(grokcore.formlib.AddForm, View):
+    interface.implements(interfaces.IGrokForm)
+
+
+class DisplayForm(grokcore.formlib.DisplayForm, View):
+    interface.implements(interfaces.IGrokForm)
+
+
+class EditForm(grokcore.formlib.EditForm, View):
+    interface.implements(interfaces.IGrokForm)
 
 
 class XMLRPC(object):

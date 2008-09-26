@@ -190,6 +190,10 @@ class IGrokView(grokcore.view.interfaces.IGrokView):
         """Send a short message to the user."""
 
 
+class IGrokForm(grokcore.formlib.interfaces.IGrokForm, IGrokView):
+    """All Grok forms provides this interface."""
+
+
 class IREST(interface.Interface):
     context = interface.Attribute("Object that the REST handler presents.")
 

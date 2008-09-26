@@ -40,10 +40,6 @@ from grokcore.view import url
 from grokcore.formlib import action
 from grokcore.formlib import AutoFields
 from grokcore.formlib import Fields
-from grokcore.formlib import Form
-from grokcore.formlib import AddForm
-from grokcore.formlib import EditForm
-from grokcore.formlib import DisplayForm
 
 from zope.event import notify
 from zope.app.component.hooks import getSite
@@ -66,7 +62,7 @@ from grok.components import XMLRPC, REST, JSON
 from grok.components import Traverser
 from grok.components import Container, OrderedContainer
 from grok.components import Site, LocalUtility, Annotation
-from grok.components import Application
+from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Role
 from grok.components import RESTProtocol, IRESTLayer
