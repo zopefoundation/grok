@@ -19,13 +19,28 @@ Upgrading to 0.14
     class MySkin(grok.Skin):
         grok.layer(IMyLayer)
 
-  you can now simply write::
+  You can now simply write::
 
     class IMyLayer(grok.IBrowserRequest):
         grok.skin('myskin')
 
   As you can see, ``IGrokLayer`` has also been removed, in favour of
   the exposure of ``IBrowserRequest``.
+
+* The ``grok.admin`` subpackage has been factored out to a separate
+  package ``grokui.admin``. To have the Grok admin UI available in
+  your environment, add ``grokui.admin`` to the required packages in
+  the ``setup.py`` of your package.
+
+  A new Grok application will have an install_requires parameter that
+  looks like this::
+  
+      install_requires=['setuptools',
+                        'grok',
+                        'grok.adminui',
+                        'z3c.testsetup',
+                        # Add extra requirements here
+                        ],
 
 
 Upgrading to 0.13
