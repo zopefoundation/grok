@@ -1,4 +1,3 @@
-
 *********
 Functions
 *********
@@ -7,29 +6,24 @@ The :mod:`grok` module provides a number of convenience functions to aid in
 common tasks.
 
 
-:func:`grok.AutoFields` -- Deduce and return schema fields automatically
+:func:`grok.AutoFields` -- deduce and return schema fields automatically
 ========================================================================
-
 
 .. function:: grok.AutoFields(class_or_interface)
 
-   This function which can be used inside :class:`Form`
-   classes to automatically deduce the form fields from the schema of
-   the context `class_or_interface`.
+    This function is used inside :class:`Form` classes to automatically
+    deduce the form fields from the schema of the `class_or_interface`.
 
-   Different to most other directives, :func:`grok.AutoFields` is used
-   more like a function and less like a pure declaration.
+This function is used to create a sequence of form fields from an interface
+(schema) or from the interfaces (schemas) the context object provides.
 
-   This function is used to create a sequence of form fields from an interface
-   (schema) or from the interfaces (schemas) the context object provides.
+**Example: Generate fields from an interface**
 
-   The following example makes use of the :func:`grok.AutoFields`
-   directive, in that one field is omitted from the form before
-   rendering:
+The :func:`grok.AutoFields` is used on the IMammoth interface, and all
+attributes that inherit from IField (such as the ones supplied in the
+zope.schema package) are concatenated into a list.
 
-   **Example:**
-
-   .. code-block:: python
+.. code-block:: python
 
      import grok
      from zope import interface, schema
@@ -46,167 +40,110 @@ common tasks.
 
          form_fields = grok.AutoFields(Mammoth).omit('size')
 
-   In this example the ``size`` attribute will not show up in the
-   resulting edit view.
+In this example the ``size`` attribute will not show up in the resulting
+edit view.
 
+.. seealso::
 
-   .. seealso::
-
-     :class:`grok.EditForm`, :func:`grok.Fields`
+    :class:`grok.EditForm`, :func:`grok.Fields`
 
 
 :func:`grok.Fields` -- declare schema fields of a form
 ======================================================
 
-.. function:: grok.Fields(**schemas)
+.. function:: grok.Fields(*args, **kw)
 
-   A class level directive, which can be used inside :class:`grok.Form`
-   classes.
+   This function is used inside a :class:`grok.Fields` to generate fields
+   (an object providing IFormFields) from positional and keyword arguments.
+   These should be available in the definition order.
 
-   A :class:`grok.Fields` can receive keyword parameters with schema
-   fields. These should be available in the definition order.
+**Example: Generate form fields from schema objects**
 
-   **Example:**
+When the :class:`Edit` form is rendered, the :class:`Textlines` `b` and `a`
+will appear as input fields in that order.
 
-   .. code-block:: python
+.. code-block:: python
 
-      import grok
-      from zope import schema
+    import grok
+    from zope import schema
+    
+    class Edit(grok.EditForm):
+        fields = grok.Fields(
+            b = schema.TextLine(title=u"Beta"),
+            a = schema.TextLine(title=u"Alpha"),
+        )
 
-      class Mammoth(grok.Model):
-          pass
+.. seealso::
 
-      class Edit(grok.EditForm):
-          fields = grok.Fields(
-              b = schema.TextLine(title=u"Beta"),
-              a = schema.TextLine(title=u"Alpha"),
-
-   Given the above code, when the :class:`Edit` form is rendered, the
-   :class:`Textlines` `b` and `a` will appear as input fields in that
-   order. This is due to the fact, that by default the `fields`
-   variable is taken into account, when rendering forms.
-
-   .. seealso::
-
-      :func:`grok.AutoFields`, :class:`grok.Form`
+    :func:`grok.AutoFields`, :class:`grok.Form`
 
 
 :func:`grok.getSite`
-===============================================
+====================
 
 .. function:: grok.getSite()
 
-   Get the current site object.
+    Get the current site object.
 
+.. seealso::
 
-   .. seealso::
+    Site objects are instances of :class:`grok.Site`. Typically this will 
+    also be your main :class:`grok.Application` root object, which inherits
+    from :class:`grok.Site`.
 
-      Site objects are instances of :class:`grok.Site` and/or
-      :class:`grok.Application`.
+.. seealso::
 
-
-   .. seealso::
-
-      `Web Component Development With Zope 3, second edition <http://worldcookery.com/WhereToBuy>`_
-      By Philipp von Weitershausen; Chapter 18 describes the use of Site objects.
+    `Web Component Development With Zope 3, second edition <http://worldcookery.com/WhereToBuy>`_
+    By Philipp von Weitershausen; Chapter 18 describes the use of Site objects.
 
 
 :func:`grok.notify`
 ===================
 
-
 .. function:: grok.notify(event)
 
    Send `event` to event subscribers.
 
-   **Example:**
+**Example:**
 
-   .. code-block:: python
+.. code-block:: python
 
-      import grok
+    import grok
 
-      class Mammoth(object):
-          def __init__(self, name):
-              self.name = name
+    class Mammoth(object):
+        def __init__(self, name):
+            self.name = name
 
-      manfred = Mammoth('manfred')
+    manfred = Mammoth('manfred')
 
-      grok.notify(grok.ObjectCreatedEvent(manfred))
+    grok.notify(grok.ObjectCreatedEvent(manfred))
 
-
-   .. seealso::
+.. seealso::
 
       Grok events provide a selection of common event types.
 
+.. seealso::
 
-   .. seealso::
-
-      `Web Component Development With Zope 3, second edition <http://worldcookery.com/WhereToBuy>`_
-      By Philipp von Weitershausen; Chapter 16 describes the Zope 3
-      event system.
+    `Web Component Development With Zope 3, second edition <http://worldcookery.com/WhereToBuy>`_
+    By Philipp von Weitershausen; Chapter 16 describes the Zope 3
+    event system.
 
 
 :func:`grok.url`
 ================
 
-
 .. function:: grok.url(request, object, [, name])
 
-   Construct a URL for the given `request` and `object`.
+    Construct a URL for the given `request` and `object`.
 
-   `name` may be a string that gets appended to the object
-   URL. Commonly used to construct an URL to a particular view on the
-   object.
+    `name` may be a string that gets appended to the object
+    URL. Commonly used to construct an URL to a particular view on the
+    object.
 
-   This function returns the constructed URL as a string.
+    This function returns the constructed URL as a string.
 
+.. seealso::
 
-   .. seealso::
-
-      View classes derived from :class:`grok.View` have a similar
-      :meth:`url` method for constructing URLs.
-
-
-:func:`grok.grok` -- Grok a package or module
-=============================================
-
-
-.. function:: grok(dotted_name)
-
-.. note:: Usually you don't need to invoke this funtion in your code,
-          since it's triggered from the `configure.zcml`. Grokking
-          test fixtures is one situation where it is useful to call
-          this explicitly.
-
-  Grokking a package or module activates the contained components
-  (like models, views, adapters, templates, etc.) and registers them
-  with Zope 3's component architecture.
-
-  The `dotted_name` must specify either a Python module or package
-  that is available from the current PYTHONPATH.
-
-  Grokking a module:
-
-    #. Scan the module for known components: models, adapters,
-       utilities, views, traversers, templates and subscribers.
-
-    #. Check whether a directory with file system templates exists
-       (:file:`<modulename>_templates`). If it exists, load the file
-       system templates into the template registry for this module.
-
-    #. Determine the module context.
-
-    #. Register all components with the Zope 3 component architecture.
-
-    #. Initialize schemata for registered models
-
-  Grokking a package:
-
-    #. Grok the package as a module.
-
-    #. Check for a static resource directory (:file:`static`) and
-       register it if it exists.
-
-    #. Recursively grok all sub-modules and sub-packages.
-
+    View classes derived from :class:`grok.View` have a similar
+    :meth:`url` method for constructing URLs.
 

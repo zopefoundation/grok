@@ -1,57 +1,59 @@
-
 **********
 Decorators
 **********
 
-grok uses a few decorators to register functions or methods for specific
+Grok uses a few decorators to register functions or methods for specific
 functionality.
 
 
-:func:`grok.subscribe` -- Register a function as a subscriber for an event
+:func:`grok.subscribe` -- register a function as a subscriber for an event
 ==========================================================================
-
 
 .. function:: subscribe(*classes_or_interfaces)
 
-  Declare that the decorated function subscribes to an event or a
-  combination of objects and events and register it.
+    Declare that the decorated function subscribes to an event or a
+    combination of objects and events.
 
-  Applicable on module-level for functions. Requires at least one
-  class or interface as argument.
-
-  (Similar to Zope 3's :func:`subscriber` decorator, but automatically
-  performs the registration of the component.)
+    Applicable on module-level for functions. Requires at least one
+    class or interface as argument.
 
 
-:func:`grok.action` -- Declare a form submit handler
+:func:`grok.action` -- declare a form submit handler
 =====================================================
 
+.. function:: action(label, **options)
 
-:func:`grok.require` -- Protect a method with a permission
-===========================================================
+    Decorator that defines an action factory based on a form
+    method. The method receives the form data as keyword
+    parameters.
 
-:func:`grok.adapter/grok.implementer` -- Declare an adapter factory
+
+:func:`grok.require` -- protect a method with a permission
+==========================================================
+
+.. function:: require(name_or_class)
+
+    The decorated method will be protected by the permission. Used in
+    web service views such as REST or XML-RPC.
+
+
+:func:`grok.adapter/grok.implementer` -- declare an adapter factory
 ====================================================================
-
-.. XXX these two decorators are always used together, but are named
-   separately because they are separate in the Zope 3 API. Should
-   grok implement this as one decorator with two arguments?
 
 These decorators are always used in tandem to declare an adapter factory.
 
-.. function:: grok.adapter(*interfaces) 
+.. function:: grok.adapter(*classes_or_interfaces) 
 
-  `*interfaces` -- the interfaces *adapted* by the object created by
-                   this factory.
-
+    Describes that a function adapts an object or a combination
+    of objects.
 
 .. function:: grok.implementer(interface) 
 
-  `interface` -- the interface *provided* by the object created by
-                 this factory.
+    Describes that a function that's used as an adapter
+    implements an interface or a number of interfaces.
 
 
-**Example 1:**
+**Example 1: Adapt to an interface**
 
 .. code-block:: python
 
@@ -60,7 +62,7 @@ These decorators are always used in tandem to declare an adapter factory.
 	def home_for_cave(cave):
 	    return Home()
 
-**Example 2: adapt a regular class instead of an interface**
+**Example 2: Adapt a regular class instead of an interface**
 
 .. code-block:: python
 
@@ -69,11 +71,11 @@ These decorators are always used in tandem to declare an adapter factory.
 	def home_for_cave(cave):
 	    return Home()
 
-**Example 3: declare a multi-adapter factory**
+**Example 3: Declare a multi-adapter factory**
 
 .. code-block:: python
 
-	@grok.adapter(ICave,IFire)
+	@grok.adapter(ICave, IFire)
 	@grok.implementer(ICozy)
 	def cozy_dwelling(cave, fire):
 	    return Dwelling()
