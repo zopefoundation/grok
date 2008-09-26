@@ -20,7 +20,7 @@ in question.
 Core directives
 ~~~~~~~~~~~~~~~
 
-:func:`grok.context` -- Declare the context for views, adapters, etc.
+:func:`grok.context` -- declare the context for views, adapters, etc.
 =====================================================================
 
 .. function:: grok.context(*class_or_interface)
@@ -40,7 +40,7 @@ Core directives
     another module as context, than the one choosen by default, then you
     have to call :func:`grok.context` explicitly.
 
-**Example:**
+**Example: Declare a component depends upon a class or interface**
 
 Here the :func:`grok.context` directive indicates that the :class:`Index`
 View applies to the context of a :class:`Mammoth` instance, and not instances
@@ -85,7 +85,11 @@ and attributes of that context.
     semantics of this directive: for what exactly a name is set when
     using this directive, depends on the component.
 
-**Example:**
+**Example: Specify the name of a View to make a more readable URL**
+
+A common use case is to have a URL for a view named differently than
+the name of the view class itself. In this example, the class is named
+`SomeView` but is accessible at an URL suffixed with `/index`.
 
 .. code-block:: python
 
@@ -94,8 +98,6 @@ and attributes of that context.
     class Mammoth(grok.Model):
       pass
 
-    # a common use case is to have a URL for a view named differently than
-    # the name of the view class itself.
     class SomeView(grok.View):
        grok.name('index')
 
@@ -108,7 +110,7 @@ and attributes of that context.
     :class:`grok.View`
 
 
-:func:`grok.title` -- Succincint description
+:func:`grok.title` -- succincint description
 ============================================
 
 .. function:: grok.title(*arg)
@@ -129,7 +131,11 @@ and attributes of that context.
     :func:`grok.implements` is currently an alias for
     :func:`zope.interface.implements`.
 
-**Example:**
+**Example: Create two Cave classes, one implements IPaintable the other does not**
+
+First we will create the IPaintable interface, which declares that objects
+which provide this interface will have a `paint()` method. We will make a
+plain `Cave` class as well:
 
 .. code-block:: python
 
@@ -143,11 +149,17 @@ and attributes of that context.
     class Cave(object):
         pass
 
-    cave = Cave()
-    IPaintable.providedBy(cave)
+You can create a `Cave` object and query the `IPaintable` interface to see if
+an object provides that interface:
 
-This would return `False` since Cave does not implement the IPaintable
-interface.
+.. code-block:: python
+
+    >>> cave = Cave()
+    >>> IPaintable.providedBy(cave)
+    False
+
+Next we will make a `PaintableCave` class which does implement the
+`IPaintable` interface:
 
 .. code-block:: python
 
@@ -156,16 +168,26 @@ interface.
 
         def paint(color):
             self._painted_color = color
-    
-    cave = PaintableCave()
-    IPaintable.providedBy(cave)
-    
-This would return `True` since the PaintableCave class declares that it
-implements the IPaintable interface.
 
+Now we can create a `PaintableCave` object and when we query the `IPaintable`
+interface it asserts that the object does provide the interface:
+    
+    >>> paintable_cave = PaintableCave()
+    >>> IPaintable.providedBy(paintable_cave)
+    True
 
-:func:`grok.provides` -- Declare, that a component provides a certain interface
-===============================================================================
+Note that interfaces, like all things in Python, are by nature of a 
+"gentleman's agreement". It's possible to declare that an object provides
+a certain interface when in reality it does not. It's also possible to
+provide magic methods such as `__getattr__` to allow an object to conform
+to a declared interface without that object needing to explicitly support
+the concrete methods and attributes declared in the interface. You can
+use the functions `zope.interface.verify.verifyClass(interface, class)`
+and `zope.interface.verify.verifyObject(interface, object)` to verify if
+a class or object actually implements or provides a specific interface.
+
+:func:`grok.provides` -- declare that a component provides an interface
+=======================================================================
 
 .. function:: grok.provides(interface)
 
@@ -178,7 +200,7 @@ implements the IPaintable interface.
     :func:`grok.implements`
 
 
-:func:`grok.adapts` -- Declare that a class adapts certain objects
+:func:`grok.adapts` -- declare that a class adapts certain objects
 ==================================================================
 
 .. function:: grok.adapts(*classes_or_interfaces)
@@ -191,7 +213,10 @@ implements the IPaintable interface.
     It works much like the :mod:`zope.component`\ s :func:`adapts()`,
     but you do not have to make a ZCML entry to register the adapter.
 
-**Example:**
+**Example: Register a MammothSize adapter for Mammoths**
+
+Imagine you want to create an adapter that extends a Mammoth object
+with an ISized interface. Your code could look like this:
 
 .. code-block:: python
 
@@ -219,18 +244,16 @@ implements the IPaintable interface.
         def sizeForDisplay(self):
             return ('1000 bytes')
 
-Having :class:`MammothSize` available, you can register it as an adapter,
-without a single line of ZCML:
+When this code is "grokked" that `MammothSize` class is registered as
+an adapter that provides ISized for IMammoth objects. You could then 
+perform adaptation elsewhere in your code with:
 
 .. code-block:: python
 
     manfred = Mammoth()
-    from zope.component import provideAdapter
-    provideAdapter(MammothSize)
     from zope.size.interfaces import ISized
     size = ISized(manfred)
-    size.sizeForDisplay()
-    # would return '1000 bytes'
+    return size.sizeForDisplay()
 
 .. seealso::
 
@@ -243,20 +266,17 @@ without a single line of ZCML:
 .. function:: grok.baseclass()
 
     A class-level directive without argument to mark something as a base
-    class. Base classes are are not grokked.
-
-    Another way to indicate that something is a base class, is by
-    postfixing the classname with ``'Base'``.
+    class. Base classes are not grokked.
 
     The baseclass mark is not inherited by subclasses, so those
-    subclasses will be grokked (except they are explicitly declared as
+    subclasses will be grokked (except if they are also explicitly declared as
     baseclasses as well).
 
-**Example:**
+**Example: Mark a View class as a Base Class**
 
 Using this example, only the :class:`WorkingView` will serve as a
-view, while calling the :class:`ViewBase` or :class:`AnotherView`
-will lead to a :exc:`ComponentLookupError`.
+view, while calling the :class:`AnotherView` will lead to a
+:exc:`ComponentLookupError`.
 
 .. code-block:: python
 
@@ -264,10 +284,6 @@ will lead to a :exc:`ComponentLookupError`.
 
     class ModelBase(grok.Model):
         pass
-
-    class ViewBase(grok.View):
-        def render(self):
-            return "hello world"
 
     class AnotherView(grok.View):
         grok.baseclass()
@@ -309,7 +325,7 @@ Utility directives
     Another way to register global utilities with Grok is to subclass from
     :class:`grok.GlobalUtility`.
 
-**Example:**
+**Example: Register two GlobalUtilities and use them**
 
 Given the following module code:
 
@@ -384,7 +400,7 @@ Then the following works:
     An alternative way to define a local utility is to subclass from
     :class:`grok.LocalUtility`.
 
-**Example:**
+**Example: Register a local utility**
 
     The following code registers a local unnamed utility `fireplace` in
     instances of :class:`Cave`
@@ -412,8 +428,8 @@ Then the following works:
 Security directives
 ~~~~~~~~~~~~~~~~~~~
 
-:func:`grok.require`
-====================
+:func:`grok.require` -- declare a permission 
+============================================
 
 .. function:: grok.require(permission)
 
@@ -422,12 +438,19 @@ certain permission.
 
 `permission` -- the name of the permission that is required
 
-**Example**
+**Example 1: Define a Permission and use it to protect a View**
 
 .. code-block:: python
 
-    class ViewPainting(grok.Permission):
-    grok.name('grok.ViewPainting')
+    import grok
+    import zope.interface
+    
+    class Read(grok.Permission):
+        grok.name('mypackage.Read')
+
+    class Index(grok.View):
+        grok.context(zope.interface.Interface)
+        grok.require('mypackage.Read')
 
 .. seealso::
 
@@ -437,44 +460,39 @@ certain permission.
 Template directives
 ~~~~~~~~~~~~~~~~~~~
 
-:func:`grok.template`
-=====================
+:func:`grok.template` -- specify a template filename
+====================================================
 
 A class level directive used to specify the template to be rendered
-for the View when no render method is defined.
+for the View when no render method is defined. This allows you to
+override the default convention of naming the template file with the same
+name as the view class itself, lowercased, in the templates directory
+for this module.
 
 .. function:: grok.template(template)
 
     `template` -- name of the template file
-
-    **Convention**
-
-    When not specified, Grok will look for a template file with the same
-    name as the view class itself, lowercased, in the templates directory
-    for this module.
 
 .. seealso::
 
     :func:`grok.templatedir`
 
 
-:func:`grok.templatedir`
-========================
+:func:`grok.templatedir` -- specify the templates directory
+===========================================================
 
 A module level directive used to specify the directory where Grok
 should look for template files.
+
+The default convention is to look for template files in a directory
+named `<module>_templates` where `<module>` is the name of the current
+module.
 
 .. function:: grok.templatedir(directory)
 
     `directory` -- the name of the directory inside the same package
                    as the module
-
-    **Convention**
-
-    When not specified, Grok will look template files in a diretory
-    named `<module>_templates` where `<module>` is the name of the current
-    module.
-
+    
 .. seealso::
 
     :func:`grok.template`
@@ -483,8 +501,8 @@ should look for template files.
 Component registry directives
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:func:`grok.site`
-=================
+:func:`grok.site` -- specify the local component registry to use for indexes
+============================================================================
 
 A class level directive used in `grok.Indexes` sub-classes to define
 in which local component registry the indexes should be located.
@@ -505,8 +523,8 @@ in which local component registry the indexes should be located.
 URL Traversal directives
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-:func:`grok.traversable`
-========================
+:func:`grok.traversable` -- mark attributes or methods as traversable
+=====================================================================
 
 A class level directive used to mark attributes or methods as traversable. An
 optional `name` argument can be used to give the attribute a different name in
