@@ -13,13 +13,13 @@ And we can access the display form which display the application URL::
   >>> browser.handleErrors = False
   >>> browser.open('http://localhost/world/arthur')
   >>> print browser.contents
-  <p>Test display: application http://localhost/world</p>
+  <p> Test display: application http://localhost/world </p>
 
 Same for the edit form::
 
   >>> browser.open('http://localhost/world/arthur/@@edit')
   >>> print browser.contents
-  <p>Test edit: application http://localhost/world</p>
+  <p> Test edit: application http://localhost/world </p>
 
 
 """
@@ -40,11 +40,17 @@ class Index(grok.DisplayForm):
 
     grok.context(Mammoth)
 
-index = grok.PageTemplate('<p>Test display: application <tal:replace tal:replace="view/application_url" /></p>')
+index = grok.PageTemplate("""
+<p>
+   Test display: application <tal:replace tal:replace="view/application_url" />
+</p>""")
 
 
 class Edit(grok.EditForm):
     
     grok.context(Mammoth)
 
-edit = grok.PageTemplate('<p>Test edit: application <tal:replace tal:replace="view/application_url" /></p>')
+edit = grok.PageTemplate("""
+<p>
+   Test edit: application <tal:replace tal:replace="view/application_url" />
+</p>""")
