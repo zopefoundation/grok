@@ -44,7 +44,7 @@ from martian.error import GrokError
 from martian import util
 
 import grok
-from grok import components, formlib
+from grok import components
 from grok.util import make_checker
 from grok.interfaces import IRESTSkinType
 from grok.interfaces import IViewletManager as IGrokViewletManager
@@ -136,25 +136,6 @@ class RESTGrokker(martian.MethodGrokker):
             callable=make_checker,
             args=(factory, method_view, permission),
             )
-        return True
-
-
-class FormGrokker(martian.ClassGrokker):
-    martian.component(components.GrokForm)
-    martian.directive(grok.context)
-
-    def execute(self, factory, config, context, **kw):
-        # Set up form_fields from context class if they haven't been
-        # configured manually already.
-        if getattr(factory, 'form_fields', None) is None:
-            factory.form_fields = formlib.get_auto_fields(context)
-
-        if not getattr(factory.render, 'base_method', False):
-            raise GrokError(
-                "It is not allowed to specify a custom 'render' "
-                "method for form %r. Forms either use the default "
-                "template or a custom-supplied one." % factory,
-                factory)
         return True
 
 

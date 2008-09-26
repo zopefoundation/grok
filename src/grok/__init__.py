@@ -37,6 +37,14 @@ from grokcore.view import templatedir
 from grokcore.view import skin
 from grokcore.view import url
 
+from grokcore.formlib import action
+from grokcore.formlib import AutoFields
+from grokcore.formlib import Fields
+from grokcore.formlib import Form
+from grokcore.formlib import AddForm
+from grokcore.formlib import EditForm
+from grokcore.formlib import DisplayForm
+
 from zope.event import notify
 from zope.app.component.hooks import getSite
 from zope.lifecycleevent import (
@@ -58,7 +66,7 @@ from grok.components import XMLRPC, REST, JSON
 from grok.components import Traverser
 from grok.components import Container, OrderedContainer
 from grok.components import Site, LocalUtility, Annotation
-from grok.components import Application, Form, AddForm, EditForm, DisplayForm
+from grok.components import Application
 from grok.components import Indexes
 from grok.components import Role
 from grok.components import RESTProtocol, IRESTLayer
@@ -68,7 +76,6 @@ from grok.components import ViewletManager, Viewlet
 from grok.directive import (local_utility, permissions, site,
                             viewletmanager, view, traversable, order)
 
-from grok.formlib import action, AutoFields, Fields
 
 
 # BBB These two functions are meant for test fixtures and should be
