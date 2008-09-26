@@ -1,49 +1,50 @@
 """
-A grok.EditForm is a special grok.View that renders an edit form.
 
-  >>> getRootFolder()["manfred"] = Mammoth()
+Forms have an application_url() method to easily retrieve the url of the
+application, like views does::
+
+  >>> getRootFolder()['world'] = world = IceWorld()
+  >>> world['arthur'] = Mammoth()
+
+And we can access the display form which display the application URL::
 
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
-  >>> browser.open("http://localhost/manfred/@@edit")
-  >>> browser.getControl(name="form.name").value = "Manfred the Mammoth"
-  >>> browser.getControl(name="form.size").value = "Really big"
-  >>> browser.getControl("Apply").click()
+  >>> browser.open('http://localhost/world/arthur')
   >>> print browser.contents
-  <html>...
-  ...Manfred the Mammoth...
-  ...Really big...
-  ...
+  <p>Test display: application http://localhost/world</p>
 
-grok.DisplayForm renders a display form:
+Same for the edit form::
 
-  >>> browser.open("http://localhost/manfred/@@display")
+  >>> browser.open('http://localhost/world/arthur/@@edit')
   >>> print browser.contents
-  <html>...
-  ...Manfred the Mammoth...
-  ...Really big...
-  ...
+  <p>Test edit: application http://localhost/world</p>
+
 
 """
 import grok
 from zope import schema
-from zope.interface import Interface, implements
-from zope.schema.fieldproperty import FieldProperty
 
-class IMammoth(Interface):
-    name = schema.TextLine(title=u"Name")
-    size = schema.TextLine(title=u"Size", default=u"Quite normal")
+class IceWorld(grok.Application, grok.Container):
+    pass
+
 
 class Mammoth(grok.Model):
-    implements(IMammoth)
-    
-    name = FieldProperty(IMammoth['name'])    
-    size = FieldProperty(IMammoth['size'])    
+    class fields:
+        name = schema.TextLine(title=u"Name")
+        size = schema.TextLine(title=u"Size", default=u"Quite normal")
+
+
+class Index(grok.DisplayForm):
+
+    grok.context(Mammoth)
+
+index = grok.PageTemplate('<p>Test display: application <tal:replace tal:replace="view/application_url" /></p>')
+
 
 class Edit(grok.EditForm):
-    pass
+    
+    grok.context(Mammoth)
 
-class Display(grok.DisplayForm):
-    pass
-
+edit = grok.PageTemplate('<p>Test edit: application <tal:replace tal:replace="view/application_url" /></p>')
