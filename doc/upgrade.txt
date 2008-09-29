@@ -37,7 +37,7 @@ Upgrading to 0.14
   
       install_requires=['setuptools',
                         'grok',
-                        'grok.adminui',
+                        'grokui.admin',
                         'z3c.testsetup',
                         # Add extra requirements here
                         ],
