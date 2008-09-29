@@ -110,14 +110,22 @@ the name of the view class itself. In this example, the class is named
     :class:`grok.View`
 
 
-:func:`grok.title` -- succincint description
-============================================
+:func:`grok.title` -- succinct description
+==========================================
 
-.. function:: grok.title(*arg)
+.. function:: grok.title(title)
 
    A descriptive title for a component.
 
 
+:func:`grok.description` -- longer description
+==============================================
+
+.. function:: grok.description(description)
+
+  A longer description for a component.
+
+ 
 :func:`grok.implements` -- indicate, that a class implements an interface
 =========================================================================
 
@@ -198,6 +206,19 @@ a class or object actually implements or provides a specific interface.
 .. seealso::
 
     :func:`grok.implements`
+
+
+:func:`grok.direct` -- specify that the class should be the component
+=====================================================================
+
+.. function:: grok.direct()
+
+    Specify whether the class should be used for the component
+    or whether it should be used to instantiate the component.
+
+    This directive can be used on GlobalUtility-based classes to
+    indicate whether the class itself should be registered as a
+    utility, or an instance of it.
 
 
 :func:`grok.adapts` -- declare that a class adapts certain objects
@@ -457,8 +478,50 @@ certain permission.
     :class:`grok.Permission` component, :func:`@grok.require` decorator
 
 
-Template directives
-~~~~~~~~~~~~~~~~~~~
+Component registry directives
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:func:`grok.site` -- specify the local component registry to use for indexes
+============================================================================
+
+A class level directive used in `grok.Indexes` sub-classes to define
+in which local component registry the indexes should be located.
+
+.. function:: grok.site(*arg)
+
+**Example**
+
+.. code-block:: python
+
+    class MammothIndexes(grok.Indexes):
+	grok.site(Herd)
+	grok.context(IMammoth)
+
+	name = index.Field()
+
+View directives
+~~~~~~~~~~~~~~~
+
+:func:`grok.layer` -- declare the layer for the view
+====================================================
+
+.. function:: grok.layer(layer)
+
+    Declare the layer for the view.
+
+    This directive acts as a contraint on the 'request' of
+    grok.View. This directive can only be used on class level.
+
+
+:func:`grok.skin` -- declare this layer as a named skin
+=======================================================
+
+.. function:: grok.skin(skin)
+
+    Declare this layer as a named skin.
+
+    This directive can only be used on class level.
+
 
 :func:`grok.template` -- specify a template filename
 ====================================================
@@ -492,32 +555,33 @@ module.
 
     `directory` -- the name of the directory inside the same package
                    as the module
-    
+
 .. seealso::
 
     :func:`grok.template`
 
 
-Component registry directives
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:func:`grok.order` -- specify ordering of components
+====================================================
 
-:func:`grok.site` -- specify the local component registry to use for indexes
-============================================================================
+Ordering is typically used in Viewlets to determine the order in which 
+they are displayed.
 
-A class level directive used in `grok.Indexes` sub-classes to define
-in which local component registry the indexes should be located.
+.. function:: grok.order(order)
 
-.. function:: grok.site(*arg)
+    Control the ordering of components.
 
-**Example**
+    If the value is specified, the order will be determined by sorting on it.
+    If no value is specified, the order will be determined by definition
+    order within the module. If the directive is absent, the order will be
+    determined by class name.
 
-.. code-block:: python
+    Inter-module order is by dotted name of the module the components are in,
+    unless an explicit argument is specified to ``grok.order()``, components are
+    grouped by module.
 
-    class MammothIndexes(grok.Indexes):
-	grok.site(Herd)
-	grok.context(IMammoth)
-
-	name = index.Field()
+The function grok.util.sort_components can be used to sort
+components according to these rules.
 
 
 URL Traversal directives

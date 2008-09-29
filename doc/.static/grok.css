@@ -696,6 +696,8 @@ div.note {
     border: 1px solid #dddddd;
 }
 
+
+/* only applies to the class name */
 dl.class {
     color: #555555;
     background: #fafaf8;
@@ -708,7 +710,6 @@ dl.class dt {
     padding: 0;
 }
 
-/* only applies to the class name */
 dl.class > dt {
     padding: 0.5em;
     margin: 0 -1em;
@@ -723,6 +724,37 @@ dl.class dd {
 }
 
 dl.class > dd {
+    margin: 0.5em 0 0 0;
+    padding: 0;
+}
+
+/* only applies to functions */
+dl.function {
+    color: #555555;
+    background: #fafaf8;
+    padding: 0 1em 1em 1em;
+    border: 1px solid #eed;
+}
+
+dl.function dt {
+    margin: 0;
+    padding: 0;
+}
+
+dl.function > dt {
+    padding: 0.5em;
+    margin: 0 -1em;
+    background-color: #eed;
+}
+
+dl.function dd {
+    color: black;
+    font-size: 100%;
+    padding: 0;
+    margin: 0.5em 1em 0.5em 1em;
+}
+
+dl.function > dd {
     margin: 0.5em 0 0 0;
     padding: 0;
 }

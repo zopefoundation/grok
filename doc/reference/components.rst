@@ -1194,8 +1194,8 @@ Security
 
 Permissions are used to protect Views so that they can only be called by
 an authenticated principal. If a View in Grok does not have a `grok.require`
-directive declaring a permission needed to use the View, then the view will
-be public.
+directive declaring a permission needed to use the View, then the default
+anonymously viewable `grok.Public` permission used.
 
 .. class:: grok.Permission
 
