@@ -28,6 +28,7 @@
   <include package="zope.app.session" />
 
   <include package="grokcore.view" />
+  <include package="grokcore.formlib" />
 
   <securityPolicy
       component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
