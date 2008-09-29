@@ -29,17 +29,6 @@ from martian.directive import StoreOnce, StoreMultipleTimes
 from grokcore.component.scan import UnambiguousComponentScope
 from grok import components
 
-# Define grok directives
-class template(martian.Directive):
-    scope = martian.CLASS
-    store = martian.ONCE
-    validate = martian.validateText
-
-class templatedir(martian.Directive):
-    scope = martian.MODULE
-    store = martian.ONCE
-    validate = martian.validateText
-
 class local_utility(martian.Directive):
     scope = martian.CLASS
     store = martian.DICT
@@ -127,9 +116,6 @@ class OneInterfaceOrClassOnClassOrModule(martian.Directive):
     store = martian.ONCE
     validate = martian.validateInterfaceOrClass
 
-class layer(OneInterfaceOrClassOnClassOrModule):
-    pass
-
 class viewletmanager(OneInterfaceOrClassOnClassOrModule):
     scope = UnambiguousComponentScope('viewletmanager')
 
@@ -155,33 +141,3 @@ class order(martian.Directive):
     def factory(self, value=0):
         order._order += 1
         return value, order._order
-
-class TaggedValueStoreOnce(StoreOnce):
-    """Stores the directive value in a interface tagged value.
-    """
-
-    def get(self, directive, component, default):
-        return component.queryTaggedValue(directive.dotted_name(), default)
-
-    def set(self, locals_, directive, value):
-        if directive.dotted_name() in locals_:
-            raise GrokImportError(
-                "The '%s' directive can only be called once per %s." %
-                (directive.name, directive.scope.description))
-        # Make use of the implementation details of interface tagged
-        # values.  Instead of being able to call "setTaggedValue()"
-        # on an interface object, we only have access to the "locals"
-        # of the interface object.  We inject whatever setTaggedValue()
-        # would've injected.
-        taggeddata = locals_.setdefault(TAGGED_DATA, {})
-        taggeddata[directive.dotted_name()] = value
-
-    def setattr(self, context, directive, value):
-        context.setTaggedValue(directive.dotted_name(), value)
-
-class skin(martian.Directive):
-    # We cannot do any better than to check for a class scope. Ideally we
-    # would've checked whether the context is indeed an Interface class.
-    scope = martian.CLASS
-    store = TaggedValueStoreOnce()
-    validate = martian.validateText
