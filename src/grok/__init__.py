@@ -37,6 +37,10 @@ from grokcore.view import templatedir
 from grokcore.view import skin
 from grokcore.view import url
 
+from grokcore.formlib import action
+from grokcore.formlib import AutoFields
+from grokcore.formlib import Fields
+
 from zope.event import notify
 from zope.app.component.hooks import getSite
 from zope.lifecycleevent import (
@@ -68,7 +72,6 @@ from grok.components import ViewletManager, Viewlet
 from grok.directive import (local_utility, permissions, site,
                             viewletmanager, view, traversable, order)
 
-from grok.formlib import action, AutoFields, Fields
 
 
 # BBB These two functions are meant for test fixtures and should be

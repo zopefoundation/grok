@@ -30,6 +30,9 @@ Restructuring
 * View-related base classes, directives and grokkers have been moved
   out to a ``grokcore.view`` package.
 
+* Form-related base classes and helpers have been moved out to a
+  ``grokcore.formlib`` package.
+
 Bug fixes
 ---------
 

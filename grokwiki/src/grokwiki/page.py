@@ -57,3 +57,18 @@ class Edit(grok.View):
         self.context.update(text)
         self.flash('Saved.')
         self.redirect(self.url(self.context))
+
+
+class WikiLayer(grok.IRESTLayer):
+    pass
+
+class PageRest(grok.REST):
+    grok.layer(WikiLayer))
+    
+    def GET(self):
+        return "Hello world"
+    
+class WikiProtocol(grok.RESTProtocol):
+    grok.layer(WikiLayer)
+    grok.name('wiki')
+

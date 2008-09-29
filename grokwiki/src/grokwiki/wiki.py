@@ -24,6 +24,20 @@ class Index(grok.View):
     def render(self):
         self.redirect(self.url('home'))
 
+class Hello(grok.View):
+    grok.baseclass()
+    
+    def render(self):
+        return "Hello"
+
+class Hoi(Hello):
+    def render(self):
+        return "Hoi"
+
+class Bonjour(Hello):
+    def render(self):
+        return "Bonjour"
+
 @grok.subscribe(Wiki, grok.IObjectAddedEvent)
 def setupHomepage(wiki, event):
     """Creates a home page for every wiki."""
