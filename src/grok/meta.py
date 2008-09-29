@@ -52,12 +52,9 @@ from grok.interfaces import IViewletManager as IGrokViewletManager
 from grokcore.component.scan import determine_module_component
 from grokcore.security.meta import PermissionGrokker
 
+from grokcore.view.meta.views import (
+    default_view_name, default_fallback_to_name)
 
-def default_view_name(factory, module=None, **data):
-    return factory.__name__.lower()
-
-def default_fallback_to_name(factory, module, name, **data):
-    return name
 
 def default_annotation_provides(factory, module, **data):
     base_interfaces = interface.implementedBy(grok.Annotation)
