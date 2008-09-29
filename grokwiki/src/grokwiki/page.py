@@ -63,7 +63,7 @@ class WikiLayer(grok.IRESTLayer):
     pass
 
 class PageRest(grok.REST):
-    grok.layer(WikiLayer))
+    grok.layer(WikiLayer)
     
     def GET(self):
         return "Hello world"
