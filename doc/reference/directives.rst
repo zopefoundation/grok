@@ -523,7 +523,7 @@ View directives
     This directive can only be used on class level.
 
 
-:func:`grok.template` -- specify a template filename
+:func:`grok.template` -- specify a template name
 ====================================================
 
 A class level directive used to specify the template to be rendered
@@ -534,7 +534,7 @@ for this module.
 
 .. function:: grok.template(template)
 
-    `template` -- name of the template file
+    `template` -- name of the template file without file extension
 
 .. seealso::
 
