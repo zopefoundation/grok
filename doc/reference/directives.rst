@@ -194,14 +194,15 @@ use the functions `zope.interface.verify.verifyClass(interface, class)`
 and `zope.interface.verify.verifyObject(interface, object)` to verify if
 a class or object actually implements or provides a specific interface.
 
-:func:`grok.provides` -- declare that a component provides an interface
-=======================================================================
+:func:`grok.provides` -- disambiguate which interface is registered
+===================================================================
 
 .. function:: grok.provides(interface)
 
-    If the component implements more than one interface,
-    :func:`grok.provides` is required to disambiguate for what interface
-    the component will be registered.
+    Explicitly specify with which interface a component will be
+    looked up. If a class declares that it implements several interaces,
+    :func:`grok.provides` can be used to disambiguate which interface will be
+    registered with the Zope Component Architecture.
 
 .. seealso::
 
