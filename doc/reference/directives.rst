@@ -200,7 +200,7 @@ a class or object actually implements or provides a specific interface.
 .. function:: grok.provides(interface)
 
     Explicitly specify with which interface a component will be
-    looked up. If a class declares that it implements several interaces,
+    looked up. If a class declares that it implements several interfaces,
     :func:`grok.provides` can be used to disambiguate which interface will be
     registered with the Zope Component Architecture.
 
