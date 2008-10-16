@@ -4,7 +4,11 @@ Grok changes
 0.15 (unreleased)
 =================
 
-...
+Feature changes
+---------------
+
+* Expose the ``DirectoryResource`` component from grokcore.view and the
+accompanying ``path`` directive.
 
 0.14 (2008-09-29)
 =================

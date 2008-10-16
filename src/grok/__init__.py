@@ -31,11 +31,13 @@ from grokcore.security import require
 
 from grokcore.view import PageTemplate
 from grokcore.view import PageTemplateFile
+from grokcore.view import DirectoryResource
 from grokcore.view import layer
 from grokcore.view import template
 from grokcore.view import templatedir
 from grokcore.view import skin
 from grokcore.view import url
+from grokcore.view import path
 
 from grokcore.formlib import action
 from grokcore.formlib import AutoFields
