@@ -107,7 +107,7 @@ class permissions(martian.Directive):
     store = martian.ONCE
     default = []
 
-    def factory(*args):
+    def factory(self, *args):
         return args
 
 class OneInterfaceOrClassOnClassOrModule(martian.Directive):
