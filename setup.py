@@ -40,6 +40,7 @@ setup(
                       'grokcore.formlib',
                       'grokcore.security',
                       'grokcore.view',
+                      'grokcore.viewlet',
                       'simplejson',
                       'pytz',
                       'ZODB3',

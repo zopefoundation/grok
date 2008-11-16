@@ -46,7 +46,7 @@ def test_suite():
                  'zcml', 'utility', 'xmlrpc', 'json', 'container',
                  'traversal', 'grokker', 'directive',
                  'baseclass', 'annotation', 'application',
-                 'viewlet', 'testsetup', 'conflict', 'order']:
+                 'viewlet', 'testsetup', 'conflict']:
         suite.addTest(suiteFromPackage(name))
     return suite
 

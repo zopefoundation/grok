@@ -39,6 +39,12 @@ from grokcore.view import skin
 from grokcore.view import url
 from grokcore.view import path
 
+from grokcore.viewlet import Viewlet
+from grokcore.viewlet import ViewletManager
+from grokcore.viewlet import view
+from grokcore.viewlet import viewletmanager
+from grokcore.viewlet import order
+
 from grokcore.formlib import action
 from grokcore.formlib import AutoFields
 from grokcore.formlib import Fields
@@ -69,10 +75,9 @@ from grok.components import Indexes
 from grok.components import Role
 from grok.components import RESTProtocol, IRESTLayer
 from grok.interfaces import IRESTSkinType
-from grok.components import ViewletManager, Viewlet
 
 from grok.directive import (local_utility, permissions, site,
-                            viewletmanager, view, traversable, order)
+                            traversable)
 
 
 

@@ -13,22 +13,19 @@
 ##############################################################################
 """Grok interfaces
 """
-from zope import interface, schema
-from zope.formlib.interfaces import reConstraint
+from zope import interface
 from zope.interface.interfaces import IInterface
-from zope.viewlet.interfaces import IViewletManager as IViewletManagerBase
 from zope.app.container.interfaces import IContainer as IContainerBase
 
+# Expose interfaces from grokcore.* packages as well:
 import grokcore.component.interfaces
 import grokcore.formlib.interfaces
 import grokcore.security.interfaces
 import grokcore.view.interfaces
+import grokcore.viewlet.interfaces
 
-# Expose interfaces from grokcore.* packages as well:
 from grokcore.component.interfaces import IContext
 from grokcore.component.interfaces import IGrokErrors
-from grokcore.view.interfaces import ITemplateFileFactory
-from grokcore.view.interfaces import ITemplate
 
 
 class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses,
@@ -47,8 +44,6 @@ class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses,
     REST = interface.Attribute("Base class for REST views.")
     Traverser = interface.Attribute("Base class for custom traversers.")
     Indexes = interface.Attribute("Base class for catalog index definitions.")
-    ViewletManager = interface.Attribute("Base class for viewletmanager.")
-    Viewlet = interface.Attribute("Base class for viewlet.")
     Role = interface.Attribute("Base class for roles.")
 
 
@@ -81,24 +76,6 @@ class IGrokDirectives(grokcore.component.interfaces.IDirectives,
         It can only be used inside grok.Indexes subclasses.
         """
 
-    def order(value=None):
-        """Control the ordering of components.
-
-        If the value is specified, the order will be determined by sorting on
-        it.
-        If no value is specified, the order will be determined by definition
-        order within the module.
-        If the directive is absent, the order will be determined by class name.
-        (unfortunately our preferred default behavior on absence which would
-        be like grok.order() without argument is hard to implement in Python)
-
-        Inter-module order is by dotted name of the module the
-        components are in; unless an explicit argument is specified to
-        ``grok.order()``, components are grouped by module.
-
-        The function grok.util.sort_components can be used to sort
-        components according to these rules.
-        """
 
 
 class IGrokEvents(interface.Interface):
@@ -134,8 +111,9 @@ class IGrokEvents(interface.Interface):
 
 class IGrokAPI(grokcore.security.interfaces.IGrokcoreSecurityAPI,
                grokcore.view.interfaces.IGrokcoreViewAPI,
+               grokcore.viewlet.interfaces.IGrokcoreViewletAPI,
                grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
-               IGrokBaseClasses, IGrokDirectives, 
+               IGrokBaseClasses, IGrokDirectives,
                IGrokEvents, IGrokErrors):
 
     # BBB this is deprecated
@@ -229,6 +207,3 @@ class IContainer(IContext, IContainerBase):
     """A Grok container.
     """
 
-class IViewletManager(IViewletManagerBase):
-    """The Grok viewlet manager.
-    """

@@ -13,7 +13,6 @@
 ##############################################################################
 """Grok utility functions.
 """
-import grok
 import zope.location.location
 from zope import interface
 from zope.security.checker import NamesChecker, defineChecker
@@ -57,14 +56,3 @@ def applySkin(request, skin, skin_type):
     # Add the new skin.
     ifaces.append(skin)
     interface.directlyProvides(request, *ifaces)
-
-def _sort_key(component):
-    # If components have a grok.order directive, sort by that.
-    explicit_order, implicit_order = grok.order.bind().get(component)
-    return (explicit_order,
-            component.__module__,
-            implicit_order,
-            component.__class__.__name__)
-
-def sort_components(components):
-    return sorted(components, key=_sort_key)
