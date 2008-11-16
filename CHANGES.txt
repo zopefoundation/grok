@@ -10,6 +10,12 @@ Feature changes
 * Expose the ``DirectoryResource`` component from grokcore.view and the
 accompanying ``path`` directive.
 
+Restructuring
+-------------
+
+* Viewlet-related base classes and helpers have been moved out to a
+  ``grokcore.viewlet`` package.
+
 0.14 (2008-09-29)
 =================
 

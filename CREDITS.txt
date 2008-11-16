@@ -41,7 +41,8 @@ CREDITS
 
 * Godefroid Chapelle (conversion to Z3 configuration actions)
 
-* Sylvain Viollon (work on martian, grokcore.formlib, grokcore.view)
+* Sylvain Viollon (work on martian, grokcore.formlib, grokcore.view,
+  grokcore.viewlet)
 
 * ME GROK (team mascot)
 
