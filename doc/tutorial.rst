@@ -128,6 +128,12 @@ called Sample::
 
   $ grokproject Sample
 
+.. sidebar:: Installing the previous 'zopectl' layout
+
+  To install the previous 'zopectl' layout create a Grok project like::
+  
+  $ grokproject --zopectl Sample
+
 This tells grokproject to create a new subdirectory called ``Sample``
 and set up the project in there. grokproject will automatically
 download and install Zope 3 and Grok into the project area.
@@ -148,11 +154,18 @@ After all that, Grok, along with a Zope 3 instance, is ready to go.
 Starting up Zope
 ----------------
 
+.. sidebar:: Run a Grok instance created with the previous 'zopectl' layout
+
+  To start up the Grok instance created with the previous 'zopectl' layout::
+  
+  $ cd Sample
+  $ bin/zopectl fg
+
 You can go into the ``Sample`` project directory now and start up the
 Zope instance that has been installed::
 
   $ cd Sample
-  $ bin/zopectl fg
+  $ bin/paster serve etc/deploy.ini
 
 This will make Zope 3 available on port 8080, and you can log in with
 username ``grok`` and password ``grok``. Assuming you've started up
@@ -189,7 +202,7 @@ this tutorial.
 
 Practice restarting Zope now, as you'll end up doing it a lot during
 this tutorial. It's just stopping Zope and starting it again:
-`CTRL-c`` and then ``bin/zopectl fg`` from your Sample
+``CTRL-c`` and then ``bin/paster serve etc/deploy.ini`` from your Sample
 project directory.
 
 An empty Grok project
@@ -217,12 +230,12 @@ upload your project to the Python Cheeseshop. We will discuss this in
 more detail later in this tutorial. (XXX)
 
 We have already seen the ``bin`` directory. It contains the startup
-script for the Zope instance (``bin/zopectl``) as well as the
+script for the Zope instance (``bin/paster``) as well as the
 executable for the buildout system (``bin/buildout``) which can be
 used to re-build the Zope instance and possibly update the Grok and
 Zope packages.
 
-The ``parts`` directory contains configuration and data created by
+The ``parts`` and  ``etc`` directories contain configuration and data created by
 ``buildout``, such as the Zope object database (ZODB) instance.
 
 The actual code of the project will all be inside the ``src``
@@ -353,8 +366,8 @@ The empty class definition above is enough for Grok to go look in the
 template should have the same name as the class, but lowercased and
 with the ``.pt`` postfix.
 
-Restart Zope (``CTRL-C, then ``bin/zopectl fg``). You can now go to a
-new web page called ``bye``:
+Restart Zope (``CTRL-C``, then ``bin/paster serve etc/deploy.ini``). You can now 
+go to a new web page called ``bye``:
 
   http://localhost:8080/test/bye
 
