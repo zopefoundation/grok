@@ -739,6 +739,29 @@ alternative to using the interface directly::
 
   myadapter = component.getAdapter(some_object, ISomeInterface)
 
+Functions as adapters
+~~~~~~~~~~~~~~~~~~~~~
+
+Sometimes an adapter doesn't need to be a full-fledged class;
+registering the factory function itself is enough. We can do this with
+the ``@grok.adapter`` and ``@grok.implementer`` decorators. This way
+we can write simple adapters that don't need to return a full-fledged
+custom class instance but for instance some built-in Python object
+like a string::
+
+  @grok.adapter(SomeClass)
+  @grok.implementer(ISomeInterface)
+  def some_interface_for_some_class(some_instance):
+      return str(some_instance)
+
+You can now do the following::
+
+  some_instance = SomeClass()
+  s = ISomeInterface(some_instance)
+  print s
+
+``ISomeInterface`` now behaves much like ``str`` for ``SomeClass``.
+
 Multi adapters
 ~~~~~~~~~~~~~~
 
