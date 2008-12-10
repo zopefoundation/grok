@@ -119,7 +119,7 @@ Creating a grok project
 
   $ paster create -t grok Sample
 
-.. _paster: http://pythonpaste.org/script/
+  .. _paster: http://pythonpaste.org/script/
 
 Let's create a first Grok project. A Grok project is a working
 environment for a developer using Grok. In essence, a directory with a
@@ -150,6 +150,28 @@ Now you have to wait while grokproject downloads `zc.buildout`_
 3 libraries.
 
 After all that, Grok, along with a Zope 3 instance, is ready to go. 
+
+.. sidebar:: Common problems installing Grok
+
+  One common problem when installing Grok is library mixup. You may
+  have some libraries installed in your Python interpreter that
+  conflict with libraries that Grok wants to install. If you already
+  have installed Zope 3 previously for instance, you may first have
+  to remove it from your Python's ``site-packages`` directory. 
+ 
+  Another way to make sure Grok doesn't clash with any incompatible
+  libraries is to install and run grokproject from within a
+  virtualenv_, with the ``--no-site-packages`` option enabled. See
+  also `Using Virtualenv for a clean Grok installation`_.
+
+  Modern versions of Mac OS X install Twisted, which in turn has a
+  non-compatible version of ``zope.interface`` as a dependency. This
+  means that the virtualenv option is always recommended on Mac OS X,
+  unless you install a separate version of Python.
+
+  .. _virtualenv: http://pypi.python.org/pypi/virtualenv
+
+  .. _`Using Virtualenv for a clean Grok installation`:  http://grok.zope.org/documentation/how-to/using-virtualenv-for-a-clean-grok-installation
 
 Starting up Zope
 ----------------
