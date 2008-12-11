@@ -524,7 +524,7 @@ Annotation components are persistent writeable adapters.
 
     class Branding(grok.Annotation):
         grok.implements(IBranding)
-        unqiue = 0
+        unique = 0
    
     # Grok the above code, then create some mammoths
     manfred = Mammoth()
@@ -536,8 +536,12 @@ Annotation components are persistent writeable adapters.
    
     # except you can store data in them, this data will transparently persist
     # in the database for as long as the object exists
-    livestock1.serial = 101
-    livestock2.serial = 102
+    livestock1.unique = 101
+    livestock2.unique = 102
+
+    # attributes not listed in the interface will also be persisted
+    # on the annotation
+    livestock2.foo = "something"
 
 Utilities
 ~~~~~~~~~
