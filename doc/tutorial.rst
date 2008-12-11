@@ -386,7 +386,14 @@ normally starts with an uppercase letter.
 The empty class definition above is enough for Grok to go look in the
 ``app_templates`` directory for ``bye.pt``. The rule is that a the
 template should have the same name as the class, but lowercased and
-with the ``.pt`` postfix.
+with the ``.pt`` postfix. 
+
+.. sidebar:: Other templating languages
+
+  You can also install extensions to allow the use of other templating
+  languages in Grok, see for instance `megrok.genshi`_.
+
+  .. _`megrok.genshi`: http://pypi.python.org/pypi/megrok.genshi/
 
 Restart Zope (``CTRL-C``, then ``bin/paster serve etc/deploy.ini``). You can now 
 go to a new web page called ``bye``:
@@ -498,16 +505,15 @@ Using view methods
 
   If you have followed the tutorial so far, you will have an extra
   template called ``bye.pt`` in your ``app_templates`` directory.
-  Since in the given ``app.py``e we have no more class using it, the
-  ``bye.pt`` template will have become *unassociated**. When you try
-  to restart Zope, grok will be unable to read your application, and
-  Zope will crash with an error message like this::
+  Since in the given ``app.py`` we we have no more class using it, the
+  ``bye.pt`` template will have become *unassociated*. When you try to
+  restart Zope, Grok will give you a warning like this::
 
-    GrokError: Found the following unassociated template(s) when
+    UserWarning: Found the following unassociated template(s) when
     grokking 'sample.app': bye.  Define view classes inheriting from
     grok.View to enable the template(s).
 
-  To resolve this error, simply remove ``bye.pt`` from your
+  To get rid of this warning, simply remove ``bye.pt`` from your
   ``app_templates`` directory.
 
 ZPT is deliberately limited in what it allows you to do with Python.
