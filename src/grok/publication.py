@@ -36,8 +36,11 @@ class ZopePublicationSansProxy(object):
     def traverseName(self, request, ob, name):
         result = super(ZopePublicationSansProxy, self).traverseName(
             request, ob, name)
-        return removeSecurityProxy(result)
-
+        if request.getTraversalStack():
+            return removeSecurityProxy(result)
+        else:
+            return result
+    
     def callObject(self, request, ob):
         checker = selectChecker(ob)
         if checker is not None:
