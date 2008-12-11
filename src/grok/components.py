@@ -176,18 +176,6 @@ class REST(zope.location.Location):
     def response(self):
         return self.request.response
 
-##     def GET(self):
-##         raise GrokMethodNotAllowed(self.context, self.request)
-
-##     def POST(self):
-##         raise GrokMethodNotAllowed(self.context, self.request)
-
-##     def PUT(self):
-##         raise GrokMethodNotAllowed(self.context, self.request)
-
-##     def DELETE(self):
-##         raise GrokMethodNotAllowed(self.context, self.request)
-
 class JSON(BrowserPage):
 
     def __call__(self):
