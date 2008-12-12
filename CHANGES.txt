@@ -1,13 +1,13 @@
 Grok changes
 ************
 
-0.14.1 (unreleased)
+0.14.1 (2008-12-12)
 ===================
 
 Bug fixes
 ---------
 
-* Close a bad security hole.
+* Fix serious security issue.
 
 0.14 (2008-09-29)
 =================
