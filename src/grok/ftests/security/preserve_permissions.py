@@ -32,7 +32,6 @@ the view just fine:
 But we can still access Grok views not explicitly protected. We create
 an application and add it to the database::
 
-  >>> grok.testing.grok(__name__)
   >>> from grok.ftests.security.preserve_permissions import App
   >>> root = getRootFolder()
   >>> root['app'] = App()
