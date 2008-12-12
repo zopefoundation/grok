@@ -7,7 +7,7 @@ Grok changes
 Bug fixes
 ---------
 
-* ...
+* Closed a bad security hole.
 
 0.12.1 (2008-05-31)
 ===================
