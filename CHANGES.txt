@@ -8,7 +8,12 @@ Feature changes
 ---------------
 
 * Expose the ``DirectoryResource`` component from grokcore.view and the
-accompanying ``path`` directive.
+  accompanying ``path`` directive.
+
+Bug fixes
+---------
+
+* Close a bad security hole.
 
 0.14 (2008-09-29)
 =================
