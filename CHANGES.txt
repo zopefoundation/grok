@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-0.11.2 (unreleased)
+0.11.2 (2008-12-12)
 ===================
 
 Bug fixes
@@ -10,7 +10,7 @@ Bug fixes
 * Port fix of zope.formlib to correctly adapt the context to a FormField's
   interface, not the field'
 
-* Fix bad security hole.
+* Fix serious security issue.
 
 0.11.1 (2008-01-20)
 ===================
