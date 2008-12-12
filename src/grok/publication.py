@@ -43,7 +43,7 @@ class ZopePublicationSansProxy(object):
             request, ob, name)
         bare_result = removeSecurityProxy(result)
         if IBrowserView.providedBy(bare_result):
-            if isinstance(bare_result, GrokView) or isinstance(bare_result, JSON):
+            if isinstance(bare_result, (GrokView, JSON)):
                 return bare_result
             else:
                 return result
