@@ -18,7 +18,7 @@ users. Instead we are asked to authenticate ourselves::
 However, if we make a grant, e.g. on the root object, we can access
 the view just fine:
 
-  >>> from zope.securitypolicy.interfaces import IPrincipalPermissionManager
+  >>> from zope.app.securitypolicy.interfaces import IPrincipalPermissionManager
   >>> root = getRootFolder()
   >>> root_perms = IPrincipalPermissionManager(root)
   >>> root_perms.grantPermissionToPrincipal('zope.ManageContent',
