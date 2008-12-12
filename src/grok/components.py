@@ -357,21 +357,18 @@ class DirectoryResource(directoryresource.DirectoryResource):
             continue
         resource_factories[type] = factory
 
-
-class DirectoryResourceFactory(object):
+class DirectoryResourceFactory(directoryresource.DirectoryResourceFactory):
     # We need this to allow hooking up our own GrokDirectoryResource
     # and to set the checker to None (until we have our own checker)
 
-    def __init__(self, path, name):
-        # XXX we're not sure about the checker=None here
-        self.__dir = directoryresource.Directory(path, None, name)
-        self.__name = name
-
     def __call__(self, request):
+        # Override this method for the following line, in which our
+        # custom DirectoryResource class is instantiated.
         resource = DirectoryResource(self.__dir, request)
+        resource.directory_factory = DirectoryResourceFactory
+        resource.__Security_checker__ = self.__checker
         resource.__name__ = self.__name
         return resource
-
 
 class Traverser(object):
     interface.implements(IBrowserPublisher)
