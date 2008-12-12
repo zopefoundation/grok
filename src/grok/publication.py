@@ -27,6 +27,10 @@ from zope.app.publication.requestpublicationfactories import \
      BrowserFactory, XMLRPCFactory, HTTPFactory
 from zope.app.http.interfaces import IHTTPException
 
+from zope.publisher.interfaces.browser import IBrowserView
+from grok.components import View as GrokView
+from grok.components import JSON
+
 class ZopePublicationSansProxy(object):
 
     def getApplication(self, request):
@@ -36,8 +40,16 @@ class ZopePublicationSansProxy(object):
     def traverseName(self, request, ob, name):
         result = super(ZopePublicationSansProxy, self).traverseName(
             request, ob, name)
-        return removeSecurityProxy(result)
+        bare_result = removeSecurityProxy(result)
+        if IBrowserView.providedBy(bare_result):
+            if isinstance(bare_result, (GrokView, JSON)):
+                return bare_result
+            else:
+                return result
+        else:
+            return bare_result
 
+        
     def callObject(self, request, ob):
         checker = selectChecker(ob)
         if checker is not None:
