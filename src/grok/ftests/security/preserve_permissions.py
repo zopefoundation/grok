@@ -52,6 +52,13 @@ While the manage view is locked::
   ...
   httperror_seek_wrapper: HTTP Error 401: Unauthorized
 
+We have some static resources defined in a local `static` directory,
+which we can access unauthenticated::
+
+  >>> browser.open('http://localhost/@@/grok.ftests.security/textfile.txt')
+  >>> print browser.contents
+  Just a test.
+
 When we authenticate, everything works fine::
 
   >>> browser.addHeader('Authorization', 'Basic mgr:mgrpw')
