@@ -1,8 +1,8 @@
 """Default REST view for Grok.
 
-The views provided by this module govern objects for which more specific
-REST behaviors are not defined, and let them return attractive Method
-Not Allowed responses when clients pester them with HTTP requests.
+The views provided by this module get invoked when an object receives an
+HTTP request in a REST skin for which no more-specific REST behavior has
+been defined.  These all return the HTTP response Method Not Allowed.
 
 """
 import grok
@@ -25,12 +25,12 @@ class GrokMethodNotAllowed(MethodNotAllowed):
 class MethodNotAllowedView(grok.MultiAdapter):
     """View rendering a REST GrokMethodNotAllowed exception over HTTP.
 
-    Not only does this view render the REST error attractively, with an
-    HTTP status of 405 (Method Not Allowed) and a simple text message as
-    the document body, but offers an ``Allow:`` HTTP header listing any
-    methods that can, in fact, succeed.  It constructs this list by
-    testing the current object to see which methods it supports; if none
-    of the standard methods succeed, then the ``Allow:`` header is still
+    Not only does this view render the REST error as an HTTP status of
+    405 (Method Not Allowed) and a simple text message as the document
+    body, but also offers an ``Allow:`` HTTP header listing any methods
+    that can, in fact, succeed.  It constructs this list by testing the
+    current object to see which methods it supports; if none of the
+    standard methods succeed, then the ``Allow:`` header is still
     provided, but its value will be empty.
 
     """
