@@ -6,6 +6,28 @@ continue to work with newer versions of Grok.  This document only
 describes changes involving incompatibilities or deprecations, not new
 features (please refer to ``CHANGES.txt`` for those).
 
+Upgrading to 0.15
+-----------------
+
+* The ``grok.RESTProtocol`` class has been removed in favour of a
+  ``grok.restskin()`` directive for interfaces.  For instance, if you
+  previously registered a REST layer as a skin like so::
+
+    class IMyLayer(grok.IRESTLayer):
+        pass
+
+    class MyRestProtocol(grok.RESTProtocol):
+        grok.layer(IMyLayer)
+
+  You can now simply write::
+
+    class IMyLayer(grok.IRESTRequest):
+        grok.restskin('myskin')
+
+  As you can see, ``IRESTRequest`` has been introduced as a baseclass for
+  defining REST layers.
+
+
 Upgrading to 0.14
 -----------------
 
@@ -34,7 +56,7 @@ Upgrading to 0.14
 
   A new Grok application will have an install_requires parameter that
   looks like this::
-  
+
       install_requires=['setuptools',
                         'grok',
                         'grokui.admin',
@@ -142,7 +164,7 @@ Upgrading to 0.13
   the ``martian.component`` and the ``martian.priority`` directives
   that take the value as its first argument. The new
   ``martian.directive`` directive was introduced above.
- 
+
 * Custom directives need to be re-implemented using Martian's new
   ``Directive`` base class.  The directive scope, the type of storage,
   the validator and a potential default value are all defined as
@@ -217,7 +239,7 @@ Upgrading to 0.12
 
     $ easy_install -U grokproject
 
-* If you have existing Grok projects and you want to make use of 
+* If you have existing Grok projects and you want to make use of
   Grok's new autoinclusion functionality in them, you can place
   the following line in your project's ``configure.zcml``:
 

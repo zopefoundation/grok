@@ -196,10 +196,9 @@ class Traverser(object):
         # if we have a RESTful request, we will handle
         # GET, POST and HEAD differently (PUT and DELETE are handled already
         # but not on the BrowserRequest layer but the HTTPRequest layer)
-        if IRESTLayer.providedBy(request):
+        if interfaces.IRESTRequest.providedBy(request):
             rest_view = component.getMultiAdapter(
-                (self.context, self.request),
-                name=request.method)
+                (self.context, self.request), name=request.method)
             return rest_view, ()
         view_name = getDefaultViewName(self.context, request)
         view_uri = "@@%s" % view_name
@@ -285,11 +284,6 @@ Indexes = IndexesClass('Indexes')
 class Role(Role):
     pass
 
-class IRESTLayer(IBrowserRequest):
-    pass
-
-class RESTProtocol(object):
-    pass
 
 class ViewletManager(ViewletManagerBase):
     interface.implements(interfaces.IViewletManager)

@@ -15,6 +15,7 @@
 
 import zope.component.interface
 from zope import interface, component
+from zope.interface.interface import InterfaceClass
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
                                                IBrowserRequest,
                                                IBrowserPublisher)
@@ -111,7 +112,7 @@ class XMLRPCGrokker(martian.MethodGrokker):
 class RESTGrokker(martian.MethodGrokker):
     martian.component(grok.REST)
     martian.directive(grok.context)
-    martian.directive(grok.layer, default=grok.IRESTLayer)
+    martian.directive(grok.layer, default=grok.IRESTRequest)
     martian.directive(grok.require, name='permission')
 
     def execute(self, factory, method, config, permission, context, layer, **kw):
@@ -132,6 +133,36 @@ class RESTGrokker(martian.MethodGrokker):
             discriminator=('protectName', method_view, '__call__'),
             callable=make_checker,
             args=(factory, method_view, permission),
+            )
+        return True
+
+
+_restskin_not_used = object()
+
+class RestskinInterfaceDirectiveGrokker(martian.InstanceGrokker):
+    martian.component(InterfaceClass)
+
+    def grok(self, name, interface, module_info, config, **kw):
+        restskin = grok.restskin.bind(default=_restskin_not_used).get(interface)
+        if restskin is _restskin_not_used:
+            # The restskin directive is not actually used on the found
+            # interface.
+            return False
+
+        if not interface.extends(grok.IRESTRequest):
+            # For REST layers it is required to extend IRESTRequest.
+            raise GrokError(
+                "The grok.restskin() directive is used on interface %r. "
+                "However, %r does not extend IRESTRequest which is "
+                "required for interfaces that are used as layers and are to "
+                "be registered as a restskin."
+                % (interface.__identifier__, interface.__identifier__),
+                interface
+                )
+        config.action(
+            discriminator=('restprotocol', restskin),
+            callable=zope.component.interface.provideInterface,
+            args=(restskin, interface, IRESTSkinType)
             )
         return True
 
@@ -425,19 +456,6 @@ class IndexesSetupSubscriber(object):
         setupUtility(site, intids, IIntIds)
         return intids
 
-
-class RESTProtocolGrokker(martian.ClassGrokker):
-    martian.component(grok.RESTProtocol)
-    martian.directive(grok.layer, default=IBrowserRequest)
-    martian.directive(grok.name, get_default=default_view_name)
-
-    def execute(self, factory, config, name, layer, **kw):
-        config.action(
-            discriminator=('restprotocol', name),
-            callable=zope.component.interface.provideInterface,
-            args=(name, layer, IRESTSkinType)
-            )
-        return True
 
 class ViewletManagerGrokker(martian.ClassGrokker):
     martian.component(grok.ViewletManager)

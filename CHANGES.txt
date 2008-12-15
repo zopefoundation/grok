@@ -10,6 +10,11 @@ Feature changes
 * Expose the ``DirectoryResource`` component from grokcore.view and the
   accompanying ``path`` directive.
 
+* Similar to the layers and skins restructuring, the ``grok.RESTProtocol``
+  baseclass has been removed in favour of a ``groke.restskin(name)`` directive
+  that can be used on REST layer interfaces. Introduced the IRESTRequest base
+  interfaces for defining REST layers.
+
 Bug fixes
 ---------
 

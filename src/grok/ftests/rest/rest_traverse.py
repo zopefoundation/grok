@@ -77,16 +77,13 @@ class MyContent(grok.Model):
         if 'sub':
             return MyContent()
 
-class LayerZ(grok.IRESTLayer):
-    pass
-
-class Z(grok.RESTProtocol):
-    grok.layer(LayerZ)
+class LayerZ(grok.IRESTRequest):
+    grok.restskin('layerz')
 
 class ZContentRest(grok.REST):
     grok.layer(LayerZ)
     grok.context(MyContent)
-    
+
     def GET(self):
         return "GET content"
 

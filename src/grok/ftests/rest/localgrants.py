@@ -1,7 +1,7 @@
 """
 REST objects, like all views, are properly located objects and will
 therefore honour local grants, for instance.  Let's consider the
-following model in the root folder.  
+following model in the root folder.
 
   >>> root = getRootFolder()
   >>> root['manfred'] = manfred = Mammoth('manfred')
@@ -57,12 +57,8 @@ class Mammoth(grok.Model):
     def __init__(self, name):
         self.name = name
 
-class MammothRestLayer(grok.IRESTLayer):
-    pass
-
-class MammothRestProtocol(grok.RESTProtocol):
-    grok.layer(MammothRestLayer)
-    grok.name('mammoth')
+class MammothRestLayer(grok.IRESTRequest):
+    grok.restskin('mammoth')
 
 class TouchMammoth(grok.Permission):
     grok.name('mammoth.Touch')

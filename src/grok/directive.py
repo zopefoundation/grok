@@ -27,6 +27,7 @@ from martian import util
 from martian.error import GrokImportError, GrokError
 from martian.directive import StoreOnce, StoreMultipleTimes
 from grokcore.component.scan import UnambiguousComponentScope
+from grokcore.view.directive import TaggedValueStoreOnce
 from grok import components
 
 class local_utility(martian.Directive):
@@ -141,3 +142,13 @@ class order(martian.Directive):
     def factory(self, value=0):
         order._order += 1
         return value, order._order
+
+class restskin(martian.Directive):
+    # We cannot do any better than to check for a class scope. Ideally we
+    # would've checked whether the context is indeed an Interface class.
+    scope = martian.CLASS
+    store = TaggedValueStoreOnce()
+    validate = martian.validateText
+
+    def factory(self, value=None):
+        return value

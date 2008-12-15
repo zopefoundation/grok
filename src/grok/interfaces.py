@@ -16,6 +16,7 @@
 from zope import interface, schema
 from zope.formlib.interfaces import reConstraint
 from zope.interface.interfaces import IInterface
+from zope.publisher.interfaces.http import IHTTPRequest
 from zope.viewlet.interfaces import IViewletManager as IViewletManagerBase
 from zope.app.container.interfaces import IContainer as IContainerBase
 
@@ -135,7 +136,7 @@ class IGrokEvents(interface.Interface):
 class IGrokAPI(grokcore.security.interfaces.IGrokcoreSecurityAPI,
                grokcore.view.interfaces.IGrokcoreViewAPI,
                grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
-               IGrokBaseClasses, IGrokDirectives, 
+               IGrokBaseClasses, IGrokDirectives,
                IGrokEvents, IGrokErrors):
 
     # BBB this is deprecated
@@ -220,6 +221,12 @@ class IIndexDefinition(interface.Interface):
         Use name for index name and attribute to index. Set up
         index for interface or class context.
         """
+
+class IRESTRequest(IHTTPRequest):
+    """REST-specific Request functionality.
+
+    Base Interfaces for defining REST-layers.
+    """
 
 class IRESTSkinType(IInterface):
     """Skin type for REST requests.

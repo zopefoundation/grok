@@ -6,7 +6,7 @@ been defined.  These all return the HTTP response Method Not Allowed.
 
 """
 import grok
-from grok.interfaces import IRESTSkinType
+from grok.interfaces import IRESTSkinType, IRESTRequest
 
 from zope import component
 from zope.component.interfaces import ComponentLookupError
@@ -90,7 +90,7 @@ class NotAllowedREST(grok.REST):
     clients attempt to assail them with unwanted HTTP methods.
 
     """
-    grok.layer(grok.IRESTLayer)
+    grok.layer(grok.IRESTRequest)
     grok.context(Interface)
 
     is_not_allowed = True

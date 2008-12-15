@@ -67,14 +67,12 @@ from grok.components import Site, LocalUtility, Annotation
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Role
-from grok.components import RESTProtocol, IRESTLayer
-from grok.interfaces import IRESTSkinType
+from grok.interfaces import IRESTSkinType, IRESTRequest
 from grok.components import ViewletManager, Viewlet
 
-from grok.directive import (local_utility, permissions, site,
-                            viewletmanager, view, traversable, order)
-
-
+from grok.directive import (
+    local_utility, permissions, site, viewletmanager, view, restskin,
+    traversable, order)
 
 # BBB These two functions are meant for test fixtures and should be
 # imported from grok.testing, not from grok.
