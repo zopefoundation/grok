@@ -20,6 +20,13 @@ Bug fixes
 
 * Close a bad security hole.
 
+Restructuring
+-------------
+
+* Viewlet-related base classes and helpers have been moved out to a
+  ``grokcore.viewlet`` package.
+
+
 0.14 (2008-09-29)
 =================
 

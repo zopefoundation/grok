@@ -10,6 +10,7 @@
   <include package="grokcore.formlib" file="meta.zcml" />
   <include package="grokcore.security" file="meta.zcml" />
   <include package="grokcore.view" file="meta.zcml" />
+  <include package="grokcore.viewlet" file="meta.zcml" />
   <grok:grok package=".meta" />
 
 </configure>

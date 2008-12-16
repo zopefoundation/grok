@@ -39,6 +39,12 @@ from grokcore.view import skin
 from grokcore.view import url
 from grokcore.view import path
 
+from grokcore.viewlet import Viewlet
+from grokcore.viewlet import ViewletManager
+from grokcore.viewlet import view
+from grokcore.viewlet import viewletmanager
+from grokcore.viewlet import order
+
 from grokcore.formlib import action
 from grokcore.formlib import AutoFields
 from grokcore.formlib import Fields
@@ -68,11 +74,9 @@ from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Role
 from grok.interfaces import IRESTSkinType, IRESTRequest
-from grok.components import ViewletManager, Viewlet
 
 from grok.directive import (
-    local_utility, permissions, site, viewletmanager, view, restskin,
-    traversable, order)
+    local_utility, permissions, site, restskin, traversable)
 
 # BBB These two functions are meant for test fixtures and should be
 # imported from grok.testing, not from grok.

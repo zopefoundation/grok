@@ -1,3 +1,0 @@
-<ul tal:define="v_dict viewletmanager/viewlet_dict; v_keys viewletmanager/viewlet_keys_sorted;">
- <li tal:repeat="k v_keys" tal:content="python:v_dict[k].render().strip()" />
-</ul>

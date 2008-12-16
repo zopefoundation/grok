@@ -22,7 +22,6 @@ from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
 from zope.publisher.interfaces.http import IHTTPRequest
 
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
-from zope.viewlet.interfaces import IViewletManager, IViewlet
 from zope.securitypolicy.interfaces import IRole
 from zope.securitypolicy.rolepermission import rolePermissionManager
 
@@ -48,9 +47,7 @@ import grok
 from grok import components
 from grok.util import make_checker
 from grok.interfaces import IRESTSkinType
-from grok.interfaces import IViewletManager as IGrokViewletManager
 
-from grokcore.component.scan import determine_module_component
 from grokcore.security.meta import PermissionGrokker
 
 from grokcore.view.meta.views import (
@@ -66,18 +63,6 @@ def default_annotation_provides(factory, module, **data):
 
 def default_annotation_name(factory, module, **data):
     return factory.__module__ + '.' + factory.__name__
-
-
-class ViewletManagerContextGrokker(martian.GlobalGrokker):
-
-    martian.priority(1001)
-
-    def grok(self, name, module, module_info, config, **kw):
-        viewletmanager = determine_module_component(module_info,
-                                                    grok.viewletmanager,
-                                                    IGrokViewletManager)
-        grok.viewletmanager.set(module, viewletmanager)
-        return True
 
 
 class XMLRPCGrokker(martian.MethodGrokker):
@@ -456,100 +441,3 @@ class IndexesSetupSubscriber(object):
         setupUtility(site, intids, IIntIds)
         return intids
 
-
-class ViewletManagerGrokker(martian.ClassGrokker):
-    martian.component(grok.ViewletManager)
-    martian.directive(grok.context)
-    martian.directive(grok.layer, default=IDefaultBrowserLayer)
-    martian.directive(grok.view)
-    martian.directive(grok.name)
-
-    def grok(self, name, factory, module_info, **kw):
-        # Need to store the module info object on the view class so that it
-        # can look up the 'static' resource directory.
-        factory.module_info = module_info
-        return super(ViewletManagerGrokker, self).grok(
-            name, factory, module_info, **kw)
-
-    def execute(self, factory, config, context, layer, view, name, **kw):
-        # This will be used to support __name__ on the viewlet manager
-        factory.__view_name__ = name
-
-        # find templates
-        templates = factory.module_info.getAnnotation('grok.templates', None)
-        if templates is not None:
-            config.action(
-                discriminator=None,
-                callable=self.checkTemplates,
-                args=(templates, factory.module_info, factory)
-                )
-
-        config.action(
-            discriminator = ('viewletManager', context, layer, view, name),
-            callable = component.provideAdapter,
-            args = (factory, (context, layer, view), IViewletManager, name)
-            )
-        return True
-
-    def checkTemplates(self, templates, module_info, factory):
-        def has_render(factory):
-            return factory.render != grok.components.ViewletManager.render
-        def has_no_render(factory):
-            # always has a render method
-            return False
-        templates.checkTemplates(module_info, factory, 'viewlet manager',
-                                 has_render, has_no_render)
-
-class ViewletGrokker(martian.ClassGrokker):
-    martian.component(grok.Viewlet)
-    martian.directive(grok.context)
-    martian.directive(grok.layer, default=IDefaultBrowserLayer)
-    martian.directive(grok.view)
-    martian.directive(grok.viewletmanager)
-    martian.directive(grok.name, get_default=default_view_name)
-    martian.directive(grok.require, name='permission')
-
-    def grok(self, name, factory, module_info, **kw):
-        # Need to store the module info object on the view class so that it
-        # can look up the 'static' resource directory.
-        factory.module_info = module_info
-        return super(ViewletGrokker, self).grok(
-            name, factory, module_info, **kw)
-
-    def execute(self, factory, config,
-                context, layer, view, viewletmanager, name, permission, **kw):
-        # This will be used to support __name__ on the viewlet
-        factory.__view_name__ = name
-
-        # find templates
-        templates = factory.module_info.getAnnotation('grok.templates', None)
-        if templates is not None:
-            config.action(
-                discriminator=None,
-                callable=self.checkTemplates,
-                args=(templates, factory.module_info, factory)
-                )
-
-        config.action(
-            discriminator = ('viewlet', context, layer,
-                             view, viewletmanager, name),
-            callable = component.provideAdapter,
-            args = (factory, (context, layer, view, viewletmanager),
-                    IViewlet, name)
-            )
-
-        config.action(
-            discriminator=('protectName', factory, '__call__'),
-            callable=make_checker,
-            args=(factory, factory, permission, ['update', 'render']),
-            )
-
-        return True
-
-    def checkTemplates(self, templates, module_info, factory):
-        def has_render(factory):
-            return factory.render != grok.components.Viewlet.render
-        def has_no_render(factory):
-            return not has_render(factory)
-        templates.checkTemplates(module_info, factory, 'viewlet',
-                                 has_render, has_no_render)

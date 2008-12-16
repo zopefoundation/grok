@@ -14,13 +14,9 @@
 """Grok directives.
 """
 
-import sys
 import grok
 from zope import interface
 from zope.interface.interfaces import IInterface
-from zope.interface.interface import TAGGED_DATA
-
-from zope.publisher.interfaces.browser import IBrowserView
 
 import martian
 from martian import util
@@ -111,18 +107,6 @@ class permissions(martian.Directive):
     def factory(self, *args):
         return args
 
-class OneInterfaceOrClassOnClassOrModule(martian.Directive):
-    """Convenience base class.  Not for public use."""
-    scope = martian.CLASS_OR_MODULE
-    store = martian.ONCE
-    validate = martian.validateInterfaceOrClass
-
-class viewletmanager(OneInterfaceOrClassOnClassOrModule):
-    scope = UnambiguousComponentScope('viewletmanager')
-
-class view(OneInterfaceOrClassOnClassOrModule):
-    default = IBrowserView
-
 class traversable(martian.Directive):
     scope = martian.CLASS
     store = martian.DICT
@@ -131,17 +115,6 @@ class traversable(martian.Directive):
         if name is None:
             name = attr
         return (name, attr)
-
-class order(martian.Directive):
-    scope = martian.CLASS
-    store = martian.ONCE
-    default = 0, 0
-
-    _order = 0
-
-    def factory(self, value=0):
-        order._order += 1
-        return value, order._order
 
 class restskin(martian.Directive):
     # We cannot do any better than to check for a class scope. Ideally we
