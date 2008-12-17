@@ -72,7 +72,7 @@ def default_annotation_name(factory, module, **data):
 
 
 class XMLRPCGrokker(martian.MethodGrokker):
-    """Grok each XML-RPC method of a `grok.XMLRPC` subclass.
+    """Grokker for methods of a `grok.XMLRPC` subclass.
 
     When an application defines a `grok.XMLRPC` view, we do not actually
     register the view with the Component Architecture.  Instead, we grok
@@ -81,8 +81,8 @@ class XMLRPCGrokker(martian.MethodGrokker):
     method the `__call__()` method of its new class, since that is how
     Zope always invokes views.  And it is this new class that is then
     made the object of the two configuration actions that we schedule:
-    one to activate it as a REST adapter for the context, and the other
-    to prepare a security check for the adapter.
+    one to activate it as an XML-RPC adapter for the context, and the
+    other to prepare a security check for the adapter.
 
     """
     martian.component(grok.XMLRPC)
@@ -114,7 +114,7 @@ class XMLRPCGrokker(martian.MethodGrokker):
 
 
 class RESTGrokker(martian.MethodGrokker):
-    """Grok the REST methods of a `grok.REST` subclass.
+    """Grokker for methods of a `grok.REST` subclass.
 
     When an application defines a `grok.REST` view, we do not actually
     register the view with the Component Architecture.  Instead, we grok
@@ -162,10 +162,24 @@ class RESTGrokker(martian.MethodGrokker):
 _restskin_not_used = object()
 
 class RestskinInterfaceDirectiveGrokker(martian.InstanceGrokker):
+    """Grokker for interfaces providing the `grok.restskin()` directive.
+
+    Applications create REST skins by subclassing `grok.IRESTRequest`
+    and providing the subclass with a `grok.restskin()` directive giving
+    the prefix string which distinguishes that REST layers from others.
+    This grokker registers those skins.
+
+    """
     martian.component(InterfaceClass)
 
     def grok(self, name, interface, module_info, config, **kw):
-        restskin = grok.restskin.bind(default=_restskin_not_used).get(interface)
+        # This `InstanceGrokker` will be called for every instance of
+        # `InterfaceClass` - that is, for every interface defined in an
+        # application module!  So we have to do our own filtering, by
+        # checking whether each interface includes the `grok.restskin()`
+        # directive, and skipping those that do not.
+        restskin = grok.restskin.bind(default=_restskin_not_used
+                                      ).get(interface)
         if restskin is _restskin_not_used:
             # The restskin directive is not actually used on the found
             # interface.
@@ -190,6 +204,19 @@ class RestskinInterfaceDirectiveGrokker(martian.InstanceGrokker):
 
 
 class JSONGrokker(martian.MethodGrokker):
+    """Grokker for methods of a `grok.JSON` subclass.
+
+    When an application defines a `grok.JSON` view, we do not actually
+    register the view with the Component Architecture.  Instead, we grok
+    each of its methods separately, placing them each inside of a new
+    class that we create on-the-fly by calling `type()`.  We make each
+    method the `__call__()` method of its new class, since that is how
+    Zope always invokes views.  And it is this new class that is then
+    made the object of the two configuration actions that we schedule:
+    one to activate it as a JSON adapter for the context, and the other
+    to prepare a security check for the adapter.
+
+    """
     martian.component(grok.JSON)
     martian.directive(grok.context)
     martian.directive(grok.require, name='permission')
