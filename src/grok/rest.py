@@ -6,7 +6,7 @@ been defined.  These all return the HTTP response Method Not Allowed.
 
 """
 import grok
-from grok.interfaces import IRESTSkinType, IRESTRequest
+from grok.interfaces import IRESTSkinType
 
 from zope import component
 from zope.component.interfaces import ComponentLookupError
