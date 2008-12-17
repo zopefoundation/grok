@@ -11,13 +11,20 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Grokkers for the various components."""
+"""Grokkers for Grok-configured components.
 
+This `meta` module contains the actual grokker mechanisms for which the
+Grok web framework is named.  A directive in the adjacent `meta.zcml`
+file directs the `martian` library to scan this file, where it discovers
+and registers the grokkers you see below.  The grokkers are then active
+and available as `martian` recursively examines the packages and modules
+of a Grok-based web application.
+
+"""
 import zope.component.interface
 from zope import interface, component
 from zope.interface.interface import InterfaceClass
 from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
-                                               IBrowserRequest,
                                                IBrowserPublisher)
 from zope.publisher.interfaces.http import IHTTPRequest
 
@@ -50,8 +57,7 @@ from grok.interfaces import IRESTSkinType
 
 from grokcore.security.meta import PermissionGrokker
 
-from grokcore.view.meta.views import (
-    default_view_name, default_fallback_to_name)
+from grokcore.view.meta.views import default_fallback_to_name
 
 
 def default_annotation_provides(factory, module, **data):
@@ -66,6 +72,19 @@ def default_annotation_name(factory, module, **data):
 
 
 class XMLRPCGrokker(martian.MethodGrokker):
+    """Grok each XML-RPC method of a `grok.XMLRPC` subclass.
+
+    When an application defines a `grok.XMLRPC` view, we do not actually
+    register the view with the Component Architecture.  Instead, we grok
+    each of its methods separately, placing them each inside of a new
+    class that we create on-the-fly by calling `type()`.  We make each
+    method the `__call__()` method of its new class, since that is how
+    Zope always invokes views.  And it is this new class that is then
+    made the object of the two configuration actions that we schedule:
+    one to activate it as a REST adapter for the context, and the other
+    to prepare a security check for the adapter.
+
+    """
     martian.component(grok.XMLRPC)
     martian.directive(grok.context)
     martian.directive(grok.require, name='permission')
@@ -95,12 +114,30 @@ class XMLRPCGrokker(martian.MethodGrokker):
 
 
 class RESTGrokker(martian.MethodGrokker):
+    """Grok the REST methods of a `grok.REST` subclass.
+
+    When an application defines a `grok.REST` view, we do not actually
+    register the view with the Component Architecture.  Instead, we grok
+    each of its methods separately, placing them each inside of a new
+    class that we create on-the-fly by calling `type()`.  We make each
+    method the `__call__()` method of its new class, since that is how
+    Zope always invokes views.  And it is this new class that is then
+    made the object of the two configuration actions that we schedule:
+    one to activate it as a REST adapter for the context, and the other
+    to prepare a security check for the adapter.
+
+    This results in several registered views, typically with names like
+    `GET`, `PUT`, and `POST` - one for each method that the `grok.REST`
+    subclass defines.
+
+    """
     martian.component(grok.REST)
     martian.directive(grok.context)
     martian.directive(grok.layer, default=grok.IRESTRequest)
     martian.directive(grok.require, name='permission')
 
-    def execute(self, factory, method, config, permission, context, layer, **kw):
+    def execute(self, factory, method, config, permission, context,
+                layer, **kw):
         name = method.__name__
 
         method_view = type(
@@ -183,6 +220,7 @@ class JSONGrokker(martian.MethodGrokker):
 
 
 class TraverserGrokker(martian.ClassGrokker):
+    """Grokker for subclasses of `grok.Traverser`."""
     martian.component(grok.Traverser)
     martian.directive(grok.context)
 
@@ -197,6 +235,7 @@ class TraverserGrokker(martian.ClassGrokker):
 
 
 class SiteGrokker(martian.ClassGrokker):
+    """Grokker for subclasses of `grok.Site`."""
     martian.component(grok.Site)
     martian.priority(500)
     martian.directive(grok.local_utility, name='infos')
