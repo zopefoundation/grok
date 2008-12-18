@@ -28,6 +28,26 @@ from martian.util import frame_is_class
 from grok.interfaces import IIndexDefinition
 
 class IndexDefinition(object):
+    """The definition of a particular index in a `grok.Indexes` class.
+
+    This base class defines the actual behavior of `grok.index.Field`
+    and the other kinds of attribute index that Grok supports.  Upon our
+    instantiation, we save every parameter that we were passed; later,
+    if an index actually needs to be created (which is typically at the
+    moment when a new `grok.Application` object is added to the Zope
+    Database), then our `setup()` method gets called.
+
+    The only parameter that is actually significant to us is `attribute`
+    which (optionally) defines the attribute we should index.  All other
+    parameters are simply passed along to the Zope index we create,
+    which interprets them as configuration details of its own.
+
+    Note that, since index creation (and thus a call to our `setup()`
+    method) currently occurs only during the creation of a new Grok
+    `Application` object in the Zope Database, the presence of this
+    declaration in Grok application code is nearly always a no-op.
+
+    """
     implements(IIndexDefinition)
 
     index_class = None
@@ -43,6 +63,9 @@ class IndexDefinition(object):
         self._kw = kw
 
     def setup(self, catalog, name, context, module_info):
+        # If the user supplied attribute= when instantiating us, we
+        # allow that value to override the attribute name under which we
+        # are actually stored inside of the `grok.Indexes` instance.
         if self._attribute is not None:
             field_name = self._attribute
         else:
@@ -66,10 +89,13 @@ class IndexDefinition(object):
                                          *self._args, **self._kw)
 
 class Field(IndexDefinition):
+    """A `grok.Indexes` index that matches against an entire field."""
     index_class = FieldIndex
 
 class Text(IndexDefinition):
+    """A `grok.Indexes` index supporting full-text searches of a field."""
     index_class = TextIndex
 
 class Set(IndexDefinition):
+    """A `grok.Indexes` index supporting keyword searches of a field."""
     index_class = SetIndex
