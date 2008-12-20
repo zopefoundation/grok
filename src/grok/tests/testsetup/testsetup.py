@@ -165,7 +165,7 @@ Basically, all files/modules are found that
 
    For unit doctests the file must contain::
 
-       :Test-Layer: functional
+       :Test-Layer: unit
 
    Python test modules must provide a module docstring that contains::
 
