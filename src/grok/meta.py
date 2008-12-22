@@ -220,19 +220,18 @@ class JSONGrokker(martian.MethodGrokker):
     martian.component(grok.JSON)
     martian.directive(grok.context)
     martian.directive(grok.require, name='permission')
+    martian.directive(grok.layer, default=IDefaultBrowserLayer)
 
-    # TODO: this grokker doesn't support layers yet
-
-    def execute(self, factory, method, config, context, permission, **kw):
+    def execute(
+            self, factory, method, config, context, permission, layer, **kw):
         # Create a new class with a __view_name__ attribute so the
         # JSON class knows what method to call.
         method_view = type(
             factory.__name__, (factory,),
             {'__view_name__': method.__name__}
             )
-        adapts = (context, IDefaultBrowserLayer)
+        adapts = (context, layer)
         name = method.__name__
-
         config.action(
             discriminator=('adapter', adapts, interface.Interface, name),
             callable=component.provideAdapter,

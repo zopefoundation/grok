@@ -18,6 +18,9 @@ Feature changes
 Bug fixes
 ---------
 
+* Allow the grok.layer() directive on JSON components. Closes
+  https://bugs.launchpad.net/grok/+bug/310558
+
 * Close a bad security hole.
 
 Restructuring
