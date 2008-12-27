@@ -15,7 +15,7 @@ Feature changes
   accompanying ``path`` directive.
 
 * Similar to the layers and skins restructuring, the ``grok.RESTProtocol``
-  baseclass has been removed in favour of a ``groke.restskin(name)`` directive
+  baseclass has been removed in favour of a ``grok.restskin(name)`` directive
   that can be used on REST layer interfaces. Introduced the IRESTRequest base
   interfaces for defining REST layers.
 
