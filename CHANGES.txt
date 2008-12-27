@@ -7,6 +7,10 @@ Grok changes
 Feature changes
 ---------------
 
+* Introduced ``grok.interfaces.IGrokSecurityView``, a marker interface
+  which non-Grok views can use to state that they want to be handled
+  like regular Grok views by the Grok publisher.
+
 * Expose the ``DirectoryResource`` component from grokcore.view and the
   accompanying ``path`` directive.
 
