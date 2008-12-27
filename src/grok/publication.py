@@ -40,19 +40,24 @@ from zope.app.http.interfaces import IHTTPException
 
 from grokcore.view import View as GrokView
 from grok.components import JSON
+from grok.interfaces import IGrokSecurityView
 
 class ZopePublicationSansProxy(object):
     """Grok mixin that makes a publisher remove security proxies.
 
-    This mixin overrides three methods from the `IPublication` interface
-    (defined in `zope.publisher.interfaces`) to alter their security
-    behavior.  The normal Zope machinery wraps a security proxy around
-    the application object returned by `getApplication()`, and around
-    each of the objects returned as `traverseName()` is then called for
-    each URL component.  The versions here strip the security proxy off
-    instead, returning the bare object (unless the object is a non-Grok
-    view, in which case we leave the proxy installed for important
-    security reasons).  Finally, when `callObject()` is asked to render
+    This mixin overrides three methods from the `IPublication`
+    interface (defined in `zope.publisher.interfaces`) to alter their
+    security behavior.  The normal Zope machinery wraps a security
+    proxy around the application object returned by
+    `getApplication()`, and around each of the objects returned as
+    `traverseName()` is then called for each URL component.  The
+    versions here strip the security proxy off instead, returning the
+    bare object (unless the object is a non-Grok view, in which case
+    we leave the proxy installed for important security
+    reasons).  Non-Grok views however, are handled like Grok views, if
+    they provide `grok.interfaces.IGrokSecurityView`.
+
+    Finally, when `callObject()` is asked to render
     the view, we quickly re-install a security proxy on the object, make
     sure that the current user is indeed allowed to invoke `__call__()`,
     then pass the bare object to the rendering machinery.
@@ -73,6 +78,8 @@ class ZopePublicationSansProxy(object):
         bare_result = removeSecurityProxy(result)
         if IBrowserView.providedBy(bare_result):
             if isinstance(bare_result, (GrokView, JSON)):
+                return bare_result
+            elif IGrokSecurityView.providedBy(bare_result):
                 return bare_result
             else:
                 return result
