@@ -16,7 +16,7 @@ Feature changes
 
 * Similar to the layers and skins restructuring, the ``grok.RESTProtocol``
   baseclass has been removed in favour of a ``grok.restskin(name)`` directive
-  that can be used on REST layer interfaces. Introduced the IRESTRequest base
+  that can be used on REST layer interfaces. Introduced the IRESTLayer base
   interfaces for defining REST layers.
 
 Bug fixes

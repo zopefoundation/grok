@@ -200,7 +200,7 @@ class IIndexDefinition(interface.Interface):
         index for interface or class context.
         """
 
-class IRESTRequest(IHTTPRequest):
+class IRESTLayer(IHTTPRequest):
     """REST-specific Request functionality.
 
     Base Interfaces for defining REST-layers.

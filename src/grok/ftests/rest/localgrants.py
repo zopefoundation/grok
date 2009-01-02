@@ -57,7 +57,7 @@ class Mammoth(grok.Model):
     def __init__(self, name):
         self.name = name
 
-class MammothRestLayer(grok.IRESTRequest):
+class MammothRestLayer(grok.IRESTLayer):
     grok.restskin('mammoth')
 
 class TouchMammoth(grok.Permission):

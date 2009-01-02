@@ -133,7 +133,7 @@ class RESTGrokker(martian.MethodGrokker):
     """
     martian.component(grok.REST)
     martian.directive(grok.context)
-    martian.directive(grok.layer, default=grok.IRESTRequest)
+    martian.directive(grok.layer, default=grok.IRESTLayer)
     martian.directive(grok.require, name='permission')
 
     def execute(self, factory, method, config, permission, context,
@@ -164,7 +164,7 @@ _restskin_not_used = object()
 class RestskinInterfaceDirectiveGrokker(martian.InstanceGrokker):
     """Grokker for interfaces providing the `grok.restskin()` directive.
 
-    Applications create REST skins by subclassing `grok.IRESTRequest`
+    Applications create REST skins by subclassing `grok.IRESTLayer`
     and providing the subclass with a `grok.restskin()` directive giving
     the prefix string which distinguishes that REST layers from others.
     This grokker registers those skins.
@@ -185,11 +185,11 @@ class RestskinInterfaceDirectiveGrokker(martian.InstanceGrokker):
             # interface.
             return False
 
-        if not interface.extends(grok.IRESTRequest):
-            # For REST layers it is required to extend IRESTRequest.
+        if not interface.extends(grok.IRESTLayer):
+            # For REST layers it is required to extend IRESTLayer.
             raise GrokError(
                 "The grok.restskin() directive is used on interface %r. "
-                "However, %r does not extend IRESTRequest which is "
+                "However, %r does not extend IRESTLayer which is "
                 "required for interfaces that are used as layers and are to "
                 "be registered as a restskin."
                 % (interface.__identifier__, interface.__identifier__),

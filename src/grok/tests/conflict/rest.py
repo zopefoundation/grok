@@ -10,8 +10,8 @@ We cannot register two rest protocols under the same name::
 
 import grok
 
-class Protocol1(grok.IRESTRequest):
+class Protocol1(grok.IRESTLayer):
     grok.restskin('foo')
 
-class Protocol2(grok.IRESTRequest):
+class Protocol2(grok.IRESTLayer):
     grok.restskin('foo')

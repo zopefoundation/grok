@@ -77,7 +77,7 @@ class MyContent(grok.Model):
         if 'sub':
             return MyContent()
 
-class LayerZ(grok.IRESTRequest):
+class LayerZ(grok.IRESTLayer):
     grok.restskin('layerz')
 
 class ZContentRest(grok.REST):

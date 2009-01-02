@@ -73,7 +73,7 @@ from grok.components import Site, LocalUtility, Annotation
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Role
-from grok.interfaces import IRESTSkinType, IRESTRequest
+from grok.interfaces import IRESTSkinType, IRESTLayer
 
 from grok.directive import (
     local_utility, permissions, site, restskin, traversable)

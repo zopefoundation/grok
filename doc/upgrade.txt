@@ -21,10 +21,10 @@ Upgrading to 0.15
 
   You can now simply write::
 
-    class IMyLayer(grok.IRESTRequest):
+    class IMyLayer(grok.IRESTLayer):
         grok.restskin('myskin')
 
-  As you can see, ``IRESTRequest`` has been introduced as a baseclass for
+  As you can see, ``IRESTLayer`` has been introduced as a baseclass for
   defining REST layers.
 
 

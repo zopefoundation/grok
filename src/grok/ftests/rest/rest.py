@@ -302,25 +302,25 @@ class MyApp(grok.Container, grok.Application):
 class MyContent(grok.Model):
     pass
 
-class LayerA(grok.IRESTRequest):
+class LayerA(grok.IRESTLayer):
     grok.restskin('a')
 
-class LayerB(grok.IRESTRequest):
+class LayerB(grok.IRESTLayer):
     grok.restskin('b')
 
-class LayerC(grok.IRESTRequest):
+class LayerC(grok.IRESTLayer):
     grok.restskin('c')
 
-class LayerSecurity(grok.IRESTRequest):
+class LayerSecurity(grok.IRESTLayer):
     grok.restskin('e')
 
-class LayerContent(grok.IRESTRequest):
+class LayerContent(grok.IRESTLayer):
     grok.restskin('f')
 
-class LayerInterface(grok.IRESTRequest):
+class LayerInterface(grok.IRESTLayer):
     grok.restskin('g')
 
-class D(grok.IRESTRequest):
+class D(grok.IRESTLayer):
     grok.restskin('d')
 
 class ARest(grok.REST):

@@ -90,7 +90,7 @@ class NotAllowedREST(grok.REST):
     clients attempt to assail them with unwanted HTTP methods.
 
     """
-    grok.layer(grok.IRESTRequest)
+    grok.layer(grok.IRESTLayer)
     grok.context(Interface)
 
     is_not_allowed = True

@@ -193,7 +193,7 @@ class Traverser(object):
         # if we have a RESTful request, we will handle
         # GET, POST and HEAD differently (PUT and DELETE are handled already
         # but not on the BrowserRequest layer but the HTTPRequest layer)
-        if interfaces.IRESTRequest.providedBy(request):
+        if interfaces.IRESTLayer.providedBy(request):
             rest_view = component.getMultiAdapter(
                 (self.context, self.request), name=request.method)
             return rest_view, ()
