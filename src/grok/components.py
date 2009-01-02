@@ -19,10 +19,9 @@ import simplejson
 import zope.location
 from zope import component
 from zope import interface
-from zope.securitypolicy.role import Role
+from zope.securitypolicy.role import Role as securitypolicy_Role
 from zope.publisher.browser import BrowserPage
 from zope.publisher.interfaces import NotFound
-from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.publisher.interfaces.browser import IBrowserPublisher
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.publisher.publish import mapply
@@ -43,11 +42,21 @@ import z3c.flashmessage.interfaces
 import martian.util
 
 import grokcore.view
-import grokcore.formlib
 from grok import interfaces, util
 
 
 class Model(Contained, persistent.Persistent):
+    """The base class for models in Grok applications.
+
+    When an application class inherits from `grok.Model`, it not only
+    gains the ability to persist itself in the Zope object database and
+    to remember where in the database it lives (so that it can figure
+    out its URL), but it is also marked with the `IContext` interface
+    which tells Grok that the class is eligible to be auto-associated
+    with `grok.View` classes or other adapters in its module which do
+    not explicitly define a `grok.context()`.
+
+    """
     # XXX Inheritance order is important here. If we reverse this,
     # then containers can't be models anymore because no unambigous MRO
     # can be established.
@@ -55,10 +64,31 @@ class Model(Contained, persistent.Persistent):
 
 
 class Container(BTreeContainer):
+    """The base class for containers in Grok applications.
+
+    A `grok.Container` subclass acts like a persistent dictionary, and
+    knows both how to persist itself inside of a Zope database, and how
+    to store other containers and models under its keys (using the
+    standard Python getitem/setitem protocol).  By default, URLs which
+    arrive at the container can continue on to objects inside of it by
+    supplying a URL component that matches one of the container's keys.
+    A `grok.Container` subclass is also marked with the `IContext`
+    interface, which tells Grok that the class is eligible to be
+    auto-associated with `grok.View` classes or other adapters in its
+    module which do not explicitly define a `grok.context()`.
+
+    """
     interface.implements(IAttributeAnnotatable, interfaces.IContainer)
 
 
 class OrderedContainer(Container):
+    """A Grok container that remembers the order of its items.
+
+    This straightforward extension of the basic `grok.Container`
+    remembers the order in which its keys pairs have been inserted, and
+    allows their order to be modified later.
+
+    """
     interface.implements(IOrderedContainer)
 
     def __init__(self):
@@ -100,10 +130,25 @@ class OrderedContainer(Container):
 
 
 class Site(SiteManagerContainer):
-    pass
+    """The base class for sites in Grok applications.
+
+    A `grok.Site` is a fancy container, with which Component
+    Architecture entities like local utilities and indexes can be
+    associated, that become active for all URLs that name either the
+    site object itself or an object beneath the site.
+
+    """
+
 
 @component.adapter(Site, IObjectAddedEvent)
 def addSiteHandler(site, event):
+    """Add a local site manager to a Grok site object upon its creation.
+
+    Grok registers this function so that it gets called each time a
+    `grok.Site` instance is added to a container.  It creates a new
+    local site manager and installs it on the site.
+
+    """
     sitemanager = LocalSiteManager(site)
     # LocalSiteManager creates the 'default' folder in its __init__.
     # It's not needed anymore in new versions of Zope 3, therefore we
@@ -113,7 +158,16 @@ def addSiteHandler(site, event):
 
 
 class Application(Site):
-    """A top-level application object."""
+    """The base class for Grok applications.
+
+    A `grok.Application` not only has all of the abilities of a Grok
+    container (it can hold other objects) and a Grok site (it can be a
+    registration point for local utilities), but application classes are
+    specifically cataloged by Grok so that the Grok admin interface can
+    list them in the menu of objects that users can instantiate directly
+    inside of the root of their Zope database.
+
+    """
     interface.implements(interfaces.IApplication)
 
 
@@ -278,7 +332,7 @@ class IndexesClass(object):
 Indexes = IndexesClass('Indexes')
 
 
-class Role(Role):
+class Role(securitypolicy_Role):
     pass
 
 
