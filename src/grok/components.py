@@ -86,7 +86,11 @@ class OrderedContainer(Container):
 
     This straightforward extension of the basic `grok.Container`
     remembers the order in which its keys pairs have been inserted, and
-    allows their order to be modified later.
+    allows their order to be modified later.  This means that keys and
+    items returned by `keys()`, `values()`, and `items()`, as well as by
+    iterating over the container, will appear in the same order as they
+    were added to the container.  The only way of changing the item
+    order in the container is through the method `updateOrder()`.
 
     """
     interface.implements(IOrderedContainer)
@@ -121,6 +125,15 @@ class OrderedContainer(Container):
         self._order.remove(key)
 
     def updateOrder(self, order):
+        """Impose a new order on the items in this container.
+
+        Items in this container are, by default, returned in the order
+        in which they were inserted.  To impose a different ordering on
+        the items instead, provide an `order` argument to this method
+        that is a list containing every key already in the container,
+        but in a new order.
+
+        """
         if set(order) != set(self._order):
             raise ValueError("Incompatible key set.")
 
@@ -172,17 +185,47 @@ class Application(Site):
 
 
 class LocalUtility(Model):
-    pass
+    """The base class for local utilities in Grok applications.
+
+    By inheriting from this `grok.LocalUtility` class when designing a
+    local utility, Grok application authors accomplish three things.
+    First, this class is knows how to persist itself to the database,
+    which is important because local utilities must be stored in the
+    Zope database alongside the `grok.Site` or `grok.Application` for
+    which they are registered.  Second, Grok can deduce the interface
+    that the utility is designed to provide if the utility simply
+    `implements()` one interface (that is not already an interface
+    provided by `grok.LocalUtility`, otherwise Grok cannot tell the
+    difference); this saves the developer from having to supply an
+    explicit `grok.provides()` directive.  Third, of course, their code
+    will be easier to read if their local utilities inherit from
+    something with "local utility" in its name.
+
+    """
 
 
 class Annotation(persistent.Persistent):
-    pass
+    """The base class for annotation classes in Grok applications."""
 
 
 class View(grokcore.view.View):
+    """The base class for views in Grok applications.
+
+    Grok automatically registers each subclass of `grok.View` as able to
+    render instances of its `grok.context()` for consumption by web
+    browsers, when a specific `/name` is appended to the context's URL.
+    The name can either be explicitly provided with `grok.name()`, or by
+    default will be the downcased name of the class itself; Grok views
+    with the name ``index`` are used by default if no `/name` is
+    appended to the context's URL.
+
+    """
+    # XXX the above description needs either more detail, or less; I
+    # will ask the Grok mailing list this morning - Brandon
     interface.implements(interfaces.IGrokView)
 
     def application_url(self, name=None):
+        """Return the URL of the nearest enclosing `grok.Application`."""
         obj = self.context
         while obj is not None:
             if isinstance(obj, Application):
@@ -191,6 +234,8 @@ class View(grokcore.view.View):
         raise ValueError("No application found.")
 
     def flash(self, message, type='message'):
+        """Send a short message to the user."""
+        # XXX this has no tests or documentation, anywhere
         source = component.getUtility(
             z3c.flashmessage.interfaces.IMessageSource, name='session')
         source.send(message, type)
