@@ -273,7 +273,8 @@ class REST(zope.location.Location):
         return self.request.response
 
 class JSON(BrowserPage):
-
+    interface.implements(interfaces.IGrokSecurityView)
+    
     def __call__(self):
         view_name = self.__view_name__
         method = getattr(self, view_name)
