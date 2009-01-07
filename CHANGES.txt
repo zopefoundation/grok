@@ -1,8 +1,8 @@
 Grok changes
 ************
 
-0.15 (unreleased)
-=================
+1.0a1 (unreleased)
+==================
 
 Feature changes
 ---------------
@@ -25,14 +25,15 @@ Bug fixes
 * Allow the grok.layer() directive on JSON components. Closes
   https://bugs.launchpad.net/grok/+bug/310558
 
-* Close a bad security hole.
+* Close a bad security hole (also fixed in 0.14.1 and other
+  releases). See
+  http://grok.zope.org/blog/security-issue-in-grok-please-upgrade
 
 Restructuring
 -------------
 
 * Viewlet-related base classes and helpers have been moved out to a
-  ``grokcore.viewlet`` package.
-
+  ``grokcore.viewlet`` package which Grok now depends on.
 
 0.14 (2008-09-29)
 =================

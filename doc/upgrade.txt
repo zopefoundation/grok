@@ -6,8 +6,8 @@ continue to work with newer versions of Grok.  This document only
 describes changes involving incompatibilities or deprecations, not new
 features (please refer to ``CHANGES.txt`` for those).
 
-Upgrading to 0.15
------------------
+Upgrading to 1.0a1
+------------------
 
 * The ``grok.RESTProtocol`` class has been removed in favour of a
   ``grok.restskin()`` directive for interfaces.  For instance, if you
