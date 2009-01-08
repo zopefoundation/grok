@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-1.0a1 (unreleased)
+1.0a1 (2009-01-08)
 ==================
 
 Feature changes
@@ -21,6 +21,9 @@ Feature changes
 
 Bug fixes
 ---------
+
+* Have GrokForm define an empty actions attribute by default, in order
+  for "action-less" forms to work easily.
 
 * Allow the grok.layer() directive on JSON components. Closes
   https://bugs.launchpad.net/grok/+bug/310558
