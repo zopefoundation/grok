@@ -15,6 +15,20 @@ users. Instead we are asked to authenticate ourselves::
   WWW-Authenticate: basic realm="Zope"
   ...
 
+This is also the case for views on the Grok application object::
+
+  >>> grok.testing.grok(__name__)
+  >>> from grok.ftests.security.preserve_permissions import App
+  >>> root = getRootFolder()
+  >>> root['app'] = App()
+  >>> print http(r'''
+  ... GET /app/++etc++site HTTP/1.1
+  ... ''')
+  HTTP/1.1 401 Unauthorized
+  ...
+  WWW-Authenticate: basic realm="Zope"
+  ...
+
 However, if we make a grant, e.g. on the root object, we can access
 the view just fine:
 
@@ -28,14 +42,6 @@ the view just fine:
   ... ''')
   HTTP/1.1 200 Ok
   ...
-
-But we can still access Grok views not explicitly protected. We create
-an application and add it to the database::
-
-  >>> grok.testing.grok(__name__)
-  >>> from grok.ftests.security.preserve_permissions import App
-  >>> root = getRootFolder()
-  >>> root['app'] = App()
 
 The default view is accessible::
   
