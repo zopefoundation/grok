@@ -38,8 +38,6 @@ from zope.app.publication.requestpublicationfactories import \
      BrowserFactory, XMLRPCFactory, HTTPFactory
 from zope.app.http.interfaces import IHTTPException
 
-from grokcore.view import View as GrokView
-from grok.components import JSON
 from grok.interfaces import IGrokSecurityView
 
 class ZopePublicationSansProxy(object):
