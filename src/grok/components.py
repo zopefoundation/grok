@@ -11,8 +11,13 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Grok components"""
+"""Base classes for Grok application components.
 
+When an application developer builds a Grok-based application, the
+classes they define each typically inherit from one of the base classes
+provided here.
+
+"""
 import persistent
 import simplejson
 
@@ -46,36 +51,42 @@ from grok import interfaces, util
 
 
 class Model(Contained, persistent.Persistent):
-    """The base class for models in Grok applications.
-
-    When an application class inherits from `grok.Model`, it not only
-    gains the ability to persist itself in the Zope object database and
-    to remember where in the database it lives (so that it can figure
-    out its URL), but it is also marked with the `IContext` interface
-    which tells Grok that the class is eligible to be auto-associated
-    with `grok.View` classes or other adapters in its module which do
-    not explicitly define a `grok.context()`.
-
-    """
     # XXX Inheritance order is important here. If we reverse this,
     # then containers can't be models anymore because no unambigous MRO
     # can be established.
+    """The base class for models in Grok applications.
+
+    When an application class inherits from `grok.Model`, it gains the
+    ability to persist itself in the Zope object database along with all
+    of its attributes, and to remember the container in which it has
+    been placed (its "parent") so that its URL can be computed.  It also
+    inherits the `IContext` marker interface, which can make it the
+    default context for views in its module; the rule is that if a
+    module contains `grok.View` classes or other adapters that do not
+    define a `grok.context()`, but the module also defines exactly one
+    class that provides the `IContext` interface, then that class will
+    automatically be made the `grok.context()` of each of the views.
+
+    """
     interface.implements(IAttributeAnnotatable, interfaces.IContext)
 
 
 class Container(BTreeContainer):
     """The base class for containers in Grok applications.
 
-    A `grok.Container` subclass acts like a persistent dictionary, and
-    knows both how to persist itself inside of a Zope database, and how
-    to store other containers and models under its keys (using the
-    standard Python getitem/setitem protocol).  By default, URLs which
-    arrive at the container can continue on to objects inside of it by
-    supplying a URL component that matches one of the container's keys.
-    A `grok.Container` subclass is also marked with the `IContext`
-    interface, which tells Grok that the class is eligible to be
-    auto-associated with `grok.View` classes or other adapters in its
-    module which do not explicitly define a `grok.context()`.
+    When an application class inherits from `grok.Container`, it not
+    only has the features of a `grok.Model` (persistance, location, and
+    the ability to serve as a default context for other classes), but it
+    also behaves like a persistent dictionary.  To store items inside a
+    container, simply use the standard Python getitem/setitem protocol::
+
+        mycontainer['counter'] = 72
+        mycontainer['address'] = mymodel
+        mycontainer['subfolder'] = another_container
+
+    By default, the URL of each item inside a container is the
+    container's own URL followed by a slash and the key (like 'counter'
+    or 'address') under which that item has been stored.
 
     """
     interface.implements(IAttributeAnnotatable, interfaces.IContainer)
@@ -85,12 +96,10 @@ class OrderedContainer(Container):
     """A Grok container that remembers the order of its items.
 
     This straightforward extension of the basic `grok.Container`
-    remembers the order in which its keys pairs have been inserted, and
-    allows their order to be modified later.  This means that keys and
-    items returned by `keys()`, `values()`, and `items()`, as well as by
-    iterating over the container, will appear in the same order as they
-    were added to the container.  The only way of changing the item
-    order in the container is through the method `updateOrder()`.
+    remembers the order in which items have been inserted, so that
+    `keys()`, `values()`, `items()`, and iteration across the container
+    can all return the items in the order they were inserted.  The only
+    way of changing the order is to call the `updateOrder()` method.
 
     """
     interface.implements(IOrderedContainer)
@@ -128,10 +137,9 @@ class OrderedContainer(Container):
         """Impose a new order on the items in this container.
 
         Items in this container are, by default, returned in the order
-        in which they were inserted.  To impose a different ordering on
-        the items instead, provide an `order` argument to this method
-        that is a list containing every key already in the container,
-        but in a new order.
+        in which they were inserted.  To change the order, provide an
+        argument to this method that is a sequence containing every key
+        already in the container, but in a new order.
 
         """
         if set(order) != set(self._order):
@@ -143,12 +151,12 @@ class OrderedContainer(Container):
 
 
 class Site(SiteManagerContainer):
-    """The base class for sites in Grok applications.
+    """Mixin for creating sites in Grok applications.
 
-    A `grok.Site` is a fancy container, with which Component
-    Architecture entities like local utilities and indexes can be
-    associated, that become active for all URLs that name either the
-    site object itself or an object beneath the site.
+    When an application `grok.Model` or `grok.Container` also inherits
+    from `grok.Site`, then it can additionally support the registration
+    of local Component Architecture entities like `grok.LocalUtility`
+    and `grok.Indexes` objects; see those classes for more information.
 
     """
 
@@ -158,8 +166,8 @@ def addSiteHandler(site, event):
     """Add a local site manager to a Grok site object upon its creation.
 
     Grok registers this function so that it gets called each time a
-    `grok.Site` instance is added to a container.  It creates a new
-    local site manager and installs it on the site.
+    `grok.Site` instance is added to a container.  It creates a local
+    site manager and installs it on the newly created site.
 
     """
     sitemanager = LocalSiteManager(site)
@@ -171,14 +179,14 @@ def addSiteHandler(site, event):
 
 
 class Application(Site):
-    """The base class for Grok applications.
+    """Mixin for creating Grok application objects.
 
-    A `grok.Application` not only has all of the abilities of a Grok
-    container (it can hold other objects) and a Grok site (it can be a
-    registration point for local utilities), but application classes are
-    specifically cataloged by Grok so that the Grok admin interface can
-    list them in the menu of objects that users can instantiate directly
-    inside of the root of their Zope database.
+    When a `grok.Container` (or a `grok.Model`, though most developers
+    use containers) also inherits from `grok.Application`, it not only
+    gains the component registration abilities of a `grok.Site`, but
+    will also be listed in the Grok admin control panel as one of the
+    applications that the admin can install directly at the root of
+    their Zope database.
 
     """
     interface.implements(interfaces.IApplication)
@@ -187,19 +195,18 @@ class Application(Site):
 class LocalUtility(Model):
     """The base class for local utilities in Grok applications.
 
-    By inheriting from this `grok.LocalUtility` class when designing a
-    local utility, Grok application authors accomplish three things.
-    First, this class is knows how to persist itself to the database,
-    which is important because local utilities must be stored in the
-    Zope database alongside the `grok.Site` or `grok.Application` for
-    which they are registered.  Second, Grok can deduce the interface
-    that the utility is designed to provide if the utility simply
-    `implements()` one interface (that is not already an interface
-    provided by `grok.LocalUtility`, otherwise Grok cannot tell the
-    difference); this saves the developer from having to supply an
-    explicit `grok.provides()` directive.  Third, of course, their code
-    will be easier to read if their local utilities inherit from
-    something with "local utility" in its name.
+    Although application developers can create local utilies without
+    actually subclassing `grok.LocalUtility`, they gain three benefits
+    from doing so.  First, their code is more readable because their
+    classes "look like" local utilities to casual readers.  Second,
+    their utility will know how to persist itself to the Zope database,
+    which means that they can set its object attributes and know that
+    the values are getting automatically saved.  Third, they can omit
+    the `grok.provides()` directive naming the interface that the
+    utility provides, if their class only `grok.implements()` a single
+    interface (unless the interface is one that the `grok.LocalUtility`
+    already implements, in which case Grok cannot tell them apart, and
+    `grok.provides()` must be used explicitly anyway).
 
     """
 
@@ -211,17 +218,60 @@ class Annotation(persistent.Persistent):
 class View(grokcore.view.View):
     """The base class for views in Grok applications.
 
-    Grok automatically registers each subclass of `grok.View` as able to
-    render instances of its `grok.context()` for consumption by web
-    browsers, when a specific `/name` is appended to the context's URL.
-    The name can either be explicitly provided with `grok.name()`, or by
-    default will be the downcased name of the class itself; Grok views
-    with the name ``index`` are used by default if no `/name` is
-    appended to the context's URL.
+    Each class that inherits from `grok.View` is designed to "render" a
+    category of content objects by reducing them to a document (often an
+    HTML document).  Every view has a name, and is invoked when users
+    visit the URL of an eligible context object followed by the name of
+    the view itself::
+
+        http://example.com/app/folder/object/viewname
+
+    If ``viewname`` might conflict with actual content inside of the
+    context (because the context already contains an attribute or item
+    named ``viewname``), then the URL can be explicit that it is asking
+    for the view by preceding its name with ``@@``::
+
+        http://example.com/app/folder/object/@@viewname
+
+    Instead of returning a full document, views are sometimes used to
+    provide only a snippet of information for inclusion in some larger
+    document; the view can then be called from inside of another view's
+    page template::
+
+        <li tal:content="context/@@viewname">snippet goes here</li>
+
+    A view class can specify the category of objects that it can render
+    by calling the `grok.context()` with either a class or an interface.
+    Otherwise, Grok will attempt to determine the context automatically
+    by searching the view's module for exactly one `grok.Model` or
+    `grok.Container` class (or some other class providing the interface
+    `IContext`) and using that class, if found.
+
+    Grok normally creates a view's name (the name used in URLs) by
+    downcasing the name of the view class itself.  The developer can
+    override this by supplying the `grok.name()` directive instead.
+
+    The view name ``index`` is special (this works whether the view
+    class itself is named ``Index``, or whether ``grok.name('index')``
+    is used instead).  A view named ``index`` is used to render an
+    object when the user visits its URL without appending a view name.
+
+    Each view should either provide a `render()` method that simply
+    returns a document, or should have an accompanying page template.
+    Grok will automatically find the correct page template if (a) it is
+    in a directory next to the view's module, whose name is the module
+    name followed by `_templates`; (b) its filename is the downcased
+    name of the view class; and (c) it has an extension (such as ``.pt``
+    for Zope Page Templates) that Grok recognizes.  Otherwise, the
+    developer can name a page template file explicitly with the
+    `grok.template()` directive.  Before the template is rendered, Grok
+    will call the `update()` method on the view, if one is supplied,
+    which can pre-compute values that the template will need to display.
+
+    Both `render()` methods and `update()` methods will find the context
+    for which the view is being rendered under ``self.context``.
 
     """
-    # XXX the above description needs either more detail, or less; I
-    # will ask the Grok mailing list this morning - Brandon
     interface.implements(interfaces.IGrokView)
 
     def application_url(self, name=None):
