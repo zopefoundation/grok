@@ -60,15 +60,11 @@ class Edit(grok.View):
 
 
 class WikiLayer(grok.IRESTLayer):
-    pass
+    # This skin will be visible as http://localhost:8080/++rest++wiki/...
+    grok.restskin('wiki')
 
 class PageRest(grok.REST):
     grok.layer(WikiLayer)
     
     def GET(self):
         return "Hello world"
-    
-class WikiProtocol(grok.RESTProtocol):
-    grok.layer(WikiLayer)
-    grok.name('wiki')
-
