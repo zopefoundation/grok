@@ -347,6 +347,13 @@ def setupUtility(site, utility, provides, name=u'',
 
 
 class RoleGrokker(martian.ClassGrokker):
+    """Grokker for components subclassed from `grok.Role`.
+
+    Each role is registered as a global utility providing the service
+    `IRole` under its own particular name, and then granted every
+    permission named in its `grok.permission()` directive.
+
+    """
     martian.component(grok.Role)
     martian.priority(martian.priority.bind().get(PermissionGrokker()) - 1)
     martian.directive(grok.name)
@@ -380,6 +387,7 @@ class RoleGrokker(martian.ClassGrokker):
 
 
 class AnnotationGrokker(martian.ClassGrokker):
+    """Grokker for components subclassed from `grok.Annotation`."""
     martian.component(grok.Annotation)
     martian.directive(grok.context, name='adapter_context')
     martian.directive(grok.provides, get_default=default_annotation_provides)
@@ -412,6 +420,7 @@ class AnnotationGrokker(martian.ClassGrokker):
 
 
 class ApplicationGrokker(martian.ClassGrokker):
+    """Grokker for Grok application classes."""
     martian.component(grok.Application)
     martian.priority(500)
 
@@ -428,6 +437,7 @@ class ApplicationGrokker(martian.ClassGrokker):
 
 
 class IndexesGrokker(martian.InstanceGrokker):
+    """Grokker for Grok index bundles."""
     martian.component(components.IndexesClass)
 
     def grok(self, name, factory, module_info, config, **kw):
@@ -457,7 +467,21 @@ class IndexesGrokker(martian.InstanceGrokker):
 
 
 class IndexesSetupSubscriber(object):
+    """Helper that sets up indexes when their Grok site is created.
 
+    Each `grok.Indexes` class serves as an assertion that, whenever an
+    instance of its `grok.site()` is created, the given list of indexes
+    should be generated as well.  But a long period of time could elapse
+    between when the application starts (and its indexes are grokked),
+    and the moment, maybe days or weeks later, when a new instance of
+    that `grok.Site` is created.  Hence this `IndexesSetupSubscriber`:
+    it can be instantiated at grokking time with the index information,
+    and then registered with the Component Architecture as an event that
+    should be fired later, whenever the right kind of `grok.Site` is
+    instantiated.  At that point its `__call__` method is kicked off and
+    it makes sure the index catalogs get created properly.
+
+    """
     def __init__(self, catalog_name, indexes, context, module_info):
         self.catalog_name = catalog_name
         self.indexes = indexes
