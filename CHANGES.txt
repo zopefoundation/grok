@@ -19,6 +19,10 @@ Feature changes
   that can be used on REST layer interfaces. Introduced the IRESTLayer base
   interfaces for defining REST layers.
 
+* Besides our extensive existing documentation, we have also started
+  to add a lot of docstrings to the Grok source code so it becomes
+  easier to understand.
+
 Bug fixes
 ---------
 
