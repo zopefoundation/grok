@@ -29,6 +29,23 @@ This is also the case for views on the Grok application object::
   WWW-Authenticate: basic realm="Zope"
   ...
 
+We can allow our application to be viewed by the Zope standard
+``contents.html`` view for site folders. For this we make it provide
+`ISiteManagementFolder`::
+
+  >>> from zope.app.component.interfaces import ISiteManagementFolder
+  >>> from zope.interface import alsoProvides
+  >>> alsoProvides(root['app'], ISiteManagementFolder)
+
+Now there is a ``contents.html`` view available for our application,
+which is protected by default::
+
+  >>> print http(r'''
+  ... GET /app/@@contents.html HTTP/1.1
+  ... ''')
+  HTTP/1.1 401 Unauthorized
+  ...
+  
 However, if we make a grant, e.g. on the root object, we can access
 the view just fine:
 
