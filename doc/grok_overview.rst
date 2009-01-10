@@ -971,6 +971,13 @@ To send this event yourself::
 
   grok.notify(grok.ObjectCopiedEvent(copy, original))
 
+``IBeforeTraverseEvent``
++++++++++++++++++++++++++
+
+Fired when the publisher is about to traverse into your object. This
+is useful to specify on your application object if you for instance
+want to set the default skin for your application.
+
 Creating and sending your own events
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
