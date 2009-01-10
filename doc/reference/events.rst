@@ -177,6 +177,22 @@ An object has been removed from a container.
 
       The name of the removed object.
 
+:class:`IBeforeTraverseEvent`
+=============================
+
+The publisher is about to traverse into the object.
+
+.. class:: grok.IBeforeTraverseEvent
+
+   Interface to subscribe to for object traversal.
+ 
+   .. attribute:: object
+      
+      The object being traversed throguh.
+
+   .. attribute:: request
+
+      The current request.
 
 Notification: Event implementations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -365,4 +381,3 @@ Event object to send as a notification of when an object is removed.
     .. attribute:: oldName
 
        The name of the removed object.
-

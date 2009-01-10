@@ -109,6 +109,7 @@ class IGrokEvents(interface.Interface):
 
     ContainerModifiedEvent = interface.Attribute("")
 
+    IBeforeTraverseEvent = interface.Attribute("")
 
 class IGrokAPI(grokcore.security.interfaces.IGrokcoreSecurityAPI,
                grokcore.view.interfaces.IGrokcoreViewAPI,

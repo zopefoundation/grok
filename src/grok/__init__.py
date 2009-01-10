@@ -55,6 +55,7 @@ from zope.lifecycleevent import (
     IObjectCreatedEvent, ObjectCreatedEvent,
     IObjectModifiedEvent, ObjectModifiedEvent,
     IObjectCopiedEvent, ObjectCopiedEvent)
+from zope.app.publication.interfaces import IBeforeTraverseEvent
 
 from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
