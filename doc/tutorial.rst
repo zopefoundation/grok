@@ -88,10 +88,7 @@ Setting up grokproject
 
 Setting up grok on a Unix-like (Linux, Mac OS X) environment is
 easy. Most of these instructions should also work in a Windows
-environment as well. Note that on Windows you need to have the
-``win32all`` package installed (download_).
-
-.. _download: http://sourceforge.net/projects/pywin32/
+environment as well.
 
 Let's go through the prerequisites first. You need a computer
 connected to the internet, as Grok installs itself over the
@@ -173,13 +170,9 @@ After all that, Grok, along with a Zope 3 instance, is ready to go.
   means that the virtualenv option is always recommended on Mac OS X,
   unless you install a separate version of Python.
 
-  On Windows you need to make sure you have win32all_ installed.
-
   .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 
   .. _`Using Virtualenv for a clean Grok installation`:  http://grok.zope.org/documentation/how-to/using-virtualenv-for-a-clean-grok-installation
-
-  .. _win32all: http://sourceforge.net/projects/pywin32/
 
 Starting up Zope
 ----------------
@@ -190,6 +183,12 @@ Starting up Zope
   
   $ cd Sample
   $ bin/zopectl fg
+
+  On Windows to work with ``zopectl`` you need to make sure you have
+  win32all_ installed in your Python. It's not required to install
+  win32all to work with the default ``paster`` setup.
+
+  .. _win32all: http://sourceforge.net/projects/pywin32/
 
 You can go into the ``Sample`` project directory now and start up the
 Zope instance that has been installed::
