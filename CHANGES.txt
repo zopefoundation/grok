@@ -4,7 +4,7 @@ Grok changes
 1.0b1 (unreleased)
 ==================
 
-* ...
+* Expose ``IBeforeTraverseEvent`` for import in the ``grok`` namespace.
 
 1.0a1 (2009-01-08)
 ==================
