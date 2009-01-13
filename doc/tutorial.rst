@@ -170,6 +170,12 @@ After all that, Grok, along with a Zope 3 instance, is ready to go.
   means that the virtualenv option is always recommended on Mac OS X,
   unless you install a separate version of Python.
 
+  During Grok installation on Linux and Mac OS X various libraries
+  with C-level components are automatically compiled for you. On Linux
+  you need to make sure you have the Python development headers
+  installed; on Debian and Ubuntu you they are in the ``python-dev``
+  package.
+
   .. _virtualenv: http://pypi.python.org/pypi/virtualenv
 
   .. _`Using Virtualenv for a clean Grok installation`:  http://grok.zope.org/documentation/how-to/using-virtualenv-for-a-clean-grok-installation
