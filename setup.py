@@ -45,8 +45,6 @@ setup(
                       'pytz',
                       'ZODB3',
                       'zope.annotation',
-                      'zope.app.apidoc',
-                      'zope.app.applicationcontrol',
                       'zope.app.appsetup',
                       'zope.app.authentication',
                       'zope.app.catalog',
