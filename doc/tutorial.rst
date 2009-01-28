@@ -92,9 +92,7 @@ environment as well.
 
 Let's go through the prerequisites first. You need a computer
 connected to the internet, as Grok installs itself over the
-network. You also need Python 2.4 installed (Python 2.5 is not
-yet supported, and does not pass all unit tests, though some
-have reported success using it with Grok.)
+network. You also need Python 2.4 or Python 2.5 installed.
 
 Because Grok uses a source distribution of Zope 3, you may need to
 install your operating system's Python "dev" package. You also need a
