@@ -20,4 +20,4 @@ artefacts that implement it's concepts.
    functions.rst
    events.rst
    exceptions.rst
-
+   testing.rst
