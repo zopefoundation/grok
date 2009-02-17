@@ -562,21 +562,21 @@ switch-on-type behavior instead, keeping our adapters clean::
       def __init__(self, context):
           self.context = context
 
-      def sized(self):
+      def size(self):
           return len(self.context.text.encode('UTF-8'))
 
   class ImageSized(object):
       def __init__(self, context):
           self.context = context
 
-      def sized(self):
+      def size(self):
           return len(self.context.data)
 
   class ContainerSized(object):
       def __init__(self, context):
           self.context = context
 
-      def sized(self):
+      def size(self):
           total = 0
           for obj in self.context.values():
               total += sized(obj).size()
@@ -617,21 +617,21 @@ using a few grok directives::
       grok.context(Document)
       grok.provides(ISized)
 
-      def sized(self):
+      def size(self):
           return len(self.context.text.encode('UTF-8'))
 
   class ImageSized(grok.Adapter):
       grok.context(Image)
       grok.provides(ISized)
 
-      def sized(self):
+      def size(self):
           return len(self.context.data)
 
   class ContainerSized(grok.Adapter):
       grok.context(Container)
       grok.provides(ISized)
 
-      def sized(self):
+      def size(self):
           total = 0
           for obj in self.context.values():
               total += ISized(obj).size()
