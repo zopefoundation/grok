@@ -225,6 +225,11 @@ a class or object actually implements or provides a specific interface.
 :func:`grok.adapts` -- declare that a class adapts certain objects
 ==================================================================
 
+In the case of a simple adapter which only requires a single object
+for adapation, the :func:`grok.context` directive is used to declare
+the interface or class the adapter is for. It is only necessary to use
+:func:`grok.adapts` to declare the adapation requirements for a multi adapter.
+
 .. function:: grok.adapts(*classes_or_interfaces)
 
     A class-level directive to declare that a class adapts objects of
@@ -232,54 +237,8 @@ a class or object actually implements or provides a specific interface.
 
     This directive accepts several arguments.
 
-    It works much like the :mod:`zope.component`\ s :func:`adapts()`,
+    It works much like the :mod:`zope.component.`:func:`adapts()`,
     but you do not have to make a ZCML entry to register the adapter.
-
-**Example: Register a MammothSize adapter for Mammoths**
-
-Imagine you want to create an adapter that extends a Mammoth object
-with an ISized interface. Your code could look like this:
-
-.. code-block:: python
-
-    import grok
-    from zope import interface, schema
-    from zope.size.interfaces import ISized
-
-    class IMammoth(interface.Interface):
-        name = schema.TextLine(title=u"Name")
-        size = schema.TextLine(title=u"Size", default=u"Quite normal")
-
-    class Mammoth(grok.Model):
-        interface.implements(IMammoth)
-
-    class MammothSize(object):
-        grok.implements(ISized)
-        grok.adapts(IMammoth)
-
-        def __init__(self, context):
-            self.context = context
-
-        def sizeForSorting(self):
-            return ('byte', 1000)
-
-        def sizeForDisplay(self):
-            return ('1000 bytes')
-
-When this code is "grokked" that `MammothSize` class is registered as
-an adapter that provides ISized for IMammoth objects. You could then 
-perform adaptation elsewhere in your code with:
-
-.. code-block:: python
-
-    manfred = Mammoth()
-    from zope.size.interfaces import ISized
-    size = ISized(manfred)
-    return size.sizeForDisplay()
-
-.. seealso::
-
-    :func:`grok.implements`
 
 
 :func:`grok.baseclass` -- declare a class as base
