@@ -18,6 +18,8 @@ from zope import interface
 from zope.security.checker import NamesChecker, defineChecker
 
 from grokcore.security.util import check_permission
+from zope.app.component.hooks import getSite
+from grok.interfaces import IApplication
 
 def make_checker(factory, view_factory, permission, method_names=None):
     """Make a checker for a view_factory associated with factory.
@@ -56,3 +58,16 @@ def applySkin(request, skin, skin_type):
     # Add the new skin.
     ifaces.append(skin)
     interface.directlyProvides(request, *ifaces)
+
+def getApplication():
+    """Get the application."""
+    site = getSite()
+    if IApplication.providedBy(site):
+        return site
+    else:
+        # another sub-site is within the application, walk up
+        # the tree until we get to the application
+        parent = site.__parent__
+        while not IApplication.providedBy(parent):
+            parent = parent.__parent__
+        return parent

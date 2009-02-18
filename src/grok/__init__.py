@@ -79,6 +79,8 @@ from grok.interfaces import IRESTSkinType, IRESTLayer
 from grok.directive import (
     local_utility, permissions, site, restskin, traversable)
 
+from grok.util import getApplication
+
 # BBB These two functions are meant for test fixtures and should be
 # imported from grok.testing, not from grok.
 from grok.testing import grok, grok_component

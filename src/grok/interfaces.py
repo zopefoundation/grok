@@ -153,6 +153,8 @@ class IGrokAPI(grokcore.security.interfaces.IGrokcoreSecurityAPI,
     def getSite():
         """Get the current site."""
 
+    def getApplication():
+        """Get the application."""
 
     IRESTSkinType = interface.Attribute('The REST skin type')
 
