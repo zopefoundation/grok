@@ -4,7 +4,7 @@ Copyright
 
 Grok and this documentation is:
 
-Copyright © 2006-2008 Zope Community and Contributors. All rights reserved.
+Copyright © 2006-2009 Zope Community and Contributors. All rights reserved.
 
 ----------
 
