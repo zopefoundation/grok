@@ -476,7 +476,8 @@ take an existing interface and extend it to provide a new interface.
 .. code-block:: python
 
     import grok
-    from zope import interface
+    import zope.component
+    import zope.interface
 
     class Fireplace(grok.Model):
        pass
@@ -484,7 +485,7 @@ take an existing interface and extend it to provide a new interface.
     class Cave(grok.Model):
        pass
 
-    class IHome(interface.Interface):
+    class IHome(zope.interface.Interface):
        pass
 
     class Home(grok.MultiAdapter):
@@ -495,7 +496,7 @@ take an existing interface and extend it to provide a new interface.
            self.cave = cave
            self.fireplace = fireplace
 
-    home = IHome(cave, fireplace)
+    home = zope.component.getMultiAdapter((cave, fireplace), IHome)
 
 :class:`grok.Annotation`
 ========================
