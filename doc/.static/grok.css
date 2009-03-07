@@ -643,8 +643,13 @@ p.topic-title {
     margin-left: 0;
 }
 
+.section blockquote {
+    border: solid 2px #eeeeee;
+    margin: 0em;
+    padding: 0.5em;
+}
 .simple li {
-    list-style: none;
+    list-style-type: circle;
 }
 
 /* Admonitions */
