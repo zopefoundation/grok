@@ -348,10 +348,18 @@ Adapters
 :class:`grok.Adapter`
 =====================
 
-Implementation, configuration, and registration of Zope 3 Adapters.
+An Adapter takes an object providing an existing interface and extends
+it to provide a new interface.
 
-Adapters are components that are constructed from other components. They
-take an existing interface and extend it to provide a new interface.
+The object providing the existing interface is passed to the Adapter
+in the constructor, and is stored in an attribute named 'context.
+The source code for the `grok.Adapter` base class is simply::
+
+.. code-block:: python
+
+    class Adapter(object):
+        def __init__(self, context):
+            self.context = context
 
 .. class:: grok.Adapter
 
@@ -405,50 +413,62 @@ take an existing interface and extend it to provide a new interface.
     from zope import interface
 
     class Cave(grok.Model):
-        "start with a cave objects (the adaptee)"
+        "Cave is the class being adapted (the adaptee)"
 
+        def __init__(self, size=100):
+            self.size = size
+    
     class IHome(interface.Interface):
-        "we want to extend caves with the IHome interface"
+        "IHome is the interface we want to add to a Cave"
+        
+        def renovate():
+            "Enlarge Cave"
+    
+    class CaveHome(grok.Adapter):
+        "Turns a Cave into a Home"
+        grok.context(Cave) 
+        grok.implements(IHome) # the new interface provided by the adapter
 
-    class Home(grok.Adapter):
-        "the home adapter turns caves into habitable homes!"
-        grok.implements(IHome)
+        def renovate(self):
+            # the adaptee is an attribute named 'context'
+            # and is passed in to the constructor
+            self.context.size += 10
 
     # Adapation (component look-up) is invoked by passing the adaptee
     # to the interface as a constructor and returns the component adapted to   
     home = IHome(cave)
-
-
-**Example 2: Register and retrieve the adapter under a specific name**
-
-.. code-block:: python
-
-    import grok
-    from zope import interface
-
-    class Cave(grok.Model):
-        pass
-    class IHome(interface.Interface):
-        pass
-
-    class Home(grok.Adapter):
+    home.renovate()
+    
+    # Multiple adapters can exist that adapt and provide the same interfaces.
+    # They can be distinguished by name.
+    
+    import zope.component
+    
+    class LargeCaveHome(grok.Adapater):
+        "Turns a Cave in a large Home"
+        grok.context(Cave) 
         grok.implements(IHome)
-        grok.name('home')
+        grok.name('largehome')
+        
+        def renovate(self):
+            self.context.size += 200
 
-    from zope.component import getAdapter
-    home = getAdapter(cave, IHome, name='home')
-
+    largehome = zope.component.getAdapter(cave, IHome, name='largehome')
+    largehome.renovate()
 
 :class:`grok.MultiAdapter`
 ==========================
 
+A MultiAdapter takes multiple objects providing existing interface(s)
+and extends them to provide a new interface.
+
+The `grok.MultiAdapter` base class does not provide a default constructor
+implementation, it's up to the individual multi-adapters to determine how
+to handle the objects being adapted.
+
 .. class:: grok.MultiAdapter
 
     Base class to define a Multi Adapter.
-   
-    A simple adapter normally adapts only one object, but an adapter may
-    adapt more than one object. If an adapter adapts more than one objects,
-    it is called multi-adapter.
 
     **Directives:**
 
@@ -479,24 +499,42 @@ take an existing interface and extend it to provide a new interface.
     import zope.component
     import zope.interface
 
-    class Fireplace(grok.Model):
-       pass
-
-    class Cave(grok.Model):
-       pass
-
-    class IHome(zope.interface.Interface):
-       pass
+    class Fireplace(grok.Model): pass
+    class Cave(grok.Model): pass
+    class IHome(zope.interface.Interface): pass
 
     class Home(grok.MultiAdapter):
-       grok.adapts(Cave, Fireplace)
-       grok.implements(IHome)
+        grok.adapts(Cave, Fireplace)
+        grok.implements(IHome)
 
-       def __init__(self, cave, fireplace):
-           self.cave = cave
-           self.fireplace = fireplace
+        def __init__(self, cave, fireplace):
+            self.cave = cave
+            self.fireplace = fireplace
 
     home = zope.component.getMultiAdapter((cave, fireplace), IHome)
+
+**Example: A Grok View is a MultiAdapter**
+
+In Grok, MultiAdapters are most commonly encountered in the form of
+Views. A View is a MultiAdapter which adapts the `request` and the
+`context` to provide the `IGrokView` interface. You can lookup a
+View component using the `getMultiAdapter` function.
+
+.. code-block:: python
+
+    def FireplaceView(grok.View):
+        grok.context(Fireplace)
+        grok.name('fire-view')
+    
+    def AlternateFireplaceView(grok.View):
+        grok.context(Fireplace)
+        
+        def render(self):
+            fireplaceview = zope.component.getMultiAdapter(
+                (self.context, self.request), IGrokView, name='fire-view'
+            )
+            return fireplaceview.render()
+
 
 :class:`grok.Annotation`
 ========================
@@ -643,12 +681,14 @@ called Traversal.
 .. class:: grok.View
 
     Base class to define a View.
+    
+    Implements the `grokcore.view.interfaces.IGrokView` interface.
 
     .. attribute:: context
 
         The object that the view is presenting. This is often an instance of
-        a grok.Model class, but can also be a grok.Application or grok.Container
-        object.
+        a grok.Model class, but can be a grok.Application, grok.Container
+        object or any type of Python object.
 
     .. attribute:: request
    
