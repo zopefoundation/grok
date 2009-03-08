@@ -13,67 +13,22 @@ and register your components. Most directives assume a default, based on the
 environment of a module. (For example, a view will be automatically associated
 with a model if the association can be made unambigously.)
 
-If no default can be assumed for a value, grok will explicitly tell you what is
-missing and how you can provide a default or explicit assignment for the value
-in question.
+If no default can be assumed for a value, grok will explicitly tell you what
+is missing and how you can provide a default or explicit assignment for
+the value in question.
 
 Core directives
 ~~~~~~~~~~~~~~~
 
-:func:`grok.context` -- declare the context for views, adapters, etc.
-=====================================================================
+Core directives are applicable to any type of component.
 
-.. function:: grok.context(*class_or_interface)
+:func:`grok.name`
+=================
 
-    A class or module level directive to indicate the context for
-    something (class or module) in the same scope.
+Associate a component with a name.
 
-    When used on module level, it will set the context for all views,
-    adapters, etc. in that module. When used on class level, it will set
-    the context for that particular class.
-
-    With Grok contexts are set automatically for some objects, if they are
-    unambigous. For example a :class:`grok.View` will get the only
-    :class:`grok.Application` or :class:`grok.Model` class as context,
-    iff there exists exactly one in the same module. If there are more
-    possible contexts or you want to set a type (class/interface) from
-    another module as context, than the one choosen by default, then you
-    have to call :func:`grok.context` explicitly.
-
-**Example: Declare a component depends upon a class or interface**
-
-Here the :func:`grok.context` directive indicates that the :class:`Index`
-View applies to the context of a :class:`Mammoth` instance, and not instances
-of :class:`Cave`. By declaring the class or interface with :func:`grok.context`
-for an object, you are stating that your object depends upon the methods
-and attributes of that context.
-
-.. code-block:: python
-
-    import grok
-
-    class Mammoth(grok.Model):
-        hair = 'Wooly'
-
-    class Cave(grok.Model):
-        texture = 'rough'
-
-    class Index(grok.View):
-        grok.context(Mammoth)
-
-        def render(self):
-            # self.context will always have the interface of a Mammoth object,
-            # since this view declares that it depends upon the context of a
-            # Mammoth class.
-            return "It feels %s" % self.context.hair
-
-.. seealso::
-
-    :class:`grok.View`, :class:`grok.Adapter`, :class:`grok.MultiAdapter`
-
-
-:func:`grok.name` -- associate a component with a name
-======================================================
+Name is a unique identifier in the form of a string. The names of
+Containers, Models and Views are used to compose the URLs of the application.
 
 .. function:: grok.name(name)
 
@@ -110,24 +65,36 @@ the name of the view class itself. In this example, the class is named
     :class:`grok.View`
 
 
-:func:`grok.title` -- succinct description
-==========================================
+:func:`grok.title`
+==================
+
+Succint description.
+
+This directive is not commonly used, but along with :func:`grok.description`
+can help provide more information about a component.
 
 .. function:: grok.title(title)
 
    A descriptive title for a component.
 
 
-:func:`grok.description` -- longer description
-==============================================
+:func:`grok.description`
+========================
+
+Longer description.
+
+This directive is not commonly used, but along with :func:`grok.title`
+can help provide more information about a component.
 
 .. function:: grok.description(description)
 
   A longer description for a component.
 
  
-:func:`grok.implements` -- indicate, that a class implements an interface
-=========================================================================
+:func:`grok.implements`
+=======================
+
+Declare that a class implements an interface.
 
 .. function:: grok.implements(*interfaces)
 
@@ -194,8 +161,10 @@ use the functions `zope.interface.verify.verifyClass(interface, class)`
 and `zope.interface.verify.verifyObject(interface, object)` to verify if
 a class or object actually implements or provides a specific interface.
 
-:func:`grok.provides` -- disambiguate which interface is registered
-===================================================================
+:func:`grok.provides`
+=====================
+
+Disambiguate which interface is registered.
 
 .. function:: grok.provides(interface)
 
@@ -209,8 +178,15 @@ a class or object actually implements or provides a specific interface.
     :func:`grok.implements`
 
 
-:func:`grok.direct` -- specify that the class should be the component
-=====================================================================
+:func:`grok.direct`
+===================
+
+Specify that the class should be the component.
+
+Typically a class implements an interface, and the class is used as a
+factory to construct objects that provide that interface. With this
+directive, the class object can by used to provide the interface
+directly without constructing additional instance objects.
 
 .. function:: grok.direct()
 
@@ -222,27 +198,10 @@ a class or object actually implements or provides a specific interface.
     utility, or an instance of it.
 
 
-:func:`grok.adapts` -- declare that a class adapts certain objects
-==================================================================
+:func:`grok.baseclass`
+======================
 
-In the case of a simple adapter which only requires a single object
-for adapation, the :func:`grok.context` directive is used to declare
-the interface or class the adapter is for. It is only necessary to use
-:func:`grok.adapts` to declare the adapation requirements for a multi adapter.
-
-.. function:: grok.adapts(*classes_or_interfaces)
-
-    A class-level directive to declare that a class adapts objects of
-    the classes or interfaces given in `\*classes_or_interfaces`.
-
-    This directive accepts several arguments.
-
-    It works much like the :mod:`zope.component.`:func:`adapts()`,
-    but you do not have to make a ZCML entry to register the adapter.
-
-
-:func:`grok.baseclass` -- declare a class as base
-=================================================
+Declare a class as a base class.
 
 .. function:: grok.baseclass()
 
@@ -279,8 +238,10 @@ view, while calling the :class:`AnotherView` will lead to a
 Utility directives
 ~~~~~~~~~~~~~~~~~~
 
-:func:`grok.global_utility` -- register a global utility
-========================================================
+:func:`grok.global_utility`
+===========================
+
+Register a global utility.
 
 .. function:: grok.global_utility(factory[, provides=None[, name=u'']])
 
@@ -338,8 +299,10 @@ Then the following works:
     :func:`grok.implements`
 
 
-:func:`grok.local_utility` -- register a local utility
-======================================================
+:func:`grok.local_utility`
+==========================
+
+Register a local utility.
 
 .. function:: grok.local_utility(factory[, provides=None[, name=u''[, setup=None[, public=False[, name_in_container=None]]]]])
 
@@ -405,12 +368,99 @@ Then the following works:
 
     :func:`grok.global_utility`, :class:`grok.LocalUtility`
 
+Adapter directives
+~~~~~~~~~~~~~~~~~~
+
+:func:`grok.context`
+====================
+
+Declare the context for views, adapters, etc.
+
+Adapters are composed from another object, this object is called the
+context object. This directive specifies the class or interface that
+this object must provide.
+
+If the context declaration is not supplied, then Grok will set the context
+to the an Application, Container or Model class in module, as long as there
+is only one class of that type in the module.
+
+.. function:: grok.context(*class_or_interface)
+
+    A class or module level directive to indicate the context for
+    something (class or module) in the same scope.
+
+    When used on module level, it will set the context for all views,
+    adapters, etc. in that module. When used on class level, it will set
+    the context for that particular class.
+
+    With Grok contexts are set automatically for some objects, if they are
+    unambigous. For example a :class:`grok.View` will get the only
+    :class:`grok.Application` or :class:`grok.Model` class as context,
+    iff there exists exactly one in the same module. If there are more
+    possible contexts or you want to set a type (class/interface) from
+    another module as context, than the one choosen by default, then you
+    have to call :func:`grok.context` explicitly.
+
+**Example: Declare a component depends upon a class or interface**
+
+Here the :func:`grok.context` directive indicates that the :class:`Index`
+View applies to the context of a :class:`Mammoth` instance, and not instances
+of :class:`Cave`. By declaring the class or interface with :func:`grok.context`
+for an object, you are stating that your object depends upon the methods
+and attributes of that context.
+
+.. code-block:: python
+
+    import grok
+
+    class Mammoth(grok.Model):
+        hair = 'Wooly'
+
+    class Cave(grok.Model):
+        texture = 'rough'
+
+    class Index(grok.View):
+        grok.context(Mammoth)
+
+        def render(self):
+            # self.context will always have the interface of a Mammoth object,
+            # since this view declares that it depends upon the context of a
+            # Mammoth class.
+            return "It feels %s" % self.context.hair
+
+.. seealso::
+
+    :class:`grok.View`, :class:`grok.Adapter`, :class:`grok.MultiAdapter`
+
+
+:func:`grok.adapts`
+===================
+
+Declare that a class adapts certain objects.
+
+In the case of a simple adapter which only requires a single object
+for adapation, the :func:`grok.context` directive is used to declare
+the interface or class the adapter is for. It is only necessary to use
+:func:`grok.adapts` to declare the adapation requirements for a multi adapter.
+
+.. function:: grok.adapts(*classes_or_interfaces)
+
+    A class-level directive to declare that a class adapts objects of
+    the classes or interfaces given in `\*classes_or_interfaces`.
+
+    This directive accepts several arguments.
+
+    It works much like the :mod:`zope.component.`:func:`adapts()`,
+    but you do not have to make a ZCML entry to register the adapter.
+
 
 Security directives
 ~~~~~~~~~~~~~~~~~~~
 
-:func:`grok.require` -- declare a permission 
-============================================
+:func:`grok.require`
+====================
+
+Declare a permission.
 
 .. function:: grok.require(permission)
 
@@ -441,8 +491,10 @@ certain permission.
 Component registry directives
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:func:`grok.site` -- specify the local component registry to use for indexes
-============================================================================
+:func:`grok.site`
+=================
+
+Specify the local component registry to use for indexes.
 
 A class level directive used in `grok.Indexes` sub-classes to define
 in which local component registry the indexes should be located.
@@ -462,8 +514,10 @@ in which local component registry the indexes should be located.
 View directives
 ~~~~~~~~~~~~~~~
 
-:func:`grok.layer` -- declare the layer for the view
-====================================================
+:func:`grok.layer`
+==================
+
+Declare the layer for the view.
 
 .. function:: grok.layer(layer)
 
@@ -473,8 +527,10 @@ View directives
     grok.View. This directive can only be used on class level.
 
 
-:func:`grok.skin` -- declare this layer as a named skin
-=======================================================
+:func:`grok.skin`
+=================
+
+Declare this layer as a named skin.
 
 .. function:: grok.skin(skin)
 
@@ -483,8 +539,10 @@ View directives
     This directive can only be used on class level.
 
 
-:func:`grok.template` -- specify a template name
-====================================================
+:func:`grok.template`
+=====================
+
+Specify a template name.
 
 A class level directive used to specify the template to be rendered
 for the View when no render method is defined. This allows you to
@@ -501,8 +559,10 @@ for this module.
     :func:`grok.templatedir`
 
 
-:func:`grok.templatedir` -- specify the templates directory
-===========================================================
+:func:`grok.templatedir`
+========================
+
+Specify the templates directory.
 
 A module level directive used to specify the directory where Grok
 should look for template files.
@@ -521,8 +581,10 @@ module.
     :func:`grok.template`
 
 
-:func:`grok.order` -- specify ordering of components
-====================================================
+:func:`grok.order`
+==================
+
+Specify ordering of components.
 
 Ordering is typically used in Viewlets to determine the order in which 
 they are displayed.
@@ -547,8 +609,10 @@ components according to these rules.
 URL Traversal directives
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-:func:`grok.traversable` -- mark attributes or methods as traversable
-=====================================================================
+:func:`grok.traversable`
+========================
+
+Mark attributes or methods as traversable.
 
 A class level directive used to mark attributes or methods as traversable. An
 optional `name` argument can be used to give the attribute a different name in

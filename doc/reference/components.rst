@@ -265,7 +265,7 @@ a normal Container.
 .. class:: grok.OrderedContainer
 
     Base class for an OrderedContainer. OrderedContainer inherits from
-    Container and supports the API.
+    Container and supports the same interface.
     
     .. method:: updateOrder(order)
     
@@ -283,8 +283,9 @@ a normal Container.
 :class:`grok.Indexes`
 =====================
 
-Indexes are data structures that provide a way of quickly finding
-data model objects.
+Indexes are containers for holding a set of indexes. An index is 
+a data structures that provides a way of quickly finding a data objects.
+A single index can be of either `Field`, `Text`, or `Set`.
 
 .. class:: grok.Indexes
 
@@ -299,7 +300,6 @@ application that defines a Herd and some Mammoths:
 .. code-block:: python
 
     import grok
-    from grok import index
     from zope.interface import Interface
     from zope import schema
 
@@ -313,7 +313,7 @@ application that defines a Herd and some Mammoths:
         grok.site(Herd)
         grok.context(IMammoth)
 
-        full_name = index.Text()
+        full_name = grok.index.Text()
 
     class Mammoth(grok.Model):
         grok.implements(IMammoth)
@@ -337,9 +337,6 @@ query for those Mammoths by their last name:
     mammoths = catalog.searchResults(full_name='Mammoth')
     # mammoths would be a list containing 'Manfred Mammoth' and 'Joe Mammoth'
     # but not 'Marty the Wooly'
-
-Indexes can index on multiple fields. A single index can be of either `Field`,
-`Text`, or `Set`.
 
 
 Adapters
@@ -689,7 +686,10 @@ Views
 :class:`grok.View`
 ==================
 
-View components provide context and request attributes. 
+Views handle interactions between the user and the model. The are constructed
+with context and request attributes, are responsible for providing a
+response. The request attribute in a View will always be for a normal
+HTTP Request.
 
 The determination of what View gets used for what Model is made by walking the
 URL in the HTTP Request object sepearted by the / character. This process is
@@ -977,28 +977,28 @@ be invoked based on the Request type.
 
 Specialized View that responds to XML-RPC.
 
-The grok.require decorator can be used to protect methods with a permission.
-
 .. class:: grok.XMLRPC
 
     Base class for XML-RPC methods.
 
 **Example 1: Create a public and a protected XML-RPC view.**
 
+The grok.require decorator can be used to protect methods with a permission.
+
 .. code-block:: python
 
-    from zope import interface
-   
-    class FooXMLRPC(grok.XMLRPC):
-        """
-        The methods in this class will be available as XML-RPC methods.
-      
-        http://localhost/say will return 'Hello world!' encoded in XML-RPC.
-        """
-        grok.context(interface.Interface)
+    import grok
+    import zope.interface
+    
+    class MammothRPC(grok.XMLRPC):
+        grok.context(zope.interface.Interface)
 
-        def say(self):
-            return 'Hello world!'
+        def stomp(self):
+            return 'Manfred stomped.'
+
+        @grok.require('zope.ManageContent')
+        def dance(self):
+            return 'Manfred doesn\'t like to dance.'
 
 
 :class:`grok.Traverser`
