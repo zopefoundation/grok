@@ -353,7 +353,7 @@ it to provide a new interface.
 
 The object providing the existing interface is passed to the Adapter
 in the constructor, and is stored in an attribute named 'context.
-The source code for the `grok.Adapter` base class is simply::
+The source code for the `grok.Adapter` base class is simply:
 
 .. code-block:: python
 
@@ -588,6 +588,13 @@ Utilities
 :class:`grok.GlobalUtility`
 ===========================
 
+A global utility is an object which provides an interface, and can be
+looked-up by that interface and optionally the component name. The
+attributes provided by a global utility are not persistent.
+
+Examples of global utilities are database connections, XML parsers,
+and web service proxies.
+
 .. class:: grok.GlobalUtility
 
     Base class to define a globally registered utility. Global utilities are
@@ -613,6 +620,16 @@ Utilities
 
 :class:`grok.LocalUtility`
 ==========================
+
+A local utility is an object which provides an interface, and can be 
+looked-up by that interface and optionally the component name. The attributes
+provided by a local utility are transparently stored in the database (ZODB).
+This means that configuration changes to a local utility lasts between
+server restarts.
+
+An example is for database connections or web service proxies, 
+where you need to dynamically provide the connection settings
+so that they can be edited through-the-web.
 
 .. class:: grok.LocalUtility
 
