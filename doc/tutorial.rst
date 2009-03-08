@@ -82,7 +82,7 @@ Setting up grokproject
 
   **Note**: Sometimes you have ``easy_install`` installed but you need
   a newer version of the underlying setuptools infrastructure to make
-  Grok work. You can automatically upgrade setuptools this by doing::
+  Grok work. You can upgrade setuptools with::
 
     $ sudo easy_install -U setuptools
 
@@ -98,7 +98,7 @@ Because Grok uses a source distribution of Zope 3, you may need to
 install your operating system's Python "dev" package. You also need a
 working C compiler (typically ``gcc``) installed, as we compile bits of
 Zope 3 during setup. Finally, you also need ``easy_install`` installed
-so it becomes easy to install eggs.
+so it becomes easy to install Python packages.
 
 Once you are done with the prerequisites, you can install
 grokproject itself::
@@ -198,7 +198,7 @@ You can go into the ``Sample`` project directory now and start up the
 Zope instance that has been installed::
 
   $ cd Sample
-  $ bin/paster serve etc/deploy.ini
+  $ bin/paster serve parts/etc/deploy.ini
 
 This will make Zope 3 available on port 8080, and you can log in with
 username ``grok`` and password ``grok``. Assuming you've started up
@@ -235,8 +235,12 @@ this tutorial.
 
 Practice restarting Zope now, as you'll end up doing it a lot during
 this tutorial. It's just stopping Zope and starting it again:
-``CTRL-c`` and then ``bin/paster serve etc/deploy.ini`` from your Sample
-project directory.
+``CTRL-c`` and then ``bin/paster serve parts/etc/deploy.ini`` from your Sample
+project directory. Alternatively, you can use the --reload flag to start
+up paster with a monitor that scans your code base for changes and 
+automatically restart the Zope server every time you make a change::
+ 
+  $ bin/paster serve --reload parts/etc/deploy.ini
 
 An empty Grok project
 ---------------------
@@ -259,8 +263,7 @@ directory.
 One of the things grokproject created was a ``setup.py`` file. This file
 contains information about your project. This information is used by
 Python distutils and setuptools. You can use the ``setup.py`` file to
-upload your project to the Python Cheeseshop. We will discuss this in
-more detail later in this tutorial. (XXX)
+upload your project to the Python Package Index (PyPI).
 
 We have already seen the ``bin`` directory. It contains the startup
 script for the Zope instance (``bin/paster``) as well as the
@@ -406,7 +409,7 @@ with the ``.pt`` postfix.
 
   .. _`megrok.genshi`: http://pypi.python.org/pypi/megrok.genshi/
 
-Restart Zope (``CTRL-C``, then ``bin/paster serve etc/deploy.ini``). You can now 
+Restart Zope (``CTRL-C``, then ``bin/paster serve parts/etc/deploy.ini``). You can now 
 go to a new web page called ``bye``:
 
   http://localhost:8080/test/bye

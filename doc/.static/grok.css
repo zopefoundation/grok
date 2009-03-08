@@ -639,14 +639,11 @@ p.topic-title {
     padding: 0;
 }
 
-.topic > ul {
-    margin-left: 0;
-}
-
 .section blockquote {
     margin: 0em;
     padding: 0.5em;
 }
+
 .simple li {
     list-style-type: circle;
 }
