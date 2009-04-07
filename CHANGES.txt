@@ -4,6 +4,8 @@ Grok changes
 1.0a2 (unreleased)
 ==================
 
+* Documentation and doc string updates.
+
 * Pin grokui.admin to 0.3.
 
 * Pin grokcore.view to 1.3.
