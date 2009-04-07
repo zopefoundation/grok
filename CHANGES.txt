@@ -1,8 +1,15 @@
 Grok changes
 ************
 
-1.0b1 (unreleased)
+1.0a2 (unreleased)
 ==================
+
+* Pin grokui.admin to 0.3.
+
+* Pin grokcore.view to 1.3.
+
+* Synced versions.cfg with the latest KGS release available at:
+  http://download.zope.org/zope3.4/3.4.0/versions.cfg
 
 * Expose ``IBeforeTraverseEvent`` for import in the ``grok`` namespace.
 
