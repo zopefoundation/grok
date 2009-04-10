@@ -10,7 +10,11 @@ Grok changes
 1.0a3 (2009-04-10)
 ==================
 
-- Nothing changed yet.
+* Pin grokui.admin to 0.3.2
+
+* Pin grokcore.view to 1.5.
+
+* Pin grokcore.component to 1.6.
 
 
 1.0a2 (2009-04-08)
