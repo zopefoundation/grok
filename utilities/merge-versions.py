@@ -21,8 +21,7 @@ python utilities/merge-versions.py > candidate.cfg
 
 """
 
-from distutils.version import LooseVersion
-from distutils.version import StrictVersion
+from pkg_resources import parse_version
 
 
 def make_versions(filename):
@@ -35,11 +34,11 @@ def make_versions(filename):
             package = split_line[0]
             if package == 'extends':
                 continue
-            try:
-                version = StrictVersion(split_line[1])
-            except ValueError:
-                version = LooseVersion(split_line[1])
-            versions[package] = version
+            original = split_line[1]
+            parsed = parse_version(original)
+            # Store both the original and the parsed version.
+            versions[package] = dict(
+                original=original, parsed=parsed)
     return versions
 
 
@@ -48,32 +47,14 @@ def make_versions(filename):
 grok_versions = make_versions('versions.cfg')
 kgs_versions = make_versions('versions.kgs')
 
-warnings = 0
 print "[versions]"
 for package, grok_version in sorted(grok_versions.items()):
     if package not in kgs_versions:
         # Extra package needed by Grok
-        print "%s = %s" % (package, grok_version)
+        print "%s = %s" % (package, grok_version['original'])
     else:
         kgs_version = kgs_versions[package]
-        if isinstance(grok_version, LooseVersion) or \
-                isinstance(kgs_version, LooseVersion):
-            # Loose versions cannot reliably be compared...
-            if isinstance(grok_version, LooseVersion) and \
-                isinstance(kgs_version, LooseVersion) and \
-                grok_version == kgs_version:
-                # ... unless they are both loose versions and exactly
-                # the same.
-                print "%s = %s" % (package, kgs_version)
-            else:
-                warnings += 1
-                print "#WARNING: package %s has a loose version number." % package
-                print "#GROK: %s = %s" % (package, grok_version)
-                print "#ZOPE: %s = %s" % (package, kgs_version)
-        elif grok_version > kgs_version:
-            print "%s = %s" % (package, grok_version)
-        elif grok_version <= kgs_version:
-            print "%s = %s" % (package, kgs_version)
-
-if warnings > 0:
-    print "#There were warnings; manual work needed; please check."
+        if grok_version['parsed'] > kgs_version['parsed']:
+            print "%s = %s" % (package, grok_version['original'])
+        else:
+            print "%s = %s" % (package, kgs_version['original'])
