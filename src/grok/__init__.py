@@ -60,11 +60,16 @@ from zope.app.publication.interfaces import IBeforeTraverseEvent
 from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
+from zope.app.container.interfaces import (
+    IObjectAddedEvent,
+    IObjectMovedEvent,
+    IObjectRemovedEvent,
+    IContainerModifiedEvent)
 from zope.app.container.contained import (
-    IObjectAddedEvent, ObjectAddedEvent,
-    IObjectMovedEvent, ObjectMovedEvent,
-    IObjectRemovedEvent, ObjectRemovedEvent,
-    IContainerModifiedEvent, ContainerModifiedEvent)
+    ObjectAddedEvent,
+    ObjectMovedEvent,
+    ObjectRemovedEvent,
+    ContainerModifiedEvent)
 
 from grok.components import Model, View
 from grok.components import XMLRPC, REST, JSON
