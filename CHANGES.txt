@@ -4,6 +4,8 @@ Grok changes
 1.0b1 (unreleased)
 ==================
 
+* Pin grokcore.view to 1.7.
+
 * Import zope.app.container interfaces from their actual definition not from a
   re-import.
 
