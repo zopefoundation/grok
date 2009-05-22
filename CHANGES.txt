@@ -4,7 +4,7 @@ Grok changes
 1.0b1 (unreleased)
 ==================
 
-- Nothing changed yet.
+* Corrected Content-type; JSON views now report a 'application/json'.
 
 
 1.0a4 (2009-05-21)
@@ -15,7 +15,7 @@ Grok changes
 * Import zope.app.container interfaces from their actual definition not from a
   re-import.
 
-* JSON views now report a Content-type: application/json. See
+* JSON views now report a Content-type: text/json. See
   https://bugs.launchpad.net/bugs/362902
 
 
