@@ -15,7 +15,7 @@ Grok changes
 * Import zope.app.container interfaces from their actual definition not from a
   re-import.
 
-* JSON views now report a Content-type: text/json. See
+* JSON views now report a Content-type: application/json. See
   https://bugs.launchpad.net/bugs/362902
 
 
