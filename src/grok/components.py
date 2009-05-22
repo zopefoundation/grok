@@ -384,7 +384,7 @@ class JSON(BrowserPage):
         view_name = self.__view_name__
         method = getattr(self, view_name)
         method_result = mapply(method, (), self.request)
-        self.request.response.setHeader('content-type', 'text/json')
+        self.request.response.setHeader('Content-Type', 'application/json')
         return simplejson.dumps(method_result)
 
 
