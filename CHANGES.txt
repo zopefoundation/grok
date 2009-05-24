@@ -4,7 +4,7 @@ Grok changes
 1.0b1 (unreleased)
 ==================
 
-* Corrected Content-type; JSON views now report a 'application/json'.
+* Corrected Content-type; JSON views now report 'application/json'.
 
 
 1.0a4 (2009-05-21)

@@ -237,7 +237,7 @@ Practice restarting Zope now, as you'll end up doing it a lot during
 this tutorial. It's just stopping Zope and starting it again:
 ``CTRL-c`` and then ``bin/paster serve parts/etc/deploy.ini`` from your Sample
 project directory. Alternatively, you can use the --reload flag to start
-up paster with a monitor that scans your code base for changes and 
+up paster with a monitor that scans your code base (python files only) for changes and 
 automatically restart the Zope server every time you make a change::
  
   $ bin/paster serve --reload parts/etc/deploy.ini
