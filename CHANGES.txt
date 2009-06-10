@@ -4,6 +4,10 @@ Grok changes
 1.0b1 (unreleased)
 ==================
 
+* Removed `docutils` and `Pygment` from versions.cfg. Both are pinned
+  in grokdocs subpackage. Closes
+  https://bugs.launchpad.net/grok/+bug/340170
+
 * Corrected Content-type; JSON views now report 'application/json'.
 
 
