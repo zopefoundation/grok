@@ -18,6 +18,10 @@ Grok changes
 
 * changed interpreter name from 'python' to 'grokpy'
 
+* Changed the default permission to grok.View instead of zope.Public. 
+  See the `upgrade notes`_(``doc/upgrade.txt``) for more information.
+  https://bugs.launchpad.net/grok/+bug/387332
+
 1.0a4 (2009-05-21)
 ==================
 

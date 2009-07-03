@@ -6,6 +6,18 @@ continue to work with newer versions of Grok.  This document only
 describes changes involving incompatibilities or deprecations, not new
 features (please refer to ``CHANGES.txt`` for those).
 
+Upgrading to 1.0b1 (not released)
+----------------------------------
+
+* The default permission is now grok.View as a replacement for zope.Public.
+  You need to add this permission as a default permission to all
+  users (use zope.Anybody). This requires a change to site.zcml as follows.
+
+      <grant permission="grok.View"
+             principal="zope.Anybody" />
+
+  IF YOU DO NOT MAKE THIS CHANGE, ALL OF YOUR VIEWS WILL BE UNAVAILBLE FOR ANONYMOUS.
+
 Upgrading to 1.0a1
 ------------------
 
