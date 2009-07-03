@@ -10,6 +10,9 @@ Grok changes
 
 * Corrected Content-type; JSON views now report 'application/json'.
 
+* updated zope.publisher dependency to 3.4.8 (fix paster.httpserver
+  related bugs in XMLRPC, PUT)
+
 
 1.0a4 (2009-05-21)
 ==================
