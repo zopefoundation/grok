@@ -16,6 +16,7 @@ Grok changes
 * switched buildout to paster base template (like grokproject default)
   https://bugs.launchpad.net/grok/+bug/307197
 
+* changed interpreter name from 'python' to 'grokpy'
 
 1.0a4 (2009-05-21)
 ==================
