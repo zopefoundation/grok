@@ -18,5 +18,13 @@ Grok: Now even cavemen can use wikis!
     install_requires=['setuptools',
                       'grok',
                       'grokui.admin',
+                      'grokcore.startup',
                       ],
+    entry_points = """
+      [console_scripts]
+      grokwiki-debug = grokcore.startup:interactive_debug_prompt
+      grokwiki-ctl = grokcore.startup:zdaemon_controller
+      [paste.app_factory]
+      main = grokcore.startup:application_factory
+      """,
 )
