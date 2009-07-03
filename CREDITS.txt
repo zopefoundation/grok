@@ -44,6 +44,8 @@ CREDITS
 * Sylvain Viollon (work on martian, grokcore.formlib, grokcore.view,
   grokcore.viewlet)
 
+* Michael Haubenwallner (WSGI support)
+
 * ME GROK (team mascot)
 
 Thank you
