@@ -1,3 +1,5 @@
+.. _upgrade_notes:
+
 Upgrade notes
 =============
 
@@ -5,6 +7,8 @@ This document outlines how to update Grok applications so that they
 continue to work with newer versions of Grok.  This document only
 describes changes involving incompatibilities or deprecations, not new
 features (please refer to ``CHANGES.txt`` for those).
+
+.. _upgrade_notes_1.0b1:
 
 Upgrading to 1.0b1 (not released)
 ----------------------------------
@@ -42,6 +46,7 @@ Upgrading to 1.0b1 (not released)
 * Interpreter name has been changed from 'bin/python' to 'bin/grokpy' to
   avoid conflicts with 'virtualenv'.
 
+.. _upgrade_notes_1.0a1:
 
 Upgrading to 1.0a1
 ------------------
@@ -64,6 +69,7 @@ Upgrading to 1.0a1
   As you can see, ``IRESTLayer`` has been introduced as a baseclass for
   defining REST layers.
 
+.. _upgrade_notes_0.14:
 
 Upgrading to 0.14
 -----------------
@@ -101,6 +107,7 @@ Upgrading to 0.14
                         # Add extra requirements here
                         ],
 
+.. _upgrade_notes_0.13:
 
 Upgrading to 0.13
 -----------------
@@ -268,6 +275,7 @@ Upgrading to 0.13
   than what it does before. Previous uses of ``view`` in a viewlet
   template should be renamed to ``viewlet``.
 
+.. _upgrade_notes_0.12:
 
 Upgrading to 0.12
 -----------------
@@ -298,6 +306,7 @@ Upgrading to 0.12
   directive to these classes explicitly where the 'Base' class convention was
   relied upon to preserve existing functionality.
 
+.. _upgrade_notes_0.11:
 
 Upgrading to 0.11
 -----------------
