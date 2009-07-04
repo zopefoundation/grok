@@ -16,7 +16,32 @@ Upgrading to 1.0b1 (not released)
       <grant permission="grok.View"
              principal="zope.Anybody" />
 
-  IF YOU DO NOT MAKE THIS CHANGE, ALL OF YOUR VIEWS WILL BE UNAVAILBLE FOR ANONYMOUS.
+  IF YOU DO NOT MAKE THIS CHANGE, ALL OF YOUR VIEWS WILL BE UNAVAILBLE FOR
+  ANONYMOUS.
+
+* Grok buildout now creates a paster based project, as grokproject
+  does for some time. It should be possible to update your checkout and
+  run buildout again to switch to the new layout.
+
+* Be careful with the files in 'parts/app' and 'parts/zopectl', esp.
+  'parts/zopectl/access.log' as both folders are deleted.
+
+* Logfiles are now in 'parts/log', config files are now in 'parts/etc'.
+  Both access and event logs are file-based.
+  Find more information on configuration and settings in 'etc/README.txt'.
+
+* Start the instance now like:
+    'bin/paster serve parts/etc/deploy.ini'
+  or
+    'bin/projectname-ctl fg'
+
+  If you start your instance with 'debug.ini' first point your browser to
+    'http://localhost:8080/@@login.html' and authenticate. This will ev.
+  be removed in a later release.
+
+* Interpreter name has been changed from 'bin/python' to 'bin/grokpy' to
+  avoid conflicts with 'virtualenv'.
+
 
 Upgrading to 1.0a1
 ------------------

@@ -13,7 +13,7 @@ Grok changes
 * updated zope.publisher dependency to 3.4.8 (fix paster.httpserver
   related bugs in XMLRPC, PUT)
 
-* switched buildout to paster base template (like grokproject default)
+* switched buildout to paster based template (like grokproject default)
   https://bugs.launchpad.net/grok/+bug/307197
 
 * changed interpreter name from 'python' to 'grokpy'
