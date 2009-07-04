@@ -24,6 +24,8 @@
            public access -->
       <grant permission="zope.View"
              principal="zope.Anybody" />
+      <grant permission="grok.View"
+             principal="zope.Anybody" />
       <grant permission="zope.app.dublincore.view"
              principal="zope.Anybody" />
 

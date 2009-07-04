@@ -20,6 +20,10 @@
       permission="zope.View"
       principal="zope.anybody"
       />
+  <grant
+      permission="grok.View"
+      principal="zope.anybody"
+      />
 
   <principal
       id="zope.mgr"
