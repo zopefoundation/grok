@@ -38,7 +38,7 @@ setup(
                       'martian >= 0.10',
                       'grokcore.component >= 1.5',
                       'grokcore.formlib',
-                      'grokcore.security',
+                      'grokcore.security >= 1.1',
                       'grokcore.view',
                       'grokcore.viewlet',
                       'simplejson',
