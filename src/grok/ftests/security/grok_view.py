@@ -23,6 +23,6 @@ from zope.publisher.browser import BrowserPage
 class App(grok.Application, grok.Container):
     pass
 
-class Index(grok.View):
+class Index(grok.CodeView):
     def render(self):
         return "Hello world"

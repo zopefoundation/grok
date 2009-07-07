@@ -53,14 +53,14 @@ class IMammoth(interface.Interface):
 class Mammoth(grok.Model):
     grok.implements(IMammoth)
 
-class Index(grok.View):
+class Index(grok.CodeView):
     grok.context(Mammoth)
 
     def render(self):
         return 'Hi, my name is %s, and I\'m "%s"' % (self.context.name,
                                                      self.context.size)
 
-class Search(grok.View):
+class Search(grok.CodeView):
     grok.context(Zoo)
 
     def render(self):
