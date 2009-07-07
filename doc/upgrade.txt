@@ -13,6 +13,10 @@ features (please refer to ``CHANGES.txt`` for those).
 Upgrading to 1.0b1 (not released)
 ----------------------------------
 
+* The View class (from either grokcore.view or grok itself) has been splitted
+  in to View and CodeView.  If you have a template: use View.  If you have a
+  render method: you must subclass from CodeView instead of View from now on.
+
 * The default permission is now grok.View as a replacement for zope.Public.
   You need to add this permission as a default permission to all
   users (use zope.Anybody). This requires a change to site.zcml as follows.
