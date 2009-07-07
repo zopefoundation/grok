@@ -38,7 +38,6 @@ from grokcore.view import templatedir
 from grokcore.view import skin
 from grokcore.view import url
 from grokcore.view import path
-from grokcore.view import CodeView 
 
 from grokcore.viewlet import Viewlet
 from grokcore.viewlet import ViewletManager
@@ -72,7 +71,7 @@ from zope.app.container.contained import (
     ObjectRemovedEvent,
     ContainerModifiedEvent)
 
-from grok.components import Model, View
+from grok.components import Model, View, CodeView
 from grok.components import XMLRPC, REST, JSON
 from grok.components import Traverser
 from grok.components import Container, OrderedContainer
