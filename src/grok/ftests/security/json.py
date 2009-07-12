@@ -16,7 +16,7 @@ We cannot access the protected method however::
   >>> browser.open('http://localhost/dance')
   Traceback (most recent call last):
     ...
-  Unauthorized: (<grok.meta.MammothJSON object at ...>, '__call__', 'zope.ManageContent')
+  HTTPError: HTTP Error 401: Unauthorized
 
 Let's log in as the manager now. We should be able to access the method now::
 
