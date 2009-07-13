@@ -6,6 +6,10 @@ Grok changes
 
 See: :ref:`upgrade_notes_1.0b1` for special notes on upgrading to this release.
 
+* Added `zope.publisher.interfaces.IReRaiseException` adapter for
+  IUnauthorized exceptions. Closes
+  https://bugs.launchpad.net/grok/+bug/332061
+
 * Removed `docutils` and `Pygment` from versions.cfg. Both are pinned
   in grokdocs subpackage. Closes
   https://bugs.launchpad.net/grok/+bug/340170

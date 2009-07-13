@@ -79,6 +79,12 @@
       priority="1"
       />
 
+  <adapter
+      factory=".publication.DontReRaiseUnauthorizedAdapter"
+      for="zope.security.interfaces.IUnauthorized"
+      provides="zope.publisher.interfaces.IReRaiseException"
+      />
+
   <!-- need to grok this for some basic REST support -->
   <grok:grok package=".rest" />
 
