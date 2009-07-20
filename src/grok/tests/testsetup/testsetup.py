@@ -430,7 +430,7 @@ layer for functional doctests. We will therefore start with it.
 
     The testrunner is ready. Let's start it::
 
-       >>> testrunner.run(defaults)
+       >>> testrunner.run_internal(defaults)
        Running samplesetup1.CustomSampleLayer tests:
          Set up samplesetup1.CustomSampleLayer in ... seconds.
          Ran 2 tests with 0 failures and 0 errors in ... seconds.
@@ -462,7 +462,7 @@ layer for functional doctests. We will therefore start with it.
        ...     '--tests-pattern', '^samplesetup2$',
        ...     ]
        >>> sys.argv = 'test -f '.split()
-       >>> testrunner.run(defaults)
+       >>> testrunner.run_internal(defaults)
        Running grok.tests.testsetup.cave.CustomLayerFromPath tests:
          Set up grok.tests.testsetup.cave.CustomLayerFromPath in ... seconds.
          Ran 2 tests with 0 failures and 0 errors in ... seconds.
@@ -492,7 +492,7 @@ layer for functional doctests. We will therefore start with it.
        ...     '--tests-pattern', '^samplesetup3$',
        ...     ]
        >>> sys.argv = 'test -f '.split()
-       >>> testrunner.run(defaults)
+       >>> testrunner.run_internal(defaults)
        Running grok.tests.testsetup.cave.FunctionalLayer tests:
          Set up grok.tests.testsetup.cave.FunctionalLayer in ... seconds.
          Ran 2 tests with 0 failures and 0 errors in ... seconds.
@@ -525,7 +525,7 @@ layer for functional doctests. We will therefore start with it.
        ...     '--tests-pattern', '^samplesetup4$',
        ...     ]
        >>> sys.argv = 'test -f '.split()
-       >>> testrunner.run(defaults)
+       >>> testrunner.run_internal(defaults)
        Running grok.tests.testsetup.cave_to_let.GrokFunctionalLayer tests:
          Set up grok.tests.testsetup.cave_to_let.GrokFunctionalLayer in ... seconds.
          Ran 1 tests with 0 failures and 0 errors in ... seconds.
