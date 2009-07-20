@@ -237,11 +237,11 @@ class BaseView(object):
 
 
 class CodeView(grokcore.view.CodeView, BaseView):
-    """ CHECK THIS """
+    """The base class for views with just a render() method in grok apps"""
 
 
 class View(grokcore.view.View, BaseView):
-    """The base class for views in Grok applications.
+    """The base class for views with templates in Grok applications.
 
     Each class that inherits from `grok.View` is designed to "render" a
     category of content objects by reducing them to a document (often an
