@@ -6,6 +6,9 @@ Grok changes
 
 See: :ref:`upgrade_notes_1.0b1` for special notes on upgrading to this release.
 
+* Bump used `z3c.testsetup` version (now: 0.4). Fix
+  https://bugs.launchpad.net/grok/+bug/395125
+
 * Bump used ZODB3 version (now: 3.8.2). Fix 
   https://bugs.launchpad.net/grok/+bug/410703
 
