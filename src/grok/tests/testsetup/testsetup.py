@@ -15,6 +15,14 @@
 Tests for testsetups in grok.testing
 ************************************
 
+.. warn:: Outdated!
+
+  While all the information herein is correct, there are more and
+  other options available with current version of `z3c.testsetup`.
+
+  See http://pypi.python.org/pypi/z3c.testsetup for up-to-date
+  information.
+
 The grok testing support provides a z3c.testsetup which should suit
 most grokprojects. Main parts of this support are
 
@@ -312,12 +320,14 @@ can use three options:
         ...     cave, filter_func = myfilter)
         >>> suite = setup()
         >>> get_basenames_from_suite(suite)
-        ['file1.py', 'subdirfile.txt', 'subdirfile.txt']
+        ['file1.py', 'subdirfile.txt', 'subdirfile.txt', 'subdirfile.txt']
 
      Again we see the one Python module. The module search is not
      affected by `filter_func`. Use `pfilter_func` instead::
 
         >>> def mypfilter(module):
+        ...     if not hasattr(module, '__file__'):
+        ...         return False
         ...     basename = os.path.basename(module.__file__)
         ...     if basename.startswith('subdirfile'):
         ...         return True
