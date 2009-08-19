@@ -67,7 +67,7 @@ class Traverser(grok.Traverser):
             applySkin(self.request, LayerZ, grok.IRESTSkinType)
             return MyContent()
 
-class Index(grok.View):
+class Index(grok.CodeView):
     grok.context(MyApp)
     def render(self):
         return "The index view"

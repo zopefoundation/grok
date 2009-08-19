@@ -45,7 +45,7 @@ class Traverser(grok.Traverser):
         # the fallback behaviour
         pass
 
-class Ellie(grok.View):
+class Ellie(grok.CodeView):
     grok.context(Herd)
     grok.name('ellie')
 
@@ -56,7 +56,7 @@ class Mammoth(grok.Model):
     def __init__(self, name):
         self.name = name
 
-class MammothIndex(grok.View):
+class MammothIndex(grok.CodeView):
     grok.context(Mammoth)
     grok.name('index')
 

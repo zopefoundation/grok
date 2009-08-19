@@ -17,7 +17,7 @@ import grok
 class BoneBag(grok.Container):
     pass
 
-class Index(grok.View):
+class Index(grok.CodeView):
     """A simple view to test whether BoneBag is really registered as a model.
     """
     def render(self):

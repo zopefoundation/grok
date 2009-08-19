@@ -43,7 +43,7 @@ from zope import interface
 class AContext(grok.Model):
     pass
 
-class ViewWithItems(grok.View):
+class ViewWithItems(grok.CodeView):
     grok.name('with_items')
 
     def render(self):

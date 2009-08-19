@@ -31,7 +31,7 @@ import grok
 class Model(grok.Model):
     pass
 
-class SomeView(grok.View):
+class SomeView(grok.CodeView):
     grok.baseclass()
     
     def render(self):

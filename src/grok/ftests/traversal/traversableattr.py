@@ -40,7 +40,7 @@ class Bar(grok.Model):
     def __init__(self, name):
         self.name = name
 
-class BarIndex(grok.View):
+class BarIndex(grok.CodeView):
     grok.context(Bar)
     grok.name('index')
 
@@ -60,7 +60,7 @@ class Foo(grok.Model):
         return Bar('bar')
     z = "i'm not called"
 
-class FooIndex(grok.View):
+class FooIndex(grok.CodeView):
     grok.context(Foo)
     grok.name('index')
     def render(self):
