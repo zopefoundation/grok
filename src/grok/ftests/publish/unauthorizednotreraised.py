@@ -11,10 +11,10 @@ We create a simple site with a protected ``index`` view:
 
 When we call the protected view with ``handle_errors`` set to
 ``False``, we will get no exception but instead an HTTP error:
-    
+
     >>> from zope.app.testing.functional import HTTPCaller
     >>> http_call = HTTPCaller()
-    
+
     >>> print http_call("GET /app/@@index HTTP/1.1" + chr(13),
     ...                 handle_errors=False)
     HTTP/1.1 401 Unauthorized
@@ -29,7 +29,7 @@ class ManagerPerm(grok.Permission):
 class App(grok.Application, grok.Container):
     pass
 
-class Index(grok.View):
+class Index(grok.CodeView):
     grok.require('grok.Manager')
     def render(self):
         return 'Hello from protected view'
