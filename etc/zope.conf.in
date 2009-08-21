@@ -4,7 +4,7 @@ site-definition ${site_zcml:output}
 <zodb>
   # Standard Filestorage
   <filestorage>
-    path ${zope_conf:filestorage}
+    path ${zope_conf:filestorage}/Data.fs
   </filestorage>
 
 # Uncomment this if you want to connect to a ZEO server instead:
