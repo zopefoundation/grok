@@ -20,11 +20,11 @@ import grokwiki.page
 class Wiki(grok.Application, grok.Container):
     """This is Grok's sample wiki application."""
 
-class Index(grok.View):
+class Index(grok.CodeView):
     def render(self):
         self.redirect(self.url('home'))
 
-class Hello(grok.View):
+class Hello(grok.CodeView):
     grok.baseclass()
     
     def render(self):
