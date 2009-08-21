@@ -4,7 +4,7 @@ site-definition ${site_zcml:output}
 <zodb>
   # Standard Filestorage
   <filestorage>
-    path ${data:path}
+    path ${zope_conf:filestorage}
   </filestorage>
 
 # Uncomment this if you want to connect to a ZEO server instead:
@@ -24,7 +24,7 @@ site-definition ${site_zcml:output}
   # filesystem path.
 
   <logfile>
-    path ${buildout:directory}/parts/log/z3.log
+    path ${zope_conf:logfiles}/z3.log
     formatter zope.exceptions.log.Formatter
   </logfile>
 
