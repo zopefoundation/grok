@@ -30,7 +30,7 @@ formatter = generic
 
 [handler_accesslog]
 class = FileHandler
-args = (os.path.join(r'${buildout:directory}', 'parts', 'log', 'access.log'),
+args = (os.path.join(r'${zope_conf:logfiles}', 'access.log'),
         'a')
 level = INFO
 formatter = accesslog
