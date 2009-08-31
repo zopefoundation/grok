@@ -21,10 +21,9 @@ Welcome to the Grok tutorial!
     http://wiki.zope.org/ZPT/FrontPage
 
   Note that some of the information in these introductions may refer
-  to concepts not available in Grok or Zope 3, in particular variables
-  like ``here`` or ``template``. The basic principles will work with
-  Zope 3 (and Grok) however; try reading ``context`` or ``view``
-  instead.
+  to concepts not available in Grok or the Zope Toolkit, in particular
+  variables like ``here`` or ``template``. The basic principles will
+  work with Grok however; try reading ``context`` or ``view`` instead.
 
 Grok is a powerful and flexible web application framework for Python
 developers. In this tutorial we will show you the various things you
@@ -223,7 +222,7 @@ and set up the project in there. grokproject will automatically
 download and install the Zope Toolkit libraries as well as Grok into
 the project area.
 
-Grok asks you for an initial username and password for the Zope
+Grok asks you for an initial username and password for the
 server. We'll use ``grok`` for both::
 
   Enter user (Name of an initial administrator user): grok
@@ -240,7 +239,7 @@ project is ready to go.
   One common problem when installing Grok is library mixup. You may
   have some libraries installed in your Python interpreter that
   conflict with libraries that Grok wants to install. You tend to get
-  an error when starting up the Grok webserver when this is the
+  an error when starting up the Grok web server when this is the
   case. If you already have installed Zope Toolkit libraries (or Zope
   3) previously for instance, you may first have to remove these
   libraries from your Python's ``site-packages`` directory. 
@@ -312,7 +311,7 @@ your Sample project directory.
 
 Alternatively, you can use the --reload flag to start up paster with a
 monitor that scans your code base (python files only) for changes and
-automatically restarts the Zope server every time you make a change::
+automatically restarts the server every time you make a change::
 
   $ bin/paster serve --reload parts/etc/deploy.ini
 
@@ -401,20 +400,20 @@ environment and can be ignored for now.
 Showing pages
 =============
 
-Showing web pages is what puts the *web* in "web applications". You
-start doing this with HTML templates, but Grok doesn't stop at
-templates. Most web pages in a web application will contain complex
-presentation logic that is better handled by separate Python code in
-conjunction with templates. This becomes especially important in more
-complex interactions with the user, such as form handling. After
-reading this chapter, you should already be able to write simple web
-applications with Grok.
+Showing web pages is what puts the *web* in "web
+applications". Typically HTML templates are used for this, but Grok
+doesn't stop at templates. Most web pages in a real-world web
+application will contain complex presentation logic that is better
+handled by separate Python code in conjunction with templates. This
+becomes especially important in more complex interactions with the
+user, such as form handling. After reading this chapter, you should
+already be able to write simple web applications with Grok.
 
 Publishing a simple web page
 ----------------------------
 
 Let's publish a simple static web page. Grok is geared towards web
-applications and therefore not really meant for publishing a large
+applications and therefore is not really meant for publishing a large
 number of static (pregenerated) web pages. For that you're better off
 to use a specialized system such as Apache. Nonetheless, in order to
 develop any web application we need to know how to put some simple
@@ -449,8 +448,8 @@ You should now see the following text::
   Hello world!
 
 Note that you can change templates and see the effects instantly:
-there is no need to restart Zope to see the effect. This is not true
-for changes on the Python level, for instance when you add a
+there is no need to restart the web server to see the effect. This is
+not true for changes on the Python level, for instance when you add a
 template. We show an example of this next.
 
 A second view
@@ -501,8 +500,9 @@ with the ``.pt`` postfix.
 
   .. _`megrok.genshi`: http://pypi.python.org/pypi/megrok.genshi/
 
-Restart Zope (``CTRL-C``, then ``bin/paster serve parts/etc/deploy.ini``). You can now 
-go to a new web page called ``bye``:
+Restart the web server (``CTRL-C``, then ``bin/paster serve
+parts/etc/deploy.ini``). You can now go to a new web page called
+``bye``:
 
   http://localhost:8080/test/bye
 
@@ -529,8 +529,8 @@ We've used the ``tal:content`` page template directive to replace the
 content between the ``<p>`` and ``</p>`` tags with something else, in
 this case the result of the Python expression ``1 + 1``.
 
-Since restarting Zope is not necessary for changes that are limited to
-the page templates, you can just reload the web page:
+Since restarting the server is not necessary for changes that are
+limited to the page templates, you can just reload the web page:
 
   http://localhost:8080/test
 
@@ -570,7 +570,7 @@ In order to use it, we also need to refer to it from our
 .. include:: groktut/static_resources_for_our_web_page/src/sample/app_templates/index.pt
   :literal:
 
-Now restart Zope and reload the page:
+Now restart the server and reload the page:
 
   http://localhost:8080/test
 
@@ -613,7 +613,7 @@ Using view methods
   template called ``bye.pt`` in your ``app_templates`` directory.
   Since in the given ``app.py`` we we have no more class using it, the
   ``bye.pt`` template will have become *unassociated*. When you try to
-  restart Zope, Grok will give you a warning like this::
+  restart the server, Grok will give you a warning like this::
 
     UserWarning: Found the following unassociated template(s) when
     grokking 'sample.app': bye.  Define view classes inheriting from
@@ -633,7 +633,7 @@ current date and time. We will use our Python interpreter to find out
 what works::
 
   $ python
-  Python 2.4.4
+  Python 2.5.2
   Type "help", "copyright", "credits" or "license" for more information.
   >>> 
 
@@ -677,7 +677,7 @@ page template. Change ``index.pt`` to read like this:
 .. include:: groktut/using_view_methods/src/sample/app_templates/index.pt
   :literal:
 
-Restart Zope. This is needed as we changed the content of a Python
+Restart the server. This is needed as we changed the content of a Python
 file (``app.py``). Now reload our index page to see whether it worked:
 
   http://localhost:8080/test
@@ -688,9 +688,9 @@ screen now::
   2007-02-27 17:21
 
 What happened here? When viewing a page, the view class (in this case
-``Index`` is instantiated by Zope. The name ``view`` in the template
-is always made available and is associated with this instance. We then
-simply call the method on it in our template.
+``Index`` is instantiated by the framework. The name ``view`` in the
+template is always made available and is associated with this
+instance. We then simply call the method on it in our template.
 
 There is another way to write the template that is slightly shorter
 and may be easier to read in some cases, using a ZPT path expression::
@@ -762,7 +762,7 @@ Modify ``app.py`` so it reads like this:
 .. include:: groktut/completely_python_driven_views/src/sample/app.py
   :literal:
 
-If you were to start up Zope with an ``index.pt`` template still
+If you were to start up the server with an ``index.pt`` template still
 inside ``app_templates`` you would get an error::
 
     GrokError: Multiple possible ways to render view <class
@@ -808,7 +808,7 @@ Now we need a template ``index.pt`` that uses ``alpha``:
 .. include:: groktut/doing_some_calculation_before_viewing_a_page/src/sample/app_templates/index.pt
   :literal:
 
-Restart Zope and then let's take another look at our application:
+Restart the server and then let's take another look at our application:
 
   http://localhost:8080/test
 
@@ -838,7 +838,7 @@ We need an ``index.pt`` that uses ``sum``:
 .. include:: groktut/reading_url_parameters/src/sample/app_templates/index.pt
   :literal:
 
-Restart Zope. Now going to the following URL should display 8:
+Restart the server. Now going to the following URL should display 8:
 
   http://localhost:8080/test?value1=3&value2=5
 
@@ -851,7 +851,7 @@ What if we don't supply the needed parameters (``value1`` and
 
   http://localhost:8080/test
 
-You can look at the window where you started up Zope to see the error
+You can look at the window where you started up the server to see the error
 traceback. This is the relevant complaint::
 
   TypeError: Missing argument to update(): value1
@@ -861,7 +861,7 @@ We can modify our code so it works even without input for either parameter:
 .. include:: groktut/reading_url_parameters2/src/sample/app.py
   :literal:
 
-Restart Zope, and see it can now deal with missing parameters (they
+Restart the server, and see it can now deal with missing parameters (they
 default to ``0``).
 
 Simple forms
@@ -871,8 +871,8 @@ Simple forms
 
   Creating forms and converting and validating user input by hand, as
   shown in this section, can be rather cumbersome. With Grok, you can
-  use Zope 3's *schema* and *formlib* systems to automate this and
-  more. This will be discussed in a later section. XXX
+  use the Zope Toolkit's *schema* and *formlib* systems to automate
+  this and more. This will be discussed in a later section. TDB
 
 Entering the parameters through URLs is not very pretty. Let's use a
 form for this instead. Change ``index.pt`` to contain a form, like
@@ -914,7 +914,7 @@ data does not result in a failure. Instead we display the text "No
 sum". If we don't get any error, the conversion to integer was fine,
 and we can display the sum.
 
-Restart Zope and go to the form again to try it out:
+Restart the server and go to the form again to try it out:
 
   http://localhost:8080/test
 
@@ -956,7 +956,7 @@ We now want to display this information in our template ``index.pt``:
 .. include:: groktut/a_view_for_a_model/src/sample/app_templates/index.pt
   :literal:
 
-Restart Zope. When you view the page:
+Restart the server. When you view the page:
 
   http://localhost:8080/test
 
@@ -1006,7 +1006,7 @@ Now let's modify the ``index.pt`` template so that it uses the
 .. include:: groktut/a_view_for_a_model2/src/sample/app_templates/index.pt
   :literal:
 
-Restart Zope. When you view the page:
+Restart the server. When you view the page:
 
   http://localhost:8080/test
 
@@ -1022,7 +1022,7 @@ Storing data
 So far we have only displayed either hardcoded data, or calculations
 based on end-user input. What if we actually want to *store* some
 information, such as something the user entered? The easiest way to do
-this with Zope is to use the Zope Object Database (ZODB).
+this with Grok is to use the Zope Object Database (ZODB).
 
 The ZODB is a database of Python objects. You can store any Python
 object in it, though you do need to follow a few simple rules (the
@@ -1062,7 +1062,7 @@ Create an ``edit.pt`` template with the following content:
 This template display a form asking for a bit of text. It submits to
 itself.
 
-Restart Zope. Let's first view the index page:
+Restart the server. Let's first view the index page:
 
   http://localhost:8080/test
 
@@ -1080,7 +1080,7 @@ itself, we will see the form again, so go to the index page manually:
 You should now see the text you just entered on the page. This means
 that your text was successfully stored in the object database!
 
-You can even restart Zope and go back to the index page, and your text
+You can even restart the server and go back to the index page, and your text
 should still be there.
 
 Redirection
@@ -1202,16 +1202,16 @@ to show in as the input value anymore:
 
   What to do when you change an object's storage structure while your
   application is already in production? In a later section, we will
-  introduce Zope 3's object evolution mechanism that allows you to
-  update objects in an existing object database. XXX
+  introduce Zope Toolkit's object evolution mechanism that allows you to
+  update objects in an existing object database. TDB
 
-Let's restart our Zope application. If you have followed the tutorial
-from the last section, you will now see an error when you look at the
-front page of the application::
+Let's restart the server. If you have followed the tutorial from the
+last section, you will now see an error when you look at the front
+page of the application::
 
   A system error occurred. 
 
-Look at the output Zope gave when we tried to load our page::
+Look at the output we got when we tried to load our page::
 
   AttributeError: 'Sample' object has no attribute 'list'
 
@@ -1237,7 +1237,7 @@ Click on ``add a text`` and add another text. You will see the new
 texts appear on the ``index`` page.
 
 Everything is just fine now, right? In fact, not so! Now we will get
-to our bug. Restart Zope and look at the index page again:
+to our bug. Restart the server and look at the index page again:
 
   http://localhost:8080/test
 
@@ -1265,8 +1265,8 @@ change to the object in memory, and thus never saved it to disk.
         mydata = []
 
   Appending an item to mydata (through ``self.mydata.append('bar')``,
-  for instance) have an effect, but only until you restart Zope. Then
-  your changes will be lost.
+  for instance) have an effect, but only until you restart the
+  server. Then your changes will be lost.
 
   It is good Python design practice not to use mutable class-data, so
   this property of the ZODB shouldn't cramp your style.
@@ -1276,12 +1276,12 @@ We can easily amend this by adding one line to the code:
 .. include:: groktut/the_rules_of_persistence2/src/sample/app.py
   :literal:
 
-We've now told Zope that the context object has changed (because we
-modified a mutable sub-object), by adding the line::
+We've now told the server that the context object has changed (because
+we modified a mutable sub-object), by adding the line::
 
   self.context._p_changed = True
 
-If you now add some texts and then restart Zope, you will notice the
+If you now add some texts and then restart the server, you will notice the
 data is still there: it has successfully been stored in the object
 database.
 
@@ -1338,7 +1338,7 @@ A second model
 
   Curious now about how to combine models into a single application?
   Can't wait? Look at the section `Containers` coming up next, or
-  `Traversal` later on.
+  `Traversal` later on. TDB
 
 We will now extend our application with a second model. Since we
 haven't explained yet how to combine models together into a single
@@ -1378,7 +1378,7 @@ You will have noticed we have used ``grok.context`` to associate the
 views with models. We actually *have* to do this here, as Grok refuses
 to guess in the face of ambiguity. Without the use of
 ``grok.context``, we would have seen an error like this when we start
-up Zope::
+up::
 
   GrokError: Multiple possible contexts for <class
   'sample.app.AnotherIndex'>, please use grok.context.
@@ -1396,8 +1396,8 @@ Luckily we have another class annotation that can help us here:
 ``grok.name``. We can use it on both view classes
 (``grok.name('index')``) to explicitly explain to Grok what we want.
 
-You can now try to restart Zope and create both applications in the
-Grok Admin interface. They should display the correct index pages
+You can now try to restart the server and create both applications in
+the Grok Admin interface. They should display the correct index pages
 when you look at them.
 
 We can see that the introduction of a second model has complicated our
@@ -1429,7 +1429,7 @@ though: they are persistent, and when you modify them, you don't have
 to use `_p_changed` anywhere to notice you changed them. They also
 send out special events that you can listen to when items are placed
 in them or removed from them. For more on that, see the section on
-events (XXX).
+events (TDB).
 
 Our application object will have a single index page that displays the
 list of items in the container. You can click an item in the list to
@@ -1475,7 +1475,7 @@ to display the ``text`` attribute:
 .. include:: groktut/containers/src/sample/app_templates/entryindex.pt
   :literal:
 
-Restart Zope and try this application.  Call your application
+Restart the server and try this application.  Call your application
 ``test``. Pay special attention to the URLs.
 
 First, we have the index page of our application:
