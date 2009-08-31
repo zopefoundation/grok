@@ -1,0 +1,60 @@
+# deploy.ini
+#
+# Deployment configuration for use with paster/WSGI
+#
+
+[loggers]
+keys = root, wsgi
+
+[handlers]
+keys = console, accesslog
+
+[formatters]
+keys = generic, accesslog
+
+[logger_root]
+level = INFO
+handlers = console
+
+[logger_wsgi]
+level = INFO
+handlers = accesslog
+qualname = wsgi
+propagate = 0
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[handler_accesslog]
+class = FileHandler
+args = (os.path.join(r'${buildout:directory}', 'parts', 'log', 'access.log'),
+        'a')
+level = INFO
+formatter = accesslog
+
+[formatter_generic]
+format = %(asctime)s %(levelname)s [%(name)s] %(message)s
+
+[formatter_accesslog]
+format = %(message)s
+
+[filter:translogger]
+use = egg:Paste#translogger
+setup_console_handler = False
+logger_name = wsgi
+
+[app:main]
+use = egg:Sample
+filter-with = translogger
+
+[server:main]
+use = egg:Paste#http
+host = 127.0.0.1
+port = 8080
+
+[DEFAULT]
+# set the name of the zope.conf file
+zope_conf = %(here)s/zope.conf
