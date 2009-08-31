@@ -1,0 +1,34 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   i18n_domain="sample"
+   package="sample"
+   >
+
+  <include package="sample" />
+
+  <!-- Typical functional testing security setup -->
+  <securityPolicy
+      component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy"
+      />
+
+  <unauthenticatedPrincipal
+      id="zope.anybody"
+      title="Unauthenticated User"
+      />
+  <grant
+      permission="zope.View"
+      principal="zope.anybody"
+      />
+
+  <principal
+      id="zope.mgr"
+      title="Manager"
+      login="mgr"
+      password="mgrpw"
+      />
+
+  <role id="zope.Manager" title="Site Manager" />
+  <grantAll role="zope.Manager" />
+  <grant role="zope.Manager" principal="zope.mgr" />
+
+</configure>

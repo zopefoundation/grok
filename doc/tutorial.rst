@@ -27,7 +27,7 @@ Welcome to the Grok tutorial!
   instead.
 
 Grok is a powerful and flexible web application framework for Python
-developers.  In this tutorial we will show you the various things you
+developers. In this tutorial we will show you the various things you
 can do with Grok, and how Grok can help you build your web
 application. We'll start out simple, and will slowly go to more
 complex usage patterns.
@@ -46,18 +46,21 @@ If you are more experienced, or just curious, you may want to skip
 around instead and read the pieces which interest you most. If
 something is unclear, you can always backtrack to previous sections.
 
-Grok is based on Zope 3 and is compatible with Zope 3, but you do not
-need to know Zope 3 (or Zope 2) at all to follow this tutorial. Grok
-builds on existing Zope 3 technology but exposes it in a different way
-to the developer. We believe Grok makes developing with Zope 3
+Grok is based on the `Zope Toolkit`_. You do not need to know about
+the Zope Toolkit at all to follow this tutorial.  Grok builds on
+existing Zope Toolkit technology but exposes it in a special way to
+the developer. We believe Grok makes developing with Zope Toolkit
 technology easier and more fun for beginners and experienced
 developers alike.
+
+.. _`Zope Toolkit`: http://docs.zope.org/zopetoolkit/
+
 
 Getting started with Grok
 =========================
 
 This chapter will help you get up and running with Grok, using the
-``grokproject`` tool. We create a new project with ``grokproject``,
+``grokproject`` tool. We create a new project with ``grokproject`` and
 tell you how to get that project running so you can access it with a
 web browser.
 
@@ -74,7 +77,7 @@ Setting up grokproject
   You need to download `ez_setup.py`_. Then, you run it like this to
   install ``easy_install`` into your system Python::
 
-    $ sudo python2.4 ez_setup.py
+    $ sudo python2.5 ez_setup.py
 
   .. _`ez_setup.py`: http://peak.telecommunity.com/dist/ez_setup.py
 
@@ -86,24 +89,105 @@ Setting up grokproject
 
     $ sudo easy_install -U setuptools
 
+  **Note**: it is recommended you set up ``easy_install`` in a special
+  virtualenv to isolate yourself from the system Python and whichever
+  libraries it may have installed. This is especially relevant on the
+  Mac OS X platform. See the next sidebar for more information.
+
+.. sidebar:: Setting up a virtualenv
+
+  Virtualenv is a tool that allows you to isolate your Python
+  development environment entirely from the system and globally
+  installed Python libraries. 
+
+  On platforms like Mac OS X the use of virtualenv is especially
+  recommended as some older versions of libraries (notably
+  ``zope.interface``) are installed for the operation of Mac OS X
+  services. Grok needs a newer version of ``zope.interface`` however,
+  resulting in a conflict. Isolating yourself from the system Python
+  is also recommended on Linux environments however, as Python is
+  usually installed with the system package manager.
+
+  If you do not want to use virtualenv it is always also possible to
+  compile and install a different version of Python locally just for
+  the use with Grok.
+
+  During Grok installation on Linux and Mac OS X various libraries
+  with C-level components are automatically compiled for you. On Linux
+  you need to make sure you have the Python development headers
+  installed; on Debian and Ubuntu they are in the ``python-dev``
+  package.
+
+  These instructions are written for a Unix-style system and will be
+  harder to follow on Windows. On Windows environments you can skip
+  this step if you know you've installed a clean Python environment
+  yourself. If however you intend to install a lot of software that
+  uses this same version of Python, virtualenv is still recommended.
+
+  You can install virtualenv with ``easy_install``::
+
+    $ easy_install-2.5 virtualenv
+
+  The ``virtualenv`` command-line tool should now be available to
+  you. You can now create a sandbox environment for the use wih Grok::
+
+    $ virtualenv --no-site-packages virtualgrok
+
+  This will create a ``virtualgrok`` directory in your present
+  location that contains the virtual environment.
+
+  The ``--no-site-packages`` switch is important; it isolates your
+  virtual Python environment from any packages installed in the system
+  libraries.
+ 
+  You should now activate the virtual environment::
+
+    $ source virtualgrok
+  
+  Once you have activated the virtual environment, you can use it to
+  ``easy_install`` grokproject in the regular way::
+
+    $ easy_install grokproject
+ 
+  Note that once you have created a Grok project from a virtual
+  environment once you do not need to activate the virtual environment
+  again afterwards -- the Grok project will know to use the special
+  virtualgrok Python environment automatically. You only need to
+  activate the ``grokproject`` virtualenv when you want to use the
+  ``grokproject`` tool directly.
+
+  For more information, see `Using Virtualenv for a clean Grok
+  installation`_.
+
+  .. _virtualenv: http://pypi.python.org/pypi/virtualenv
+
+  .. _`Using Virtualenv for a clean Grok installation`: http://grok.zope.org/documentation/how-to/using-virtualenv-for-a-clean-grok-installation
+
 Setting up grok on a Unix-like (Linux, Mac OS X) environment is
 easy. Most of these instructions should also work in a Windows
 environment as well.
 
 Let's go through the prerequisites first. You need a computer
 connected to the internet, as Grok installs itself over the
-network. You also need Python 2.4 or Python 2.5 installed.
+network. You also need Python 2.5 (or Python 2.4) installed.
 
-Because Grok uses a source distribution of Zope 3, you may need to
-install your operating system's Python "dev" package. You also need a
-working C compiler (typically ``gcc``) installed, as we compile bits of
-Zope 3 during setup. Finally, you also need ``easy_install`` installed
-so it becomes easy to install Python packages.
+Because Grok uses a source distribution of the Zope Toolkit libraries,
+you may need to install your operating system's Python "dev"
+package. You also need a working C compiler (typically ``gcc``)
+installed, as we compile bits of the Zope Toolkit during setup. On
+Windows such a build environment is not necessary, as grokproject will
+download and automatically install precompiled libraries for
+Windows. Finally, you also need ``easy_install`` installed so it
+becomes easy to install Python packages.
 
 Once you are done with the prerequisites, you can install
 grokproject itself::
 
-  $ sudo easy_install grokproject
+  $ easy_install grokproject
+
+If you are on a Unixy environment and you are not working from the
+recommended virtualenv, you will need to request admin rights using
+``sudo``, as this will install new libraries into your system Python.
 
 We're ready to create our first grok project now!
 
@@ -129,86 +213,74 @@ called Sample::
 
 .. sidebar:: Installing the previous 'zopectl' layout
 
-  To install the previous 'zopectl' layout create a Grok project like::
+  Grok used to have a different layout using ``zopectl``. To install
+  this older layout, use ``grokproject`` with the ``--ctl`` flag::
   
   $ grokproject --zopectl Sample
 
 This tells grokproject to create a new subdirectory called ``Sample``
 and set up the project in there. grokproject will automatically
-download and install Zope 3 and Grok into the project area.
+download and install the Zope Toolkit libraries as well as Grok into
+the project area.
 
-You will be asked a number of questions now.  Grok asks you for an
-initial username and password for the Zope server. We'll use ``grok``
-for both::
+Grok asks you for an initial username and password for the Zope
+server. We'll use ``grok`` for both::
 
   Enter user (Name of an initial administrator user): grok
   Enter passwd (Password for the initial administrator user): grok
 
-Now you have to wait while grokproject downloads `zc.buildout`_
-(the system that's used to build the project area), Grok and the Zope
-3 libraries.
-
-After all that, Grok, along with a Zope 3 instance, is ready to go. 
+Now you have to wait while grokproject downloads and installs the
+various tools and libraries that are needed in a Grok project. The
+second time you create a Grok project it will be faster as it can
+reuse the previously installed libraries. After all that your Grok
+project is ready to go.
 
 .. sidebar:: Common problems installing Grok
 
   One common problem when installing Grok is library mixup. You may
   have some libraries installed in your Python interpreter that
-  conflict with libraries that Grok wants to install. If you already
-  have installed Zope 3 previously for instance, you may first have
-  to remove it from your Python's ``site-packages`` directory. 
- 
-  Another way to make sure Grok doesn't clash with any incompatible
-  libraries is to install and run grokproject from within a
-  virtualenv_, with the ``--no-site-packages`` option enabled. See
-  also `Using Virtualenv for a clean Grok installation`_.
+  conflict with libraries that Grok wants to install. You tend to get
+  an error when starting up the Grok webserver when this is the
+  case. If you already have installed Zope Toolkit libraries (or Zope
+  3) previously for instance, you may first have to remove these
+  libraries from your Python's ``site-packages`` directory. 
 
-  Modern versions of Mac OS X install Twisted, which in turn has a
-  non-compatible version of ``zope.interface`` as a dependency. This
-  means that the virtualenv option is always recommended on Mac OS X,
-  unless you install a separate version of Python.
+  Better yet, see the previous ``virtualenv`` sidebar for a way to
+  isolate Grok from the system Python environment and its libraries,
+  avoiding such problems.
 
-  During Grok installation on Linux and Mac OS X various libraries
-  with C-level components are automatically compiled for you. On Linux
-  you need to make sure you have the Python development headers
-  installed; on Debian and Ubuntu you they are in the ``python-dev``
-  package.
+Starting up the web server
+--------------------------
 
-  .. _virtualenv: http://pypi.python.org/pypi/virtualenv
+.. sidebar:: Run a Grok instance created with the older 'zopectl' layout
 
-  .. _`Using Virtualenv for a clean Grok installation`:  http://grok.zope.org/documentation/how-to/using-virtualenv-for-a-clean-grok-installation
-
-Starting up Zope
-----------------
-
-.. sidebar:: Run a Grok instance created with the previous 'zopectl' layout
-
-  To start up the Grok instance created with the previous 'zopectl' layout::
+  To start up the Grok instance created with the older 'zopectl'
+  layout::
   
   $ cd Sample
   $ bin/zopectl fg
 
   On Windows to work with ``zopectl`` you need to make sure you have
-  win32all_ installed in your Python. It's not required to install
+  win32all_ installed in your Python. It is not required to install
   win32all to work with the default ``paster`` setup.
 
   .. _win32all: http://sourceforge.net/projects/pywin32/
 
 You can go into the ``Sample`` project directory now and start up the
-Zope instance that has been installed::
+web server for our project::
 
   $ cd Sample
   $ bin/paster serve parts/etc/deploy.ini
 
-This will make Zope 3 available on port 8080, and you can log in with
+This will make Grok available on port 8080. You can log in with
 username ``grok`` and password ``grok``. Assuming you've started up
-Zope on your localhost, you can go to it here:
+the web server on your development computer, you can go to it here:
 
   http://localhost:8080
 
 This first pops up a login dialog (username: ``grok`` and password:
-``grok``). It will then show a simple Grok admin interface. This
-allows you to install new Grok applications. 
+``grok``). It will then show a simple Grok admin interface. This user
+interface allows you to install new Grok applications.
 
 Our sample application (``sample.app.Sample``) will be available for
 adding. Let's try this out.  Go to the Grok admin page:
@@ -229,17 +301,19 @@ You should see a simple web page with the following text on it::
   Your Grok application is up and running. Edit
   sample/app_templates/index.pt to change this page.
 
-You can shut down Zope 3 at any time by hitting ``CTRL-c``. Shut it
-down now. We will be shutting down and starting up Zope 3 often in
-this tutorial.
+You can shut down the server at any time by hitting ``CTRL-c``. Shut
+it down now. We will be shutting down and starting up the server often
+in this tutorial.
 
-Practice restarting Zope now, as you'll end up doing it a lot during
-this tutorial. It's just stopping Zope and starting it again:
-``CTRL-c`` and then ``bin/paster serve parts/etc/deploy.ini`` from your Sample
-project directory. Alternatively, you can use the --reload flag to start
-up paster with a monitor that scans your code base (python files only) for changes and 
-automatically restart the Zope server every time you make a change::
- 
+Practice restarting the server now, as you'll end up doing it a lot
+during this tutorial. It's just stopping and starting it again:
+``CTRL-c`` and then ``bin/paster serve parts/etc/deploy.ini`` from
+your Sample project directory. 
+
+Alternatively, you can use the --reload flag to start up paster with a
+monitor that scans your code base (python files only) for changes and
+automatically restarts the Zope server every time you make a change::
+
   $ bin/paster serve --reload parts/etc/deploy.ini
 
 An empty Grok project
@@ -247,32 +321,33 @@ An empty Grok project
 
 .. sidebar:: What about the other directories and files in our project?
 
-  What about the other files and subdirectories in our ``Sample`` project
-  directory? Grokproject sets up the project using a system called
-  `zc.buildout`_. The ``eggs``, ``develop-eggs`` and ``bin``
-  directories are all set up and maintained by zc.buildout. See its
-  documentation for more information about how to use it. The
-  configuration of the project and its dependency is in
+  What about the other files and subdirectories in our ``Sample``
+  project directory? Grokproject sets up the project using a system
+  called `zc.buildout`_. The ``eggs``, ``develop-eggs``, ``bin`` and
+  ``parts`` directories are all set up and maintained by
+  zc.buildout. See its documentation for more information about how to
+  use it. The configuration of the project and its dependency is in
   ``buildout.cfg``. For now, you can avoid these details however.
 
-  .. _`zc.buildout`: http://cheeseshop.python.org/pypi/zc.buildout
+  .. _`zc.buildout`: http://buildout.org
 
 Let's take a closer look at what's been created in the Sample project
 directory.
 
-One of the things grokproject created was a ``setup.py`` file. This file
-contains information about your project. This information is used by
-Python distutils and setuptools. You can use the ``setup.py`` file to
-upload your project to the Python Package Index (PyPI).
+One of the things grokproject created was a ``setup.py`` file. This
+file contains information about your project. This information is used
+by buildout to download your project's dependencies and to install
+it. You can also use the ``setup.py`` file to upload your project to
+the Python Package Index (PyPI).
 
 We have already seen the ``bin`` directory. It contains the startup
-script for the Zope instance (``bin/paster``) as well as the
-executable for the buildout system (``bin/buildout``) which can be
-used to re-build the Zope instance and possibly update the Grok and
-Zope packages.
+script for the web server (``bin/paster``) as well as the executable
+for the buildout system (``bin/buildout``) which can be used to
+re-build your project (to update it or to install a new dependency).
 
-The ``parts`` and  ``etc`` directories contain configuration and data created by
-``buildout``, such as the Zope object database (ZODB) instance.
+The ``parts` directory contain configuration and data created and
+managed by ``buildout``, such as the Zope object database (ZODB)
+storage, and the ``.ini`` files to be used with ``paster``.
 
 The actual code of the project will all be inside the ``src``
 directory. In it is a Python package directory called ``sample`` with
@@ -297,14 +372,31 @@ template called ``index.pt``:
 
 This is the template for your project's welcome page.
 
-What's left is a ``configure.zcml`` file. Unlike in typical Zope 3
-applications, this will only ever contain a few lines that load Grok
-and then register this application with Grok. This means we can
-typically completely ignore it, but we'll show it here once for good
-measure:
+There is also a ``configure.zcml`` file. This file will normally only
+contain a few lines that load dependencies and then register this
+application with Grok. This means we can typically completely ignore
+it, but we'll show it here once for good measure:
 
 .. include:: groktut/an_empty_grok_project/src/sample/configure.zcml
    :literal:
+
+.. sidebar:: ``configure.zcml`` in non-Grok applications
+
+  In non-Grok applications that use the Zope Toolkit (such as
+  something created with Zope 2 or Zope 3), the ZCML file usually
+  plays a much bigger role. It contains directives which registers
+  particular Python objects (typically classes, such as views) with
+  the component architecture that is central to the Zope Toolkit.
+  Grok however automates this registration by putting more information
+  into the Python code directly, so that the ZCML file can remain small.
+
+There is also a ``static`` directory. This contains static files that
+can be used in the web application, such as images, css files and
+javascript files.
+
+Besides these files, there is an ``app.txt``, ``ftesting.zcml`` and
+``tests.py``. These all have to do with the automatic testing
+environment and can be ignored for now.
 
 Showing pages
 =============

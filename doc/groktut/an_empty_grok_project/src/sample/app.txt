@@ -1,0 +1,32 @@
+Do a functional doctest test on the app.
+========================================
+
+:Test-Layer: functional
+
+Let's first create an instance of Sample at the top level:
+
+   >>> from sample.app import Sample
+   >>> root = getRootFolder()
+   >>> root['app'] = Sample()
+
+
+Run tests in the testbrowser
+----------------------------
+
+The zope.testbrowser.browser module exposes a Browser class that
+simulates a web browser similar to Mozilla Firefox or IE.  We use that
+to test how our application behaves in a browser.  For more
+information, see http://pypi.python.org/pypi/zope.testbrowser.
+
+Create a browser and visit the instance you just created:
+
+   >>> from zope.testbrowser.testing import Browser
+   >>> browser = Browser()
+   >>> browser.open('http://localhost/app')
+
+Check some basic information about the page you visit:
+
+   >>> browser.url
+   'http://localhost/app'
+   >>> browser.headers.get('Status').upper()
+   '200 OK'

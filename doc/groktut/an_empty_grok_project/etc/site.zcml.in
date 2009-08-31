@@ -1,0 +1,36 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           i18n_domain="sample">
+
+  <include package="sample" />
+
+    <configure i18n_domain="sample">
+    
+      <unauthenticatedPrincipal id="zope.anybody"
+                                title="Unauthenticated User" />
+      <unauthenticatedGroup id="zope.Anybody"
+                            title="Unauthenticated Users" />
+      <authenticatedGroup id="zope.Authenticated"
+                        title="Authenticated Users" />
+      <everybodyGroup id="zope.Everybody"
+                      title="All Users" />
+      <principal id="zope.manager"
+                 title="Manager"
+                 login="grok"
+                 password_manager="SHA1"
+                 password="8977f073739bd029629243732eb682db005a7541f7509622"
+                 />
+
+      <!-- Replace the following directive if you do not want
+           public access -->
+      <grant permission="zope.View"
+             principal="zope.Anybody" />
+      <grant permission="zope.app.dublincore.view"
+             principal="zope.Anybody" />
+
+      <role id="zope.Manager" title="Site Manager" />
+      <role id="zope.Member" title="Site Member" />
+      <grantAll role="zope.Manager" />
+      <grant role="zope.Manager"
+             principal="zope.manager" />
+   </configure>
+</configure>
