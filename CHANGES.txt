@@ -6,6 +6,10 @@ Grok changes
 
 See: :ref:`upgrade_notes_1.0b1` for special notes on upgrading to this release.
 
+* Bump used zope.app.wsgi version (now: 3.4.2) to support
+  product-configs in zope.conf files with paster. Fix
+  https://bugs.launchpad.net/grok/+bug/220440
+
 * Default location for Data.fs and logfiles of grok's sample application is
   now var/filestorage/ and var/log/ instead of parts/data/ and parts/log/.
 
