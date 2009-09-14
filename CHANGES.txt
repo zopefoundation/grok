@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-1.0b1 (unreleased)
+1.0b1 (2009-09-14)
 ==================
 
 See: :ref:`upgrade_notes_1.0b1` for special notes on upgrading to this release.
