@@ -20,12 +20,12 @@ Upgrading to 1.0b1 (not released)
   If you have a template: use ``View``.  If you have a render method:
   you must subclass from ``CodeView`` instead of ``View`` from now on.
 
-* The default permission is now ``grok.View`` as a replacement for
+* The default permission is now ``zope.View`` as a replacement for
   ``zope.Public``.  You need to add this permission as a default
   permission to all users (use ``zope.Anybody``). This requires a
   change to ``site.zcml`` as follows::
 
-      <grant permission="grok.View"
+      <grant permission="zope.View"
              principal="zope.Anybody" />
 
   **If you do not make this change, all of your views will be
@@ -34,6 +34,11 @@ Upgrading to 1.0b1 (not released)
 
   This change allows you to protect Grok views that come with the
   default permission by modifying your ``site.zcml``.
+
+  If you used a previous version of Grok or grokproject you may still
+  have a reference to ``grok.View`` in ``site.zcml`` or
+  ``ftesting.zcml``. This will lead to an error, as Grok does not
+  define ``grok.View`` anymore. It's safe to remove such references.
 
 * When upgrading to a newer version of Grok, you should refer to the
   newest list of versions as defined for this release of Grok.
