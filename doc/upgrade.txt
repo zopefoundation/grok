@@ -8,15 +8,22 @@ continue to work with newer versions of Grok.  This document only
 describes changes involving incompatibilities or deprecations, not new
 features (please refer to ``CHANGES.txt`` for those).
 
+.. _upgrade_notes_1.0b2:
+
+Upgrading to 1.0b2
+------------------
+
+* ...
+
 .. _upgrade_notes_1.0b1:
 
-Upgrading to 1.0b1 (not released)
-----------------------------------
+Upgrading to 1.0b1 (2009-09-14)
+-------------------------------
 
 * The ``View`` class (from either grokcore.view or grok itself) has
   been split into ``View`` and ``CodeView``. ``CodeView`` is only for
   use with a ``render`` method, and ``View`` is only for templates.
-  
+
   If you have a template: use ``View``.  If you have a render method:
   you must subclass from ``CodeView`` instead of ``View`` from now on.
 
@@ -87,7 +94,7 @@ Upgrading to 1.0b1 (not released)
   your backed-up version of ``Data.fs`` in there to reuse your older
   data.
 
-  Log files are now placed in ``var/log``. 
+  Log files are now placed in ``var/log``.
 
   Before re-running buildout to generate the new templates, please be
   aware that ``parts/zopectl`` and ``parts/app`` will be deleted when
@@ -100,7 +107,7 @@ Upgrading to 1.0b1 (not released)
   Start the instance now like::
 
     bin/paster serve parts/etc/deploy.ini
-  
+
   or with::
 
     bin/projectname-ctl fg
