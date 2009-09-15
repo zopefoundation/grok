@@ -1,10 +1,10 @@
 Grok changes
 ************
 
-1.0b1 (2009-09-14)
+1.0b2 (unreleased)
 ==================
 
-See: :ref:`upgrade_notes_1.0b1` for special notes on upgrading to this release.
+See: :ref:`upgrade_notes_1.0b2` for special notes on upgrading to this release.
 
 * Bump used zope.app.wsgi version (now: 3.4.2) to support
   product-configs in zope.conf files with paster. Fix
@@ -48,6 +48,12 @@ See: :ref:`upgrade_notes_1.0b1` for special notes on upgrading to this release.
 
 * Restructured the upgrade and change documentation so that they now
   get generated into separate files by Sphinx
+
+1.0b1 (2009-09-14)
+==================
+
+* This release happened but never really was fully completed. See the
+  release notes for 1.0b2 instead.
 
 1.0a4 (2009-05-21)
 ==================

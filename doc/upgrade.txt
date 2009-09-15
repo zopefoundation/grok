@@ -13,14 +13,7 @@ features (please refer to ``CHANGES.txt`` for those).
 
 .. _upgrade_notes_1.0b2:
 
-Upgrading to 1.0b2
-------------------
-
-* See the upgrade notes for 1.0b1.
-
-.. _upgrade_notes_1.0b1:
-
-Upgrading to 1.0b1 (2009-09-14)
+Upgrading to 1.0b2 (2009-09-15)
 -------------------------------
 
 * The ``View`` class (from either grokcore.view or grok itself) has
@@ -78,8 +71,9 @@ Upgrading to 1.0b1 (2009-09-14)
   anymore. The only reasons there are still ``[data]`` and ``[log]``
   sections in the new ``buildout.cfg``structure is to make sure we
   don't accidentally throw away important data. Back up at least any
-  important ``Data.fs`` *before* making any changes to a project, or
-  when you upgrade any deployment.
+  important ``Data.fs`` (which contains the ZODB object database of
+  your app) *before* making any changes to a project, or when you
+  upgrade any deployment.
 
   To switch over your project to use a new layout, create a new, empty
   project with grokproject and compare it with your current
@@ -94,8 +88,8 @@ Upgrading to 1.0b1 (2009-09-14)
   configuration and settings in ``etc/README.txt``.
 
   The ``Data.fs`` file is now placed in ``var/filestorage``. Please
-  your backed-up version of ``Data.fs`` in there to reuse your older
-  data.
+  copy your backed-up version of ``Data.fs`` in there to reuse your
+  older ZODB database.
 
   Log files are now placed in ``var/log``.
 
@@ -133,6 +127,12 @@ Upgrading to 1.0b1 (2009-09-14)
   depends on a release that was only available in this repository.
 
 .. _upgrade_notes_1.0a1:
+
+Upgrading to 1.0b1 (2009-09-14)
+-------------------------------
+
+* This release happened was never completed. See the upgrade
+  documentation for 1.0b2 instead.
 
 Upgrading to 1.0a1
 ------------------
