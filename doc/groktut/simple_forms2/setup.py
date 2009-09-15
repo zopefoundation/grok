@@ -20,9 +20,16 @@ setup(name='Sample',
       zip_safe=False,
       install_requires=['setuptools',
                         'grok',
+                        'grokui.admin',
+                        'z3c.testsetup',
+                        'grokcore.startup',
                         # Add extra requirements here
                         ],
       entry_points="""
-      # Add entry points here
+      [console_scripts]
+      sample-debug = grokcore.startup:interactive_debug_prompt
+      sample-ctl = grokcore.startup:zdaemon_controller
+      [paste.app_factory]
+      main = grokcore.startup:application_factory
       """,
       )
