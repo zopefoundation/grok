@@ -29,7 +29,7 @@ class ManagerPerm(grok.Permission):
 class App(grok.Application, grok.Container):
     pass
 
-class Index(grok.CodeView):
+class Index(grok.View):
     grok.require('grok.Manager')
     def render(self):
         return 'Hello from protected view'

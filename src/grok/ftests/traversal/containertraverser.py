@@ -76,7 +76,7 @@ class Mammoth(grok.Model):
 class Special(grok.Model):
     pass
 
-class SpecialIndex(grok.CodeView):
+class SpecialIndex(grok.View):
     grok.context(Special)
     grok.name('index')
     

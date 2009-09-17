@@ -44,13 +44,13 @@ class IMarker(zope.interface.Interface):
     pass
 
 
-class Index(grok.CodeView):
+class Index(grok.View):
     grok.context(IMarker)
 
     def render(self):
         return self.application_url()
 
-class Second(grok.CodeView):
+class Second(grok.View):
     grok.context(IMarker)
 
     def render(self):

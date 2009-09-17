@@ -98,11 +98,11 @@ class ManageApp(grok.Permission):
 class App(grok.Application, grok.Container):
     pass
 
-class Index(grok.CodeView):
+class Index(grok.View):
     def render(self):
         return 'Moo!'
 
-class Manage(grok.CodeView):
+class Manage(grok.View):
     grok.require('app.Manage')
     def render(self):
         return 'Woo!'

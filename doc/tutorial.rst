@@ -755,8 +755,7 @@ Completely Python-driven views
 
 Sometimes it is inconvenient to have to use a template at all. Perhaps
 we are not returning a HTML page at all, for instance. In this case, we
-can use a special ``grok.CodeView`` baseclass with a ``render`` method 
-on a view.
+can use the special ``render`` method on a view.
 
 Modify ``app.py`` so it reads like this:
 
@@ -764,15 +763,15 @@ Modify ``app.py`` so it reads like this:
   :literal:
 
 If you were to start up the server with an ``index.pt`` template still
-inside ``app_templates`` you would get a warning::
+inside ``app_templates`` you would get a an error::
 
-    Found the following unassociated template(s) when grokking
-    'sample.app': index.  Define view classes inheriting from
-    grok.View to enable the template(s).
+    GrokError: Multiple possible ways to render view <class
+    'sample.app.Index'>. It has both a 'render' method as well as an
+    associated template.
 
-Grok warns you here that it can find a template ``index`` even though
-there is no ``grok.View`` to associate it with. You can safely remove
-the ``index.pt`` file from the ``app_templates`` directory now.
+In the face of ambiguity Grok, like Python, refuses to guess. To
+resolve this error, remove ``index.pt`` from the ``app_templates``
+directory.
 
 Now take another look at our test application:
 

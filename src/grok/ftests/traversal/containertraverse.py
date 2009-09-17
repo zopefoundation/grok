@@ -66,7 +66,7 @@ class Herd(grok.Container):
             return Special()
         return None
     
-class HerdIndex(grok.CodeView):
+class HerdIndex(grok.View):
     grok.context(Herd)
     grok.name('index')
 
@@ -81,7 +81,7 @@ class Mammoth(grok.Model):
 class Special(grok.Model):
     pass
 
-class SpecialIndex(grok.CodeView):
+class SpecialIndex(grok.View):
     grok.context(Special)
     grok.name('index')
     

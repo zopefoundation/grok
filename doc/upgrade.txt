@@ -16,13 +16,6 @@ features (please refer to ``CHANGES.txt`` for those).
 Upgrading to 1.0b2 (2009-09-15)
 -------------------------------
 
-* The ``View`` class (from either grokcore.view or grok itself) has
-  been split into ``View`` and ``CodeView``. ``CodeView`` is only for
-  use with a ``render`` method, and ``View`` is only for templates.
-
-  If you have a template: use ``View``.  If you have a render method:
-  you must subclass from ``CodeView`` instead of ``View`` from now on.
-
 * The default permission is now ``zope.View`` as a replacement for
   ``zope.Public``.  You need to add this permission as a default
   permission to all users (use ``zope.Anybody``). This requires a
@@ -125,6 +118,11 @@ Upgrading to 1.0b2 (2009-09-15)
   If you have problems after removing it and re-running ``bin/buildout``,
   you can add it again however. We know that ``megrok.form`` for instance
   depends on a release that was only available in this repository.
+
+* Note: in 1.0b1 we used to have a split between ``View`` and
+  ``CodeView``.  This split got reverted. Grok's behavior is still the
+  same as in the 1.0a versions - views and the ``render`` method continue
+  to work as they did before.
 
 .. _upgrade_notes_1.0a1:
 

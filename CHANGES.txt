@@ -6,9 +6,18 @@ Grok changes
 
 See: :ref:`upgrade_notes_1.0b2` for special notes on upgrading to this release.
 
-* Bump versions of grokcore.formlib and grokcore.viewlet.
+* ``grokcore.view``, ``grokcore.viewlet`` and ``grokcore.formlib`` and
+  Grok itself have been updated to undo the ``View``/``CodeView``
+  split that we had temporarily introduced in the development versions
+  after Grok 1.0a4.  This means the behavior of ``grok.View`` is
+  unchanged from Grok 1.0a4. Nothing to see here!
 
-* Bump version of grokcore.security.
+* Changed the default permission to ``zope.View`` instead of
+  ``zope.Public``. This means a modification needs to be made to your
+  ``site.zcml`` if you're upgrading an existing Grok-based
+  project. See the upgrade notes for more information.
+
+  See also https://bugs.launchpad.net/grok/+bug/387332
 
 * Bump used zope.app.wsgi version (now: 3.4.2) to support
   product-configs in zope.conf files with paster. Fix
@@ -17,10 +26,6 @@ See: :ref:`upgrade_notes_1.0b2` for special notes on upgrading to this release.
 * Default location for Data.fs and logfiles of grok's sample application is
   now ``var/filestorage/`` and ``var/log/`` instead of ``parts/data/``
   and ``parts/log/``.
-
-* Bumped grokcore.view version: the ``View`` class is now split into
-  ``View`` (with a template) and ``CodeView`` (with just a render()
-  method).
 
 * Bump used `z3c.testsetup` version (now: 0.4). Fix
   https://bugs.launchpad.net/grok/+bug/395125
@@ -45,10 +50,7 @@ See: :ref:`upgrade_notes_1.0b2` for special notes on upgrading to this release.
 * switched buildout to paster based template (like grokproject default)
   https://bugs.launchpad.net/grok/+bug/307197
 
-* changed interpreter name from 'python' to 'grokpy'
-
-* Changed the default permission to ``zope.View`` instead of
-  ``zope.Public``.  https://bugs.launchpad.net/grok/+bug/387332
+* changed interpreter name from 'python' to 'grokpy'.
 
 * Restructured the upgrade and change documentation so that they now
   get generated into separate files by Sphinx

@@ -23,7 +23,7 @@ class CaveWasRobbedError(Exception):
     pass
 
 
-class Cave(grok.CodeView):
+class Cave(grok.View):
 
     grok.context(zope.interface.Interface)
 
@@ -33,7 +33,7 @@ class Cave(grok.CodeView):
         raise CaveWasRobbedError("EVERYTHING GONE! GROK ANGRY!")
 
 
-class CaveErrorView(grok.CodeView):
+class CaveErrorView(grok.View):
 
     grok.context(CaveWasRobbedError)
     grok.name("index.html")

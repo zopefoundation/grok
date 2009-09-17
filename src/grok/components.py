@@ -215,32 +215,7 @@ class Annotation(persistent.Persistent):
     """The base class for annotation classes in Grok applications."""
 
 
-class BaseView(object):
-    """ Base Class for helper methods"""
-    interface.implements(interfaces.IGrokView)
-
-    def application_url(self, name=None):
-        """Return the URL of the nearest enclosing `grok.Application`."""
-        obj = self.context
-        while obj is not None:
-            if isinstance(obj, Application):
-                return self.url(obj, name)
-            obj = obj.__parent__
-        raise ValueError("No application found.")
-
-    def flash(self, message, type='message'):
-        """Send a short message to the user."""
-        # XXX this has no tests or documentation, anywhere
-        source = component.getUtility(
-            z3c.flashmessage.interfaces.IMessageSource, name='session')
-        source.send(message, type)
-
-
-class CodeView(grokcore.view.CodeView, BaseView):
-    """The base class for views with just a render() method in grok apps"""
-
-
-class View(grokcore.view.View, BaseView):
+class View(grokcore.view.View):
     """The base class for views with templates in Grok applications.
 
     Each class that inherits from `grok.View` is designed to "render" a
@@ -310,6 +285,23 @@ class View(grokcore.view.View, BaseView):
     rendered under ``self.context``.
 
     """
+    interface.implements(interfaces.IGrokView)
+
+    def application_url(self, name=None):
+        """Return the URL of the nearest enclosing `grok.Application`."""
+        obj = self.context
+        while obj is not None:
+            if isinstance(obj, Application):
+                return self.url(obj, name)
+            obj = obj.__parent__
+        raise ValueError("No application found.")
+
+    def flash(self, message, type='message'):
+        """Send a short message to the user."""
+        # XXX this has no tests or documentation, anywhere
+        source = component.getUtility(
+            z3c.flashmessage.interfaces.IMessageSource, name='session')
+        source.send(message, type)
 
 
 
