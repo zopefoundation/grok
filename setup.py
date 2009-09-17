@@ -39,7 +39,7 @@ setup(
                       'grokcore.component >= 1.5, < 2.0',
                       'grokcore.formlib >= 1.4',
                       'grokcore.security >= 1.1',
-                      'grokcore.view >= 1.2.1',
+                      'grokcore.view >= 1.12',
                       'grokcore.viewlet >= 1.3',
                       'simplejson',
                       'pytz',
