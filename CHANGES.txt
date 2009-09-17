@@ -6,6 +6,11 @@ Grok changes
 
 See: :ref:`upgrade_notes_1.0b2` for special notes on upgrading to this release.
 
+* Revert back to an older version of ``grokui.admin`` that has not seen any
+  changes related to the ``grok.View`` permission and the
+  ``View``/``CodeView`` split and still has the introspector that is removed
+  from newer versions.
+
 * ``grokcore.view``, ``grokcore.viewlet`` and ``grokcore.formlib`` and
   Grok itself have been updated to undo the ``View``/``CodeView``
   split that we had temporarily introduced in the development versions
