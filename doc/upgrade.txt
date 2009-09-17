@@ -39,9 +39,9 @@ Upgrading to 1.0b2 (2009-09-15)
 * When upgrading to a newer version of Grok, you should refer to the
   newest list of versions as defined for this release of Grok.
 
-  For Grok 1.0b1, download the following file::
+  For Grok 1.0b2, download the following file::
 
-    http://grok.zope.org/releaseinfo/grok-1.0b1.cfg
+    http://grok.zope.org/releaseinfo/grok-1.0b2.cfg
 
   And replace ``versions.cfg`` in your project with this file.
 
@@ -102,8 +102,8 @@ Upgrading to 1.0b2 (2009-09-15)
 
     bin/projectname-ctl fg
 
-  If you start your instance with ``etc/debug.ini`` first point your
-  browser.
+  You can also start it with ``parts/etc/debug.ini`` to get exception
+  formatting.
 
   Interpreter name has been changed from ``bin/python`` to
   ``bin/grokpy`` to avoid conflicts with virtualenv.
