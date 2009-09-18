@@ -4,7 +4,9 @@ Grok changes
 1.0 (unreleased)
 ================
 
-- Nothing changed yet.
+* Use newer versions of simplejson and pytz. 
+  
+  See also https://bugs.launchpad.net/grok/+bug/432115
 
 
 1.0b2 (2009-09-17)
