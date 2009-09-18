@@ -30,6 +30,7 @@
   <include package="grokcore.viewlet" />
   <include package="grokcore.formlib" />
   <include package="grokcore.annotation" />
+  <include package="grokcore.site" />
 
   <securityPolicy
       component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
@@ -41,8 +42,6 @@
       for=".interfaces.IContext"
       name="index"
       />
-
-  <subscriber handler=".components.addSiteHandler" />
 
   <!-- we register a ++rest++ traversal namespace -->
   <adapter

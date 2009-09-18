@@ -51,6 +51,10 @@ from grokcore.formlib import Fields
 
 from grokcore.annotation import Annotation
 
+from grokcore.site import LocalUtility
+from grokcore.site import Site
+from grokcore.site import local_utility
+
 from zope.event import notify
 from zope.app.component.hooks import getSite
 from zope.lifecycleevent import (
@@ -77,14 +81,13 @@ from grok.components import Model, View
 from grok.components import XMLRPC, REST, JSON
 from grok.components import Traverser
 from grok.components import Container, OrderedContainer
-from grok.components import Site, LocalUtility
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Role
 from grok.interfaces import IRESTSkinType, IRESTLayer
 
 from grok.directive import (
-    local_utility, permissions, site, restskin, traversable)
+    permissions, site, restskin, traversable)
 
 # BBB These two functions are meant for test fixtures and should be
 # imported from grok.testing, not from grok.

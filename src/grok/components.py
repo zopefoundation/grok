@@ -35,18 +35,17 @@ from zope.annotation.interfaces import IAttributeAnnotatable
 from zope.app.publisher.browser import getDefaultViewName
 from zope.app.container.btree import BTreeContainer
 from zope.app.container.contained import Contained
-from zope.app.container.interfaces import IReadContainer, IObjectAddedEvent
+from zope.app.container.interfaces import IReadContainer
 from zope.app.container.interfaces import IOrderedContainer
 from zope.app.container.contained import notifyContainerModified
 from persistent.list import PersistentList
-from zope.app.component.site import SiteManagerContainer
-from zope.app.component.site import LocalSiteManager
 
 import grok
 import z3c.flashmessage.interfaces
 import martian.util
 
 import grokcore.view
+import grokcore.site
 from grok import interfaces, util
 
 
@@ -150,35 +149,7 @@ class OrderedContainer(Container):
         notifyContainerModified(self)
 
 
-class Site(SiteManagerContainer):
-    """Mixin for creating sites in Grok applications.
-
-    When an application `grok.Model` or `grok.Container` also inherits
-    from `grok.Site`, then it can additionally support the registration
-    of local Component Architecture entities like `grok.LocalUtility`
-    and `grok.Indexes` objects; see those classes for more information.
-
-    """
-
-
-@component.adapter(Site, IObjectAddedEvent)
-def addSiteHandler(site, event):
-    """Add a local site manager to a Grok site object upon its creation.
-
-    Grok registers this function so that it gets called each time a
-    `grok.Site` instance is added to a container.  It creates a local
-    site manager and installs it on the newly created site.
-
-    """
-    sitemanager = LocalSiteManager(site)
-    # LocalSiteManager creates the 'default' folder in its __init__.
-    # It's not needed anymore in new versions of Zope 3, therefore we
-    # remove it
-    del sitemanager['default']
-    site.setSiteManager(sitemanager)
-
-
-class Application(Site):
+class Application(grokcore.site.Site):
     """Mixin for creating Grok application objects.
 
     When a `grok.Container` (or a `grok.Model`, though most developers
@@ -190,25 +161,6 @@ class Application(Site):
 
     """
     interface.implements(interfaces.IApplication)
-
-
-class LocalUtility(Model):
-    """The base class for local utilities in Grok applications.
-
-    Although application developers can create local utilies without
-    actually subclassing `grok.LocalUtility`, they gain three benefits
-    from doing so.  First, their code is more readable because their
-    classes "look like" local utilities to casual readers.  Second,
-    their utility will know how to persist itself to the Zope database,
-    which means that they can set its object attributes and know that
-    the values are getting automatically saved.  Third, they can omit
-    the `grok.provides()` directive naming the interface that the
-    utility provides, if their class only `grok.implements()` a single
-    interface (unless the interface is one that the `grok.LocalUtility`
-    already implements, in which case Grok cannot tell them apart, and
-    `grok.provides()` must be used explicitly anyway).
-
-    """
 
 
 class View(grokcore.view.View):

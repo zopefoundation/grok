@@ -23,6 +23,7 @@ import grokcore.annotation.interfaces
 import grokcore.component.interfaces
 import grokcore.formlib.interfaces
 import grokcore.security.interfaces
+import grokcore.site.interfaces
 import grokcore.view.interfaces
 import grokcore.viewlet.interfaces
 
@@ -33,14 +34,13 @@ from grokcore.component.interfaces import IGrokErrors
 class IGrokBaseClasses(grokcore.annotation.interfaces.IBaseClasses,
                        grokcore.component.interfaces.IBaseClasses,
                        grokcore.security.interfaces.IBaseClasses,
+                       grokcore.site.interfaces.IBaseClasses,
                        grokcore.view.interfaces.IBaseClasses):
     Model = interface.Attribute("Base class for persistent content objects "
                                 "(models).")
     Container = interface.Attribute("Base class for containers.")
     OrderedContainer = interface.Attribute("Base class for ordered containers.")
-    Site = interface.Attribute("Mixin class for sites.")
     Application = interface.Attribute("Base class for applications.")
-    LocalUtility = interface.Attribute("Base class for local utilities.")
     XMLRPC = interface.Attribute("Base class for XML-RPC methods.")
     JSON = interface.Attribute("Base class for JSON methods.")
     REST = interface.Attribute("Base class for REST views.")
@@ -51,22 +51,8 @@ class IGrokBaseClasses(grokcore.annotation.interfaces.IBaseClasses,
 
 class IGrokDirectives(grokcore.component.interfaces.IDirectives,
                       grokcore.security.interfaces.IDirectives,
+                      grokcore.site.interfaces.IDirectives,
                       grokcore.view.interfaces.IDirectives):
-
-    def local_utility(factory, provides=None, name=u'',
-                      setup=None, public=False, name_in_container=None):
-        """Register a local utility.
-
-        factory - the factory that creates the local utility
-        provides - the interface the utility should be looked up with
-        name - the name of the utility
-        setup - a callable that receives the utility as its single argument,
-                it is called after the utility has been created and stored
-        public - if False, the utility will be stored below ++etc++site
-                 if True, the utility will be stored directly in the site.
-                 The site should in this case be a container.
-        name_in_container - the name to use for storing the utility
-        """
 
     def permissions(permissions):
         """Specify the permissions that comprise a role.
@@ -112,10 +98,11 @@ class IGrokEvents(interface.Interface):
 
     IBeforeTraverseEvent = interface.Attribute("")
 
-class IGrokAPI(grokcore.security.interfaces.IGrokcoreSecurityAPI,
+class IGrokAPI(grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
+               grokcore.security.interfaces.IGrokcoreSecurityAPI,
+               grokcore.site.interfaces.IGrokcoreSiteAPI,
                grokcore.view.interfaces.IGrokcoreViewAPI,
                grokcore.viewlet.interfaces.IGrokcoreViewletAPI,
-               grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
                IGrokBaseClasses, IGrokDirectives,
                IGrokEvents, IGrokErrors):
 
