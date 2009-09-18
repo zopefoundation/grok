@@ -7,6 +7,10 @@ Grok changes
 * Use grokcore.site and grokcore.annotation instead of builtins
   implementations.
 
+* Use newer versions of simplejson and pytz. 
+  
+  See also https://bugs.launchpad.net/grok/+bug/432115
+
 
 1.0b2 (2009-09-17)
 ==================
