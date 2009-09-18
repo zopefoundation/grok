@@ -211,10 +211,6 @@ class LocalUtility(Model):
     """
 
 
-class Annotation(persistent.Persistent):
-    """The base class for annotation classes in Grok applications."""
-
-
 class View(grokcore.view.View):
     """The base class for views with templates in Grok applications.
 

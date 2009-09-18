@@ -32,12 +32,9 @@ from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.securitypolicy.interfaces import IRole
 from zope.securitypolicy.rolepermission import rolePermissionManager
 
-from zope.annotation.interfaces import IAnnotations
-
 from zope.app.publisher.xmlrpc import MethodPublisher
 from zope.app.container.interfaces import IContainer
 from zope.app.container.interfaces import INameChooser
-from zope.app.container.contained import contained
 
 from zope.app.intid import IntIds
 from zope.app.intid.interfaces import IIntIds
@@ -58,17 +55,6 @@ from grok.interfaces import IRESTSkinType
 from grokcore.security.meta import PermissionGrokker
 
 from grokcore.view.meta.views import default_fallback_to_name
-
-
-def default_annotation_provides(factory, module, **data):
-    base_interfaces = interface.implementedBy(grok.Annotation)
-    factory_interfaces = interface.implementedBy(factory)
-    real_interfaces = list(factory_interfaces - base_interfaces)
-    util.check_implements_one_from_list(real_interfaces, factory)
-    return real_interfaces[0]
-
-def default_annotation_name(factory, module, **data):
-    return factory.__module__ + '.' + factory.__name__
 
 
 class XMLRPCGrokker(martian.MethodGrokker):
@@ -383,39 +369,6 @@ class RoleGrokker(martian.ClassGrokker):
                 callable=rolePermissionManager.grantPermissionToRole,
                 args=(permission, name),
                 )
-        return True
-
-
-class AnnotationGrokker(martian.ClassGrokker):
-    """Grokker for components subclassed from `grok.Annotation`."""
-    martian.component(grok.Annotation)
-    martian.directive(grok.context, name='adapter_context')
-    martian.directive(grok.provides, get_default=default_annotation_provides)
-    martian.directive(grok.name, get_default=default_annotation_name)
-
-    def execute(self, factory, config, adapter_context, provides, name, **kw):
-        @component.adapter(adapter_context)
-        @interface.implementer(provides)
-        def getAnnotation(context):
-            annotations = IAnnotations(context)
-            try:
-                result = annotations[name]
-            except KeyError:
-                result = factory()
-                annotations[name] = result
-
-            # Containment has to be set up late to allow containment
-            # proxies to be applied, if needed. This does not trigger
-            # an event and is idempotent if containment is set up
-            # already.
-            contained_result = contained(result, context, name)
-            return contained_result
-
-        config.action(
-            discriminator=('adapter', adapter_context, provides, ''),
-            callable=component.provideAdapter,
-            args=(getAnnotation,),
-            )
         return True
 
 

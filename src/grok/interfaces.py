@@ -19,6 +19,7 @@ from zope.publisher.interfaces.http import IHTTPRequest
 from zope.app.container.interfaces import IContainer as IContainerBase
 
 # Expose interfaces from grokcore.* packages as well:
+import grokcore.annotation.interfaces
 import grokcore.component.interfaces
 import grokcore.formlib.interfaces
 import grokcore.security.interfaces
@@ -29,7 +30,8 @@ from grokcore.component.interfaces import IContext
 from grokcore.component.interfaces import IGrokErrors
 
 
-class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses,
+class IGrokBaseClasses(grokcore.annotation.interfaces.IBaseClasses,
+                       grokcore.component.interfaces.IBaseClasses,
                        grokcore.security.interfaces.IBaseClasses,
                        grokcore.view.interfaces.IBaseClasses):
     Model = interface.Attribute("Base class for persistent content objects "
@@ -38,7 +40,6 @@ class IGrokBaseClasses(grokcore.component.interfaces.IBaseClasses,
     OrderedContainer = interface.Attribute("Base class for ordered containers.")
     Site = interface.Attribute("Mixin class for sites.")
     Application = interface.Attribute("Base class for applications.")
-    Annotation = interface.Attribute("Base class for persistent annotations.")
     LocalUtility = interface.Attribute("Base class for local utilities.")
     XMLRPC = interface.Attribute("Base class for XML-RPC methods.")
     JSON = interface.Attribute("Base class for JSON methods.")

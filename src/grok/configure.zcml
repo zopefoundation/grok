@@ -9,7 +9,6 @@
   <include package="zope.app.zcmlfiles" file="meta.zcml" />
   <include package="grok" file="meta.zcml" />
 
-  <include package="zope.annotation" />
   <include package="zope.copypastemove" />
   <include package="zope.contentprovider" />
   <include package="zope.formlib" />
@@ -30,6 +29,7 @@
   <include package="grokcore.view" />
   <include package="grokcore.viewlet" />
   <include package="grokcore.formlib" />
+  <include package="grokcore.annotation" />
 
   <securityPolicy
       component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy" />

@@ -49,6 +49,8 @@ from grokcore.formlib import action
 from grokcore.formlib import AutoFields
 from grokcore.formlib import Fields
 
+from grokcore.annotation import Annotation
+
 from zope.event import notify
 from zope.app.component.hooks import getSite
 from zope.lifecycleevent import (
@@ -75,7 +77,7 @@ from grok.components import Model, View
 from grok.components import XMLRPC, REST, JSON
 from grok.components import Traverser
 from grok.components import Container, OrderedContainer
-from grok.components import Site, LocalUtility, Annotation
+from grok.components import Site, LocalUtility
 from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Role

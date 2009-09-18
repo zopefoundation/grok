@@ -36,6 +36,7 @@ setup(
     zip_safe=False,
     install_requires=['setuptools',
                       'martian >= 0.10, < 0.12',
+                      'grokcore.annotation >= 1.1',
                       'grokcore.component >= 1.5, < 2.0',
                       'grokcore.formlib >= 1.4',
                       'grokcore.security >= 1.1',
