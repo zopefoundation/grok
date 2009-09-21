@@ -115,7 +115,7 @@ Setting up grokproject
   with C-level components are automatically compiled for you. On Linux
   you need to make sure you have the Python development headers
   installed; on Debian and Ubuntu they are in the ``python-dev``
-  package.
+  package. (use ``python2.5-dev`` to get the version for Python 2.5).
 
   These instructions are written for a Unix-style system and will be
   harder to follow on Windows. On Windows environments you can skip
@@ -171,13 +171,15 @@ connected to the internet, as Grok installs itself over the
 network. You also need Python 2.5 (or Python 2.4) installed.
 
 Because Grok uses a source distribution of the Zope Toolkit libraries,
-you may need to install your operating system's Python "dev"
-package. You also need a working C compiler (typically ``gcc``)
-installed, as we compile bits of the Zope Toolkit during setup. On
-Windows such a build environment is not necessary, as grokproject will
-download and automatically install precompiled libraries for
-Windows. Finally, you also need ``easy_install`` installed so it
-becomes easy to install Python packages.
+you may need to install your operating system's Python "dev" package
+(``python-dev`` on Debian and Ubuntu, ``python2.5-dev`` for Python
+2.5). You also need a working C compiler (typically ``gcc``)
+installed, as we compile bits of the Zope Toolkit during setup
+(``build-essential`` on Debian and Ubuntu). On Windows such a build
+environment is not necessary, as grokproject will download and
+automatically install precompiled libraries for Windows. Finally, you
+also need ``easy_install`` installed so it becomes easy to install
+Python packages.
 
 Once you are done with the prerequisites, you can install
 grokproject itself::
@@ -236,6 +238,8 @@ project is ready to go.
 
 .. sidebar:: Common problems installing Grok
 
+  *Library mixup*
+
   One common problem when installing Grok is library mixup. You may
   have some libraries installed in your Python interpreter that
   conflict with libraries that Grok wants to install. You tend to get
@@ -247,6 +251,16 @@ project is ready to go.
   Better yet, see the previous ``virtualenv`` sidebar for a way to
   isolate Grok from the system Python environment and its libraries,
   avoiding such problems.
+
+  *No Python development environment*
+
+  Grok includes dependencies that need to be compiled against Python.
+  This happens automatically in the installation process, but a Python
+  development environment does need to be installed, unless you are on
+  Windows, where we supply binary versions of the required libraries.
+
+  On Debian and Ubuntu this is the ``python-dev`` package
+  (``python2.5-dev for Python 2.5). You also need ``build-essential``.
 
 Starting up the web server
 --------------------------
