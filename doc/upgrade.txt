@@ -102,11 +102,27 @@ Upgrading to 1.0b2 (2009-09-15)
 
     bin/projectname-ctl fg
 
-  You can also start it with ``parts/etc/debug.ini`` to get exception
-  formatting.
+  Alternatively there's a profile available that can help debugging errors in
+  your application::
+
+    bin/paster serve parts/etc/debug.ini
+
+  When using this profile it is not the ``zope.publisher`` that handles the
+  exceptions that are raised, but a special middleware is. This middleware
+  then provides a pdb-like debugging user interdace in the browser.
+
+  Note that the ``IUnauthorized`` exception is treated specially: Grok will
+  make sure that this types of exception is actaully still handled by
+  ``zope.publisher`` in order to make login forms or Basic Auth
+  authentication still function properly.
+
+  Also note that as a consequence the ``handleErrors`` attribute on
+  ``zope.testbrowser.testing.Browser`` instances used in functional tests
+  does not effect the ``IUnauthorized`` exception.
 
   Interpreter name has been changed from ``bin/python`` to
   ``bin/grokpy`` to avoid conflicts with virtualenv.
+
 
 * Old ``buildout.cfg`` contain a ``find-links`` line like this::
 
