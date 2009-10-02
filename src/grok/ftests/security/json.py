@@ -3,7 +3,6 @@ Let's test whether require decorators work for json methods.
 
   >>> from zope.testbrowser.testing import Browser
   >>> browser = Browser()
-  >>> browser.handleErrors = False
 
 We can access the public method just fine::
 
@@ -24,7 +23,7 @@ Let's log in as the manager now. We should be able to access the method now::
   >>> browser.open('http://localhost/dance')
   >>> print browser.contents
   {"Manfred doesn't like to dance.": ""}
-  
+
 """
 
 import grok
