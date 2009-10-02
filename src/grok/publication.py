@@ -176,20 +176,3 @@ class GrokHTTPFactory(HTTPFactory):
     def __call__(self):
         request, publication = super(GrokHTTPFactory, self).__call__()
         return request, GrokHTTPPublication
-
-def DontReRaiseUnauthorizedAdapter(context):
-    """Adapter to indicate we don't want Unauthorized to be reraised.
-
-    When running the publisher in ``handle_errors=False``-mode, which
-    happens for instance when running Grok in a WSGI pipeline with a
-    debugger middleware enabled, we don't want IUnauthorized errors to
-    be reraised during publishing.
-
-    We can indicate this by providing an adapter, that adapts
-    exceptions of this type (`IUnauthorized`) to
-    `zope.publisher.interfaces.IReRaiseException` and returning
-    ``False`` when being called.
-    """
-    def shouldBeReRaised():
-        return False
-    return shouldBeReRaised
