@@ -4,8 +4,12 @@ Grok changes
 1.0 (unreleased)
 ================
 
-* Use newer versions of simplejson and pytz. 
-  
+* Removed IReRaiseException adapter registration for IUnauthorized again in
+  favor of using grokcore.startup's configurable``debug_application_factory``
+  WSGI application factory function.
+
+* Use newer versions of simplejson and pytz.
+
   See also https://bugs.launchpad.net/grok/+bug/432115
 
 
