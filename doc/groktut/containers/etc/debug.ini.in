@@ -53,8 +53,9 @@ use = egg:z3c.evalexception#ajax
 next = zope
 
 [app:zope]
-use = egg:Sample
+use = egg:Sample#debug
 filter-with = translogger
+exempt-exceptions = zope.security.interfaces.IUnauthorized
 
 [server:main]
 use = egg:Paste#http
