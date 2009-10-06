@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = 0.0
+version = '0.0'
 
 setup(name='Sample',
       version=version,
@@ -8,7 +8,7 @@ setup(name='Sample',
       long_description="""\
 """,
       # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
-      classifiers=[], 
+      classifiers=[],
       keywords="",
       author="",
       author_email="",
@@ -25,11 +25,12 @@ setup(name='Sample',
                         'grokcore.startup',
                         # Add extra requirements here
                         ],
-      entry_points="""
+      entry_points = """
       [console_scripts]
       sample-debug = grokcore.startup:interactive_debug_prompt
       sample-ctl = grokcore.startup:zdaemon_controller
       [paste.app_factory]
       main = grokcore.startup:application_factory
+      debug = grokcore.startup:debug_application_factory
       """,
       )

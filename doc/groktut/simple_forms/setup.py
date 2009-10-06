@@ -8,7 +8,7 @@ setup(name='Sample',
       long_description="""\
 """,
       # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
-      classifiers=[], 
+      classifiers=[],
       keywords="",
       author="",
       author_email="",
@@ -31,5 +31,6 @@ setup(name='Sample',
       sample-ctl = grokcore.startup:zdaemon_controller
       [paste.app_factory]
       main = grokcore.startup:application_factory
+      debug = grokcore.startup:debug_application_factory
       """,
       )
