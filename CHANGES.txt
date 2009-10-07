@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-1.0 (unreleased)
+1.0 (2009-10-07)
 ================
 
 * Removed IReRaiseException adapter registration for IUnauthorized again in
