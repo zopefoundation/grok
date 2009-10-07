@@ -16,7 +16,7 @@ Grok changes
 1.0b2 (2009-09-17)
 ==================
 
-See: :ref:`upgrade_notes_1.0b2` for special notes on upgrading to this release.
+See: `upgrade_notes_1.0b2` for special notes on upgrading to this release.
 
 * Revert back to an older version of ``grokui.admin`` that has not seen any
   changes related to the ``grok.View`` permission and the
@@ -117,7 +117,7 @@ See: :ref:`upgrade_notes_1.0b2` for special notes on upgrading to this release.
 1.0a1 (2009-01-08)
 ==================
 
-See: :ref:`upgrade_notes_1.0a1` for special notes on upgrading to this release.
+See: `upgrade_notes_1.0a1` for special notes on upgrading to this release.
 
 Feature changes
 ---------------
@@ -160,7 +160,7 @@ Restructuring
 0.14 (2008-09-29)
 =================
 
-See: :ref:`upgrade_notes_0.14` for special notes on upgrading to this release.
+See: `upgrade_notes_0.14` for special notes on upgrading to this release.
 
 Feature changes
 ---------------
@@ -208,7 +208,7 @@ Bug fixes
 0.13 (2008-06-23)
 =================
 
-See: :ref:`upgrade_notes_0.13` for special notes on upgrading to this release.
+See: `upgrade_notes_0.13` for special notes on upgrading to this release.
 
 Restructuring
 -------------
@@ -225,7 +225,7 @@ Restructuring
 
 * Refactored class grokkers to make use of Martian's new declarative
   way for retrieving directive data from classes, and Martian's new
-  declarative way to write grokkers. See :ref:`upgrade_notes_0.13`
+  declarative way to write grokkers. See `upgrade_notes_0.13`
   for more information.
 
 
@@ -262,7 +262,7 @@ Feature changes
   http://download.zope.org/zope3.4/versions-3.4.0c1.cfg
 
   We are now using the latest Zope 3 releases for all Zope packages.
-  See :ref:`upgrade_notes_0.13` for more information.
+  See `upgrade_notes_0.13` for more information.
 
 * Added support for easier test setup based on ``z3c.testsetup``. This
   is a more stable and more powerful implementation of
@@ -321,7 +321,7 @@ Bug fixes
 0.12 (2008-04-22)
 =================
 
-See: :ref:`upgrade_notes_0.12` for special notes on upgrading to this release.
+See: `upgrade_notes_0.12` for special notes on upgrading to this release.
 
 Feature changes
 ---------------
@@ -355,7 +355,7 @@ Feature changes
   classes. These classes need to have the grok.baseclass() directive added to
   them explicitly.
 
-  See :ref:`upgrade_notes_0.12` for more information.
+  See `upgrade_notes_0.12` for more information.
 
 Bug fixes
 ---------
@@ -425,7 +425,7 @@ Restructuring
 0.11 (2007-11-08)
 =================
 
-See: :ref:`upgrade_notes_0.11` for special notes on upgrading to this release.
+See: `upgrade_notes_0.11` for special notes on upgrading to this release.
 
 Feature changes
 ---------------
@@ -484,7 +484,7 @@ Restructuring
 
 * Grokkers now emit configuration actions, much like ZCML directive
   handlers do. If you defined custom grokkers,
-  see :ref:`upgrade_notes_0.11` for more information.
+  see `upgrade_notes_0.11` for more information.
 
 * The new pluggable template language support includes some restructuring:
 
