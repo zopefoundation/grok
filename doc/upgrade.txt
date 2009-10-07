@@ -13,6 +13,25 @@ features (please refer to ``CHANGES.txt`` for those).
 
 .. _upgrade_notes_1.0b2:
 
+Upgrading to 1.0 (2009-10-07)
+-----------------------------
+
+  There is a configuration option called ``exempt-exceptions`` available in
+  the debug.ini that determines what exceptions should still be handled by
+  zope. By default debug.ini files created by grokproject will exempt the
+  IUnauthorized exceptions from being reraised and thus normal authentication
+  mechanisms continue to work::
+
+    [app:zope]
+    use = egg:${egg}#debug
+    filter-with = translogger
+    exempt-exceptions = zope.security.interfaces.IUnauthorized
+
+  This is a change from 1.0b2 where the reraise behaviour was handled by Grok
+  itself, regardless of what *.ini was used when starting Grok. As this could
+  be confusing for example in tests, this is now controlled from the
+  debug.ini file.
+
 Upgrading to 1.0b2 (2009-09-15)
 -------------------------------
 
