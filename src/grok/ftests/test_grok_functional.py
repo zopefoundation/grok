@@ -31,7 +31,7 @@ def http_call(method, path, data=None, **kw):
     data - (body) data to submit
     kw - any request parameters
     """
-    
+
     if path.startswith('http://localhost'):
         path = path[len('http://localhost'):]
     request_string = '%s %s HTTP/1.1\n' % (method, path)
@@ -70,7 +70,7 @@ def suiteFromPackage(name):
 
 def test_suite():
     suite = unittest.TestSuite()
-    for name in ['xmlrpc', 'traversal', 'form', 'url', 'security', 'publish',
+    for name in ['xmlrpc', 'traversal', 'form', 'url', 'security',
                  'catalog', 'site', 'rest', 'viewlet','json']:
         suite.addTest(suiteFromPackage(name))
     return suite
