@@ -77,6 +77,7 @@ from zope.app.container.contained import (
     ObjectRemovedEvent,
     ContainerModifiedEvent)
 
+from grok.events import ApplicationInitializedEvent
 from grok.components import Model, View
 from grok.components import XMLRPC, REST, JSON
 from grok.components import Traverser
@@ -85,6 +86,7 @@ from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Role
 from grok.interfaces import IRESTSkinType, IRESTLayer
+from grok.interfaces import IApplicationInitializedEvent
 
 from grok.directive import (
     permissions, site, restskin, traversable)

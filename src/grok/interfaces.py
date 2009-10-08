@@ -15,6 +15,7 @@
 """
 from zope import interface
 from zope.interface.interfaces import IInterface
+from zope.component.interfaces import IObjectEvent
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.app.container.interfaces import IContainer as IContainerBase
 
@@ -97,6 +98,11 @@ class IGrokEvents(interface.Interface):
     ContainerModifiedEvent = interface.Attribute("")
 
     IBeforeTraverseEvent = interface.Attribute("")
+
+    IApplicationInitializedEvent = interface.Attribute("")
+
+    ApplicationInitializedEvent = interface.Attribute("")
+
 
 class IGrokAPI(grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
                grokcore.security.interfaces.IGrokcoreSecurityAPI,
@@ -213,3 +219,11 @@ class IGrokSecurityView(interface.Interface):
     `grok.Permission` and `grok.require` settings however, will be
     applied to such views.
     """
+
+class IApplicationInitializedEvent(IObjectEvent):
+    """A Grok Application has been created with success and is now ready
+    to be used.
+
+    This event can be used to trigger the creation of contents or other tasks
+    that require the application to be fully operational : utilities installed
+    and indexes created in the catalog."""
