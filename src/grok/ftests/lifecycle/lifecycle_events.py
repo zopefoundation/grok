@@ -1,7 +1,7 @@
 """
-==========================
-Application initialization
-==========================
+==============================
+Application lifecycle overview
+==============================
 
 The application initialization is an important moment of your
 application's life. This creation process is responsible for the

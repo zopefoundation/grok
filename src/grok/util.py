@@ -13,11 +13,16 @@
 ##############################################################################
 """Grok utility functions.
 """
+import grok
+import zope.event
 import zope.location.location
 from zope import interface
+from zope.schema.interfaces import WrongType
+from zope.exceptions.interfaces import DuplicationError
 from zope.security.checker import NamesChecker, defineChecker
 
 from grokcore.security.util import check_permission
+
 
 def make_checker(factory, view_factory, permission, method_names=None):
     """Make a checker for a view_factory associated with factory.
@@ -35,6 +40,7 @@ def make_checker(factory, view_factory, permission, method_names=None):
         checker = NamesChecker(method_names, permission)
     defineChecker(view_factory, checker)
 
+
 def safely_locate_maybe(obj, parent, name):
     """Set an object's __parent__ (and __name__) if the object's
     __parent__ attribute doesn't exist yet or is None.
@@ -47,6 +53,7 @@ def safely_locate_maybe(obj, parent, name):
     # This either sets __parent__ or wraps 'obj' in a LocationProxy
     return zope.location.location.located(obj, parent, name)
 
+
 def applySkin(request, skin, skin_type):
     """Change the presentation skin for this request.
     """
@@ -56,3 +63,31 @@ def applySkin(request, skin, skin_type):
     # Add the new skin.
     ifaces.append(skin)
     interface.directlyProvides(request, *ifaces)
+
+
+def create_application(factory, container, name):
+    """Creates an application and triggers the events from
+    the application lifecycle.
+    """
+    # Check the factory.
+    if not grok.interfaces.IApplication.implementedBy(factory):
+        raise WrongType(factory)
+
+    # Check the availability of the name in the container.
+    if name in container:
+        raise DuplicationError(name)
+
+    # Instanciate the application
+    application = factory()
+
+    # Trigger the creation event.
+    grok.notify(grok.ObjectCreatedEvent(application))
+
+    # Persist the application.
+    # This may raise a DuplicationError.
+    container[name] = application
+
+    # Trigger the initialization event.
+    grok.notify(grok.ApplicationInitializedEvent(application))
+
+    return application
