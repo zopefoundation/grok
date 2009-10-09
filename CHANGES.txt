@@ -4,6 +4,15 @@ Grok changes
 1.1 (unreleased)
 ================
 
+* Added an util function, ``create_application``, to create an
+  application and trigger the correct events during the process.
+
+* Grok now provides an application-centric event to complete the
+  zope.lifecycle ones. This event, ``ApplicationInitializedEvent``, is
+  destined to be trigged after the application has been added to a
+  container. At this particular step, the application is considered
+  safe for additional content to be created.
+
 * Use grokcore.site and grokcore.annotation instead of builtins
   implementations.
 
