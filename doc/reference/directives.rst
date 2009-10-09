@@ -467,9 +467,26 @@ Declare a permission.
 A class level directive used to protect a View by requiring a
 certain permission.
 
-`permission` -- the name of the permission that is required
+`permission` -- the class of the :class:`grok.Permission` subclass that
+                is required. Alternatively, the name of the permission that is
+                required
 
-**Example 1: Define a Permission and use it to protect a View**
+
+**Example 1 Define a Permission and use it to protect a View, using permission class**
+
+.. code-block:: python
+
+    import grok
+    import zope.interface
+    
+    class Read(grok.Permission):
+        grok.name('mypackage.Read')
+
+    class Index(grok.View):
+        grok.context(zope.interface.Interface)
+        grok.require(Read)
+
+**Example 2: Define a Permission and use it to protect a View, using permission name**
 
 .. code-block:: python
 

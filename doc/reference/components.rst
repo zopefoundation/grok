@@ -1257,7 +1257,7 @@ Security
 Permissions are used to protect Views so that they can only be called by
 an authenticated principal. If a View in Grok does not have a `grok.require`
 directive declaring a permission needed to use the View, then the default
-anonymously viewable `grok.Public` permission used.
+anonymously viewable `zope.View` permission used.
 
 .. class:: grok.Permission
 
@@ -1342,7 +1342,8 @@ protected by the Permissions that the Role contains.
 
     :func:`grok.permissions(permissions)`
 
-        Required. Declare the permissions granted to this role.
+        Required. Declare the permissions granted to this role. These
+        can refer by permission class or by name.
 
     :func:`grok.title(title)`
 
@@ -1379,8 +1380,10 @@ protected by the Permissions that the Role contains.
         grok.name('paint.Artist')
         grok.title('Artist')
         grok.description('An artist owns the paintings that they create.')
-        grok.permissions(
-            'paint.ViewPainting', 'paint.EditPainting', 'paint.ErasePainting')
+        grok.permissions(ViewPainting, EditPainting, ErasePainting)
+        # alternatively, use permission names
+        # grok.permissions(
+        #    'paint.ViewPainting', 'paint.EditPainting', 'paint.ErasePainting')
 
     class CavePainting(grok.View):
         grok.context(zope.interface.Interface)
