@@ -7,6 +7,11 @@ Grok changes
 * Use grokcore.site and grokcore.annotation instead of builtins
   implementations.
 
+* Update the reference to mention ``zope.View``.
+
+* Update the reference to mention direct references to permissions in
+  ``grok.require`` and ``grok.permissions`` in ``grok.Role``.
+
 1.0 (2009-10-07)
 ================
 
