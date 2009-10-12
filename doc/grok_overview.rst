@@ -1286,7 +1286,7 @@ easily edit them. This *is* a view of the ``Species`` model::
 
      @grok.action(u"Edit species")
      def edit_species(self, **data):
-          self.applyData(species, **data)
+          self.applyData(self.context, **data)
 
 Forms are self-submitting, so this will show the edit form again. If
 you want to display another page, you can redirect the browser as we
