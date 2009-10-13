@@ -141,7 +141,7 @@ Setting up grokproject
  
   You should now activate the virtual environment::
 
-    $ source virtualgrok
+    $ source virtualgrok/bin/activate
   
   Once you have activated the virtual environment, you can use it to
   ``easy_install`` grokproject in the regular way::
