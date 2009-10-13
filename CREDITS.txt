@@ -65,9 +65,11 @@ Thank you
 * The organizers of EuroPython 2007 in Vilnius for allowing us to host
   the third Grok sprint after EuroPython there.
 
-* GfU Cyrus in Cologne for generously hosting the fourth Grok sprint
-  (Neanderthal sprint).
-
 * ID StudioLab of the faculty of Industrial Design at the Delft
   University of Technology for sponsoring the development of REST
   support in Grok.
+
+* The Health Agency for hosting the "Grokkerdam sprint" in 2008.
+
+* GfU Cyrus in Cologne for generously hosting the "Neanderthal sprint" in
+  2007 and the "Neanderthal II sprint" in 2009.
