@@ -21,14 +21,14 @@ provides a convenient function called `create_application`::
   Cave <grok.events.ApplicationInitializedEvent object at ...>
 
 As we can see, the events are effectively trigged, and in the right
-order. The function returns the persisted application method.
+order. The function returns the persisted application.
 
   >>> print app
   <grok.ftests.lifecycle.create_application.Cave object at ...>
   >>> print app.__parent__
   <zope.app.folder.folder.Folder object at ...>
 
-However, if an error occur during the creation process, the exception
+However, if an error occurs during the creation process, the exception
 is not caught by `create_application`.
 
 In the case we provide an id that already exists, the exception will
@@ -58,7 +58,7 @@ class Mammoth(grok.Model):
     pass
 
 class Cave(grok.Container, grok.Application):
-    """A shelter for the homeless cavemen.
+    """A shelter for homeless cavemen.
     """
     pass
 
