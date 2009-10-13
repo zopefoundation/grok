@@ -30,7 +30,9 @@ that other projects can use them without having to pull in all of Grok.
 
 """
 
+import grok
 import martian
+import martian.util
 from grokcore.view.directive import TaggedValueStoreOnce
 
 
@@ -63,8 +65,24 @@ class permissions(martian.Directive):
     store = martian.ONCE
     default = []
 
-    def factory(self, *args):
-        return args
+    def validate(self, *values):
+        for value in values:
+            if martian.util.check_subclass(value, grok.Permission):
+                continue
+            if martian.util.not_unicode_or_ascii(value):
+                raise grok.GrokImportError(
+                    "You can only pass unicode values, ASCII values, or "
+                    "subclasses of grok.Permission to the '%s' directive."
+                    % self.name)
+
+    def factory(self, *values):
+        permission_ids = []
+        for value in values:
+            if martian.util.check_subclass(value, grok.Permission):
+                permission_ids.append(grok.name.bind().get(value))
+            else:
+                permission_ids.append(value)
+        return permission_ids
 
 class traversable(martian.Directive):
     """The `grok.traversable()` directive.

@@ -4,6 +4,10 @@ Grok changes
 1.1 (unreleased)
 ================
 
+* The ``grok.permissions()``, that is used in the ``grok.Role`` component now
+  accepts references to ``grok.Permission`` class, not just permission ids.
+  This behaviour is now symetrical to the ``grok.require()`` directive.
+
 * Added an util function, ``create_application``, to create an
   application and trigger the correct events during the process.
 
