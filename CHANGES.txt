@@ -25,6 +25,8 @@ Grok changes
 * Update the reference to mention direct references to permissions in
   ``grok.require`` and ``grok.permissions`` in ``grok.Role``.
 
+* Fix documentation bug where virtualenv wasn't explained correctly.
+
 1.0 (2009-10-07)
 ================
 
