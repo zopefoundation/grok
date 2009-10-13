@@ -24,7 +24,7 @@ As we can see, the events are effectively trigged, and in the right
 order. The function returns the persisted application method.
 
   >>> print app
-  <grok.ftests.lifecycle.application_creation.Cave object at ...>
+  <grok.ftests.lifecycle.create_application.Cave object at ...>
   >>> print app.__parent__
   <zope.app.folder.folder.Folder object at ...>
 
@@ -46,7 +46,7 @@ factories implementing IApplication::
   >>> james = grok.util.create_application(Mammoth, root, 'james')
   Traceback (most recent call last):
   ...
-  WrongType: <class 'grok.ftests.lifecycle.application_creation.Mammoth'>
+  WrongType: <class 'grok.ftests.lifecycle.create_application.Mammoth'>
 
 """
 import grok
