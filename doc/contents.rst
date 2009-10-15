@@ -10,6 +10,7 @@ Grok Documentation Contents
    grok_overview.rst
    reference/index.rst
    naming_conventions.rst
+   developing_grok.rst
 
    bugs.rst
    license.rst

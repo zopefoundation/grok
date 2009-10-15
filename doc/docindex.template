@@ -30,6 +30,9 @@
       <p class="biglink"><a class="biglink" href="{{ pathto("naming_conventions") }}">Naming Conventions</a><br>
          <span class="linkdescr">How to name your stuff correctly.</span></p>
 
+      <p class="biglink"><a class="biglink" href="{{ pathto("developing_grok") }}">Developing Grok</a><br>
+         <span class="linkdescr">Notes for developers <strong>of</strong> Grok.</span></p>
+
     </td></tr>
   </table>
 
@@ -73,7 +76,7 @@
 	The <b>Official Grok Documentation</b> documents the core features of the
 	Grok framework. For further reading, the
 	<a href="http://grok.zope.org/documentation/">Community Grok Documentation</a>
-	contains deeper information on working with Grok, as well as using 
+	contains deeper information on working with Grok, as well as using
 	additional packages with Grok that are not part of the core framework.
   </p>
 
