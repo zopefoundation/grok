@@ -27,6 +27,9 @@ Grok changes
 
 * Fix documentation bug where virtualenv wasn't explained correctly.
 
+* Remove the ``grok.View`` permission declaration in ``etc/site.zcml.in``, 
+  should have gone in 1.0b2 already
+
 1.0 (2009-10-07)
 ================
 
