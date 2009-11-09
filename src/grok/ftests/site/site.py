@@ -3,7 +3,7 @@ A site can be created by mixing in grok.Site into a grok.Model or
 grok.Container.
 
   >>> from zope import interface
-  >>> from zope.app.component.interfaces import IPossibleSite, ISite
+  >>> from zope.location.interfaces import IPossibleSite, ISite
   >>> manfred = Mammoth()
   >>> IPossibleSite.providedBy(manfred)
   True
