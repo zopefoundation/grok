@@ -30,13 +30,13 @@ from zope.security.proxy import removeSecurityProxy
 from zope.security.checker import selectChecker
 from zope.publisher.publish import mapply
 
+from zope.publisher.interfaces.http import IHTTPException
 from zope.publisher.interfaces.browser import IBrowserView
 
 from zope.app.publication.http import BaseHTTPPublication, HTTPPublication
 from zope.app.publication.browser import BrowserPublication
 from zope.app.publication.requestpublicationfactories import \
      BrowserFactory, XMLRPCFactory, HTTPFactory
-from zope.app.http.interfaces import IHTTPException
 
 from grok.interfaces import IGrokSecurityView
 
