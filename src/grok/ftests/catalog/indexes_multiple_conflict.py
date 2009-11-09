@@ -10,10 +10,7 @@ Let's set up a site in which we manage a couple of objects::
   >>> getRootFolder()['herd'] = herd
   Traceback (most recent call last):
     ...
-  GrokError: grok.Indexes in module <module
-  'grok.ftests.catalog.indexes_multiple_conflict' from ...>
-  causes creation of catalog index 'name' in catalog u'', but an index
-  with that name is already present.
+  KeyError: u'name'
 
   >>> from zope.app.component.hooks import setSite
   >>> setSite(herd)

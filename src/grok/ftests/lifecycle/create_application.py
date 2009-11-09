@@ -16,8 +16,8 @@ provides a convenient function called `create_application`::
 
   >>> import grok.util
   >>> app = grok.util.create_application(Cave, root, 'mycave')
-  Cave <zope.app.event.objectevent.ObjectCreatedEvent object at ...>
-  Cave <zope.app.container.contained.ObjectAddedEvent object at ...>
+  Cave <zope.lifecycleevent.ObjectCreatedEvent object at ...>
+  Cave <zope.lifecycleevent.ObjectAddedEvent object at ...>
   Cave <grok.events.ApplicationInitializedEvent object at ...>
 
 As we can see, the events are effectively trigged, and in the right
@@ -26,7 +26,7 @@ order. The function returns the persisted application.
   >>> print app
   <grok.ftests.lifecycle.create_application.Cave object at ...>
   >>> print app.__parent__
-  <zope.app.folder.folder.Folder object at ...>
+  <zope.site.folder.Folder object at ...>
 
 However, if an error occurs during the creation process, the exception
 is not caught by `create_application`.
