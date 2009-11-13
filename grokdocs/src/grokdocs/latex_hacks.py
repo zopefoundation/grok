@@ -21,7 +21,7 @@ still missing. Therefore we 'inject' those changes here.
 """
 
 from docutils import nodes
-from sphinx.latexwriter import LaTeXTranslator
+from sphinx.writers.latex import LaTeXTranslator
 
 # Inject a working pygments workaround.
 def depart_literal_block(self, node):

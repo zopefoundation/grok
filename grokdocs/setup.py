@@ -9,9 +9,9 @@ setup(
     description="""\
 Grokdocs: Build the Grok documentation in different formats!
 """,
-    install_requires=['docutils==0.4',
-                      'Sphinx==0.4',
-                      'Pygments==0.8.1',
+    install_requires=['docutils',
+                      'Sphinx',
+                      'Pygments',
                       ],
     package_dir = {'': 'src'},
     packages=find_packages('src'),
