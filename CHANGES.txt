@@ -29,6 +29,13 @@ Grok changes
 
 * Remove the ``grok.View`` permission declaration in ``etc/site.zcml.in``, 
   should have gone in 1.0b2 already
+  
+* this release depends on grokcore.view 1.13
+
+* add ZTK support (currently ZTK 1.0dev)
+
+* grokdocs now uses ZTK pinned versions
+
 
 1.0 (2009-10-07)
 ================

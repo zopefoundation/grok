@@ -19,13 +19,11 @@ import re
 
 version = 'Unknown'
 setupfilepath = path.join(path.dirname(path.abspath(curdir)), 'setup.py')
-reg = re.compile("^\s*version=.(.+).,.*")
-for line in open(setupfilepath, 'r').read().split():
+reg = re.compile("^\s*version = .(.+).,.*")
+for line in open(setupfilepath, 'r').read().split('\n'):
     m = reg.match(line)
     if m:
         version = m.groups()[0]
-
-
 
 
 # If your extensions are in another directory, add it here.
@@ -49,7 +47,7 @@ master_doc = 'index'
 
 # General substitutions.
 project = 'Official Grok'
-copyright = '2006-2008, The Zope Foundation'
+copyright = '2006-2009, The Zope Foundation'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
