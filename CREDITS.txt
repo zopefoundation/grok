@@ -41,6 +41,8 @@ CREDITS
 
 * Godefroid Chapelle (conversion to Z3 configuration actions)
 
+* Souheil Chelfouh
+
 * Sylvain Viollon (work on martian, grokcore.formlib, grokcore.view,
   grokcore.viewlet)
 
