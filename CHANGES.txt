@@ -4,6 +4,12 @@ Grok changes
 1.1 (unreleased)
 ================
 
+* This release depends on grokcore.view 1.13.
+
+* Add ZTK support (currently ZTK 1.0dev).
+
+* Grokdocs now uses ZTK pinned versions.
+
 * The ``grok.permissions()``, that is used in the ``grok.Role`` component now
   accepts references to ``grok.Permission`` class, not just permission ids.
   This behaviour is now symetrical to the ``grok.require()`` directive.
@@ -27,7 +33,7 @@ Grok changes
 
 * Fix documentation bug where virtualenv wasn't explained correctly.
 
-* Remove the ``grok.View`` permission declaration in ``etc/site.zcml.in``, 
+* Remove the ``grok.View`` permission declaration in ``etc/site.zcml.in``,
   should have gone in 1.0b2 already
 
 1.0 (2009-10-07)

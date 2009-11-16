@@ -48,7 +48,7 @@ provided by Grok, to be fired at this step. The same test event shows
 that we can now work on an operational environment:
 
   >>> notify(grok.ApplicationInitializedEvent(site))
-  <zope.app.catalog.catalog.Catalog object at ...>
+  <zope.catalog.catalog.Catalog object at ...>
 
 """
 import grok

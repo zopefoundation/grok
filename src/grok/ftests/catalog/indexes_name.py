@@ -17,7 +17,7 @@ We have to look up the catalog by name now::
 
   >>> catalog = getUtility(ICatalog, 'foo_catalog')
   >>> catalog
-  <zope.app.catalog.catalog.Catalog object at ...>
+  <zope.catalog.catalog.Catalog object at ...>
 
 Nuke the catalog and intids in the end, so as not to confuse
 other tests::
