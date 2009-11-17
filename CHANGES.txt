@@ -1,8 +1,8 @@
 Grok changes
 ************
 
-1.1 (unreleased)
-================
+1.1a1 (2009-11-17)
+==================
 
 * This release depends on grokcore.view 1.13a1.
 
