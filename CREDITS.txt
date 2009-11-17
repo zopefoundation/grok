@@ -50,6 +50,10 @@ CREDITS
 
 * Vincent Fretin
 
+* Reinout van Rees
+
+* Maurits van Rees
+
 * ME GROK (team mascot)
 
 Thank you
