@@ -48,6 +48,8 @@ CREDITS
 
 * Michael Haubenwallner (WSGI support, ZTK support)
 
+* Vincent Fretin
+
 * ME GROK (team mascot)
 
 Thank you
