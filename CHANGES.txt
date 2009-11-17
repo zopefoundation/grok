@@ -4,7 +4,7 @@ Grok changes
 1.1 (unreleased)
 ================
 
-* This release depends on grokcore.view 1.13.
+* This release depends on grokcore.view 1.13a1.
 
 * Add ZTK support (currently ZTK 1.0dev).
 
