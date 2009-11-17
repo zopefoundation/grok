@@ -11,7 +11,7 @@ features (please refer to ``CHANGES.txt`` for those).
 **Warning**. Please be sure to always backup your data (especially the
 ``Data.fs`` file) before you perform upgrades.
 
-.. _upgrade_notes_1.0b2:
+.. _upgrade_notes_1.1a1:
 
 Upgrading to 1.1a1 (2009-11-17)
 -------------------------------
@@ -26,6 +26,8 @@ Upgrading to 1.1a1 (2009-11-17)
   And replace ``versions.cfg`` in your project with this file. Then run::
 
     ./bin/buildout
+
+.. _upgrade_notes_1.0b2:
 
 Upgrading to 1.0b2 (2009-09-15)
 -------------------------------
