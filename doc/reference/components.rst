@@ -1380,7 +1380,7 @@ protected by the Permissions that the Role contains.
         grok.name('paint.Artist')
         grok.title('Artist')
         grok.description('An artist owns the paintings that they create.')
-        grok.permissions(ViewPainting, EditPainting, ErasePainting)
+        grok.permissions(ViewPermission, EditPermission, ErasePermission)
         # alternatively, use permission names
         # grok.permissions(
         #    'paint.ViewPainting', 'paint.EditPainting', 'paint.ErasePainting')
