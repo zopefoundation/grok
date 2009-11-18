@@ -18,6 +18,7 @@ artefacts that implement it's concepts.
    directives.rst
    decorators.rst
    functions.rst
+   utils.rst
    events.rst
    exceptions.rst
    testing.rst

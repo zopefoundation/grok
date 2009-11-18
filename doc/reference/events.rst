@@ -18,6 +18,23 @@ All events interfaces inherit from the base interface of IObjectEvent.
 
         The subject of the event taking place.
 
+:class:`IApplicationInitializedEvent`
+=====================================
+
+A Grok Application has been created with success and is now ready
+to be used.
+
+This event can be used to trigger the creation of contents or other tasks
+that require the application to be fully operational : utilities installed
+and indexes created in the catalog.
+
+.. class:: grok.IApplicationInitializedEvent
+
+    Interface to subscribe to application initialization.
+
+    .. attribute:: object
+
+        The application that has just been initialized.
 
 :class:`IObjectModifiedEvent`
 =============================
@@ -213,6 +230,18 @@ this:
         def __init__(self, object):
             self.object = object
 
+:class:`ApplicationInitializedEvent`
+=====================================
+
+Event object to send after an application has been created.
+
+.. class:: grok.ApplicationInitializedEvent
+
+    Default event implementation of the `grok.IApplicationInitializedEvent` interface.
+
+    .. attribute:: object
+
+        The application that has just been initialized.
 
 :class:`ObjectModifiedEvent`
 ============================
