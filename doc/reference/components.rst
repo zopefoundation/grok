@@ -300,6 +300,7 @@ application that defines a Herd and some Mammoths:
 .. code-block:: python
 
     import grok
+    import grok.index
     from zope.interface import Interface
     from zope import schema
 
