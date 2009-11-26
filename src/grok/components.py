@@ -235,14 +235,9 @@ class View(grokcore.view.View):
     """
     interface.implements(interfaces.IGrokView)
 
-    def application_url(self, name=None):
+    def application_url(self, name=None, data=None):
         """Return the URL of the nearest enclosing `grok.Application`."""
-        obj = self.context
-        while obj is not None:
-            if isinstance(obj, Application):
-                return self.url(obj, name)
-            obj = obj.__parent__
-        raise ValueError("No application found.")
+        return util.application_url(self.request, self.context, name, data)
 
     def flash(self, message, type='message'):
         """Send a short message to the user."""
@@ -284,7 +279,13 @@ class EditForm(grokcore.formlib.EditForm, View):
     interface.implements(interfaces.IGrokForm)
 
 
-class XMLRPC(object):
+class ViewishViewSupport(grokcore.view.ViewSupport):
+
+    def application_url(self, name=None, data=None):
+        return util.application_url(self.request, self.context, name, data)
+
+
+class XMLRPC(ViewishViewSupport):
     """Base class for XML-RPC endpoints in Grok applications.
 
     When an application creates a subclass of `grok.XMLRPC`, it is
@@ -311,21 +312,16 @@ class XMLRPC(object):
     """
 
 
-class REST(zope.location.Location):
+class REST(zope.location.Location, ViewishViewSupport):
     """Base class for REST views in Grok applications."""
     interface.implements(interfaces.IREST)
 
     def __init__(self, context, request):
         self.context = self.__parent__ = context
         self.request = request
-        self.body = request.bodyStream.getCacheStream().read()
-
-    @property
-    def response(self):
-        return self.request.response
 
 
-class JSON(BrowserPage):
+class JSON(BrowserPage, ViewishViewSupport):
     """Base class for JSON views in Grok applications."""
     interface.implements(interfaces.IGrokSecurityView)
 

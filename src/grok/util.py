@@ -21,6 +21,7 @@ from zope.schema.interfaces import WrongType
 from zope.exceptions.interfaces import DuplicationError
 from zope.security.checker import NamesChecker, defineChecker
 
+from grokcore.view.util import url
 from grokcore.security.util import check_permission
 
 
@@ -91,3 +92,12 @@ def create_application(factory, container, name):
     grok.notify(grok.ApplicationInitializedEvent(application))
 
     return application
+
+
+def application_url(request, obj, name=None, data={}):
+    """Return the URL of the nearest enclosing `grok.Application`."""
+    while obj is not None:
+        if isinstance(obj, grok.Application):
+            return url(request, obj, name, data)
+        obj = obj.__parent__
+    raise ValueError("No application found.")
