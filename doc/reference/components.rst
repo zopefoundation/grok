@@ -284,8 +284,12 @@ a normal Container.
 =====================
 
 Indexes are containers for holding a set of indexes. An index is 
-a data structures that provides a way of quickly finding a data objects.
+a data structures that provides a way of quickly finding data objects.
 A single index can be of either `Field`, `Text`, or `Set`.
+
+When a `grok.Indexes` class is grokked, a subscriber is created which
+listens to `grok.IObjectAddedEvent' events specific to the `grok.context`
+of the declared for the class.
 
 .. class:: grok.Indexes
 
@@ -301,14 +305,14 @@ application that defines a Herd and some Mammoths:
 
     import grok
     import grok.index
-    from zope.interface import Interface
-    from zope import schema
+    import zope.interface
+    import zope.schema
 
     class Herd(grok.Container, grok.Application):
         pass
 
-    class IMammoth(Interface):
-        name = schema.TextLine(title=u'Full Name')
+    class IMammoth(zope.interface.Interface):
+        name = zope.schema.TextLine(title=u'Full Name')
 
     class MammothIndexes(grok.Indexes):
         grok.site(Herd)
@@ -332,9 +336,11 @@ query for those Mammoths by their last name:
     herd['two'] = Mammoth('Joe Mammoth')
     herd['three'] = Mammoth('Marty the Wooly')
 
-    from zope.app.catalog.interfaces import ICatalog
-    from zope.component import getUtility
-    catalog = getUtility(ICatalog)
+    import zope.catalog.interfaces
+    import zope.component
+    catalog = zope.component.getUtility(
+        zope.catalog.interfaces.ICatalog
+    )
     mammoths = catalog.searchResults(full_name='Mammoth')
     # mammoths would be a list containing 'Manfred Mammoth' and 'Joe Mammoth'
     # but not 'Marty the Wooly'
