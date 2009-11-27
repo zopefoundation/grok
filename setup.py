@@ -50,7 +50,6 @@ setup(
                       'zope.app.appsetup',
                       'zope.app.authentication',
                       'zope.app.catalog',
-                      'zope.app.component',
                       'zope.app.container',
                       'zope.app.folder',
                       'zope.app.intid',

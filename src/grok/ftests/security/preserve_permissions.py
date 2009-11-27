@@ -33,7 +33,7 @@ We can allow our application to be viewed by the Zope standard
 ``contents.html`` view for site folders. For this we make it provide
 `ISiteManagementFolder`::
 
-  >>> from zope.app.component.interfaces import ISiteManagementFolder
+  >>> from zope.site.interfaces import ISiteManagementFolder
   >>> from zope.interface import alsoProvides
   >>> alsoProvides(root['app'], ISiteManagementFolder)
 

@@ -57,7 +57,7 @@ from zope.event import notify
 from zope.schema import TextLine
 from zope.interface import Interface
 from zope.component import queryUtility
-from zope.app.component.hooks import setSite
+from zope.site.hooks import setSite
 from zope.app.catalog.interfaces import ICatalog
 
 

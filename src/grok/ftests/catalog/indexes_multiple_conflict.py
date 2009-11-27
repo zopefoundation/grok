@@ -12,7 +12,7 @@ Let's set up a site in which we manage a couple of objects::
     ...
   KeyError: u'name'
 
-  >>> from zope.app.component.hooks import setSite
+  >>> from zope.site.hooks import setSite
   >>> setSite(herd)
   >>> from zope.app.catalog.interfaces import ICatalog
   >>> from zope.component import getUtility, queryUtility

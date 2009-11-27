@@ -5,7 +5,7 @@ Let's set up a site in which we manage a couple of objects::
 
   >>> herd = Herd()
   >>> getRootFolder()['herd'] = herd
-  >>> from zope.app.component.hooks import setSite
+  >>> from zope.site.hooks import setSite
   >>> setSite(herd)
 
 Now we add some indexable objects to the site::

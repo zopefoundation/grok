@@ -18,7 +18,7 @@ Let's set up a site in which we manage a couple of objects::
 Nuke the catalog and intids in the end, so as not to confuse
 other tests::
 
-  >>> from zope.app.component.hooks import setSite
+  >>> from zope.site.hooks import setSite
   >>> setSite(herd)
   >>> from zope.app.catalog.interfaces import ICatalog
   >>> from zope.component import getUtility
