@@ -57,6 +57,7 @@ from grokcore.site import local_utility
 
 from zope.event import notify
 from zope.app.component.hooks import getSite
+from grok.util import getApplication
 from zope.lifecycleevent import (
     IObjectCreatedEvent, ObjectCreatedEvent,
     IObjectModifiedEvent, ObjectModifiedEvent,

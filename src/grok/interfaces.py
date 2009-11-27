@@ -147,6 +147,8 @@ class IGrokAPI(grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
     def getSite():
         """Get the current site."""
 
+    def getApplication():
+        """Get the current application."""
 
     IRESTSkinType = interface.Attribute('The REST skin type')
 

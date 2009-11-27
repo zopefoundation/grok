@@ -14,6 +14,7 @@
 """Grok utility functions.
 """
 import grok
+import grok.interfaces
 import zope.event
 import zope.location.location
 from zope import interface
@@ -22,7 +23,6 @@ from zope.exceptions.interfaces import DuplicationError
 from zope.security.checker import NamesChecker, defineChecker
 
 from grokcore.security.util import check_permission
-
 
 def make_checker(factory, view_factory, permission, method_names=None):
     """Make a checker for a view_factory associated with factory.
@@ -63,6 +63,20 @@ def applySkin(request, skin, skin_type):
     # Add the new skin.
     ifaces.append(skin)
     interface.directlyProvides(request, *ifaces)
+
+
+def getApplication():
+    """Get the application."""
+    site = grok.getSite()
+    if grok.interfaces.IApplication.providedBy(site):
+        return site
+    else:
+        # another sub-site is within the application, walk up
+        # the tree until we get to the application
+        parent = site.__parent__
+        while not grok.interfaces.IApplication.providedBy(parent):
+            parent = parent.__parent__
+        return parent
 
 
 def create_application(factory, container, name):
