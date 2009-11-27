@@ -74,7 +74,7 @@ class Index(grok.View):
 
 class MyContent(grok.Model):
     def traverse(self, name):
-        if 'sub':
+        if name == 'sub':
             return MyContent()
 
 class LayerZ(grok.IRESTLayer):
