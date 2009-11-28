@@ -66,12 +66,12 @@ from zope.app.publication.interfaces import IBeforeTraverseEvent
 from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
-from zope.app.container.interfaces import (
+from zope.container.interfaces import (
     IObjectAddedEvent,
     IObjectMovedEvent,
     IObjectRemovedEvent,
     IContainerModifiedEvent)
-from zope.app.container.contained import (
+from zope.container.contained import (
     ObjectAddedEvent,
     ObjectMovedEvent,
     ObjectRemovedEvent,

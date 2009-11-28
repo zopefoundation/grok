@@ -33,11 +33,11 @@ from zope.publisher.publish import mapply
 from zope.annotation.interfaces import IAttributeAnnotatable
 
 from zope.app.publisher.browser import getDefaultViewName
-from zope.app.container.btree import BTreeContainer
-from zope.app.container.contained import Contained
-from zope.app.container.interfaces import IReadContainer
-from zope.app.container.interfaces import IOrderedContainer
-from zope.app.container.contained import notifyContainerModified
+from zope.container.btree import BTreeContainer
+from zope.container.contained import Contained
+from zope.container.interfaces import IReadContainer
+from zope.container.interfaces import IOrderedContainer
+from zope.container.contained import notifyContainerModified
 from persistent.list import PersistentList
 
 import grok

@@ -17,7 +17,7 @@ from zope import interface
 from zope.interface.interfaces import IInterface
 from zope.component.interfaces import IObjectEvent
 from zope.publisher.interfaces.http import IHTTPRequest
-from zope.app.container.interfaces import IContainer as IContainerBase
+from zope.container.interfaces import IContainer as IContainerBase
 
 # Expose interfaces from grokcore.* packages as well:
 import grokcore.annotation.interfaces

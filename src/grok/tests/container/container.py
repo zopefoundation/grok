@@ -6,12 +6,12 @@ you can store a lot of items in a scalable way.
 
     >>> grok.testing.grok(__name__)
 
-    >>> from zope.app.container.interfaces import IContainer
+    >>> from zope.container.interfaces import IContainer
     >>> bag = BoneBag()
     >>> IContainer.providedBy(bag)
     True
 
-    >>> from zope.app.container.btree import BTreeContainer
+    >>> from zope.container.btree import BTreeContainer
     >>> isinstance(bag, BTreeContainer)
     True
      

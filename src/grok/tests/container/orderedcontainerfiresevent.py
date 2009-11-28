@@ -33,7 +33,7 @@ class Bone(grok.Model):
     def __init__(self, name):
         self.name = name
 
-from zope.app.container.interfaces import IContainerModifiedEvent
+from zope.container.interfaces import IContainerModifiedEvent
 @grok.subscribe(OrderedBones, IContainerModifiedEvent)
 def container_changed(object, event):
     print 'Container has changed!'

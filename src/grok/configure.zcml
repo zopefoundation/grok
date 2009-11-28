@@ -9,10 +9,13 @@
   <include package="zope.app.zcmlfiles" file="meta.zcml" />
   <include package="grok" file="meta.zcml" />
 
+  <include package="zope.catalog" />
   <include package="zope.copypastemove" />
   <include package="zope.contentprovider" />
   <include package="zope.formlib" />
+  <include package="zope.intid" />
   <include package="zope.i18n.locales" />
+  <include package="zope.keyreference" />
   <include package="zope.publisher" />
   <include package="zope.securitypolicy" />
   <include package="zope.size" />
@@ -20,9 +23,6 @@
   <include package="zope.traversing.browser" />
   <include package="zope.app.zcmlfiles" />
   <include package="zope.app.authentication" />
-  <include package="zope.intid" />
-  <include package="zope.keyreference" />
-  <include package="zope.catalog" />
   <include package="zope.app.renderer" />
   <include package="zope.app.session" />
 

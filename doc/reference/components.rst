@@ -73,7 +73,7 @@ disk, by default in the Zope Object Dataabse (ZODB).
 
 Objects in a container are manipulated using the same syntax as you would
 with a standard Python Dictionary object. The container implements the
-zope.app.container.interfaces.IContainer interface using a BTree, providing
+zope.container.interfaces.IContainer interface using a BTree, providing
 reasonable performance for large collections of objects.
 
 .. class:: grok.Container

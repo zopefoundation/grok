@@ -1119,13 +1119,13 @@ So far we have only used interfaces for the second argument of the
 event handler registration, but the principle also works for the first
 argument. For example, to handle ``IObjectModifiedEvent`` events for
 all kinds of containers, you can subscribe to
-``zope.app.container.interfaces.IContainer`` objects::
+``zope.container.interfaces.IContainer`` objects::
 
   @grok.subscribe(IContainer, IObjectModifiedEvent):
   def handle_event(obj, event):
       "Called whenever any container is modified"
 
-``zope.app.container.interfaces.IContainer`` defines the abstract
+``zope.container.interfaces.IContainer`` defines the abstract
 container API that all containers must provide, no matter how they are
 implemented internally.
 
@@ -1137,7 +1137,7 @@ can use ``grok.context`` with interfaces as well as with concrete
 classes. To write an adapter that works for any kind of container, you
 can write::
 
-  from zope.app.container.interfaces import IContainer
+  from zope.container.interfaces import IContainer
 
   class SortedKeysAdapter(grok.Adapter):
       grok.context(IContainer)
@@ -1152,7 +1152,7 @@ Interfaces and views
 The same principle can also be used with ``grok.context`` in other
 places, such as in views. This view is registered for all containers::
 
-  from zope.app.container.interfaces import IContainer
+  from zope.container.interfaces import IContainer
 
   class Keys(grok.View):
      grok.context(IContainer)

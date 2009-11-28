@@ -139,7 +139,7 @@ a binary egg on Windows::
   zope.i18nmessageid
   zope.interface
   zope.security
-  zope.app.container
+  zope.container
   ZODB3
   zope.hookable
   zope.proxy
