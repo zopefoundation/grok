@@ -22,7 +22,7 @@
   <include package="zope.app.authentication" />
   <include package="zope.intid" />
   <include package="zope.keyreference" />
-  <include package="zope.app.catalog" />
+  <include package="zope.catalog" />
   <include package="zope.app.renderer" />
   <include package="zope.app.session" />
 

@@ -20,13 +20,13 @@ other tests::
 
   >>> from zope.site.hooks import setSite
   >>> setSite(herd)
-  >>> from zope.app.catalog.interfaces import ICatalog
+  >>> from zope.catalog.interfaces import ICatalog
   >>> from zope.component import getUtility
   >>> catalog = getUtility(ICatalog)
 
 
   >>> sm = herd.getSiteManager()
-  >>> from zope.app.catalog.interfaces import ICatalog
+  >>> from zope.catalog.interfaces import ICatalog
   >>> sm.unregisterUtility(catalog, provided=ICatalog)
   True
   >>> from zope.intid.interfaces import IIntIds

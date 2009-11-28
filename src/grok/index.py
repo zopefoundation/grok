@@ -18,8 +18,8 @@ import sys
 from zope.interface import implements
 from zope.interface.interfaces import IMethod, IInterface
 
-from zope.app.catalog.field import FieldIndex
-from zope.app.catalog.text import TextIndex
+from zope.catalog.field import FieldIndex
+from zope.catalog.text import TextIndex
 from zc.catalog.catalogindex import SetIndex
 
 from martian.error import GrokError, GrokImportError

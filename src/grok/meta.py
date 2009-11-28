@@ -36,8 +36,8 @@ from zope.app.publisher.xmlrpc import MethodPublisher
 
 from zope.intid import IntIds
 from zope.intid.interfaces import IIntIds
-from zope.app.catalog.catalog import Catalog
-from zope.app.catalog.interfaces import ICatalog
+from zope.catalog.catalog import Catalog
+from zope.catalog.interfaces import ICatalog
 
 from zope.exceptions.interfaces import DuplicationError
 

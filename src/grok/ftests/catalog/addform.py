@@ -33,11 +33,11 @@ right value:
 """
 import grok
 from zope import schema, interface, component
-from zope.app.intid import IntIds
-from zope.app.intid.interfaces import IIntIds
-from zope.app.catalog.catalog import Catalog
-from zope.app.catalog.interfaces import ICatalog
-from zope.app.catalog.field import FieldIndex
+from zope.intid import IntIds
+from zope.intid.interfaces import IIntIds
+from zope.catalog.catalog import Catalog
+from zope.catalog.interfaces import ICatalog
+from zope.catalog.field import FieldIndex
 
 def setup_catalog(catalog):
     catalog['name'] = FieldIndex('name', IMammoth)

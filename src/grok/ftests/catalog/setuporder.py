@@ -16,7 +16,7 @@ Now we add some indexable objects to the site:
 
 Then we are able to query the catalog:
 
-  >>> from zope.app.catalog.interfaces import ICatalog
+  >>> from zope.catalog.interfaces import ICatalog
   >>> from zope.component import getUtility
   >>> catalog = getUtility(ICatalog)
   >>> for obj in catalog.searchResults(name=('Ellie', 'Ellie')):
@@ -29,9 +29,9 @@ import grok
 from zope import schema, interface
 from zope.intid import IntIds
 from zope.intid.interfaces import IIntIds
-from zope.app.catalog.catalog import Catalog
-from zope.app.catalog.interfaces import ICatalog
-from zope.app.catalog.field import FieldIndex
+from zope.catalog.catalog import Catalog
+from zope.catalog.interfaces import ICatalog
+from zope.catalog.field import FieldIndex
 
 def setup_catalog(catalog):
     catalog['name'] = FieldIndex('name', IMammoth)

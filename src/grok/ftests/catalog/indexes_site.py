@@ -12,7 +12,7 @@ Let's set up a site in which we manage a couple of objects::
 
 The catalog is there in the site::
 
-  >>> from zope.app.catalog.interfaces import ICatalog
+  >>> from zope.catalog.interfaces import ICatalog
   >>> from zope.component import getUtility, queryUtility
   >>> catalog = queryUtility(ICatalog, default=None)
   >>> catalog is not None
@@ -22,7 +22,7 @@ Nuke the catalog and intids in the end, so as not to confuse
 other tests::
 
   >>> sm = herd.getSiteManager()
-  >>> from zope.app.catalog.interfaces import ICatalog
+  >>> from zope.catalog.interfaces import ICatalog
   >>> sm.unregisterUtility(catalog, provided=ICatalog)
   True
   >>> from zope.intid.interfaces import IIntIds
