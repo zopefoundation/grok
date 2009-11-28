@@ -49,7 +49,6 @@ setup(
                       'zope.annotation',
                       'zope.app.appsetup',
                       'zope.app.authentication',
-                      'zope.app.folder',
                       'zope.app.pagetemplate',
                       'zope.app.publication',
                       'zope.app.publisher',
