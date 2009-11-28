@@ -26,7 +26,7 @@ other tests::
   >>> from zope.app.catalog.interfaces import ICatalog
   >>> sm.unregisterUtility(catalog, provided=ICatalog, name='foo_catalog')
   True
-  >>> from zope.app.intid.interfaces import IIntIds
+  >>> from zope.intid.interfaces import IIntIds
   >>> from zope import component
   >>> intids = component.getUtility(IIntIds)
   >>> sm.unregisterUtility(intids, provided=IIntIds)

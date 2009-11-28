@@ -20,7 +20,7 @@
   <include package="zope.traversing.browser" />
   <include package="zope.app.zcmlfiles" />
   <include package="zope.app.authentication" />
-  <include package="zope.app.intid" />
+  <include package="zope.intid" />
   <include package="zope.keyreference" />
   <include package="zope.app.catalog" />
   <include package="zope.app.renderer" />

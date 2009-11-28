@@ -24,8 +24,8 @@ Then we are able to query the catalog:
 
 import grok
 from zope import schema, interface
-from zope.app.intid import IntIds
-from zope.app.intid.interfaces import IIntIds
+from zope.intid import IntIds
+from zope.intid.interfaces import IIntIds
 from zope.app.catalog.catalog import Catalog
 from zope.app.catalog.interfaces import ICatalog
 from zope.app.catalog.field import FieldIndex

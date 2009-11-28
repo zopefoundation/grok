@@ -34,8 +34,8 @@ from zope.securitypolicy.rolepermission import rolePermissionManager
 
 from zope.app.publisher.xmlrpc import MethodPublisher
 
-from zope.app.intid import IntIds
-from zope.app.intid.interfaces import IIntIds
+from zope.intid import IntIds
+from zope.intid.interfaces import IIntIds
 from zope.app.catalog.catalog import Catalog
 from zope.app.catalog.interfaces import ICatalog
 
