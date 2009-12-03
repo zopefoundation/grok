@@ -4,8 +4,13 @@ Grok changes
 1.1a2 (unreleased)
 ==================
 
-- Nothing changed yet.
+* Use zope.container instead of zope.app.container.
 
+* Use zope.catalog instead of zope.app.catalog.
+
+* Use zope.intid instead of zope.app.intid.
+
+* Use zope.keyreference instead of zope.app.keyreference.
 
 1.1a1 (2009-11-17)
 ==================
