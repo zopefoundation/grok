@@ -4,6 +4,9 @@ Grok changes
 1.1a2 (unreleased)
 ==================
 
+* Add grok.getApplication() that, similar to grok.getSite() retrieves
+  the "nearest" enclosing grok.Application object.
+
 * Use zope.container instead of zope.app.container.
 
 * Use zope.catalog instead of zope.app.catalog.
