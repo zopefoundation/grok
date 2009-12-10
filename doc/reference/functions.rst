@@ -78,6 +78,16 @@ will appear as input fields in that order.
     :func:`grok.AutoFields`, :class:`grok.Form`
 
 
+:func:`grok.getApplication`
+====================
+
+.. function:: grok.getApplication()
+
+    Get the current application object or the nearest enclosing
+    `grok.Application` object. Raises ValueError if no Application can
+    be found.
+
+
 :func:`grok.getSite`
 ====================
 
@@ -89,7 +99,10 @@ will appear as input fields in that order.
 
     Site objects are instances of :class:`grok.Site`. Typically this will 
     also be your main :class:`grok.Application` root object, which inherits
-    from :class:`grok.Site`.
+    from :class:`grok.Site`. Normally you will want to use
+    `grok.getApplication` to get the application object, as `grok.getSite`
+    can return enclosed sub-sites in applications with more complex
+    configuration.
 
 .. seealso::
 
