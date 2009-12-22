@@ -13,6 +13,13 @@ long_description = (
     '********\n'
     )
 
+tests_require = [
+    'zope.app.testing',
+    'zope.configuration',
+    'zope.testbrowser',
+    'zope.testing',
+    ]
+
 setup(
     name='grok',
     version = '1.1a2dev',
@@ -77,11 +84,6 @@ setup(
                       'zope.site',
                       'zope.size',
                       'zope.traversing',
-                      # Test-only dependencies
-                      'zope.app.testing',
-                      'zope.configuration',
-                      'zope.testbrowser',
-                      'zope.testing',
                       # deprecated packages, there for backwards compatibility
                       'zope.app.error',
                       'zope.app.securitypolicy',
@@ -100,4 +102,6 @@ setup(
                       'zope.proxy',
                       'zope.viewlet',
                       ],
+    tests_require=tests_require,
+    extras_require={'test': tests_require},
 )

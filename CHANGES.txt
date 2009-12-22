@@ -4,6 +4,9 @@ Grok changes
 1.1a2 (unreleased)
 ==================
 
+* Updated z3c.recipe.compattest's version and used it for a bin/compattest
+  that tests grok and all its dependencies.
+
 * Add grok.getApplication() that, similar to grok.getSite() retrieves
   the "nearest" enclosing grok.Application object.
 
