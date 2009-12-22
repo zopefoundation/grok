@@ -1,6 +1,12 @@
 Grok changes
 ************
 
+1.1b1 (unreleased)
+==================
+
+- Nothing changed yet.
+
+
 1.1a2 (2009-12-22)
 ==================
 
