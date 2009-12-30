@@ -4,8 +4,8 @@ Grok changes
 1.1b1 (unreleased)
 ==================
 
-- Nothing changed yet.
-
+- Lifted dependencies on deprecate packages zope.app.error and
+  zope.app.securitypolicy and zope.app.session.
 
 1.1a2 (2009-12-22)
 ==================
