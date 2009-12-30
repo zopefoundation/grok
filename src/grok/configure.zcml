@@ -18,13 +18,14 @@
   <include package="zope.keyreference" />
   <include package="zope.publisher" />
   <include package="zope.securitypolicy" />
+  <include package="zope.session" />
   <include package="zope.size" />
   <include package="zope.traversing" />
   <include package="zope.traversing.browser" />
+
   <include package="zope.app.zcmlfiles" />
   <include package="zope.app.authentication" />
   <include package="zope.app.renderer" />
-  <include package="zope.app.session" />
 
   <include package="grokcore.view" />
   <include package="grokcore.viewlet" />

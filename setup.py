@@ -87,7 +87,6 @@ setup(
                       # deprecated packages, there for backwards compatibility
                       'zope.app.error',
                       'zope.app.securitypolicy',
-                      'zope.app.session',
                       # Reported as unused by z3c.dependencychecker.  Should
                       # be removed or moved to the deprecated packages list.
                       'zope.app.appsetup',
