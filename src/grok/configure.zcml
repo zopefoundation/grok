@@ -16,6 +16,7 @@
   <include package="zope.intid" />
   <include package="zope.i18n.locales" />
   <include package="zope.keyreference" />
+  <include package="zope.password" />
   <include package="zope.publisher" />
   <include package="zope.securitypolicy" />
   <include package="zope.session" />
@@ -24,7 +25,6 @@
   <include package="zope.traversing.browser" />
 
   <include package="zope.app.zcmlfiles" />
-  <include package="zope.app.authentication" />
   <include package="zope.app.renderer" />
 
   <include package="grokcore.view" />
