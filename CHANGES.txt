@@ -4,6 +4,9 @@ Grok changes
 1.1b1 (unreleased)
 ==================
 
+- Lifted the dependency on zope.app.authentication and depend on
+  zope.password instead.
+
 - Lifted dependencies on deprecate packages zope.app.error and
   zope.app.securitypolicy and zope.app.session.
 
