@@ -4,6 +4,8 @@ Grok changes
 1.1b1 (unreleased)
 ==================
 
+- Address launchpad issue #499633.
+
 - Lifted the dependency on zope.app.authentication and depend on
   zope.password instead.
 
