@@ -4,12 +4,13 @@ Grok changes
 1.1b1 (unreleased)
 ==================
 
-- Address launchpad issue #499633.
+* Now using grokcore.content for the base content types : Model,
+  Container and OrderedContainer. 
 
-- Lifted the dependency on zope.app.authentication and depend on
+* Lifted the dependency on zope.app.authentication and depend on
   zope.password instead.
 
-- Lifted dependencies on deprecate packages zope.app.error and
+* Lifted dependencies on deprecate packages zope.app.error and
   zope.app.securitypolicy and zope.app.session.
 
 1.1a2 (2009-12-22)

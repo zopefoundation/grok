@@ -25,6 +25,8 @@ from grokcore.component.decorators import subscribe, adapter, implementer
 from grokcore.component.directive import (
     context, name, title, description, provides, global_utility, direct)
 
+from grokcore.content import Model, Container, OrderedContainer
+
 from grokcore.security import Permission
 from grokcore.security import Public
 from grokcore.security import require
@@ -79,11 +81,10 @@ from zope.container.contained import (
     ContainerModifiedEvent)
 
 from grok.events import ApplicationInitializedEvent
-from grok.components import Model, View
+from grok.components import Application
+from grok.components import View, Form, AddForm, EditForm, DisplayForm
 from grok.components import XMLRPC, REST, JSON
 from grok.components import Traverser
-from grok.components import Container, OrderedContainer
-from grok.components import Application, Form, AddForm, EditForm, DisplayForm
 from grok.components import Indexes
 from grok.components import Role
 from grok.interfaces import IRESTSkinType, IRESTLayer

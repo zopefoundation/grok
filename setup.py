@@ -48,6 +48,7 @@ setup(
                       'grokcore.formlib >= 1.4',
                       'grokcore.security >= 1.1',
                       'grokcore.site',
+                      'grokcore.content',
                       'grokcore.view >= 1.12',
                       'grokcore.viewlet >= 1.3',
                       'martian >= 0.10, < 0.12',
