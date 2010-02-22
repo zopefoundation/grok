@@ -283,17 +283,53 @@ a normal Container.
 :class:`grok.Indexes`
 =====================
 
-Indexes are containers for holding a set of indexes. An index is 
-a data structures that provides a way of quickly finding data objects.
-A single index can be of either `Field`, `Text`, or `Set`.
+Indexes are local utilities for holding a set of indexes alongside a
+:class:`grok.Site` or :class:`grok.Application`. An index is a data
+structure that provides a way of quickly finding certain types of
+objects, i.e. it provides catalog functionality for
+attributes/contents of stored objects.
 
-When a `grok.Indexes` class is grokked, a subscriber is created which
-listens to `grok.IObjectAddedEvent' events specific to the `grok.context`
-of the declared for the class.
+The site or application that the indexes are intended for should be
+named with the :func:`grok.site()` directive, and the kind of object to
+index should be named with a :func:`grok.context()` directive.
+
+Inside their class, the developer should specify one or more
+:class:`grok.index.Field`, :class:`grok.index.Text`, or
+:class:`grok.index.Set` instances naming object attributes that should
+be indexed (and therefore searchable). See :mod:`grok.index` module
+for more information on field types.
+
+.. note:: Indexes are persistent: they are stored in the Zope database
+          alongside the site or application that they index.  They are
+          created when the site or application is first created (and
+          made persistent), and so an already-created site will not
+          change just because the definition of one of its
+          `grok.Indexes` changes; it will either have to be deleted
+          and re-created, or some other operation performed to bring
+          its indexes up to date.
 
 .. class:: grok.Indexes
 
-    Base class for catalog index definitions.
+    Base class for index collections in a Grok application.
+
+    **Directives:**
+
+    :func:`grok.context(context_obj_or_interface)`
+        Required. Identifies the type of objects that should be
+        catalogued. The ``context`` type can also be set module-wide.
+
+        .. seealso::
+
+            :func:`grok.context`
+
+    :func:`grok.site(application_type_or_interface)`
+        Required. Identifies the type of site or application in which
+        objects should be catalogued.
+
+        .. seealso::
+
+            :func:`grok.site`
+
 
 **Example 1: Index the Mammoths in a Herd**
 
@@ -312,7 +348,7 @@ application that defines a Herd and some Mammoths:
         pass
 
     class IMammoth(zope.interface.Interface):
-        name = zope.schema.TextLine(title=u'Full Name')
+        full_name = zope.schema.TextLine(title=u'Full Name')
 
     class MammothIndexes(grok.Indexes):
         grok.site(Herd)
@@ -327,23 +363,35 @@ application that defines a Herd and some Mammoths:
             self.full_name = full_name
 
 We can now create a Herd application, add some Mammoths to the Herd, and
-query for those Mammoths by their last name:
+query for those Mammoths by their last name.
 
-.. code-block:: python
+Imagine ``root`` is our ZODB root as provided for instance by a
+debugger::
 
-    # imagine herd is an already created Herd application instance
-    herd['one'] = Mammoth('Manfred Mammoth')
-    herd['two'] = Mammoth('Joe Mammoth')
-    herd['three'] = Mammoth('Marty the Wooly')
+    >>> herd = Herd()
+    >>> root['herd'] = herd   # <-- the indexes are created here
 
-    import zope.catalog.interfaces
-    import zope.component
-    catalog = zope.component.getUtility(
-        zope.catalog.interfaces.ICatalog
-    )
-    mammoths = catalog.searchResults(full_name='Mammoth')
-    # mammoths would be a list containing 'Manfred Mammoth' and 'Joe Mammoth'
-    # but not 'Marty the Wooly'
+We manually set the 'site' to search. This happens automatically when
+we do for instance regular browser requests::
+
+    >>> from zope.site.hooks import setSite
+    >>> setSite(herd)
+
+Populate the herd::
+
+    >>> herd['one'] = Mammoth('Manfred Mammoth')
+    >>> herd['two'] = Mammoth('Joe Mammoth')
+    >>> herd['three'] = Mammoth('Marty the Wooly')
+
+Search the herd::
+
+    >>> import zope.component
+    >>> from zope.catalog.interfaces import ICatalog
+    >>> catalog = zope.component.getUtility(ICatalog)
+    >>> mammoths = catalog.searchResults(full_name='Mammoth')
+
+``mammoths`` would be a list containing ``'Manfred Mammoth'`` and
+``'Joe Mammoth'`` but not ``'Marty the Wooly'``
 
 
 Adapters
