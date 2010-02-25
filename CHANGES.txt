@@ -1,17 +1,21 @@
 Grok changes
 ************
 
-1.1b1 (unreleased)
-==================
+1.1rc1 (2010-02-25)
+===================
 
 * Now using grokcore.content for the base content types : Model,
-  Container and OrderedContainer. 
+  Container and OrderedContainer.
 
 * Lifted the dependency on zope.app.authentication and depend on
   zope.password instead.
 
 * Lifted dependencies on deprecate packages zope.app.error and
   zope.app.securitypolicy and zope.app.session.
+
+Beside these changes lot of work has been undertaken to remove as much
+dependencies on "older" zope.app.* packages as possible from Grok itself
+and from the dependencies of Grok. This work is not complete yet.
 
 1.1a2 (2009-12-22)
 ==================
