@@ -78,7 +78,7 @@ setup(
                       'zope.lifecycleevent',
                       'zope.location',
                       'zope.password',
-                      'zope.plugaableauth',
+                      'zope.pluggableauth',
                       'zope.publisher',
                       'zope.schema',
                       'zope.security',
