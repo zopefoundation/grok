@@ -4,8 +4,11 @@ Grok changes
 1.0.1 (unreleased)
 ==================
 
-* Fix documentation bug where virtualenv wasn't explained correctly.
+* Pin versions for dependencies of applications created with grokproject
+  (grokproject would have added these version pins itself to the newly created
+  applications however this proved to be unmaintainable).
 
+* Fix documentation bug where virtualenv wasn't explained correctly.
 
 1.0 (2009-10-07)
 ================
