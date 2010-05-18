@@ -115,7 +115,7 @@ Setting up grokproject
   with C-level components are automatically compiled for you. On Linux
   you need to make sure you have the Python development headers
   installed; on Debian and Ubuntu they are in the ``python-dev``
-  package. (use ``python2.5-dev`` to get the version for Python 2.5).
+  package. (use ``python2.6-dev`` to get the version for Python 2.6).
 
   These instructions are written for a Unix-style system and will be
   harder to follow on Windows. On Windows environments you can skip
@@ -125,7 +125,7 @@ Setting up grokproject
 
   You can install virtualenv with ``easy_install``::
 
-    $ easy_install-2.5 virtualenv
+    $ easy_install-2.6 virtualenv
 
   The ``virtualenv`` command-line tool should now be available to
   you. You can now create a sandbox environment for the use wih Grok::
@@ -168,12 +168,12 @@ environment as well.
 
 Let's go through the prerequisites first. You need a computer
 connected to the internet, as Grok installs itself over the
-network. You also need Python 2.5 (or Python 2.4) installed.
+network. You also need Python 2.6 (or Python 2.5) installed.
 
 Because Grok uses a source distribution of the Zope Toolkit libraries,
 you may need to install your operating system's Python "dev" package
-(``python-dev`` on Debian and Ubuntu, ``python2.5-dev`` for Python
-2.5). You also need a working C compiler (typically ``gcc``)
+(``python-dev`` on Debian and Ubuntu, ``python2.6-dev`` for Python
+2.6). You also need a working C compiler (typically ``gcc``)
 installed, as we compile bits of the Zope Toolkit during setup
 (``build-essential`` on Debian and Ubuntu). On Windows such a build
 environment is not necessary, as grokproject will download and
@@ -260,7 +260,7 @@ project is ready to go.
   Windows, where we supply binary versions of the required libraries.
 
   On Debian and Ubuntu this is the ``python-dev`` package
-  (``python2.5-dev for Python 2.5). You also need ``build-essential``.
+  (``python2.6-dev for Python 2.6). You also need ``build-essential``.
 
 Starting up the web server
 --------------------------
@@ -647,7 +647,7 @@ current date and time. We will use our Python interpreter to find out
 what works::
 
   $ python
-  Python 2.5.2
+  Python 2.6.2
   Type "help", "copyright", "credits" or "license" for more information.
   >>> 
 
