@@ -13,6 +13,22 @@ features (please refer to ``CHANGES.txt`` for those).
 
 .. _upgrade_notes_1.1rc1:
 
+Upgrading to 1.1 (2010-05-18)
+-----------------------------
+
+* When upgrading to a newer version of Grok, you should refer to the
+  newest list of versions as defined for this release of Grok.
+
+  For Grok 1.1, download the following file::
+
+    http://grok.zope.org/releaseinfo/grok-1.1.cfg
+
+  And replace ``versions.cfg`` in your project with this file. Then run::
+
+    ./bin/buildout
+
+.. _upgrade_notes_1.1rc1:
+
 Upgrading to 1.1rc1 (2010-02-25)
 -------------------------------
 

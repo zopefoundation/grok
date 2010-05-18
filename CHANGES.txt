@@ -4,8 +4,7 @@ Grok changes
 1.1 (unreleased)
 ================
 
-- Nothing changed yet.
-
+- Add zope.pluggablauth as a dependency.
 
 1.1rc1 (2010-02-25)
 ===================
