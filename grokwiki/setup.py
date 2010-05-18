@@ -19,6 +19,7 @@ Grok: Now even cavemen can use wikis!
                       'grok',
                       'grokui.admin',
                       'grokcore.startup',
+                      'grokcore.message',
                       ],
     entry_points = """
       [console_scripts]

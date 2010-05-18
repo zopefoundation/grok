@@ -16,6 +16,8 @@
 import re
 import grok
 
+from z3c.flashmessage.interfaces import IMessageReceiver
+from zope import component
 
 LINK_PATTERN = re.compile('\[\[(.*?)\]\]')
 find_wiki_links = LINK_PATTERN.findall
@@ -58,6 +60,11 @@ class Edit(grok.View):
         self.flash('Saved.')
         self.redirect(self.url(self.context))
 
+class Messages(grok.View):
+    @property
+    def messages(self):
+        receiver = component.getUtility(IMessageReceiver)
+        return receiver.receive()
 
 class WikiLayer(grok.IRESTLayer):
     # This skin will be visible as http://localhost:8080/++rest++wiki/...
