@@ -4,14 +4,16 @@ Grok
 What is grok?
 =============
 
-Grok makes it easier to get started with a Zope 3 web application.
+Grok is a smashing web framework based on Zope Toolkit_ technology.
 
-Grok uses the Component Architecture and builds on Zope 3 concepts
-like content objects (models), views, and adapters.  Its simplicity
-lies in using **convention over configuration** and **sensible
-defaults** when wiring components together.  That means neither a
-configuration language like ZCML nor a lot of repetition are needed to
-create a web application with grok.
+.. _`Zope Toolkit`: http://docs.zope.org/zopetoolkit
+
+Grok uses the Component Architecture and builds on Zope concepts like
+content objects (models), views, and adapters.  Its simplicity lies in
+using **convention over configuration** and **sensible defaults** when
+wiring components together.  That means neither a configuration
+language like ZCML nor a lot of repetition are needed to create a web
+application with grok.
 
 You can find out much more about Grok at our http://grok.zope.org
 website.
@@ -37,7 +39,7 @@ area by calling the ``grokproject`` script like so::
   ... many lines of output here
 
 This will create a project area in ``MyProject`` as well as download
-and install grok and Zope 3 (the application server grok is built on).
+and install grok.
 
 You can also get grok from the subversion repository::
 
