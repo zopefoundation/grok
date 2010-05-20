@@ -4,8 +4,7 @@ Grok changes
 1.0.2 (unreleased)
 ==================
 
-- Nothing changed yet.
-
+- Update grokcore.startup to 1.0.
 
 1.0.1 (2010-04-14)
 ==================
