@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-1.0.2 (unreleased)
+1.0.2 (2010-05-27)
 ==================
 
 - Update zope.app.authentication 3.4.6.
