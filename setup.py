@@ -91,12 +91,20 @@ setup(
                       'zope.app.appsetup',
                       'zope.app.pagetemplate',
                       'zope.app.security',
+                      # zope.app.testing has been removed from Grok's
+                      # dependencies which is good, but should - for the
+                      # 1.1 line - still be available to the grok "users".
+                      'zope.app.testing',
                       'zope.app.twisted',
                       'zope.deprecation',
                       'zope.dottedname',
                       'zope.hookable',
                       'zope.i18nmessageid',
                       'zope.pagetemplate',
+                      # zope.testbrowser has been removed from Grok's
+                      # dependencies which is good, but should - for the
+                      # 1.1 line - still be available to the grok "users".
+                      'zope.testbrowser',
                       'zope.proxy',
                       'zope.viewlet',
                       ],
