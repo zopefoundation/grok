@@ -95,7 +95,6 @@ setup(
                       # dependencies which is good, but should - for the
                       # 1.1 line - still be available to the grok "users".
                       'zope.app.testing',
-                      'zope.app.twisted',
                       'zope.deprecation',
                       'zope.dottedname',
                       'zope.hookable',
