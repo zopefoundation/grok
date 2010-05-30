@@ -1,11 +1,19 @@
 Grok changes
 ************
 
-1.2 (unreleased)
-================
+1.1.1 (2010-05-30)
+==================
 
-- Nothing changed yet.
+- Make use of the groktoolkit 1.1.1 that includes several bugfix releases
+  of Grok's dependencies such as:
 
+  - zope.password, where the SSHAPasswordManager was fixed.
+
+  - zope.publisher, that fixes the long standing XML-RPC "hanging" bug.
+
+- Cleanups in the buildout parts.
+
+- Remove zope.app.twisted.
 
 1.1 (2010-05-18)
 ================

@@ -22,7 +22,7 @@ tests_require = [
 
 setup(
     name='grok',
-    version='1.2dev',
+    version='1.1.1',
     author='Grok Team',
     author_email='grok-dev@zope.org',
     url='http://grok.zope.org',
