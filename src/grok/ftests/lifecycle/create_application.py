@@ -38,7 +38,7 @@ intentionally, no event will be trigged.
   >>> app = grok.util.create_application(Cave, root, 'mycave')
   Traceback (most recent call last):
   ...
-  DuplicationError: mycave
+  KeyError: 'mycave'
 
 Please note that the `create_application` function will only accept
 factories implementing IApplication::

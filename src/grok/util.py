@@ -19,11 +19,10 @@ import zope.event
 import zope.location.location
 from zope import interface
 from zope.schema.interfaces import WrongType
-from zope.exceptions.interfaces import DuplicationError
 from zope.security.checker import NamesChecker, defineChecker
-
 from grokcore.view.util import url
 from grokcore.security.util import check_permission
+
 
 def make_checker(factory, view_factory, permission, method_names=None):
     """Make a checker for a view_factory associated with factory.
@@ -65,6 +64,7 @@ def applySkin(request, skin, skin_type):
     ifaces.append(skin)
     interface.directlyProvides(request, *ifaces)
 
+
 def getApplication():
     """Return the nearest enclosing `grok.Application`.
 
@@ -82,12 +82,14 @@ def getApplication():
         obj = obj.__parent__
     raise ValueError("No application found.")
 
+
 def application_url(request, obj, name=None, data={}):
     """Return the URL of the nearest enclosing `grok.Application`.
 
     Raises ValueError if no Application can be found.
     """
     return url(request, getApplication(), name, data)
+
 
 def create_application(factory, container, name):
     """Creates an application and triggers the events from
@@ -99,7 +101,7 @@ def create_application(factory, container, name):
 
     # Check the availability of the name in the container.
     if name in container:
-        raise DuplicationError(name)
+        raise KeyError(name)
 
     # Instanciate the application
     application = factory()
@@ -108,7 +110,7 @@ def create_application(factory, container, name):
     grok.notify(grok.ObjectCreatedEvent(application))
 
     # Persist the application.
-    # This may raise a DuplicationError.
+    # This may raise a KeyError.
     container[name] = application
 
     # Trigger the initialization event.

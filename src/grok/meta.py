@@ -362,7 +362,7 @@ class IndexesSetupSubscriber(object):
         for name, index in self.indexes.items():
             try:
                 index.setup(catalog, name, self.context, self.module_info)
-            except DuplicationError:
+            except (DuplicationError, KeyError):
                 raise GrokError(
                     "grok.Indexes in module %r causes "
                     "creation of catalog index %r in catalog %r, "

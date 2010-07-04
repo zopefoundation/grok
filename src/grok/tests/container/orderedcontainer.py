@@ -52,7 +52,7 @@ Now change the order::
   >>> bones.keys()
   ['ankle', 'shin', 'thigh', 'toe']
 
-Adding a new object under an existing key, raises a DuplicationError::
+Adding a new object under an existing key, raises a KeyError::
 
   >>> bones['shin'] = Bone('Another Shin Bone')
   Traceback (most recent call last):
