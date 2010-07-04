@@ -1,12 +1,10 @@
 Grok changes
 ************
 
-1.1 (unreleased)
+1.2 (unreleased)
 ================
 
-* `create_application` now raises a `KeyError`, in cases of key
-  duplication, to match the ``zope.container`` behavior. Tests have
-  been adapted accordingly.
+* ...
 
 1.1rc1 (2010-02-25)
 ===================
