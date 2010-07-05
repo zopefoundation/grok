@@ -31,7 +31,7 @@ from zope.publisher.interfaces.http import IHTTPRequest
 from zope.publisher.publish import mapply
 from zope.annotation.interfaces import IAttributeAnnotatable
 
-from zope.app.publisher.browser import getDefaultViewName
+from zope.publisher.defaultview import getDefaultViewName
 from zope.container.btree import BTreeContainer
 from zope.container.contained import Contained
 from zope.container.interfaces import IReadContainer

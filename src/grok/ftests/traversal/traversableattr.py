@@ -3,7 +3,7 @@ Models can expose attributes using the grok.traversable directive.
 
   >>> getRootFolder()["traversefoo"] = Foo('foo')
 
-  >>> from zope.testbrowser.testing import Browser
+  >>> from zope.app.wsgi.testlayer import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
 

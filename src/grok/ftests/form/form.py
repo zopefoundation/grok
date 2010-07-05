@@ -8,7 +8,7 @@ application, like views does::
 
 And we can access the display form which display the application URL::
 
-  >>> from zope.testbrowser.testing import Browser
+  >>> from zope.app.wsgi.testlayer import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open('http://localhost/world/arthur')

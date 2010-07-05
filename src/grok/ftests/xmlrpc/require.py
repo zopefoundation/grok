@@ -1,7 +1,7 @@
 """
-  >>> from zope.app.testing.xmlrpc import ServerProxy
-  >>> server = ServerProxy("http://localhost/")
-  >>> mgr_server = ServerProxy("http://mgr:mgrpw@localhost/")
+  >>> from zope.app.wsgi.testlayer import XMLRPCServerProxy
+  >>> server = XMLRPCServerProxy("http://localhost/")
+  >>> mgr_server = XMLRPCServerProxy("http://mgr:mgrpw@localhost/")
 
 We can access a public method just fine, but a protected method will
 raise Unauthorized:

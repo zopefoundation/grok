@@ -12,7 +12,7 @@ with a permission.  Therefore we can't access it as anonymous:
   >>> print http(r'''
   ... GET /++rest++mammoth/manfred HTTP/1.1
   ... ''')
-  HTTP/1.1 401 Unauthorized
+  HTTP/1.0 401 Unauthorized
   Content-Length: 0
   Content-Type: text/plain
   WWW-Authenticate: basic realm="Zope"
@@ -29,7 +29,7 @@ With the grant in place we can access it as anonymous:
   >>> print http(r'''
   ... GET /++rest++mammoth/manfred HTTP/1.1
   ... ''')
-  HTTP/1.1 200 Ok
+  HTTP/1.0 200 Ok
   Content-Length: 7
   Content-Type: text/plain
   <BLANKLINE>

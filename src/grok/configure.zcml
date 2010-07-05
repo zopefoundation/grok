@@ -3,35 +3,47 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:grok="http://namespaces.zope.org/grok">
 
-  <include package="zope.security" file="meta.zcml" />
+  <include package="zope.app.publication" file="meta.zcml" />
+  <include package="zope.browserpage" file="meta.zcml" />
+  <include package="zope.component" file="meta.zcml" />
   <include package="zope.i18n" file="meta.zcml" />
+  <include package="zope.principalregistry" file="meta.zcml" />
+  <include package="zope.publisher" file="meta.zcml" />
+  <include package="zope.security" file="meta.zcml" />
   <include package="zope.securitypolicy" file="meta.zcml" />
-  <include package="zope.app.zcmlfiles" file="meta.zcml" />
+
   <include package="grok" file="meta.zcml" />
 
+  <include package="zope.app.appsetup" />
+  <include package="zope.app.http" />
+  <include package="zope.app.publication" />
+  <include package="zope.app.wsgi" />
+  <include package="zope.annotation" />
+  <include package="zope.browserpage" />
   <include package="zope.catalog" />
-  <include package="zope.copypastemove" />
+  <include package="zope.component" />
   <include package="zope.contentprovider" />
-  <include package="zope.formlib" />
-  <include package="zope.intid" />
+  <include package="zope.copypastemove" />
   <include package="zope.i18n.locales" />
+  <include package="zope.intid" />
   <include package="zope.keyreference" />
+  <include package="zope.location" />
+  <include package="zope.login" />
   <include package="zope.password" />
+  <include package="zope.principalregistry" />
   <include package="zope.publisher" />
+  <include package="zope.security " />
   <include package="zope.securitypolicy" />
   <include package="zope.session" />
-  <include package="zope.size" />
+  <include package="zope.site" />
   <include package="zope.traversing" />
   <include package="zope.traversing.browser" />
 
-  <include package="zope.app.zcmlfiles" />
-  <include package="zope.app.renderer" />
-
+  <include package="grokcore.annotation" />
+  <include package="grokcore.formlib" />
+  <include package="grokcore.site" />
   <include package="grokcore.view" />
   <include package="grokcore.viewlet" />
-  <include package="grokcore.formlib" />
-  <include package="grokcore.annotation" />
-  <include package="grokcore.site" />
 
   <securityPolicy
       component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy" />

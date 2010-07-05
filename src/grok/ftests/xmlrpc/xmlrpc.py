@@ -1,8 +1,8 @@
 """
   >>> getRootFolder()["Manfred"] = Mammoth()
 
-  >>> from zope.app.testing.xmlrpc import ServerProxy
-  >>> server = ServerProxy("http://localhost/")
+  >>> from zope.app.wsgi.testlayer import XMLRPCServerProxy
+  >>> server = XMLRPCServerProxy("http://localhost/")
 
   >>> server.Manfred.stomp()
   'Manfred stomped.'

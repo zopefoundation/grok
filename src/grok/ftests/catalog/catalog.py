@@ -20,6 +20,17 @@ Then we are able to query the catalog:
   ...     print obj.name
   Ellie
 
+Nuke the catalog and intids in the end, so as not to confuse
+other tests::
+
+  >>> from zope import component
+  >>> sm = herd.getSiteManager()
+  >>> sm.unregisterUtility(catalog, provided=ICatalog)
+  True
+  >>> intids = component.getUtility(IIntIds)
+  >>> sm.unregisterUtility(intids, provided=IIntIds)
+  True
+
 """
 
 import grok

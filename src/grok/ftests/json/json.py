@@ -4,7 +4,7 @@
 JSON views answer a special content-type::
 
   >>> print http('GET /cave/show HTTP/1.1')
-  HTTP/1. 200 Ok
+  HTTP/1.0 200 Ok
   Content-Length: 17
   Content-Type: application/json
   <BLANKLINE>

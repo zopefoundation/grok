@@ -120,34 +120,34 @@ the response MUST include an Allow header containing a list of valid
 methods for the requested resource::
 
   >>> print http('POST /++rest++b/app HTTP/1.1')
-  HTTP/1. 405 Method Not Allowed
-  Allow: GET, PUT
+  HTTP/1.0 405 Method Not Allowed
   Content-Length: 18
   Content-Type: text/plain
+  Allow: GET, PUT
   <BLANKLINE>
   Method Not Allowed
 
   >>> print http('DELETE /++rest++b/app HTTP/1.1')
-  HTTP/1. 405 Method Not Allowed
-  Allow: GET, PUT
+  HTTP/1.0 405 Method Not Allowed
   Content-Length: 18
+  Allow: GET, PUT
   <BLANKLINE>
   Method Not Allowed
 
   >>> print http('POST /++rest++c/app HTTP/1.1')
-  HTTP/1. 405 Method Not Allowed
-  Allow:
+  HTTP/1.0 405 Method Not Allowed
   Content-Length: 18
   Content-Type: text/plain
+  Allow:
   <BLANKLINE>
   Method Not Allowed
 
 We can also try this with a completely made-up request method, like FROG::
 
   >>> print http('FROG /++rest++b/app HTTP/1.1')
-  HTTP/1. 405 Method Not Allowed
-  Allow: GET, PUT
+  HTTP/1.0 405 Method Not Allowed
   Content-Length: 18
+  Allow: GET, PUT
   <BLANKLINE>
   Method Not Allowed
 
@@ -155,7 +155,7 @@ Let's now see whether security works properly with REST. GET should
 be public::
 
   >>> print http('GET /++rest++e/app/alpha HTTP/1.1')
-  HTTP/1. 200 Ok
+  HTTP/1.0 200 Ok
   Content-Length: 4
   Content-Type: text/plain
   <BLANKLINE>
@@ -164,20 +164,20 @@ be public::
 POST, PUT and DELETE however are not public::
 
   >>> print http('POST /++rest++e/app/alpha HTTP/1.1')
-  HTTP/1. 401 Unauthorized
+  HTTP/1.0 401 Unauthorized
   Content-Length: 0
   Content-Type: text/plain
   WWW-Authenticate: basic realm="Zope"
   <BLANKLINE>
 
   >>> print http('PUT /++rest++e/app/alpha HTTP/1.1')
-  HTTP/1. 401 Unauthorized
+  HTTP/1.0 401 Unauthorized
   Content-Length: 0
   WWW-Authenticate: basic realm="Zope"
   <BLANKLINE>
 
   >>> print http('DELETE /++rest++e/app/alpha HTTP/1.1')
-  HTTP/1. 401 Unauthorized
+  HTTP/1.0 401 Unauthorized
   Content-Length: 0
   WWW-Authenticate: basic realm="Zope"
   <BLANKLINE>
@@ -192,7 +192,7 @@ attribute on the REST view contains the uploaded data::
 
   >>> print http_call('POST', 'http://localhost/++rest++f/app/alpha',
   ...                 'this is the POST body')
-  HTTP/1.1 200 Ok
+  HTTP/1.0 200 Ok
   Content-Length: 21
   Content-Type: text/plain
   <BLANKLINE>
@@ -202,7 +202,7 @@ This works with PUT as well::
 
   >>> print http_call('PUT', 'http://localhost/++rest++f/app/alpha',
   ...                 'this is the PUT body')
-  HTTP/1.1 200 Ok
+  HTTP/1.0 200 Ok
   Content-Length: 20
   <BLANKLINE>
   this is the PUT body
@@ -211,7 +211,7 @@ Opening up the publication for REST doesn't mean we can just delete
 random objects without access:
 
   >>> print http('DELETE /app HTTP/1.1')
-  HTTP/1. 500 Internal Server Error
+  HTTP/1.0 500 Internal Server Error
   Content-Length: 127
   Content-Type: text/html;charset=utf-8
   <BLANKLINE>
@@ -222,7 +222,7 @@ random objects without access:
   <BLANKLINE>
 
   >>> print http('DELETE /app/alpha HTTP/1.1')
-  HTTP/1. 500 Internal Server Error
+  HTTP/1.0 500 Internal Server Error
   Content-Length: 127
   Content-Type: text/html;charset=utf-8
   <BLANKLINE>
@@ -235,7 +235,7 @@ random objects without access:
  We shouldn't be allowed to PUT either::
 
   >>> print http('PUT /app/beta HTTP/1.1')
-  HTTP/1. 404 Not Found
+  HTTP/1.0 404 Not Found
   Content-Length: 0
 
 XXX shouldn't this really give a FORBIDDEN response?

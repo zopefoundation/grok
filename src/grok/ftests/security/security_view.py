@@ -25,7 +25,7 @@ to use the `__call__` method::
 
 However, when we want to watch this view, we run into trouble::
 
-  >>> from zope.testbrowser.testing import Browser
+  >>> from zope.app.wsgi.testlayer import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open('http://localhost/app/@@index')

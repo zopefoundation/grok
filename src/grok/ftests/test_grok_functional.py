@@ -1,22 +1,12 @@
 import re
-import unittest
+import unittest, doctest
 import grok
-import os.path
 
 from pkg_resources import resource_listdir
-from zope.testing import doctest, renormalizing
-from zope.app.testing.functional import (HTTPCaller, getRootFolder,
-                                         FunctionalTestSetup, sync, ZCMLLayer)
+from zope.testing import renormalizing
+from zope.app.wsgi.testlayer import BrowserLayer, http
 
-ftesting_zcml = os.path.join(os.path.dirname(grok.__file__), 'ftesting.zcml')
-GrokFunctionalLayer = ZCMLLayer(ftesting_zcml, __name__, 'GrokFunctionalLayer',
-                                allow_teardown=True)
-
-def setUp(test):
-    FunctionalTestSetup().setUp()
-
-def tearDown(test):
-    FunctionalTestSetup().tearDown()
+FunctionalLayer = BrowserLayer(grok)
 
 checker = renormalizing.RENormalizing([
     # Accommodate to exception wrapping in newer versions of mechanize
@@ -40,7 +30,7 @@ def http_call(method, path, data=None, **kw):
     if data is not None:
         request_string += '\r\n'
         request_string += data
-    return HTTPCaller()(request_string, handle_errors=False)
+    return http(request_string, handle_errors=False)
 
 def suiteFromPackage(name):
     files = resource_listdir(__name__, name)
@@ -53,26 +43,26 @@ def suiteFromPackage(name):
 
         dottedname = 'grok.ftests.%s.%s' % (name, filename[:-3])
         test = doctest.DocTestSuite(
-            dottedname, setUp=setUp, tearDown=tearDown,
+            dottedname,
             checker=checker,
-            extraglobs=dict(http=HTTPCaller(),
-                            http_call=http_call,
-                            getRootFolder=getRootFolder,
-                            sync=sync),
+            extraglobs=dict(http_call=http_call,
+                            http=http,
+                            getRootFolder=FunctionalLayer.getRootFolder),
             optionflags=(doctest.ELLIPSIS+
                          doctest.NORMALIZE_WHITESPACE+
-                         doctest.REPORT_NDIFF)
-            )
-        test.layer = GrokFunctionalLayer
+                         doctest.REPORT_NDIFF))
+        test.layer = FunctionalLayer
 
         suite.addTest(test)
     return suite
 
 def test_suite():
     suite = unittest.TestSuite()
-    for name in ['xmlrpc', 'traversal', 'form', 'url', 'security', 'rest',
-                 'catalog', 'site', 'application', 'viewlet', 'json',
-                 'lifecycle']:
+    for name in [
+        'xmlrpc',
+        'traversal', 'form', 'url', 'security', 'rest',
+        'catalog', 'site', 'application', 'viewlet', 'json',
+        'lifecycle']:
         suite.addTest(suiteFromPackage(name))
     return suite
 

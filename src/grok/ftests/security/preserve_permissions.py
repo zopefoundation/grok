@@ -3,6 +3,29 @@
 Permissions already set by non-grok components are preserved by the
 Grok publisher.
 
+Let's first define a ``@@contents.html`` that is protected by a Zope
+permission, ``zope.ManageContent``::
+
+  >>> from zope.publisher.browser import BrowserPage
+  >>> class Contents(BrowserPage):
+  ...   def __init__(self, context, request):
+  ...     self.context = context
+  ...     self.request = request
+  ...   def __call__(self):
+  ...     return "Contents called"
+  >>> from zope import component
+  >>> from zope.interface import Interface
+  >>> from zope.publisher.interfaces.browser import IBrowserRequest
+  >>> component.provideAdapter(Contents,
+  ...   adapts=(Interface, IBrowserRequest),
+  ...   provides=Interface,
+  ...   name='contents.html')
+  >>> from zope.security.checker import Checker, defineChecker
+  >>> required = {}
+  >>> required['__call__'] = 'zope.ManageContent'
+  >>> required['browserDefault'] = 'zope.ManageContent'
+  >>> defineChecker(Contents, Checker(required))
+  
 The `@@contents.html` view of folders is protected by
 `zope.ManageContent` and should not be visible to unauthenticated
 users. Instead we are asked to authenticate ourselves::
@@ -10,32 +33,15 @@ users. Instead we are asked to authenticate ourselves::
   >>> print http(r'''
   ... GET /@@contents.html HTTP/1.1
   ... ''')
-  HTTP/1.1 401 Unauthorized
-  ...
-  WWW-Authenticate: basic realm="Zope"
+  HTTP/1.0 401 Unauthorized
   ...
 
-This is also the case for views on the Grok application object::
+Let's test this in the context of a Grok application:
 
   >>> grok.testing.grok(__name__)
   >>> from grok.ftests.security.preserve_permissions import App
   >>> root = getRootFolder()
   >>> root['app'] = App()
-  >>> print http(r'''
-  ... GET /app/++etc++site HTTP/1.1
-  ... ''')
-  HTTP/1.1 401 Unauthorized
-  ...
-  WWW-Authenticate: basic realm="Zope"
-  ...
-
-We can allow our application to be viewed by the Zope standard
-``contents.html`` view for site folders. For this we make it provide
-`ISiteManagementFolder`::
-
-  >>> from zope.site.interfaces import ISiteManagementFolder
-  >>> from zope.interface import alsoProvides
-  >>> alsoProvides(root['app'], ISiteManagementFolder)
 
 Now there is a ``contents.html`` view available for our application,
 which is protected by default::
@@ -43,7 +49,7 @@ which is protected by default::
   >>> print http(r'''
   ... GET /app/@@contents.html HTTP/1.1
   ... ''')
-  HTTP/1.1 401 Unauthorized
+  HTTP/1.0 401 Unauthorized
   ...
   
 However, if we make a grant, e.g. on the root object, we can access
@@ -57,12 +63,12 @@ the view just fine:
   >>> print http(r'''
   ... GET /@@contents.html HTTP/1.1
   ... ''')
-  HTTP/1.1 200 Ok
+  HTTP/1.0 200 Ok
   ...
 
 The default view is accessible::
   
-  >>> from zope.testbrowser.testing import Browser
+  >>> from zope.app.wsgi.testlayer import Browser
   >>> browser = Browser()
   >>> browser.open('http://localhost/app')
   >>> print browser.contents

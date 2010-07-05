@@ -32,14 +32,13 @@ from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.securitypolicy.interfaces import IRole
 from zope.securitypolicy.rolepermission import rolePermissionManager
 
-from zope.app.publisher.xmlrpc import MethodPublisher
-
 from zope.intid import IntIds
 from zope.intid.interfaces import IIntIds
 from zope.catalog.catalog import Catalog
 from zope.catalog.interfaces import ICatalog
-
+from zope.location import Location
 from zope.exceptions.interfaces import DuplicationError
+from zope.publisher.xmlrpc import XMLRPCView
 
 import martian
 from martian.error import GrokError
@@ -54,6 +53,16 @@ from grokcore.security.meta import PermissionGrokker
 
 from grokcore.view.meta.views import default_fallback_to_name
 
+class MethodPublisher(XMLRPCView, Location):
+    """Copied from zope.app.publisher.xmlrpc to get rid of that dependency.
+    """
+    def __getParent(self):
+        return hasattr(self, '_parent') and self._parent or self.context
+
+    def __setParent(self, parent):
+        self._parent = parent
+
+    __parent__ = property(__getParent, __setParent)
 
 class XMLRPCGrokker(martian.MethodGrokker):
     """Grokker for methods of a `grok.XMLRPC` subclass.

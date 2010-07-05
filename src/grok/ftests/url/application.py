@@ -7,7 +7,7 @@ application::
 
 Asking for the application_url on the cave returns the URL to the cave::
 
-  >>> from zope.testbrowser.testing import Browser
+  >>> from zope.app.wsgi.testlayer import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open('http://localhost/cave')

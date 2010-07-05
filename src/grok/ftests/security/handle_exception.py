@@ -4,7 +4,7 @@ The handleException() method has a special case that might introduce a proxy
 and cause the grok security to fail, we have a simple test here that assures
 that we don't hit this:
 
-  >>> from zope.testbrowser.testing import Browser
+  >>> from zope.app.wsgi.testlayer import Browser
   >>> browser = Browser()
   >>> browser.open("http://localhost/@@cave")
   Traceback (most recent call last):

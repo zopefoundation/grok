@@ -11,6 +11,21 @@ features (please refer to ``CHANGES.txt`` for those).
 **Warning**. Please be sure to always backup your data (especially the
 ``Data.fs`` file) before you perform upgrades.
 
+.. _upgrade_notes_1.1:
+
+Upgrading to 1.1 (unreleased)
+-----------------------------
+
+* `z3c.testsetup` dependency has been removed from grok. If you use
+  grok.testing.register_all_tests in your testsetup, make sure to
+  require ``z3c.testsetup`` (and also ``zope.app.testing``, if you use
+  functional tests) in `setup.py` of your project and use::
+
+    import z3c.testsetsetup
+    z3c.testsetup.register_all_tests(...)
+
+  where you used ``grok.testing.register_all_tests(...)`` before.
+
 .. _upgrade_notes_1.1rc1:
 
 Upgrading to 1.1rc1 (2010-02-25)

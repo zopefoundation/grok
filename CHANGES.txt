@@ -4,7 +4,9 @@ Grok changes
 1.2 (unreleased)
 ================
 
-* ...
+* Removed z3c.testsetup-specific test collector from grok.testing. You
+  can still use z3c.testsetup with grok, but have to declare the
+  dependency in your project's ``setup.py`` explicitly.
 
 1.1rc1 (2010-02-25)
 ===================
