@@ -8,6 +8,14 @@ Grok changes
   can still use z3c.testsetup with grok, but have to declare the
   dependency in your project's ``setup.py`` explicitly.
 
+* the grok.View component now uses the grokcore.message package for
+  its `flash` method.
+
+* Grok test zcml now explicitly sets a defaultView name (to
+  `index.html`). This has been added since we no longer depend on
+  packages such as zope.app.zcmlfiles, that used to take care of that
+  configuration step.
+
 1.1rc1 (2010-02-25)
 ===================
 

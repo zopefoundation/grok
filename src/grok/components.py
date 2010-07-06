@@ -29,20 +29,18 @@ from zope.publisher.interfaces import NotFound
 from zope.publisher.interfaces.browser import IBrowserPublisher
 from zope.publisher.interfaces.http import IHTTPRequest
 from zope.publisher.publish import mapply
-from zope.annotation.interfaces import IAttributeAnnotatable
-
 from zope.publisher.defaultview import getDefaultViewName
-from zope.container.btree import BTreeContainer
-from zope.container.contained import Contained
 from zope.container.interfaces import IReadContainer
 
 import grok
-import z3c.flashmessage.interfaces
 import martian.util
 
 import grokcore.view
 import grokcore.site
+import grokcore.message
 from grok import interfaces, util
+
+# BBB this is for import backward compatibility.
 from grokcore.content import Model, Container, OrderedContainer
 
 
@@ -138,11 +136,7 @@ class View(grokcore.view.View):
 
     def flash(self, message, type='message'):
         """Send a short message to the user."""
-        # XXX this has no tests or documentation, anywhere
-        source = component.getUtility(
-            z3c.flashmessage.interfaces.IMessageSource, name='session')
-        source.send(message, type)
-
+        grokcore.message.send(message, type=type, name='session')
 
 
 class Form(grokcore.formlib.Form, View):

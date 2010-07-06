@@ -15,8 +15,8 @@
 """
 import grok
 import grok.interfaces
-import zope.event
 import zope.location.location
+
 from zope import interface
 from zope.schema.interfaces import WrongType
 from zope.security.checker import NamesChecker, defineChecker
