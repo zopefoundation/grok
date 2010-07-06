@@ -1,12 +1,14 @@
 <configure
    xmlns="http://namespaces.zope.org/zope"
    xmlns:grok="http://namespaces.zope.org/grok"
+   xmlns:browser="http://namespaces.zope.org/browser"
    i18n_domain="grok"
-   package="grok"
-   >
+   package="grok">
 
   <include package="grok" />
   <grok:grok package="grok.ftests" />
+
+  <browser:defaultView name="index.html" />
 
   <securityPolicy
       component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy"

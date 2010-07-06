@@ -1,5 +1,4 @@
 """
-
 The handleException() method has a special case that might introduce a proxy
 and cause the grok security to fail, we have a simple test here that assures
 that we don't hit this:
@@ -10,13 +9,12 @@ that we don't hit this:
   Traceback (most recent call last):
   HTTPError: HTTP Error 500: Internal Server Error
   >>> browser.contents
-  "It's gone!"
+  'It is gone!'
 
 """
 
-import zope.interface
-
 import grok
+from zope.interface import Interface
 
 
 class CaveWasRobbedError(Exception):
@@ -24,19 +22,21 @@ class CaveWasRobbedError(Exception):
 
 
 class Cave(grok.View):
+    """Home of Grok.
+    """
+    grok.context(Interface)
 
-    grok.context(zope.interface.Interface)
-
-    fire = "It's gone!"
+    fire = 'It is gone!'
 
     def render(self):
         raise CaveWasRobbedError("EVERYTHING GONE! GROK ANGRY!")
 
 
 class CaveErrorView(grok.View):
-
-    grok.context(CaveWasRobbedError)
+    """Default view for the CaveWasRobbedError.
+    """
     grok.name("index.html")
+    grok.context(CaveWasRobbedError)
 
     def render(self):
         self.request.response.setStatus(500)
