@@ -55,6 +55,7 @@ setup(
         'pytz',
         'setuptools',
         'simplejson',
+        'z3c.autoinclude',
         'zc.catalog',
         'zope.annotation',
         'zope.app.appsetup',
