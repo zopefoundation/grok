@@ -27,6 +27,7 @@ from martian.util import frame_is_class
 
 from grok.interfaces import IIndexDefinition
 
+
 class IndexDefinition(object):
     """The definition of a particular index in a `grok.Indexes` class.
 
@@ -82,19 +83,22 @@ class IndexDefinition(object):
             call = IMethod.providedBy(method)
         else:
             call = callable(getattr(context, field_name, None))
-            context = None # no interface lookup
+            context = None  # no interface lookup
         catalog[name] = self.index_class(field_name=field_name,
                                          interface=context,
                                          field_callable=call,
                                          *self._args, **self._kw)
 
+
 class Field(IndexDefinition):
     """A `grok.Indexes` index that matches against an entire field."""
     index_class = FieldIndex
 
+
 class Text(IndexDefinition):
     """A `grok.Indexes` index supporting full-text searches of a field."""
     index_class = TextIndex
+
 
 class Set(IndexDefinition):
     """A `grok.Indexes` index supporting keyword searches of a field."""

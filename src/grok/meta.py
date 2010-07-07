@@ -53,6 +53,7 @@ from grokcore.security.meta import PermissionGrokker
 
 from grokcore.view.meta.views import default_fallback_to_name
 
+
 class MethodPublisher(XMLRPCView, Location):
     """Copied from zope.app.publisher.xmlrpc to get rid of that dependency.
     """
@@ -63,6 +64,7 @@ class MethodPublisher(XMLRPCView, Location):
         self._parent = parent
 
     __parent__ = property(__getParent, __setParent)
+
 
 class XMLRPCGrokker(martian.MethodGrokker):
     """Grokker for methods of a `grok.XMLRPC` subclass.
@@ -89,8 +91,7 @@ class XMLRPCGrokker(martian.MethodGrokker):
         # views have a location
         method_view = type(
             factory.__name__, (factory, MethodPublisher),
-            {'__call__': method}
-            )
+            {'__call__': method})
 
         adapts = (context, IXMLRPCRequest)
         config.action(
@@ -135,8 +136,7 @@ class RESTGrokker(martian.MethodGrokker):
 
         method_view = type(
             factory.__name__, (factory,),
-            {'__call__': method }
-            )
+            {'__call__': method})
 
         adapts = (context, layer)
         config.action(
@@ -153,6 +153,7 @@ class RESTGrokker(martian.MethodGrokker):
 
 
 _restskin_not_used = object()
+
 
 class RestskinInterfaceDirectiveGrokker(martian.InstanceGrokker):
     """Grokker for interfaces providing the `grok.restskin()` directive.
@@ -186,13 +187,13 @@ class RestskinInterfaceDirectiveGrokker(martian.InstanceGrokker):
                 "required for interfaces that are used as layers and are to "
                 "be registered as a restskin."
                 % (interface.__identifier__, interface.__identifier__),
-                interface
-                )
+                interface)
+
         config.action(
             discriminator=('restprotocol', restskin),
             callable=zope.component.interface.provideInterface,
-            args=(restskin, interface, IRESTSkinType)
-            )
+            args=(restskin, interface, IRESTSkinType))
+
         return True
 
 
@@ -221,20 +222,21 @@ class JSONGrokker(martian.MethodGrokker):
         # JSON class knows what method to call.
         method_view = type(
             factory.__name__, (factory,),
-            {'__view_name__': method.__name__}
-            )
+            {'__view_name__': method.__name__})
+
         adapts = (context, layer)
         name = method.__name__
+
         config.action(
             discriminator=('adapter', adapts, interface.Interface, name),
             callable=component.provideAdapter,
-            args=(method_view, adapts, interface.Interface, name),
-            )
+            args=(method_view, adapts, interface.Interface, name))
+
         config.action(
             discriminator=('protectName', method_view, '__call__'),
             callable=make_checker,
-            args=(factory, method_view, permission),
-            )
+            args=(factory, method_view, permission))
+
         return True
 
 
@@ -407,4 +409,3 @@ class IndexesSetupSubscriber(object):
             grokcore.site.interfaces.IUtilityInstaller)
         setupUtility(site, intids, IIntIds)
         return intids
-

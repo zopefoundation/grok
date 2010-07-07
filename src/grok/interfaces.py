@@ -66,7 +66,6 @@ class IGrokDirectives(grokcore.component.interfaces.IDirectives,
         """
 
 
-
 class IGrokEvents(interface.Interface):
 
     IObjectCreatedEvent = interface.Attribute("")
@@ -179,12 +178,14 @@ class IREST(interface.Interface):
     body = interface.Attribute(
         """The text of the request body.""")
 
+
 class IApplication(interface.Interface):
     """Marker-interface for grok application factories.
 
     Used to register applications as utilities to look them up and
     provide a list of grokked applications.
     """
+
 
 class IIndexDefinition(interface.Interface):
     """Define an index for grok.Indexes.
@@ -197,19 +198,23 @@ class IIndexDefinition(interface.Interface):
         index for interface or class context.
         """
 
+
 class IRESTLayer(IHTTPRequest):
     """REST-specific Request functionality.
 
     Base Interfaces for defining REST-layers.
     """
 
+
 class IRESTSkinType(IInterface):
     """Skin type for REST requests.
     """
 
+
 class IContainer(IContext, IContainerBase):
     """A Grok container.
     """
+
 
 class IGrokSecurityView(interface.Interface):
     """A view treated special by the Grok publisher.
@@ -221,6 +226,7 @@ class IGrokSecurityView(interface.Interface):
     `grok.Permission` and `grok.require` settings however, will be
     applied to such views.
     """
+
 
 class IApplicationInitializedEvent(IObjectEvent):
     """A Grok Application has been created with success and is now ready

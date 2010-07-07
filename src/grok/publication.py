@@ -40,6 +40,7 @@ from zope.app.publication.requestpublicationfactories import \
 
 from grok.interfaces import IGrokSecurityView
 
+
 class ZopePublicationSansProxy(object):
     """Grok mixin that makes a publisher remove security proxies.
 
@@ -103,6 +104,7 @@ class GrokBrowserPublication(ZopePublicationSansProxy, BrowserPublication):
             request, ob)
         return removeSecurityProxy(obj), path
 
+
 class GrokBrowserFactory(BrowserFactory):
     """Returns the classes Grok uses for browser requests and publication.
 
@@ -120,6 +122,7 @@ class GrokBrowserFactory(BrowserFactory):
 
 class GrokXMLRPCPublication(ZopePublicationSansProxy, BaseHTTPPublication):
     """Combines `BaseHTTPPublication` with the Grok sans-proxy mixin."""
+
 
 class GrokXMLRPCFactory(XMLRPCFactory):
     """Returns the classes Grok uses for browser requests and publication.
@@ -162,6 +165,7 @@ class GrokHTTPPublication(ZopePublicationSansProxy, HTTPPublication):
             if ob is None:
                 raise GrokMethodNotAllowed(orig, request)
         return mapply(ob, request.getPositionalArguments(), request)
+
 
 class GrokHTTPFactory(HTTPFactory):
     """Returns the classes Grok uses for HTTP requests and publication.

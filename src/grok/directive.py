@@ -47,6 +47,7 @@ class site(martian.Directive):
     store = martian.ONCE
     validate = martian.validateInterfaceOrClass
 
+
 class permissions(martian.Directive):
     """The `grok.permissions()` directive.
 
@@ -84,6 +85,7 @@ class permissions(martian.Directive):
                 permission_ids.append(value)
         return permission_ids
 
+
 class traversable(martian.Directive):
     """The `grok.traversable()` directive.
 
@@ -110,6 +112,7 @@ class traversable(martian.Directive):
         if name is None:
             name = attr
         return (name, attr)
+
 
 class restskin(martian.Directive):
     """The `grok.restskin()` directive.
