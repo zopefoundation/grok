@@ -17,14 +17,11 @@
   <include package="zope.app.appsetup" />
   <include package="zope.app.http" />
   <include package="zope.app.publication" />
-  <include package="zope.app.wsgi" />
   <include package="zope.annotation" />
   <include package="zope.browserpage" />
   <include package="zope.catalog" />
   <include package="zope.component" />
   <include package="zope.contentprovider" />
-  <include package="zope.copypastemove" />
-  <include package="zope.i18n.locales" />
   <include package="zope.intid" />
   <include package="zope.keyreference" />
   <include package="zope.location" />
@@ -34,7 +31,6 @@
   <include package="zope.publisher" />
   <include package="zope.security " />
   <include package="zope.securitypolicy" />
-  <include package="zope.session" />
   <include package="zope.site" />
   <include package="zope.traversing" />
   <include package="zope.traversing.browser" />
