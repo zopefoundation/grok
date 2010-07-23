@@ -69,6 +69,7 @@ setup(
         'zope.event',
         'zope.exceptions',
         'zope.i18n',
+        'zope.i18nmessageid',
         'zope.interface',
         'zope.intid',
         'zope.keyreference',

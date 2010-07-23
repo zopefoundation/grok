@@ -16,6 +16,37 @@ Grok changes
   packages such as zope.app.zcmlfiles, that used to take care of that
   configuration step.
 
+1.1.2 (unreleased)
+==================
+
+- Internationalization of title and description of roles are not lost anymore.
+
+- `create_application` now raises a `KeyError`, in cases of key
+  duplication, to match the ``zope.container`` behavior. Tests have
+  been adapted accordingly.
+
+- Added `KeyError` error handling to the existing `DuplicationError`,
+  to fit the ``zope.container`` changes. Tests have been adapted accordingly.
+
+1.1.1 (2010-05-30)
+==================
+
+- Make use of the groktoolkit 1.1.1 that includes several bugfix releases
+  of Grok's dependencies such as:
+
+  - zope.password, where the SSHAPasswordManager was fixed.
+
+  - zope.publisher, that fixes the long standing XML-RPC "hanging" bug.
+
+- Cleanups in the buildout parts.
+
+- Remove zope.app.twisted.
+
+1.1 (2010-05-18)
+================
+
+- Add zope.pluggablauth as a dependency.
+
 1.1rc1 (2010-02-25)
 ===================
 

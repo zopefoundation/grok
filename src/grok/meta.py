@@ -32,6 +32,7 @@ from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
 from zope.securitypolicy.interfaces import IRole
 from zope.securitypolicy.rolepermission import rolePermissionManager
 
+from zope.i18nmessageid import Message
 from zope.intid import IntIds
 from zope.intid.interfaces import IIntIds
 from zope.catalog.catalog import Catalog
@@ -278,7 +279,11 @@ class RoleGrokker(martian.ClassGrokker):
                 "grok.name to specify one.", factory)
         # We can safely convert to unicode, since the directives makes sure
         # it is either unicode already or ASCII.
-        role = factory(unicode(name), unicode(title), unicode(description))
+        if not isinstance(title, Message):
+            title = unicode(title)
+        if not isinstance(description, Message):
+            description = unicode(description)
+        role = factory(unicode(name), title, description)
 
         config.action(
             discriminator=('utility', IRole, name),
