@@ -72,6 +72,7 @@ setup(
                       'zope.exceptions',
                       'zope.formlib',
                       'zope.i18n',
+                      'zope.i18nmessageid',
                       'zope.interface',
                       'zope.intid',
                       'zope.keyreference',

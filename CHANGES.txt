@@ -4,6 +4,8 @@ Grok changes
 1.1.2 (unreleased)
 ==================
 
+- Internationalization of title and description of roles are not lost anymore.
+
 - `create_application` now raises a `KeyError`, in cases of key
   duplication, to match the ``zope.container`` behavior. Tests have
   been adapted accordingly.
