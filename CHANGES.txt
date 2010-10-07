@@ -4,29 +4,33 @@ Grok changes
 1.2 (unreleased)
 ================
 
-* Removed z3c.testsetup-specific test collector from grok.testing. You
-  can still use z3c.testsetup with grok, but have to declare the
-  dependency in your project's ``setup.py`` explicitly.
+- Grok and the Grok Toolkit now use zc.buildout-1.5.1 that should simplify
+  Grok's installation story significantly. It is now possible to use a system
+  Python installation for installing Grok. This obsoletes the ``virtualenv``
+  requirement.
 
-* the grok.View component now uses the grokcore.message package for
-  its `flash` method.
+- Grok and the Grok Toolkit now officially use the ZTK.
 
-* Grok test zcml now explicitly sets a defaultView name (to
-  `index.html`). This has been added since we no longer depend on
-  packages such as zope.app.zcmlfiles, that used to take care of that
-  configuration step.
+- Various dependencies have been updated.
 
-1.1.2 (unreleased)
-==================
+- Removed z3c.testsetup-specific test collector from grok.testing. You can
+  still use z3c.testsetup with grok, but have to declare the dependency in your
+  project's ``setup.py`` explicitly.
+
+- The grok.View component now uses the grokcore.message package for its
+  `flash` method.
+
+  - Grok test zcml now explicitly sets a defaultView name (to `index.html`).
+  This has been added since we no longer depend on packages such as
+  zope.app.zcmlfiles, that used to take care of that configuration step.
 
 - Internationalization of title and description of roles are not lost anymore.
 
-- `create_application` now raises a `KeyError`, in cases of key
-  duplication, to match the ``zope.container`` behavior. Tests have
-  been adapted accordingly.
+- `create_application` now raises a `KeyError`, in cases of key duplication,
+  to match the ``zope.container`` behavior. Tests have been adapted accordingly.
 
-- Added `KeyError` error handling to the existing `DuplicationError`,
-  to fit the ``zope.container`` changes. Tests have been adapted accordingly.
+- Added `KeyError` error handling to the existing `DuplicationError`, to fit
+  the ``zope.container`` changes. Tests have been adapted accordingly.
 
 1.1.1 (2010-05-30)
 ==================
