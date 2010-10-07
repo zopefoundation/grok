@@ -1,8 +1,8 @@
 Grok changes
 ************
 
-1.2 (unreleased)
-================
+1.2a (2010-10-07)
+=================
 
 - Grok and the Grok Toolkit now use zc.buildout-1.5.1 that should simplify
   Grok's installation story significantly. It is now possible to use a system
