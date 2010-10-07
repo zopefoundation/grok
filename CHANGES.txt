@@ -9,7 +9,8 @@ Grok changes
   Python installation for installing Grok. This obsoletes the ``virtualenv``
   requirement.
 
-- Grok and the Grok Toolkit now officially use the ZTK.
+- Grok and the Grok Toolkit will use the ZTK-1.0 release. Note though that
+  several package versions are overridden to include bugfix releases.
 
 - Various dependencies have been updated.
 
