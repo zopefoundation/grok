@@ -4,7 +4,7 @@ Grok
 What is grok?
 =============
 
-Grok is a smashing web framework based on Zope Toolkit_ technology.
+Grok is a smashing web framework based on `Zope Toolkit`_ technology.
 
 .. _`Zope Toolkit`: http://docs.zope.org/zopetoolkit
 

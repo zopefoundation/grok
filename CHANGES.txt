@@ -10,8 +10,7 @@ Grok changes
 1.2 (2010-10-13)
 ================
 
-- Nothing changed yet.
-
+- No changes were necessary.
 
 1.2a (2010-10-07)
 =================
