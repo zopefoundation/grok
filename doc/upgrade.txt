@@ -15,6 +15,7 @@ refer to ``CHANGES.txt`` for those).
 .. _upgrade_notes_1.2:
 
 Upgrading to 1.2 (2010-10-26)
+-----------------------------
 
 To upgrade your Grok based project, make sure your project's ``buildout.cfg``
 extends from the ``versions.cfg`` of the latest Grok Toolkit release. This file
