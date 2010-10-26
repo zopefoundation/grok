@@ -1,12 +1,10 @@
 import os.path
 import z3c.testsetup
+from zope.app.wsgi.testlayer import BrowserLayer
+
 import sample
-from zope.app.testing.functional import ZCMLLayer
 
+browser_layer = BrowserLayer(groktutexample)
 
-ftesting_zcml = os.path.join(
-    os.path.dirname(sample.__file__), 'ftesting.zcml')
-FunctionalLayer = ZCMLLayer(ftesting_zcml, __name__, 'FunctionalLayer',
-                            allow_teardown=True)
-
-test_suite = z3c.testsetup.register_all_tests('sample')
+test_suite = z3c.testsetup.register_all_tests(
+    'sample', globs={'getRootFolder': browser_layer.getRootFolder})
