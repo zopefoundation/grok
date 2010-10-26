@@ -4,7 +4,11 @@ Grok changes
 1.2.1 (unreleased)
 ==================
 
+- Grok tutorial example projects updated.
+
 - Documentation updates in preparation for the Grok Toolkit 1.2 release.
+
+- Use zc.buildout-1.5.2.
 
 1.2 (2010-10-13)
 ================
