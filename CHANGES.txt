@@ -1,11 +1,10 @@
 Grok changes
 ************
 
-1.3 (unreleased)
-================
+1.2.1 (unreleased)
+==================
 
-- Nothing changed yet.
-
+- Documentation updates in preparation for the Grok Toolkit 1.2 release.
 
 1.2 (2010-10-13)
 ================
