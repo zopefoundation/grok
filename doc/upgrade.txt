@@ -11,9 +11,28 @@ features (please refer to ``CHANGES.txt`` for those).
 **Warning**. Please be sure to always backup your data (especially the
 ``Data.fs`` file) before you perform upgrades.
 
+.. _upgrade_notes_1.2:
+
+Upgrading to 1.2 (unreleased)
+
+* make sure your project's buildout.cfg now refers to
+
+    http://grok.zope.org/releaseinfo/1.2/versions.cfg
+
+  then re-run ``bootstrap.py`` to prevent potential zc.buldout version
+  conflicts. then run bin/buildout.
+
+* zdaemon support has been removed, use a fresh app skeleton as an example
+  how to restructure you app.
+
+* zope.app.* dependencies removed, install_require yourself now
+
+* a configuration of a package might not be triggered implicitely anymore,
+  include it your self in the configure.zcml
+
 .. _upgrade_notes_1.1:
 
-Upgrading to 1.1 (unreleased)
+Upgrading to 1.1 (2010-05-18)
 -----------------------------
 
 * `z3c.testsetup` dependency has been removed from grok. If you use
