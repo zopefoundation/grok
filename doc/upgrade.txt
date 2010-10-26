@@ -1,34 +1,81 @@
 .. _upgrade_notes:
 
+
 Upgrade notes
 =============
 
-This document outlines how to update Grok applications so that they
-continue to work with newer versions of Grok.  This document only
-describes changes involving incompatibilities or deprecations, not new
-features (please refer to ``CHANGES.txt`` for those).
+This document outlines how to update Grok applications so that they continue to
+work with newer versions of Grok. This document only describes changes
+involving incompatibilities or deprecations, not new features (please refer to
+``CHANGES.txt`` for those).
 
 **Warning**. Please be sure to always backup your data (especially the
 ``Data.fs`` file) before you perform upgrades.
 
 .. _upgrade_notes_1.2:
 
-Upgrading to 1.2 (unreleased)
+Upgrading to 1.2 (2010-10-26)
 
-* make sure your project's buildout.cfg now refers to
+To upgrade your Grok based project, make sure your project's ``buildout.cfg``
+extends from the ``versions.cfg`` of the latest Grok Toolkit release. This file
+can be found here::
 
     http://grok.zope.org/releaseinfo/1.2/versions.cfg
 
-  then re-run ``bootstrap.py`` to prevent potential zc.buldout version
-  conflicts. then run bin/buildout.
+Then re-run ``bootstrap.py`` in your project to prevent potential
+``zc.buildout`` version conflicts. Then run ``bin/buildout`` to get the latest
+versions of all of the packages that comprise the Grok Toolkit.
 
-* zdaemon support has been removed, use a fresh app skeleton as an example
-  how to restructure you app.
+Extra notes:
 
-* zope.app.* dependencies removed, install_require yourself now
+* In Grok 1.2 the "zdaemon" support has been removed. If your project still
+  relied on this method of starting and stopping the server you will need to
+  update your prokject.
 
-* a configuration of a package might not be triggered implicitely anymore,
-  include it your self in the configure.zcml
+  The easiest way for find what parts and file to add, is to create a new
+  project using the ``grokproject`` tool and then to compare its structure to
+  your project's structure. Look for the "debug_ini" and "deploy_ini" parts in
+  the ``buildout.cfg`` file and the corresponding configuration file templates.
+
+* A large numner of ``zope.app.`` dependencies have been removed. Even though
+  most of these packages just contained backwards compatibility imports, your
+  application might still contain imports from these ``zope.app.`` packages.
+
+  The best way to update this, is to carefully search for ``zope.app.`` imports
+  in your project and to rewrite them to the new import locations. Note though,
+  that in rare cases, this might break persisted object in your database.
+
+  If this is the case, you will need to add the particular ``zope.app.``
+  package to the ``install_requires`` section in the ``setup.py`` of your
+  project. After a re-run of ``./bin/buildout`` these package are now again
+  available to your project.
+
+  In general it is good practice to explicitely list the dependencies of your
+  project in the ``setup.py``. In other words: if your project imports from
+  packages, these packages should be listed in the ``install_requires`` of your
+  project's ``setup.py``.
+
+* One specific case of a ``zope.app.`` depdendency that got removed and
+  replaced is ``zope.app.testing`` that is used in the test setup of your
+  project. Most of the functionality in ``zope.app.testing`` has been rebuild
+  in ``zope.component.testlayer``, ``zope.app.appsetup``, and
+  ``zope.app.wsgi.testlayer``.
+
+  Again, the easiest way to upgrade this part of your project, is to look a
+  freshly created project using the ``grokproject`` tool. There, the test setup
+  code uses the "new style" test layers for functional testing.
+
+* In some case the configuration step of a dependency is not triggered
+  anymore, where it used to be before most of the ``zope.app.`` dependencies
+  got removed. If this is the case (for example for components in in
+  zope.pluggableauth.plugins), you will need to trigger the configuration
+  yourself from your project's ``configure.zcml`` like so::
+
+    <include package="[PACKAGE_TO_CONFIGURE]" />
+
+  or, for a specific ``*.zcml`` file in package::
+
+    <include package="[PACKAGE_TO_CONFIGURE]" file="[ZCML_FILE]"/>
 
 .. _upgrade_notes_1.1:
 

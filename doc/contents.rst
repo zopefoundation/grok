@@ -6,6 +6,7 @@ Grok Documentation Contents
    :maxdepth: 2
 
    changes.rst
+   upgrade.rst
    tutorial.rst
    grok_overview.rst
    reference/index.rst

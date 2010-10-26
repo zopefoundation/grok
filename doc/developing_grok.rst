@@ -71,10 +71,9 @@ After having released Grok, the following steps should be taken:
 
    .. _`releases folder`: http://grok.zope.org/project/releases/
 
-3. Update the `upgrade notes`_ with the latest version as in
-   ``doc/upgrade.txt``.
-
-   .. _`upgrade notes`: http://grok.zope.org/project/upgrade-notes
+3. Official Documentation: Create a build of the docs from the tagged
+  release and copy it to the server. Detailed steps are documented in the
+  `Updating the Official Grok Documentation (OGD)`_ page.
 
 4. Create a news item in the `blog folder`_ announcing the news. The text
    can be based on the release notes written at point 7.
@@ -82,8 +81,9 @@ After having released Grok, the following steps should be taken:
    .. _`blog folder`: http://grok.zope.org/blog/
 
 5. Make both the new release notes, the new news item, as well as the
-   updated upgrade notes public. 6. Update the sidebar in the site. You can
-   edit it here::
+   updated upgrade notes public.
+
+6. Update the sidebar in the site. You can edit it here::
 
      http://grok.zope.org/portal_skins/custom/portlet_download/manage_main
 
@@ -95,15 +95,11 @@ After having released Grok, the following steps should be taken:
    documentation which is truly outdated and no longer best practice. Do this
    here: http://grok.zope.org/documentation/edit
 
-9. Official Documentation: Create a build of the docs from the tagged
-  release and copy it to the server. Detailed steps are documented in the
-  `Updating the Official Grok Documentation (OGD)`_ page.
-
-10. Send out an email to at least zope-announce@zope.org as well as grok-
+8. Send out an email to at least zope-announce@zope.org as well as grok-
    dev@zope.org announcing the new release. The text can be based on the
    release notes written at point 7.
 
-11. Update the Grok Wikipedia article with the information about the latest
+9. Update the Grok Wikipedia article with the information about the latest
    release: http://en.wikipedia.org/wiki/Grok_(web_framework)
 
 .. _`Updating the Official Grok Documentation (OGD)`: http://grok.zope.org/project/meta/updating-the-official-grok-documentation-ogd
