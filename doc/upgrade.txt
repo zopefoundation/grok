@@ -5,9 +5,9 @@ Upgrade notes
 =============
 
 This document outlines how to update Grok applications so that they continue to
-work with newer versions of Grok. This document only describes changes
-involving incompatibilities or deprecations, not new features (please refer to
-``CHANGES.txt`` for those).
+work with newer versions of the Grok Toolkit. This document only describes
+changes involving incompatibilities or deprecations, not new features (please
+refer to ``CHANGES.txt`` for those).
 
 **Warning**. Please be sure to always backup your data (especially the
 ``Data.fs`` file) before you perform upgrades.
