@@ -72,8 +72,8 @@ After having released Grok, the following steps should be taken:
    .. _`releases folder`: http://grok.zope.org/project/releases/
 
 3. Official Documentation: Create a build of the docs from the tagged
-  release and copy it to the server. Detailed steps are documented in the
-  `Updating the Official Grok Documentation (OGD)`_ page.
+   release and copy it to the server. Detailed steps are documented in the
+   `Updating the Official Grok Documentation (OGD)`_ page.
 
 4. Create a news item in the `blog folder`_ announcing the news. The text
    can be based on the release notes written at point 7.
@@ -97,7 +97,7 @@ After having released Grok, the following steps should be taken:
 
 8. Send out an email to at least zope-announce@zope.org as well as grok-
    dev@zope.org announcing the new release. The text can be based on the
-   release notes written at point 7.
+   release notes written at step 2.
 
 9. Update the Grok Wikipedia article with the information about the latest
    release: http://en.wikipedia.org/wiki/Grok_(web_framework)
