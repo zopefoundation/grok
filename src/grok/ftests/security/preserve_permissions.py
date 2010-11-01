@@ -25,7 +25,7 @@ permission, ``zope.ManageContent``::
   >>> required['__call__'] = 'zope.ManageContent'
   >>> required['browserDefault'] = 'zope.ManageContent'
   >>> defineChecker(Contents, Checker(required))
-  
+
 The `@@contents.html` view of folders is protected by
 `zope.ManageContent` and should not be visible to unauthenticated
 users. Instead we are asked to authenticate ourselves::
@@ -51,7 +51,7 @@ which is protected by default::
   ... ''')
   HTTP/1.0 401 Unauthorized
   ...
-  
+
 However, if we make a grant, e.g. on the root object, we can access
 the view just fine:
 
@@ -67,7 +67,7 @@ the view just fine:
   ...
 
 The default view is accessible::
-  
+
   >>> from zope.app.wsgi.testlayer import Browser
   >>> browser = Browser()
   >>> browser.open('http://localhost/app')
@@ -84,6 +84,7 @@ While the manage view is locked::
 We have some static resources defined in a local `static` directory,
 which we can access unauthenticated::
 
+  >>> browser.handleErrors = False
   >>> browser.open('http://localhost/@@/grok.ftests.security/textfile.txt')
   >>> print browser.contents
   Just a test.
@@ -94,7 +95,7 @@ When we authenticate, everything works fine::
   >>> browser.open('http://localhost/app/@@manage')
   >>> print browser.contents
   Woo!
-  
+
 """
 import grok
 

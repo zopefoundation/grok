@@ -50,9 +50,8 @@ from grok.util import make_checker
 from grok.interfaces import IRESTSkinType
 
 import grokcore.site.interfaces
+from grokcore.component.meta import default_context
 from grokcore.security.meta import PermissionGrokker
-
-from grokcore.view.meta.views import default_fallback_to_name
 
 
 class MethodPublisher(XMLRPCView, Location):
@@ -82,7 +81,7 @@ class XMLRPCGrokker(martian.MethodGrokker):
 
     """
     martian.component(grok.XMLRPC)
-    martian.directive(grok.context)
+    martian.directive(grok.context, get_default=default_context)
     martian.directive(grok.require, name='permission')
 
     def execute(self, factory, method, config, context, permission, **kw):
@@ -127,7 +126,7 @@ class RESTGrokker(martian.MethodGrokker):
 
     """
     martian.component(grok.REST)
-    martian.directive(grok.context)
+    martian.directive(grok.context, get_default=default_context)
     martian.directive(grok.layer, default=grok.IRESTLayer)
     martian.directive(grok.require, name='permission')
 
@@ -213,7 +212,7 @@ class JSONGrokker(martian.MethodGrokker):
 
     """
     martian.component(grok.JSON)
-    martian.directive(grok.context)
+    martian.directive(grok.context, get_default=default_context)
     martian.directive(grok.require, name='permission')
     martian.directive(grok.layer, default=IDefaultBrowserLayer)
 
@@ -244,7 +243,7 @@ class JSONGrokker(martian.MethodGrokker):
 class TraverserGrokker(martian.ClassGrokker):
     """Grokker for subclasses of `grok.Traverser`."""
     martian.component(grok.Traverser)
-    martian.directive(grok.context)
+    martian.directive(grok.context, get_default=default_context)
 
     def execute(self, factory, config, context, **kw):
         adapts = (context, IHTTPRequest)
@@ -255,6 +254,8 @@ class TraverserGrokker(martian.ClassGrokker):
             )
         return True
 
+def default_fallback_to_name(factory, module, name, **data):
+    return name
 
 class RoleGrokker(martian.ClassGrokker):
     """Grokker for components subclassed from `grok.Role`.
