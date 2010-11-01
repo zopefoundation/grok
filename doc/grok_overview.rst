@@ -460,7 +460,7 @@ argument is the cookie name, the second the value. Optional keyword
 arguments can be used to set up further cookie properties (such as
 ``max_age`` and ``expires``).
 
-``expireCookie(name, value)`` can be used to immediately expire a
+``expireCookie(name, **kw)`` can be used to immediately expire a
 cookie.
 
 More can be found in the ``IHTTPResponse`` interface documentation
