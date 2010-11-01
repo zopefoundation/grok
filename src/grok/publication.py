@@ -38,8 +38,7 @@ from zope.app.publication.browser import BrowserPublication
 from zope.app.publication.requestpublicationfactories import \
      BrowserFactory, XMLRPCFactory, HTTPFactory
 
-from grok.interfaces import IGrokSecurityView
-
+from grokcore.view.interfaces import IGrokSecurityView
 
 class ZopePublicationSansProxy(object):
     """Grok mixin that makes a publisher remove security proxies.
@@ -54,7 +53,7 @@ class ZopePublicationSansProxy(object):
     bare object (unless the object is a non-Grok view, in which case
     we leave the proxy installed for important security
     reasons).  Non-Grok views however, are handled like Grok views, if
-    they provide `grok.interfaces.IGrokSecurityView`.
+    they provide `grokcore.view.IGrokSecurityView`.
 
     Finally, when `callObject()` is asked to render
     the view, we quickly re-install a security proxy on the object, make

@@ -48,7 +48,8 @@ attributes.
 We let instances of `Index` provide `IGrokSecurityView`::
 
   >>> from zope.interface import classImplements
-  >>> classImplements(Index, grok.interfaces.IGrokSecurityView)
+  >>> import grokcore.view
+  >>> classImplements(Index, grokcore.view.IGrokSecurityView)
 
 Now we can watch the view::
 
