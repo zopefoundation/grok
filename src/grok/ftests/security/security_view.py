@@ -20,7 +20,7 @@ context::
 We create a permission checker for this view, which allows everybody
 to use the `__call__` method::
 
-  >>> from grok.util import make_checker
+  >>> from grokcore.view import make_checker
   >>> make_checker(App, Index, None)
 
 However, when we want to watch this view, we run into trouble::

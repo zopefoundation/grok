@@ -46,13 +46,14 @@ from martian.error import GrokError
 
 import grok
 from grok import components
-from grok.util import make_checker
 from grok.interfaces import IRESTSkinType
 
 import grokcore.site.interfaces
 from grokcore.component.meta import default_context
 from grokcore.security.meta import PermissionGrokker
 
+from grokcore.view import make_checker
+from grokcore.view.meta.views import default_fallback_to_name
 
 class MethodPublisher(XMLRPCView, Location):
     """Copied from zope.app.publisher.xmlrpc to get rid of that dependency.
