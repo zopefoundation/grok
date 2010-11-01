@@ -216,18 +216,6 @@ class IContainer(IContext, IContainerBase):
     """
 
 
-class IGrokSecurityView(interface.Interface):
-    """A view treated special by the Grok publisher.
-
-    Views that provide this interface are treated more generously by
-    the Grok publisher, as they are allowed to use attributes, which
-    are not covered by permission setttings.
-
-    `grok.Permission` and `grok.require` settings however, will be
-    applied to such views.
-    """
-
-
 class IApplicationInitializedEvent(IObjectEvent):
     """A Grok Application has been created with success and is now ready
     to be used.

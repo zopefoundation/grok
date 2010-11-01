@@ -214,7 +214,7 @@ class REST(zope.location.Location, ViewishViewSupport):
 
 class JSON(BrowserPage, ViewishViewSupport):
     """Base class for JSON views in Grok applications."""
-    interface.implements(interfaces.IGrokSecurityView)
+    interface.implements(grokcore.view.IGrokSecurityView)
 
     def __call__(self):
         view_name = self.__view_name__
