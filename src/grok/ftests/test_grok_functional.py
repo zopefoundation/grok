@@ -61,8 +61,7 @@ def test_suite():
     for name in [
         'xmlrpc',
         'traversal', 'form', 'url', 'security', 'rest',
-        'catalog', 'site', 'application', 'viewlet', 'json',
-        'lifecycle']:
+        'catalog', 'site', 'application', 'viewlet', 'lifecycle']:
         suite.addTest(suiteFromPackage(name))
     return suite
 
