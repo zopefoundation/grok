@@ -73,14 +73,6 @@
       />
 
   <publisher
-      name="BROWSER"
-      factory=".publication.GrokBrowserFactory"
-      methods="GET POST HEAD"
-      mimetypes="*"
-      priority="11"
-      />
-
-  <publisher
       name="HTTP"
       factory=".publication.GrokHTTPFactory"
       methods="*"
