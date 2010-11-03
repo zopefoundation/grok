@@ -50,6 +50,7 @@ setup(
         'grokcore.security >= 1.1',
         'grokcore.site',
         'grokcore.view',
+        'grokcore.view [security_publication]',
         'grokcore.viewlet >= 1.3',
         'martian',
         'pytz',

@@ -39,6 +39,7 @@
   <include package="grokcore.formlib" />
   <include package="grokcore.site" />
   <include package="grokcore.view" />
+  <include package="grokcore.view" file="publication_security.zcml" />
   <include package="grokcore.viewlet" />
 
   <securityPolicy
