@@ -23,6 +23,7 @@ from zope.container.interfaces import IContainer as IContainerBase
 import grokcore.annotation.interfaces
 import grokcore.component.interfaces
 import grokcore.formlib.interfaces
+import grokcore.json.interfaces
 import grokcore.security.interfaces
 import grokcore.site.interfaces
 import grokcore.view.interfaces
