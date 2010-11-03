@@ -48,7 +48,6 @@ from grok import components
 from grok.interfaces import IRESTSkinType
 
 import grokcore.site.interfaces
-from grokcore.component.meta import default_context
 from grokcore.security.meta import PermissionGrokker
 
 from grokcore.view import make_checker
@@ -81,7 +80,7 @@ class XMLRPCGrokker(martian.MethodGrokker):
 
     """
     martian.component(grok.XMLRPC)
-    martian.directive(grok.context, get_default=default_context)
+    martian.directive(grok.context)
     martian.directive(grok.require, name='permission')
 
     def execute(self, factory, method, config, context, permission, **kw):
@@ -126,7 +125,7 @@ class RESTGrokker(martian.MethodGrokker):
 
     """
     martian.component(grok.REST)
-    martian.directive(grok.context, get_default=default_context)
+    martian.directive(grok.context)
     martian.directive(grok.layer, default=grok.IRESTLayer)
     martian.directive(grok.require, name='permission')
 
@@ -200,7 +199,7 @@ class RestskinInterfaceDirectiveGrokker(martian.InstanceGrokker):
 class TraverserGrokker(martian.ClassGrokker):
     """Grokker for subclasses of `grok.Traverser`."""
     martian.component(grok.Traverser)
-    martian.directive(grok.context, get_default=default_context)
+    martian.directive(grok.context)
 
     def execute(self, factory, config, context, **kw):
         adapts = (context, IHTTPRequest)

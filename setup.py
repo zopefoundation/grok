@@ -43,7 +43,7 @@ setup(
     install_requires=[
         'ZODB3',
         'grokcore.annotation >= 1.1',
-        'grokcore.component',
+        'grokcore.component >= 2.1',
         'grokcore.content',
         'grokcore.formlib >= 1.4',
         'grokcore.json',
@@ -53,7 +53,7 @@ setup(
         'grokcore.view',
         'grokcore.view [security_publication]',
         'grokcore.viewlet >= 1.3',
-        'martian',
+        'martian >= 0.14',
         'pytz',
         'setuptools',
         'simplejson',
