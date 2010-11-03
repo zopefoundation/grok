@@ -8,6 +8,12 @@ Grok changes
 
 - The `make_checker` util function has been moved to ``grokcore.view``. 
 
+- The base publisher has been moved to ``grokcore.view`` as an
+  optional feature : security_publication.
+
+- The JSON component and grokker are now moved to
+  ``grokcore.json``. Grok now depends on this new grokore package.
+
 - Update to latest martian and grokcore.component.
 
 1.2.1 (2010-10-26)

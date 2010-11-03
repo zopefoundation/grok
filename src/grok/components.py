@@ -41,6 +41,7 @@ import grokcore.message
 from grok import interfaces, util
 
 # BBB this is for import backward compatibility.
+from grokcore.json import JSON
 from grokcore.content import Model, Container, OrderedContainer
 
 
@@ -210,18 +211,6 @@ class REST(zope.location.Location, ViewishViewSupport):
     def __init__(self, context, request):
         self.context = self.__parent__ = context
         self.request = request
-
-
-class JSON(BrowserPage, ViewishViewSupport):
-    """Base class for JSON views in Grok applications."""
-    interface.implements(grokcore.view.IGrokSecurityView)
-
-    def __call__(self):
-        view_name = self.__view_name__
-        method = getattr(self, view_name)
-        method_result = mapply(method, (), self.request)
-        self.request.response.setHeader('Content-Type', 'application/json')
-        return simplejson.dumps(method_result)
 
 
 class Traverser(object):

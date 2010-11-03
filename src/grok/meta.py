@@ -24,8 +24,7 @@ of a Grok-based web application.
 import zope.component.interface
 from zope import interface, component
 from zope.interface.interface import InterfaceClass
-from zope.publisher.interfaces.browser import (IDefaultBrowserLayer,
-                                               IBrowserPublisher)
+from zope.publisher.interfaces.browser import IBrowserPublisher
 from zope.publisher.interfaces.http import IHTTPRequest
 
 from zope.publisher.interfaces.xmlrpc import IXMLRPCRequest
@@ -198,49 +197,6 @@ class RestskinInterfaceDirectiveGrokker(martian.InstanceGrokker):
         return True
 
 
-class JSONGrokker(martian.MethodGrokker):
-    """Grokker for methods of a `grok.JSON` subclass.
-
-    When an application defines a `grok.JSON` view, we do not actually
-    register the view with the Component Architecture.  Instead, we grok
-    each of its methods separately, placing them each inside of a new
-    class that we create on-the-fly by calling `type()`.  We make each
-    method the `__call__()` method of its new class, since that is how
-    Zope always invokes views.  And it is this new class that is then
-    made the object of the two configuration actions that we schedule:
-    one to activate it as a JSON adapter for the context, and the other
-    to prepare a security check for the adapter.
-
-    """
-    martian.component(grok.JSON)
-    martian.directive(grok.context, get_default=default_context)
-    martian.directive(grok.require, name='permission')
-    martian.directive(grok.layer, default=IDefaultBrowserLayer)
-
-    def execute(
-            self, factory, method, config, context, permission, layer, **kw):
-        # Create a new class with a __view_name__ attribute so the
-        # JSON class knows what method to call.
-        method_view = type(
-            factory.__name__, (factory,),
-            {'__view_name__': method.__name__})
-
-        adapts = (context, layer)
-        name = method.__name__
-
-        config.action(
-            discriminator=('adapter', adapts, interface.Interface, name),
-            callable=component.provideAdapter,
-            args=(method_view, adapts, interface.Interface, name))
-
-        config.action(
-            discriminator=('protectName', method_view, '__call__'),
-            callable=make_checker,
-            args=(factory, method_view, permission))
-
-        return True
-
-
 class TraverserGrokker(martian.ClassGrokker):
     """Grokker for subclasses of `grok.Traverser`."""
     martian.component(grok.Traverser)
@@ -255,8 +211,10 @@ class TraverserGrokker(martian.ClassGrokker):
             )
         return True
 
+
 def default_fallback_to_name(factory, module, name, **data):
     return name
+
 
 class RoleGrokker(martian.ClassGrokker):
     """Grokker for components subclassed from `grok.Role`.
