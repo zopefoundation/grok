@@ -5,6 +5,11 @@
    i18n_domain="grok"
    package="grok">
 
+  <include package="zope.security" file="meta.zcml"/>
+
+  <permission title="grok.test"
+              id="grok.test"/>
+
   <include package="grok" />
   <grok:grok package="grok.ftests" />
 
@@ -14,10 +19,20 @@
       component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy"
       />
 
-  <unauthenticatedPrincipal
-      id="zope.anybody"
-      title="Unauthenticated User"
-      />
+
+  <unauthenticatedPrincipal id="zope.anybody"
+                            title="Unauthenticated User" />
+  <unauthenticatedGroup id="zope.Anybody"
+                        title="Unauthenticated Users" />
+  <authenticatedGroup id="zope.Authenticated"
+                      title="Authenticated Users" />
+  <everybodyGroup id="zope.Everybody"
+                  title="All Users" />
+
+  <grant
+      permission="grok.test"
+      principal="zope.Authenticated"/>
+
   <grant
       permission="zope.View"
       principal="zope.anybody"
@@ -30,8 +45,14 @@
       password="mgrpw"
       />
 
+  <principal
+      id="sample.user"
+      title="foo"
+      login="foo"
+      password="secret"
+      />
+
   <role id="zope.Manager" title="Site Manager" />
   <grantAll role="zope.Manager" />
   <grant role="zope.Manager" principal="zope.mgr" />
-
 </configure>
