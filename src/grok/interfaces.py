@@ -147,9 +147,6 @@ class IGrokAPI(grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
     def getSite():
         """Get the current site."""
 
-    def getApplication():
-        """Return the nearest enclosing `grok.Application`."""
-
     IRESTSkinType = interface.Attribute('The REST skin type')
 
 
@@ -178,14 +175,6 @@ class IREST(interface.Interface):
 
     body = interface.Attribute(
         """The text of the request body.""")
-
-
-class IApplication(interface.Interface):
-    """Marker-interface for grok application factories.
-
-    Used to register applications as utilities to look them up and
-    provide a list of grokked applications.
-    """
 
 
 class IIndexDefinition(interface.Interface):

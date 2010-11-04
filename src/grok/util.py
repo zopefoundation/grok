@@ -20,6 +20,7 @@ import zope.location.location
 from zope import interface
 from zope.schema.interfaces import WrongType
 from grokcore.view.util import url
+from grokcore.site.util import getApplication
 
 
 def safely_locate_maybe(obj, parent, name):
@@ -44,24 +45,6 @@ def applySkin(request, skin, skin_type):
     # Add the new skin.
     ifaces.append(skin)
     interface.directlyProvides(request, *ifaces)
-
-
-def getApplication():
-    """Return the nearest enclosing `grok.Application`.
-
-    Raises ValueError if no Application can be found.
-    """
-    site = grok.getSite()
-    if grok.interfaces.IApplication.providedBy(site):
-        return site
-    # Another sub-site is within the application. Walk up the object
-    # tree until we get to the an application.
-    obj = site
-    while obj is not None:
-        if isinstance(obj, grok.Application):
-            return obj
-        obj = obj.__parent__
-    raise ValueError("No application found.")
 
 
 def application_url(request, obj, name=None, data={}):
