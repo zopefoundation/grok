@@ -47,7 +47,6 @@ And of course you can access the protected view.
 import grok
 import zope.interface
 from zope.component import queryUtility
-from zope.pluggableauth.interfaces import IPrincipalCreated
 from zope.security.interfaces import IGroup, IGroupAwarePrincipal
 from zope.authentication.interfaces import IAuthenticatedGroup, IEveryoneGroup
 
