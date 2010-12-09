@@ -18,7 +18,6 @@ Now we can look at the view::
 
 """
 import grok
-from zope.publisher.browser import BrowserPage
 
 class App(grok.Application, grok.Container):
     pass

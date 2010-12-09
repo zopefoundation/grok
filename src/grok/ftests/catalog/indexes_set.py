@@ -29,7 +29,7 @@ Let's query the set index::
   ['Alpha', 'Beta']
   >>> sortedResults(catalog, features={'any_of': ['friendly']})
   ['Beta', 'Gamma']
-  
+
 Nuke the catalog and intids in the end, so as not to confuse
 other tests::
 
@@ -47,7 +47,6 @@ Unfortunately ftests don't have good isolation from each other yet.
 """
 
 from zope.interface import Interface, Attribute
-from zope import schema
 
 import grok
 from grok import index
@@ -57,7 +56,7 @@ class Herd(grok.Container, grok.Application):
 
 class IMammoth(Interface):
     features = Attribute('Features')
-    
+
 class MammothIndexes(grok.Indexes):
     grok.site(Herd)
     grok.context(IMammoth)
@@ -70,4 +69,4 @@ class Mammoth(grok.Model):
     def __init__(self, name, features):
         self.name = name
         self.features = features
-    
+
