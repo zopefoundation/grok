@@ -15,14 +15,15 @@ Let's create an application, then get it using grok.getApplication():
   >>> app = grok.util.create_application(Cave, root, 'mycave')
   >>> root['cave'] = app
   >>> zope.site.hooks.setSite(app)
-  >>> grok.getApplication()
+  >>> import grokcore.site
+  >>> grokcore.site.getApplication()
   <grok.ftests.application.application.Cave object at ...>
-  
+
 Or get it using grok.getSite():
 
   >>> grok.getSite()
   <grok.ftests.application.application.Cave object at ...>
-  
+
 Now we can create a container with a sub-site. When we call grok.getSite()
 we'll get the box:
 
@@ -30,10 +31,10 @@ we'll get the box:
   >>> zope.site.hooks.setSite(root['cave']['box'])
   >>> grok.getSite()
   <grok.ftests.application.application.WoodBox object at ...>
-  
+
 But when we call grok.getApplication() we get the cave:
-  
-  >>> grok.getApplication()
+
+  >>> grokcore.site.getApplication()
   <grok.ftests.application.application.Cave object at ...>
 
 """

@@ -14,7 +14,7 @@
 """Grok utility functions.
 """
 import grok
-import grok.interfaces
+import grokcore.site.interfaces
 import zope.location.location
 
 from zope import interface
@@ -60,7 +60,7 @@ def create_application(factory, container, name):
     the application lifecycle.
     """
     # Check the factory.
-    if not grok.interfaces.IApplication.implementedBy(factory):
+    if not grokcore.site.interfaces.IApplication.implementedBy(factory):
         raise WrongType(factory)
 
     # Check the availability of the name in the container.

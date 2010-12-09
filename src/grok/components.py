@@ -56,7 +56,7 @@ class Application(grokcore.site.Site):
     their Zope database.
 
     """
-    interface.implements(interfaces.IApplication)
+    interface.implements(grokcore.site.interfaces.IApplication)
 
 
 class View(grokcore.view.View):

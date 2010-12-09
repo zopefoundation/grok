@@ -5,8 +5,8 @@ available as a utility::
 
     >>> grok.testing.grok(__name__)
     >>> import zope.component
-    >>> import grok.interfaces
-    >>> calendar_app = zope.component.getUtility(grok.interfaces.IApplication,
+    >>> import grokcore.site.interfaces
+    >>> calendar_app = zope.component.getUtility(grokcore.site.interfaces.IApplication,
     ...                                          name='grok.tests.application.application.Calendar')
     >>> calendar_app
     <class 'grok.tests.application.application.Calendar'>

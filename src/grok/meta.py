@@ -266,7 +266,7 @@ class ApplicationGrokker(martian.ClassGrokker):
 
     def grok(self, name, factory, module_info, config, **kw):
         # XXX fail loudly if the same application name is used twice.
-        provides = grok.interfaces.IApplication
+        provides = grokcore.site.interfaces.IApplication
         name = '%s.%s' % (module_info.dotted_name, name)
         config.action(
             discriminator=('utility', provides, name),
