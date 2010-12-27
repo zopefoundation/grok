@@ -41,6 +41,8 @@ import grokcore.message
 from grok import interfaces, util
 
 # BBB this is for import backward compatibility.
+from grokcore.xmlrpc import XMLRPC
+from grokcore.rest import REST
 from grokcore.json import JSON
 from grokcore.content import Model, Container, OrderedContainer
 
@@ -175,134 +177,6 @@ class ViewishViewSupport(grokcore.view.ViewSupport):
 
     def application_url(self, name=None, data=None):
         return util.application_url(self.request, self.context, name, data)
-
-
-class XMLRPC(ViewishViewSupport):
-    """Base class for XML-RPC endpoints in Grok applications.
-
-    When an application creates a subclass of `grok.XMLRPC`, it is
-    creating an XML-RPC view.  Like other Grok views, each `grok.XMLRPC`
-    component can either use an explicit `grok.context()` directive to
-    specify the kind of object it wraps, or else Grok will look through
-    the same module for exactly one `grok.Model` or `grok.Container` (or
-    other `IGrokContext` implementor) and make that class its context
-    instead.
-
-    Every object that is an instance of the wrapped class or interface
-    becomes a legitimate XML-RPC server URL, offering as available
-    procedures whatever methods have been defined inside of that
-    `grok.XMLRPC` component.  When a method is called over XML-RPC, any
-    parameters are translated into normal Python data types and supplied
-    as normal positional arguments.  When the method returns a value or
-    raises an exception, the result is converted back into an XML-RPC
-    response for the client.  In both directions, values are marshalled
-    transparently to and from XML-RPC data structures.
-
-    During the execution of an XML-RPC method, the object whose URL was
-    used for the XML-RPC call is available as ``self.context``.
-
-    """
-
-
-class REST(zope.location.Location, ViewishViewSupport):
-    """Base class for REST views in Grok applications."""
-    interface.implements(interfaces.IREST)
-
-    def __init__(self, context, request):
-        self.context = self.__parent__ = context
-        self.request = request
-
-
-class Traverser(object):
-    """Base class for traversers in Grok applications."""
-    interface.implements(IBrowserPublisher)
-
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-
-    def browserDefault(self, request):
-        # if we have a RESTful request, we will handle
-        # GET, POST and HEAD differently (PUT and DELETE are handled already
-        # but not on the BrowserRequest layer but the HTTPRequest layer)
-        if interfaces.IRESTLayer.providedBy(request):
-            rest_view = component.getMultiAdapter(
-                (self.context, self.request), name=request.method)
-            return rest_view, ()
-        view_name = getDefaultViewName(self.context, request)
-        view_uri = "@@%s" % view_name
-        return self.context, (view_uri,)
-
-    def publishTraverse(self, request, name):
-        subob = self.traverse(name)
-        if subob is not None:
-            return util.safely_locate_maybe(subob, self.context, name)
-
-        traversable_dict = grok.traversable.bind().get(self.context)
-        if traversable_dict:
-            if name in traversable_dict:
-                subob = getattr(self.context, traversable_dict[name])
-                if callable(subob):
-                    subob = subob()
-                return util.safely_locate_maybe(subob, self.context, name)
-
-        # XXX Special logic here to deal with containers.  It would be
-        # good if we wouldn't have to do this here. One solution is to
-        # rip this out and make you subclass ContainerTraverser if you
-        # wanted to override the traversal behaviour of containers.
-        if IReadContainer.providedBy(self.context):
-            item = self.context.get(name)
-            if item is not None:
-                return item
-
-        view = component.queryMultiAdapter((self.context, request), name=name)
-        if view is not None:
-            return view
-
-        raise NotFound(self.context, name, request)
-
-    def traverse(self, name):
-        # this will be overridden by subclasses
-        pass
-
-
-class ContextTraverser(Traverser):
-    """Base class for context traversers in Grok applications.
-
-    A context traverser is like a normal `grok.Traverser` but, instead
-    of supplying its own `traverse()` method, it directs Grok to go call
-    the ``traverse()`` method on the context itself in order to process
-    the next name in the URL.
-
-    """
-    component.adapts(interfaces.IContext, IHTTPRequest)
-
-    def traverse(self, name):
-        traverse = getattr(self.context, 'traverse', None)
-        if traverse:
-            return traverse(name)
-
-
-class ContainerTraverser(Traverser):
-    """Base class for container traversers in Grok applications.
-
-    A container traverser is like a normal `grok.Traverser` but, instead
-    of supplying its own ``traverse()`` method, Grok will either call
-    the ``traverse()`` method on the context itself, if any, else call
-    ``get()`` on the container (a getitem-style lookup) in order to
-    resolve the next name in the URL.
-
-    """
-    component.adapts(interfaces.IContainer, IHTTPRequest)
-
-    def traverse(self, name):
-        traverse = getattr(self.context, 'traverse', None)
-        if traverse:
-            result = traverse(name)
-            if result is not None:
-                return result
-        # try to get the item from the container
-        return self.context.get(name)
 
 
 class IndexesClass(object):

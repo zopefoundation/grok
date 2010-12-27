@@ -39,49 +39,20 @@
   <include package="grokcore.formlib" />
   <include package="grokcore.json" />
   <include package="grokcore.site" />
+  <include package="grokcore.traverser" />
   <include package="grokcore.view" />
   <include package="grokcore.view" file="publication_security.zcml" />
   <include package="grokcore.viewlet" />
+  <include package="grokcore.rest" />
+  <include package="grokcore.xmlrpc" />
+
 
   <securityPolicy
       component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy" />
-
-  <adapter factory=".components.ContextTraverser" />
-  <adapter factory=".components.ContainerTraverser" />
 
   <browser:defaultView
       for=".interfaces.IContext"
       name="index"
       />
-
-  <!-- we register a ++rest++ traversal namespace -->
-  <adapter
-      factory=".rest.rest_skin"
-      for="* zope.publisher.interfaces.browser.IHTTPRequest"
-      provides="zope.traversing.interfaces.ITraversable"
-      name="rest"
-      />
-
-  <!-- this overrides Zope 3's publication factories because they have
-       the same name; we also need to change the priority because of
-       the ZCML discriminator -->
-  <publisher
-      name="XMLRPC"
-      factory=".publication.GrokXMLRPCFactory"
-      methods="POST"
-      mimetypes="text/xml"
-      priority="21"
-      />
-
-  <publisher
-      name="HTTP"
-      factory=".publication.GrokHTTPFactory"
-      methods="*"
-      mimetypes="*"
-      priority="1"
-      />
-
-  <!-- need to grok this for some basic REST support -->
-  <grok:grok package=".rest" />
 
 </configure>

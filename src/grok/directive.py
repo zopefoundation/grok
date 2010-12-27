@@ -34,6 +34,7 @@ import grok
 import martian
 import martian.util
 from grokcore.view.directive import TaggedValueStoreOnce
+from grokcore.rest.directive import restskin
 
 
 class site(martian.Directive):
@@ -84,50 +85,3 @@ class permissions(martian.Directive):
             else:
                 permission_ids.append(value)
         return permission_ids
-
-
-class traversable(martian.Directive):
-    """The `grok.traversable()` directive.
-
-    Each time this directive is used inside of a class, it designates an
-    attribute of that class which URLs should be able to traverse.  For
-    example, the declaration:
-
-        class Mammoth(grok.Model):
-            grok.traversable('thighbone')
-
-    means that if the URL `/app/mymammoth` designates a Mammoth, then
-    `/app/mymammoth/thighbone` will also be a valid URL (assuming that
-    the Mammoth instance, at runtime, indeed has an attribute by that
-    name)!  By default, the name that must be appended to the URL should
-    simply be the same as the name of the attribute; but by providing a
-    `name` keyword argument, the programmer can designate another name
-    to appear in the URL instead of the raw attribute name.
-
-    """
-    scope = martian.CLASS
-    store = martian.DICT
-
-    def factory(self, attr, name=None):
-        if name is None:
-            name = attr
-        return (name, attr)
-
-
-class restskin(martian.Directive):
-    """The `grok.restskin()` directive.
-
-    This directive is placed inside of `grok.IRESTLayer` subclasses to
-    indicate what their layer name will be within a REST URL.  Giving
-    the skin ``grok.restskin('b')``, for example, will enable URLs that
-    look something like `http://localhost/++rest++b/app`.
-
-    """
-    # We cannot do any better than to check for a class scope. Ideally we
-    # would've checked whether the context is indeed an Interface class.
-    scope = martian.CLASS
-    store = TaggedValueStoreOnce()
-    validate = martian.validateText
-
-    def factory(self, value=None):
-        return value

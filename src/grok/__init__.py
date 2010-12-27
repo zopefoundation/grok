@@ -83,14 +83,15 @@ from grok.events import ApplicationInitializedEvent
 from grok.components import Application
 from grok.components import View, Form, AddForm, EditForm, DisplayForm
 from grok.components import XMLRPC, REST, JSON
-from grok.components import Traverser
+from grokcore.traverser import Traverser
 from grok.components import Indexes
 from grok.components import Role
 from grok.interfaces import IRESTSkinType, IRESTLayer
 from grok.interfaces import IApplicationInitializedEvent
 
+from grokcore.traverser import traversable
 from grok.directive import (
-    permissions, site, restskin, traversable)
+    permissions, site, restskin)
 
 # BBB These two functions are meant for test fixtures and should be
 # imported from grok.testing, not from grok.

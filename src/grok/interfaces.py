@@ -25,28 +25,33 @@ import grokcore.component.interfaces
 import grokcore.formlib.interfaces
 import grokcore.json.interfaces
 import grokcore.security.interfaces
+import grokcore.rest.interfaces
 import grokcore.site.interfaces
 import grokcore.view.interfaces
 import grokcore.viewlet.interfaces
+import grokcore.xmlrpc.interfaces
+import grokcore.traverser.interfaces
 
 from grokcore.component.interfaces import IContext
 from grokcore.component.interfaces import IGrokErrors
 
 
+from grokcore.rest.interfaces import IREST, IRESTSkinType, IRESTLayer
+
 class IGrokBaseClasses(grokcore.annotation.interfaces.IBaseClasses,
                        grokcore.component.interfaces.IBaseClasses,
                        grokcore.security.interfaces.IBaseClasses,
+                       grokcore.rest.interfaces.IBaseClasses,
                        grokcore.site.interfaces.IBaseClasses,
                        grokcore.view.interfaces.IBaseClasses,
-                       grokcore.json.interfaces.IBaseClasses):
+                       grokcore.json.interfaces.IBaseClasses,
+                       grokcore.traverser.interfaces.IBaseClasses,
+                       grokcore.xmlrpc.interfaces.IBaseClasses):
     Model = interface.Attribute("Base class for persistent content objects "
                                 "(models).")
     Container = interface.Attribute("Base class for containers.")
     OrderedContainer = interface.Attribute("Base class for ordered containers.")
     Application = interface.Attribute("Base class for applications.")
-    XMLRPC = interface.Attribute("Base class for XML-RPC methods.")
-    REST = interface.Attribute("Base class for REST views.")
-    Traverser = interface.Attribute("Base class for custom traversers.")
     Indexes = interface.Attribute("Base class for catalog index definitions.")
     Role = interface.Attribute("Base class for roles.")
 
@@ -167,16 +172,6 @@ class IGrokForm(grokcore.formlib.interfaces.IGrokForm, IGrokView):
     """All Grok forms provides this interface."""
 
 
-class IREST(interface.Interface):
-    context = interface.Attribute("Object that the REST handler presents.")
-
-    request = interface.Attribute("Request that REST handler was looked"
-                                  "up with.")
-
-    body = interface.Attribute(
-        """The text of the request body.""")
-
-
 class IIndexDefinition(interface.Interface):
     """Define an index for grok.Indexes.
     """
@@ -187,18 +182,6 @@ class IIndexDefinition(interface.Interface):
         Use name for index name and attribute to index. Set up
         index for interface or class context.
         """
-
-
-class IRESTLayer(IHTTPRequest):
-    """REST-specific Request functionality.
-
-    Base Interfaces for defining REST-layers.
-    """
-
-
-class IRESTSkinType(IInterface):
-    """Skin type for REST requests.
-    """
 
 
 class IContainer(IContext, IContainerBase):

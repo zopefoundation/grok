@@ -32,27 +32,6 @@ from zope.publisher.publish import mapply
 from zope.publisher.interfaces.http import IHTTPException
 
 from zope.app.publication.http import BaseHTTPPublication, HTTPPublication
-from zope.app.publication.requestpublicationfactories import (
-    XMLRPCFactory, HTTPFactory)
-
-
-class GrokXMLRPCPublication(ZopePublicationSansProxy, BaseHTTPPublication):
-    """Combines `BaseHTTPPublication` with the Grok sans-proxy mixin."""
-
-
-class GrokXMLRPCFactory(XMLRPCFactory):
-    """Returns the classes Grok uses for browser requests and publication.
-
-    When an instance of this class is called, it returns a 2-element
-    tuple containing:
-
-    - The request class that Grok uses for XML-RPC requests.
-    - The publication class that Grok uses to publish to a XML-RPC.
-
-    """
-    def __call__(self):
-        request, publication = super(GrokXMLRPCFactory, self).__call__()
-        return request, GrokXMLRPCPublication
 
 
 class GrokHTTPPublication(ZopePublicationSansProxy, HTTPPublication):
