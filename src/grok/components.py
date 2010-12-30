@@ -50,12 +50,13 @@ from grokcore.content import Model, Container, OrderedContainer
 class Application(grokcore.site.Site):
     """Mixin for creating Grok application objects.
 
-    When a `grok.Container` (or a `grok.Model`, though most developers
-    use containers) also inherits from `grok.Application`, it not only
-    gains the component registration abilities of a `grok.Site`, but
-    will also be listed in the Grok admin control panel as one of the
-    applications that the admin can install directly at the root of
-    their Zope database.
+    When a :class:`grok.Container` (or a :class:`grok.Model`, though
+    most developers use containers) also inherits from
+    :class:`grok.Application`, it not only gains the component
+    registration abilities of a :class:`grok.Site`, but will also be
+    listed in the Grok admin control panel as one of the applications
+    that the admin can install directly at the root of their Zope
+    database.
 
     """
     interface.implements(grokcore.site.interfaces.IApplication)
@@ -64,6 +65,9 @@ class Application(grokcore.site.Site):
 class View(grokcore.view.View):
     """The base class for views with templates in Grok applications.
 
+    Implements the :class:`grokcore.view.interfaces.IGrokView`
+    interface.
+    
     Each class that inherits from `grok.View` is designed to "render" a
     category of content objects by reducing them to a document (often an
     HTML document).  Every view has a name, and is invoked when users
@@ -134,7 +138,10 @@ class View(grokcore.view.View):
     interface.implements(interfaces.IGrokView)
 
     def application_url(self, name=None, data=None):
-        """Return the URL of the nearest enclosing `grok.Application`."""
+        """Return the URL of the closest :class:`grok.Application` object in
+        the hierarchy or the URL of a named object (``name``
+        parameter) relative to the closest application object.
+        """
         return util.application_url(self.request, self.context, name, data)
 
     def flash(self, message, type='message'):
@@ -145,14 +152,15 @@ class View(grokcore.view.View):
 class Form(grokcore.formlib.Form, View):
     """The base class for forms in Grok applications.
 
-    A class that inherits from `grok.Form` is a `grok.View` whose
-    template will be given information about the fields in its context,
-    and use that information to render an HTML form for adding or
-    editing the form.  Generally developers use one of the subclasses:
+    A class that inherits from :class:`grok.Form` is a
+    :class:`grok.View` whose template will be given information about
+    the fields in its context, and use that information to render an
+    HTML form for adding or editing the form.  Generally developers
+    use one of the subclasses:
 
-    * `grok.AddForm`
-    * `grok.DisplayForm`
-    * `grok.EditForm`
+    * :class:`grok.AddForm`
+    * :class:`grok.DisplayForm`
+    * :class:`grok.EditForm`
 
     """
     interface.implements(interfaces.IGrokForm)
@@ -182,16 +190,18 @@ class ViewishViewSupport(grokcore.view.ViewSupport):
 class IndexesClass(object):
     """Base class for index collections in a Grok application.
 
-    A `grok.Indexes` utility provides one or more Zope Database content
-    indexes for use in a `grok.Site` or `grok.Application`.  The site or
-    application that the indexes are intended for should be named with
-    the `grok.site()` directive, and the kind of object to index should
-    be named with a `grok.context()` directive.
+    A `grok.Indexes` utility provides one or more Zope Database
+    content indexes for use in a :class:`grok.Site` or
+    :class:`grok.Application`.  The site or application that the
+    indexes are intended for should be named with the :func:`grok.site()`
+    directive, and the kind of object to index should be named with a
+    :func:`grok.context()` directive.
 
     Inside their class, the developer should specify one or more
-    `grok.index.Field` instances naming object attributes that should be
-    indexed (and therefore searchable)::
-
+    :class:`grok.index.Field`, :class:`grok.index.Text`, or
+    :class:`grok.index.Set` instances naming object attributes that
+    should be indexed (and therefore searchable).::
+    
         class ArticleIndex(grok.Indexes):
             grok.site(Newspaper)
             grok.context(Article)
@@ -199,15 +209,18 @@ class IndexesClass(object):
             title = index.Field()
             body = index.Text()
 
-    See the `grok.index` module for more information on field types.
+    See the :mod:`grok.index` module for more information on field
+    types.
 
-    Note that indexes are persistent: they are stored in the Zope
-    database alongside the site or application that they index.  They
-    are created when the site or application is first created, and so an
-    already-created site will not change just because the definition of
-    one of its `grok.Indexes` changes; it will either have to be deleted
-    and re-created, or some other operation performed to bring its
-    indexes up to date.
+    .. note:: Indexes are persistent: they are stored in the Zope
+              database alongside the site or application that they
+              index.  They are created when the site or application is
+              first created (and made persistent), and so an
+              already-created site will not change just because the
+              definition of one of its :data:`grok.Indexes` changes;
+              it will either have to be deleted and re-created, or
+              some other operation performed to bring its indexes up
+              to date.
 
     """
     def __init__(self, name, bases=(), attrs=None):

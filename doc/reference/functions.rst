@@ -79,7 +79,7 @@ will appear as input fields in that order.
 
 
 :func:`grok.getApplication`
-====================
+===========================
 
 .. function:: grok.getApplication()
 

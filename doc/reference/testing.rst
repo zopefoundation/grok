@@ -281,223 +281,64 @@ pattern of \'^f?tests$\' to identify these modules. The test runner will
 then use the name `test_suite` in all matching modules as the object to
 provide test suites.
 
-To make it easier to automatically discover tests and group them into
-different test suites, Grok provides a function for registering all
-tests.
+Test Supporting API
+~~~~~~~~~~~~~~~~~~~
 
-Automatic test detection and setup supports three kinds of tests:
+.. .. module:: grok.testing
 
-    * **python tests:** Python modules which contain
-      ``unittest.TestCase`` classes.
+To support testing in Grok-based projects, Grok comes with a couple of
+helpers located in the :mod:`grok.testing` module.
 
-    * **unit doctests:** plain-text files that are written as doctests,
-      but require no complicated layer setup.
+.. automodule:: grok.testing
+   :members:
+   :undoc-members:
+   :inherited-members:
 
-    * **functional doctests:** plain-text files that are written as doctests,
-      but also require the full Zope 3/Grok framework to test for example
-      browser requests.
+   .. autofunction:: grok.testing.grok_component
 
+      Grok a single component.
 
-:func:`grok.testing.register_all_tests` -- automatically find all test cases
-============================================================================
+      This function can be used to grok individual components within a
+      doctest, such as adapters. It sets up just enough context for
+      some grokking to work, though more complicated grokkers which
+      need module context (such as view grokkers) might not work.
 
-.. function:: grok.testing.register_all_tests(package_name, *args, **kw)
+      Returns ``True`` or ``False`` depending on whether the grokking
+      worked or not.
 
-    Get all functional, unit and python tests specified in the package
-    name and return them as a test suite.
-    
-    Positional and keyword arguments will be passed to the TestSetups only
-    if they are appropriate to the individual TestSetups. The keyword 
-    parameters are:
+      A sample doctest could look as follows:
 
-    `filter_func`
-    
-    A function that takes an absolute filepath and retur    - (.*)ns `True` or
-    `False`, depending on whether the file should be included in the
-    test suite as doctest or not. `filter_func` applies only to
-    doctests.
-    
-    `extensions`
+        This defines the object we want to provide an adapter for:
 
-    A list of filename extensions to be considered during test
-    search. Default value is `['.txt', '.rst']`. Python tests are not
-    touched by this (they have to be regular Python modules with '.py'
-    extension).
-    
-    `encoding`
-    
-    The encoding of testfiles. 'utf-8' by default. Setting this to `None`
-    means using the default value.
-    
-    `checker`
-    
-    An output checker for functional doctests.
-    
-    `globs`
-    
-    A dictionary of things that should be available immediately
-    (without imports) during tests. Defaults are:
+          >>> class Bar(object):
+          ...    pass
 
-    .. code-block:: python
-    
-        dict(http=HTTPCaller(),
-           getRootFolder=getRootFolder,
-           sync=sync)
+        This is the interface that we want to adapt to:
 
-    for functional doctests and an empty dict for unit
-    doctests. Python test globals can't be set this way.
-    
-    If you want to register special globals for functional doctest or
-    unit doctests only, then you can use the `fglobs` and/or `uglobs`
-    keyword respectively. These keywords replace any `globs` value for
-    the respective kind of tests.
-    
-    `setup`
-    
-    A function that takes a `test` argument and is executed before
-    every single doctest. By default it runs::
+          >>> from zope.interface import Interface
+          >>> class IFoo(Interface):
+          ...    pass
 
-      zope.app.testing.functional.FunctionalTestSetup().setUp()
+        This is the adapter itself:
 
-    for functional doctests and an empty function for unit
-    doctests. Python tests provide their own setups.
+          >>> import grokcore.component as grok
+          >>> class MyAdapter(grok.Adapter):
+          ...    grok.provides(IFoo)
+          ...    grok.context(Bar)
 
-    If you want to register special setup-functions for either
-    functional or unit doctests, then you can pass keyword parameters
-    `fsetup` or `usetup` respectively.
-    
-    `teardown`
-    
-    The equivalent to `setup`. Runs by default::
+        Now we will register the adapter using grok_component():
 
-      FunctionalTestSetup().tearDown()
+          >>> from grok.testing import grok, grok_component
+          >>> grok('grokcore.component.meta')
+          >>> grok_component('MyAdapter', MyAdapter)
+          True
+  
+        The adapter should now be available:
 
-    for functional doctests and::
-
-      zope.testing.cleanup.cleanUp()
-
-    for unit doctests. Python tests have to provide their own teardown
-    functions in TestCases.
-    
-    `optionflags`
-
-    Optionflags influence the behaviour of the testrunner. They are
-    logically or'd so that you can add them arithmetically.
-    
-    `zcml_config`
-    
-    A filepath of a ZCML file which is registered with functional
-    doctests. In the ZCML file you can for example register principals
-    (users) usable by functional doctests.
-
-    By default any `ftesting.zcml` file from the root of the given
-    package is taken. If this does not exist, an empty ZCML file of
-    the z3c.testsetup package is used (``ftesting.zcml``).
-
-    This parameter has no effect, if also a ``layer`` parameter is
-    given.
-    
-    `layer_name`
-    
-    You can name your layer, to distinguish different setups of
-    functional doctests. The layer name can be an arbitrary string.
-
-    This parameter has no effect, if also a ``layer`` parameter is
-    given.
-
-    `layer`
-    
-    You can register a ZCML layer yourself and pass it as the
-    ``layer`` parameter. If you only have a filepath to the according
-    ZCML file, use the ``zcml_config`` paramter instead.
-
-    This parameter overrides any ``zcml_config`` and ``layer_name``
-    parameter.
+          >>> adapted = IFoo(Bar())
+          >>> isinstance(adapted, MyAdapter)
+          True
 
 
-**Example 1: Boilerplace code put into a tests.py module of a package**
-
-.. code-block:: python
-
-    import grok
-    test_suite = grok.testing.register_all_tests('sample')
-
-
-Python test layer
-=================
-
-The declaration `:Test-Layer: python` states the file should be included
-as part of the Python test layer. These modules are expected to contain
-``unittest.TestCase`` classes.
-
-**Example 1: Simple Python test**
-
-.. code-block:: python
-
-    """
-    Do a Python test on the app.
-
-    :Test-Layer: python
-    """
-
-    import unittest
-    from sample.app import Sample
-
-    class SimpleSampleTest(unittest.TestCase):
-        "Test the Sample application"
-
-        def test1(self):
-            "Test that something works"
-            grokapp = Sample()
-            self.assertEqual(list(grokapp.keys()), [])
-
-Unit test layer
-===============
-
-The declaration `:Test-Layer: unit` states the file should be included
-as part of the doctesting unit test layer. This layer requires no setup
-and is for tests which can be quickly run.
-
-**Example 1: Simple doctest**::
-
-    Do a simple doctest test on the app.
-    ************************************
-    :Test-Layer: unit
-
-    When you create an instance there are no objects in it::
-
-       >>> from sample.app import Sample
-       >>> grokapp = Sample()
-       >>> list(grokapp.keys())
-       []
-
-
-Functional test layer
-=====================
-
-The declaration `:Test-Layer: function` states the file should be included
-as part of the functional test layer. The setup for this layer includes a
-running Zope 3/Grok server. By default the ``ftesting.zcml`` file in the
-test package will be used to do configuration of your functional environment.
-
-**Example 1: Simple functional test**
-
-.. code-block:: python
-
-    """
-    Do a functional test on the app.
-
-    :Test-Layer: python
-    """
-    from sample.app import Sample
-    from sample.testing import FunctionalLayer
-    from zope.app.testing.functional import FunctionalTestCase
-    class SampleFunctionalTest(FunctionalTestCase):
-        layer = FunctionalLayer
-    class SimpleSampleFunctionalTest(SampleFunctionalTest):
-        """ This the app in ZODB. """
-        def test_simple(self):
-            """ test creating a Sample instance into Zope """
-            root = self.getRootFolder()
-            root['instance'] = Sample()
-            self.assertEqual(root.get('instance').__class__, Sample)
+      .. deprecated:: 1.0
+         Use :func:`grokcore.component.testing.grok_component` instead.

@@ -96,7 +96,7 @@ Upgrading to 1.1 (2010-05-18)
 .. _upgrade_notes_1.1rc1:
 
 Upgrading to 1.1rc1 (2010-02-25)
--------------------------------
+--------------------------------
 
 * When upgrading to a newer version of Grok, you should refer to the
   newest list of versions as defined for this release of Grok.

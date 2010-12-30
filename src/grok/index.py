@@ -29,24 +29,27 @@ from grok.interfaces import IIndexDefinition
 
 
 class IndexDefinition(object):
-    """The definition of a particular index in a `grok.Indexes` class.
+    """The definition of a particular index in a :data:`grok.Indexes`
+    class.
 
-    This base class defines the actual behavior of `grok.index.Field`
-    and the other kinds of attribute index that Grok supports.  Upon our
-    instantiation, we save every parameter that we were passed; later,
-    if an index actually needs to be created (which is typically at the
-    moment when a new `grok.Application` object is added to the Zope
-    Database), then our `setup()` method gets called.
+    This base class defines the actual behavior of
+    :class:`grok.index.Field` and the other kinds of attribute index
+    that Grok supports.  Upon our instantiation, we save every
+    parameter that we were passed; later, if an index actually needs
+    to be created (which is typically at the moment when a new
+    :class:`grok.Application` object is added to the Zope Database),
+    then our :meth:`setup()` method gets called.
 
     The only parameter that is actually significant to us is `attribute`
     which (optionally) defines the attribute we should index.  All other
     parameters are simply passed along to the Zope index we create,
     which interprets them as configuration details of its own.
 
-    Note that, since index creation (and thus a call to our `setup()`
-    method) currently occurs only during the creation of a new Grok
-    `Application` object in the Zope Database, the presence of this
-    declaration in Grok application code is nearly always a no-op.
+    Note that, since index creation (and thus a call to our
+    :meth:`setup()` method) currently occurs only during the creation
+    of a new Grok `Application` object in the Zope Database, the
+    presence of this declaration in Grok application code is nearly
+    always a no-op.
 
     """
     implements(IIndexDefinition)
@@ -91,15 +94,16 @@ class IndexDefinition(object):
 
 
 class Field(IndexDefinition):
-    """A `grok.Indexes` index that matches against an entire field."""
+    """A :class:`grok.Indexes` index that matches against an entire field."""
     index_class = FieldIndex
 
 
 class Text(IndexDefinition):
-    """A `grok.Indexes` index supporting full-text searches of a field."""
+    """A :class:`grok.Indexes` index supporting full-text searches of a
+    field."""
     index_class = TextIndex
 
 
 class Set(IndexDefinition):
-    """A `grok.Indexes` index supporting keyword searches of a field."""
+    """A :class:`grok.Indexes` index supporting keyword searches of a field."""
     index_class = SetIndex

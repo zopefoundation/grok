@@ -15,4 +15,6 @@ Grok Documentation Contents
 
    bugs.rst
    license.rst
+   README.rst
    copyright.rst
+   glossary.rst

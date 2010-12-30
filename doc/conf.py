@@ -12,19 +12,9 @@
 # show the default value as assigned to them.
 
 import sys
+import pkg_resources
 
 from os import path, curdir
-import re
-
-
-version = 'Unknown'
-setupfilepath = path.join(path.dirname(path.abspath(curdir)), 'setup.py')
-reg = re.compile("^\s*version = .(.+).,.*")
-for line in open(setupfilepath, 'r').read().split('\n'):
-    m = reg.match(line)
-    if m:
-        version = m.groups()[0]
-
 
 # If your extensions are in another directory, add it here.
 #sys.path.append('some/directory')
@@ -33,8 +23,15 @@ for line in open(setupfilepath, 'r').read().split('\n'):
 # ---------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
-# coming with Sphinx (named 'sphinx.addons.*') or your custom ones.
-#extensions = []
+# coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
+extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.doctest',
+              'sphinx.ext.intersphinx',
+              # 'sphinx.ext.viewcode', # This is currently broken?
+              ]
+
+# Order autodoc generated docs in source code order.
+autodoc_member_order = 'bysource'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['.']
@@ -47,15 +44,17 @@ master_doc = 'index'
 
 # General substitutions.
 project = 'Official Grok'
-copyright = '2006-2009, The Zope Foundation'
+copyright = '2006-2010, The Zope Foundation'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = version
+version = pkg_resources.get_distribution('grok').version
 # The full version, including alpha/beta/rc tags.
 release = version
+if release.endswith('dev'):
+    release = '%s (unreleased)' % release
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:

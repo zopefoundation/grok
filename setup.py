@@ -19,6 +19,13 @@ tests_require = [
     'zope.testing',
     ]
 
+docs_require = [
+    'Sphinx',
+    'collective.recipe.sphinxbuilder',
+    'docutils',
+    'roman',
+    ]
+
 setup(
     name='grok',
     version='1.4dev',
@@ -91,5 +98,6 @@ setup(
         'zope.traversing',
         ],
     tests_require=tests_require,
-    extras_require={'test': tests_require},
+    extras_require={'test': tests_require,
+                    'docs': docs_require},
 )

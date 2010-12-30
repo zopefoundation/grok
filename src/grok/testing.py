@@ -11,7 +11,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Grok test helpers
+"""Grok test helpers.
 """
 import sys
 from zope.configuration.config import ConfigurationMachine
@@ -21,6 +21,15 @@ from grokcore.component.testing import grok_component
 
 
 def grok(module_name):
+    """Grok a module.
+
+    Test helper to 'grok' a module named by `module_name`, a dotted
+    path to a module like ``'mypkg.mymodule'``. 'grokking' hereby
+    means to do all the ZCML configurations triggered by directives
+    like ``grok.context()`` etc. This is only needed if your module
+    was not `grokked` during test setup time as it normally happens
+    with functional tests.
+    """
     config = ConfigurationMachine()
     zcml.do_grok('grokcore.component.meta', config)
     zcml.do_grok('grokcore.security.meta', config)
@@ -44,7 +53,7 @@ def warn(message, category=None, stacklevel=1):
     Modified copy from zope.deprecation.tests to:
 
       * make the signature identical to warnings.warn
-      * to check for *.pyc and *.pyo files.
+      * to check for \*.pyc and \*.pyo files.
 
     When zope.deprecation is fixed, this warn function can be removed again.
     """
