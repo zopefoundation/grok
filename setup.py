@@ -21,7 +21,6 @@ tests_require = [
 
 docs_require = [
     'Sphinx',
-    'collective.recipe.sphinxbuilder',
     'docutils',
     'roman',
     ]
