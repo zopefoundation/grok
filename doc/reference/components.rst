@@ -1127,8 +1127,6 @@ be invoked based on the Request type.
     
         The text of the request body.
 
-    .. automethod:: application_url
-
     .. automethod:: url
 
     .. automethod:: redirect
@@ -1176,8 +1174,6 @@ Specialized View that responds to XML-RPC.
     .. autoattribute:: grok.XMLRPC.body
     
         The text of the request body.
-
-    .. automethod:: grok.XMLRPC.application_url
 
     .. automethod:: grok.XMLRPC.url
 
