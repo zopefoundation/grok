@@ -55,6 +55,7 @@ from grokcore.annotation import Annotation
 
 from grokcore.site import LocalUtility
 from grokcore.site import Site
+from grokcore.site import getApplication
 from grokcore.site import local_utility
 
 from zope.event import notify
