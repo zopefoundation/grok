@@ -81,11 +81,11 @@ will appear as input fields in that order.
 :func:`grok.getApplication`
 ===========================
 
-.. function:: grok.getApplication()
+.. autofunction:: grok.getApplication()
 
-    Get the current application object or the nearest enclosing
-    `grok.Application` object. Raises ValueError if no Application can
-    be found.
+    .. deprecated:: 1.4
+       This function has been moved to :mod:`grokcore.site`. Use
+       :func:`grokcore.site.getApplication` instead.
 
 
 :func:`grok.getSite`
