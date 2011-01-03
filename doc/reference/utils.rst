@@ -40,17 +40,6 @@ called at :func:`grok.getApplication`.
        :func:`grokcore.site.getApplication` instead.
 
 
-:func:`grok.util.make_checker`
-==============================
-
-.. function:: grok.util.make_checker(factory, view_factory, permission, method_names=None)
-
-    Make a checker for a view_factory associated with factory.
-
-    These could be one and the same for normal views, or different
-    in case we make method-based views such as for JSON and XMLRPC.
-
-
 :func:`grok.util.safely_locate_maybe`
 =====================================
 
