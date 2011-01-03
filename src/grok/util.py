@@ -24,11 +24,12 @@ from grokcore.site.util import getApplication
 
 
 def safely_locate_maybe(obj, parent, name):
-    """Set an object's __parent__ (and __name__) if the object's
-    __parent__ attribute doesn't exist yet or is None.
+    """Set an object's ``__parent__`` (and ``__name__``) if the object's
+    ``__parent__`` attribute doesn't exist yet or is ``None``.
 
-    If the object provides ILocation, __parent__ and __name__ will be
-    set directly.  A location proxy will be returned otherwise.
+    If the object provides ``ILocation``, ``__parent__`` and
+    ``__name__`` will be set directly.  A location proxy will be
+    returned otherwise.
     """
     if getattr(obj, '__parent__', None) is not None:
         return obj
@@ -48,9 +49,9 @@ def applySkin(request, skin, skin_type):
 
 
 def application_url(request, obj, name=None, data={}):
-    """Return the URL of the nearest enclosing `grok.Application`.
+    """Return the URL of the nearest enclosing :class:`grok.Application`.
 
-    Raises ValueError if no Application can be found.
+    Raises :exc:`ValueError` if no application can be found.
     """
     return url(request, getApplication(), name, data)
 
