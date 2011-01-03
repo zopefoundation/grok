@@ -1,11 +1,11 @@
+.. module:: grok.util
+
 *********
 Utilities
 *********
 
 The :mod:`grok.util` module provides functions which are less commonly
 used, and so are not available for import directly from the :mod:`grok` module.
-
-.. module:: grok.util
 
 :func:`grok.util.application_url`
 =================================
