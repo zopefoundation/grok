@@ -1,7 +1,8 @@
 import re
 import unittest
+import doctest
 from pkg_resources import resource_listdir
-from zope.testing import doctest, cleanup, renormalizing
+from zope.testing import cleanup, renormalizing
 import zope.component.eventtesting
 
 def setUpZope(test):
