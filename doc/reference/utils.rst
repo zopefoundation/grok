@@ -37,14 +37,14 @@ used, and so are not available for import directly from the :mod:`grok` module.
 :func:`grok.util.getApplication`
 ================================
 
-.. function:: grok.util.getApplication()
+This function is also exported to the main grok namespace and can be
+called at :func:`grok.getApplication`.
 
-    Return the nearest enclosing `grok.Application`.
+.. autofunction:: grok.util.getApplication()
 
-    Raises ValueError if no Application can be found.
-
-    This function is also export to the main grok namespace and can be
-    called at `grok.getApplication`.
+    .. deprecated:: 1.4
+       This function has been moved to :mod:`grokcore.site`. Use
+       :func:`grokcore.site.getApplication` instead.
 
 
 :func:`grok.util.make_checker`
@@ -68,5 +68,3 @@ used, and so are not available for import directly from the :mod:`grok` module.
 
     If the object provides ILocation, __parent__ and __name__ will be
     set directly.  A location proxy will be returned otherwise.
-
-
