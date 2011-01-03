@@ -5,33 +5,26 @@ Utilities
 The :mod:`grok.util` module provides functions which are less commonly
 used, and so are not available for import directly from the :mod:`grok` module.
 
+.. module:: grok.util
+
 :func:`grok.util.application_url`
 =================================
 
-.. function:: grok.util.application_url(request, obj, name=None, data={})`
+This function is also available as a method on the :class:`grok.View` class.
 
-    Return the URL of the nearest enclosing `grok.Application`.
-
-    Raises ValueError if no Application can be found.
-    
-    This function is also available as a method on the `grok.View` class.
+.. autofunction:: grok.util.application_url
 
 
 :func:`grok.util.applySkin`
 ===========================
 
-.. function:: grok.util.applySkin(request, skin, skin_type)
-
-    Change the presentation skin for this request.
+.. autofunction:: grok.util.applySkin
 
 
 :func:`grok.util.create_application`
 ====================================
 
-.. function:: grok.util.create_application(factory, container, name)
-
-    Creates an application and triggers the events from
-    the application lifecycle.
+.. autofunction:: grok.util.create_application
 
 
 :func:`grok.util.getApplication`
@@ -61,10 +54,4 @@ called at :func:`grok.getApplication`.
 :func:`grok.util.safely_locate_maybe`
 =====================================
 
-.. function:: grok.util.safely_locate_maybe(obj, parent, name)
-
-    Set an object's __parent__ (and __name__) if the object's
-    __parent__ attribute doesn't exist yet or is None.
-
-    If the object provides ILocation, __parent__ and __name__ will be
-    set directly.  A location proxy will be returned otherwise.
+.. autofunction:: grok.util.safely_locate_maybe
