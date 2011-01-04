@@ -4,21 +4,25 @@ Grok changes
 1.4 (unreleased)
 ================
 
+- Moved the XMLRPC, REST component into separate packages
+  grokcore.xmlrpc and grokcore.rest. Consequently the custom traverse
+  components that Grok defined were moved to grokcore.traverser. Grok
+  the-python-package acts more and more like an import-hub.
+
 - To build the docs we now use `collective.recipe.sphinxbuilder`
   instead of our own, early hack (get rid of `grokdocs`
   subpackage). Buildout now generates ``grokdocs2html`` and
   ``grokdocs2pdf`` which should do what you think they do.
 
-- The `IApplication` interface, and getApplication moved to
+- The `IApplication` interface, and getApplication() moved to
   ``grokcore.site``.
-
 
 1.3 (2010-11-03)
 ================
 
-- The `IGrokSecurityView` interface has been to ``grokcore.view``. 
+- The `IGrokSecurityView` interface has been to ``grokcore.view``.
 
-- The `make_checker` util function has been moved to ``grokcore.view``. 
+- The `make_checker` util function has been moved to ``grokcore.view``.
 
 - The base publisher has been moved to ``grokcore.view`` as an
   optional feature : security_publication.
