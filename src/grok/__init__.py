@@ -81,12 +81,15 @@ from zope.container.contained import (
     ContainerModifiedEvent)
 
 from grok.events import ApplicationInitializedEvent
+
 from grok.components import Application
 from grok.components import View, Form, AddForm, EditForm, DisplayForm
 from grok.components import XMLRPC, REST, JSON
-from grokcore.traverser import Traverser
 from grok.components import Indexes
 from grok.components import Role
+
+from grokcore.traverser import Traverser
+
 from grok.interfaces import IRESTSkinType, IRESTLayer
 from grok.interfaces import IApplicationInitializedEvent
 

@@ -66,7 +66,7 @@ will appear as input fields in that order.
 
     import grok
     from zope import schema
-    
+
     class Edit(grok.EditForm):
         fields = grok.Fields(
             b = schema.TextLine(title=u"Beta"),
@@ -83,11 +83,6 @@ will appear as input fields in that order.
 
 .. autofunction:: grok.getApplication()
 
-    .. deprecated:: 1.4
-       This function has been moved to :mod:`grokcore.site`. Use
-       :func:`grokcore.site.getApplication` instead.
-
-
 :func:`grok.getSite`
 ====================
 
@@ -97,7 +92,7 @@ will appear as input fields in that order.
 
 .. seealso::
 
-    Site objects are instances of :class:`grok.Site`. Typically this will 
+    Site objects are instances of :class:`grok.Site`. Typically this will
     also be your main :class:`grok.Application` root object, which inherits
     from :class:`grok.Site`. Normally you will want to use
     `grok.getApplication` to get the application object, as `grok.getSite`
