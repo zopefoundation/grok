@@ -3,11 +3,12 @@
 Components
 **********
 
-.. Here we documented the component base classes. For the directive possible
-    for each component we document only the specific within its context. We then
-    refer to the directives documented in the directives.rst file.
+.. Here we documented the component base classes. For the directive
+    possible for each component we document only the specifics within
+    its context. We then refer to the directives documented in the
+    directives.rst file.
 
-The :mod:`grok` module defines a set of base classes for creating new 
+The :mod:`grok` module defines a set of base classes for creating new
 components of different types, that provide basic Zope 3 functionality in a
 convenient way. Grok applications are built by subclassing these components.
 
@@ -53,15 +54,15 @@ disk, by default in the Zope Object Database (ZODB).
     .. attribute:: __parent__
 
        The parent in the location hierarchy.
-       
+
        If you recursively follow the :attr:`__parent__` attribute, you
        will always reach a reference to a top-level grok.Application
        object instance.
 
     .. attribute:: __name__
-    
+
         The name within the parent.
-        
+
         Traverse the parent with this name to get the object.
 
         Name in Grok means "human-readable identifier" as the
@@ -82,15 +83,15 @@ reasonable performance for large collections of objects.
     .. attribute:: __parent__
 
        The parent in the location hierarchy.
-       
+
        If you recursively follow the :attr:`__parent__` attribute, you
        will always reach a reference to a top-level grok.Application
        object instance.
 
     .. attribute:: __name__
-    
+
         The name within the parent.
-        
+
         Traverse the parent with this name to get the object.
 
         Name in Grok means "human-readable identifier" as the
@@ -98,7 +99,7 @@ reasonable performance for large collections of objects.
         within an URL.
 
     .. method:: items(key=None)
-    
+
         Return an iterator over the key-value pairs in the container.
 
         If ``None`` is passed as `key`, this method behaves as if no argument
@@ -109,7 +110,7 @@ reasonable performance for large collections of objects.
         the key that would come next if `key` were in the container.
 
     .. method:: keys(key=None)
-    
+
         Return an iterator over the keys in the container.
 
         If ``None`` is passed as `key`, this method behaves as if no argument
@@ -120,7 +121,7 @@ reasonable performance for large collections of objects.
         come next if `key` were in the container.
 
     .. method:: values(key=None)
-    
+
         Return an iterator over the values in the container.
 
         If ``None`` is passed as `key`, this method behaves as if no argument
@@ -132,44 +133,44 @@ reasonable performance for large collections of objects.
 
 
     .. method:: __getitem__(key)
-        
+
         Get a value for a key
 
         A KeyError is raised if there is no value for the key.
 
     .. method:: get(key, default=None)
-        
+
         Get a value for a key
 
         The default is returned if there is no value for the key.
 
     .. method:: __contains__(key)
-        
+
         Tell if a key exists in the mapping.
 
 
     .. method:: __iter__()
-    
+
         Return an iterator for the keys of the mapping object.
 
     .. method:: values()
-        
+
         Return the values of the mapping object.
 
     .. method:: items()
-        
+
         Return the items of the mapping object.
 
     .. method:: __len__()
-        
+
         Return the number of items.
 
     .. method:: has_key(key)
-    
+
         Tell if a key exists in the mapping.
-    
+
     .. method:: __setitem__(name, object)
-        
+
         Add the given `object` to the container under the given name.
 
         Raises a ``TypeError`` if the key is not a unicode or ascii string.
@@ -204,7 +205,7 @@ reasonable performance for large collections of objects.
         generation.
 
     .. method:: __delitem__(name)
-        
+
         Delete the named object from the container.
 
         Raises a ``KeyError`` if the object is not found.
@@ -230,26 +231,26 @@ reasonable performance for large collections of objects.
 
     # define a container and a model and then create them
     class BoneBag(grok.Container): pass
-    class Bone(grok.Model): pass    
+    class Bone(grok.Model): pass
     bag = BoneBag()
     skull = Bone()
-    
+
     # ... your classes are then "grokked" by Grok ...
-    
+
     # store an object in a container
     bag['bone1'] = skull
-    
+
     # test for containment
     bag.has_key('bone1')
-    
+
     # retrieve an object from a container
-    first_bone = bag['bone1'] 
-    
+    first_bone = bag['bone1']
+
     # iterate through objects in a container with .values()
     # you can also use .keys() and .items()
     for bone in bag.values():
         bone.marks = 'teeth'
-    
+
     # delete objects using the del keyword
     del bag['bone1']
 
@@ -259,7 +260,7 @@ reasonable performance for large collections of objects.
 
 OrderedContainers act just like Containers, but also support the ability
 to maintain order on the items within the container. This implementation
-maintains a persistent list of keys on a private attribute, so it's 
+maintains a persistent list of keys on a private attribute, so it's
 important to note that OrderedContainers will have poorer performance than
 a normal Container.
 
@@ -310,7 +311,7 @@ Grok Index Definitions
 
 **Example 1: Index the Mammoths in a Herd**
 
-Imagine you have a herd of mammoths, and you wish to quickly find a 
+Imagine you have a herd of mammoths, and you wish to quickly find a
 mammoth based on their last name. First we will create a simple Grok
 application that defines a Herd and some Mammoths:
 
@@ -452,16 +453,16 @@ The source code for the `grok.Adapter` base class is simply:
 
         def __init__(self, size=100):
             self.size = size
-    
+
     class IHome(interface.Interface):
         "IHome is the interface we want to add to a Cave"
-        
+
         def renovate():
             "Enlarge Cave"
-    
+
     class CaveHome(grok.Adapter):
         "Turns a Cave into a Home"
-        grok.context(Cave) 
+        grok.context(Cave)
         grok.implements(IHome) # the new interface provided by the adapter
 
         def renovate(self):
@@ -470,21 +471,21 @@ The source code for the `grok.Adapter` base class is simply:
             self.context.size += 10
 
     # Adapation (component look-up) is invoked by passing the adaptee
-    # to the interface as a constructor and returns the component adapted to   
+    # to the interface as a constructor and returns the component adapted to
     home = IHome(cave)
     home.renovate()
-    
+
     # Multiple adapters can exist that adapt and provide the same interfaces.
     # They can be distinguished by name.
-    
+
     import zope.component
-    
+
     class LargeCaveHome(grok.Adapater):
         "Turns a Cave in a large Home"
-        grok.context(Cave) 
+        grok.context(Cave)
         grok.implements(IHome)
         grok.name('largehome')
-        
+
         def renovate(self):
             self.context.size += 200
 
@@ -564,7 +565,7 @@ View component using the `getMultiAdapter` function.
 
     class AlternateFireplaceView(grok.View):
         grok.context(Fireplace)
-        
+
         def render(self):
             fireplaceview = zope.component.getMultiAdapter(
                 (self.context, self.request), IGrokView, name='fire-view'
@@ -601,15 +602,15 @@ Annotation components are persistent writeable adapters.
     class Branding(grok.Annotation):
         grok.implements(IBranding)
         unique = 0
-   
+
     # Grok the above code, then create some mammoths
     manfred = Mammoth()
     mumbles = Mammoth()
-   
+
     # creating Annotations work just like Adapters
     livestock1 = ISerialBrand(manfred)
     livestock2 = ISerialBrand(mumbles)
-   
+
     # except you can store data in them, this data will transparently persist
     # in the database for as long as the object exists
     livestock1.unique = 101
@@ -659,13 +660,13 @@ and web service proxies.
 :class:`grok.LocalUtility`
 ==========================
 
-A local utility is an object which provides an interface, and can be 
+A local utility is an object which provides an interface, and can be
 looked-up by that interface and optionally the component name. The attributes
 provided by a local utility are transparently stored in the database (ZODB).
 This means that configuration changes to a local utility lasts between
 server restarts.
 
-An example is for database connections or web service proxies, 
+An example is for database connections or web service proxies,
 where you need to dynamically provide the connection settings
 so that they can be edited through-the-web.
 
@@ -749,7 +750,7 @@ sepearted by the ``/`` character. This process is called "Traversal".
         object or any type of Python object.
 
     .. attribute:: request
-   
+
         The HTTP Request object.
 
     .. autoattribute:: grok.View.response
@@ -875,13 +876,13 @@ that they contain can be read like a normal Python dictionary.
 
        Typically the Model object for which this ViewletManager is being
        rendered in the context of.
-        
+
    .. attribute:: request
-    
+
        The Request object.
-    
+
    .. attribute:: view
-    
+
        Reference to the View that the ViewletManager is being provided
        in.
 
@@ -931,7 +932,7 @@ is displaying information about a cave or a herd.
                 <div tal:content="structure provider:cave" />
             </body></html>
             """)
-    
+
     class CaveManager(grok.ViewletManager):
         grok.view(ViewForACave)
         grok.name('cave')
@@ -960,17 +961,17 @@ main content area and a footer.
 
         Typically the Model object for which this Viewlet is being
         rendered in the context of.
-    
+
     .. attribute:: request
-    
+
         The Request object.
-    
+
     .. attribute:: view
-    
+
         Reference to the View that the Viewlet is being provided in.
 
     .. attribute:: viewletmanager
-    
+
         Reference to the ViewletManager that is rendering this Viewlet.
 
     .. automethod:: grok.Viewlet.default_namespace
@@ -1013,11 +1014,11 @@ decorator can be used to protect methods with a permission.
 .. autoclass:: grok.JSON
 
     .. attribute:: context
-    
+
         Object that the JSON handler presents.
 
     .. attribute:: request
-    
+
         Request that JSON handler was looked up with.
 
     .. autoattribute:: response
@@ -1025,7 +1026,7 @@ decorator can be used to protect methods with a permission.
         The response sent back to the client.
 
     .. attribute:: body
-    
+
         The text of the request body.
 
     .. automethod:: redirect
@@ -1056,7 +1057,7 @@ decorator can be used to protect methods with a permission.
 
         Lookup a name and return an object with `self.context` as its parent.
         The method can use the request to determine the correct object.
-	  
+
         The `request` argument is the publisher request object. The
         `name` argument is the name that is to be looked up. It must
         be an ASCII string or Unicode object.
@@ -1066,7 +1067,7 @@ decorator can be used to protect methods with a permission.
     .. automethod:: browserDefault
 
         Returns an object and a sequence of names.
-	  
+
         The publisher calls this method at the end of each traversal path.
         If the sequence of names is not empty, then a traversal step is made
         for each name. After the publisher gets to the end of the sequence,
@@ -1087,7 +1088,7 @@ decorator can be used to protect methods with a permission.
     class MammothJSON(grok.JSON):
         """
         Returns JSON from URLs in the form of:
-      
+
         http://localhost/stomp
         http://localhost/dance
         """
@@ -1112,19 +1113,19 @@ be invoked based on the Request type.
 .. autoclass:: grok.REST
 
     .. attribute:: context
-    
+
         Object that the REST handler presents.
 
     .. attribute:: request
-    
+
         Request that REST handler was looked up with.
-    
+
     .. autoattribute:: response
 
         The response sent back to the client.
 
     .. autoattribute:: body
-    
+
         The text of the request body.
 
     .. automethod:: url
@@ -1160,19 +1161,19 @@ Specialized View that responds to XML-RPC.
 .. autoclass:: grok.XMLRPC
 
     .. attribute:: context
-    
+
         Object that the REST handler presents.
 
     .. attribute:: request
-    
+
         Request that REST handler was looked up with.
-    
+
     .. autoattribute:: grok.XMLRPC.response
 
         The response sent back to the client.
 
     .. autoattribute:: grok.XMLRPC.body
-    
+
         The text of the request body.
 
     .. automethod:: grok.XMLRPC.url
@@ -1188,7 +1189,7 @@ The grok.require decorator can be used to protect methods with a permission.
 
     import grok
     import zope.interface
-    
+
     class MammothRPC(grok.XMLRPC):
         grok.context(zope.interface.Interface)
 
@@ -1216,7 +1217,7 @@ and the View used to interact with that object.
         The object that is being traversed.
 
     .. attribute:: request
-   
+
         The HTTP Request object.
 
     .. automethod:: traverse
@@ -1228,15 +1229,15 @@ and the View used to interact with that object.
     .. automethod:: browserDefault
 
         Returns an object and a sequence of names.
-	  
+
         The publisher calls this method at the end of each traversal path.
         If the sequence of names is not empty, then a traversal step is made
         for each name. After the publisher gets to the end of the sequence,
         it will call browserDefault on the last traversed object.
-	  
+
         The default behaviour in Grok is to return `self.context` for
         the object and ``'index'`` for the default view name.
-	  
+
         Note that if additional traversal steps are indicated (via a
         nonempty sequence of names), then the publisher will try to adjust
         the base href.
@@ -1245,7 +1246,7 @@ and the View used to interact with that object.
 
         Lookup a name and return an object with `self.context` as its parent.
         The method can use the request to determine the correct object.
-	  
+
         The `request` argument is the publisher request object. The
         `name` argument is the name that is to be looked up. It must
         be an ASCII string or Unicode object.
@@ -1347,7 +1348,7 @@ View that renders an HTML Form.
 .. autoclass:: grok.Form
 
     .. attribute:: template
-    
+
         Template used to display the form
 
     .. attribute:: context
@@ -1355,7 +1356,7 @@ View that renders an HTML Form.
         The object for which the form is rendered.
 
     .. attribute:: prefix
-    
+
         Page-element prefix. All named or identified page elements in a
         subpage should have names and identifiers that begin with a subpage
         prefix followed by a dot.
@@ -1365,34 +1366,34 @@ View that renders an HTML Form.
         Update the subpage prefix
 
     .. attribute:: label
-    
+
         A label to display at the top of a form.
 
     .. attribute:: status
-    
+
         An update status message. This is normally generated by success or
         failure handlers.
-    
+
     .. attribute:: errors
 
         Sequence of errors encountered during validation.
 
     .. attribute:: form_result
-    
+
         Return from action result method.
 
     .. attribute:: form_reset
-    
+
         Boolean indicating whether the form needs to be reset.
 
     .. attribute:: form_fields
-    
+
         The form's form field definitions.
 
         This attribute is used by many of the default methods.
 
     .. attribute:: widgets
-    
+
         The form's widgets.
 
         - set by :meth:`setUpWidgets`
@@ -1410,7 +1411,7 @@ View that renders an HTML Form.
         The response sent back to the client.
 
     .. automethod:: setUpWidgets
-    
+
         Set up the form's widgets.
 
         The default implementation uses the form definitions in the
@@ -1419,24 +1420,24 @@ View that renders an HTML Form.
         The function should set the :attr:`widgets` attribute.
 
     .. automethod:: validate
-    
+
         The default form validator
 
         If an action is submitted and the action doesn't have it's own
         validator then this function will be called.
 
     .. automethod:: resetForm
-    
+
         Reset any cached data because underlying content may have changed.
 
     .. automethod:: grok.Form.error_views
-    
+
         Return views of any errors.
 
         The errors are returned as an iterable.
 
     .. automethod:: applyData
-    
+
         Save form data to an object.
 
         This returns a dictionary with interfaces as keys and lists of
@@ -1535,7 +1536,7 @@ used.
     e.g. ``'mypackage.MyPermissionName'``.
 
     .. attribute:: id
-    
+
         Id as which this permission will be known and used. This is set
         to the value specified in the :func:`grok.name` directive.
 
@@ -1550,14 +1551,14 @@ used.
     **Directives:**
 
     :data:`grok.name(name)`
-    
+
         Required. Identifies the unique name (also used as the id) of the
         permission.
 
     :data:`grok.title(title)`
 
         Optional. Stored as the title attribute for this permission.
-    
+
     :data:`grok.description(description)`
 
         Optional. Stored as the description attribute for this permission.
@@ -1569,7 +1570,7 @@ used.
 
     import grok
     import zope.interface
-    
+
     class Read(grok.Permission):
         grok.name('mypackage.Read')
 
@@ -1591,7 +1592,7 @@ protected by the Permissions that the Role contains.
    :undoc-members:
 
    .. attribute:: id
-    
+
        Id as which this role will be known and used. This is set
        to the value specified in the :func:`grok.name` directive.
 
