@@ -30,14 +30,10 @@ This function is also available as a method on the :class:`grok.View` class.
 :func:`grok.util.getApplication`
 ================================
 
-This function is also exported to the main grok namespace and can be
-called at :func:`grok.getApplication`.
+This function is also availbale in the main grok namespace and can be
+called as :func:`grok.getApplication`.
 
 .. autofunction:: grok.util.getApplication()
-
-    .. deprecated:: 1.4
-       This function has been moved to :mod:`grokcore.site`. Use
-       :func:`grokcore.site.getApplication` instead.
 
 
 :func:`grok.util.safely_locate_maybe`

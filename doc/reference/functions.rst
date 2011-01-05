@@ -83,6 +83,7 @@ will appear as input fields in that order.
 
 .. autofunction:: grok.getApplication()
 
+
 :func:`grok.getSite`
 ====================
 
