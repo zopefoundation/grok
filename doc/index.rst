@@ -1,7 +1,22 @@
-Official Grok Documentation Overview
-************************************
+Grok, a smashing framework!
+===========================
+
+Contents:
 
 .. toctree::
-   :hidden:
+   :maxdepth: 2
 
-   contents.rst
+   introduction
+   api
+   development
+   changes
+
+   license
+   copyright
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

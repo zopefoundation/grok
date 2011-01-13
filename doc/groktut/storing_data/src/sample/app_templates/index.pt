@@ -1,5 +1,0 @@
-<html>
-<body>
-<p>The text: <span tal:replace="python:context.text">text</span></p>
-</body>
-</html>
