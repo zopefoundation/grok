@@ -1,5 +1,0 @@
-<html>
-<body>
-<p tal:content="python:context.information()">replaced</p>
-</body>
-</html>

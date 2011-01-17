@@ -1,8 +1,0 @@
-<html>
-<body>
-<form tal:attributes="action view/url" method="POST">
-Text to store: <input type="text" name="text" value="" /><br />
-<input type="submit" value="Store" />
-</form>
-</body>
-</html>
