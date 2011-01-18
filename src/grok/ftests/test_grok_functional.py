@@ -40,28 +40,36 @@ def suiteFromPackage(name):
             continue
         if filename == '__init__.py':
             continue
-
         dottedname = 'grok.ftests.%s.%s' % (name, filename[:-3])
         test = doctest.DocTestSuite(
             dottedname,
             checker=checker,
-            extraglobs=dict(http_call=http_call,
-                            http=http,
-                            getRootFolder=FunctionalLayer.getRootFolder),
-            optionflags=(doctest.ELLIPSIS+
-                         doctest.NORMALIZE_WHITESPACE+
-                         doctest.REPORT_NDIFF))
+            extraglobs=dict(
+                http_call=http_call,
+                http=http,
+                getRootFolder=FunctionalLayer.getRootFolder),
+            optionflags=(
+                doctest.ELLIPSIS+
+                doctest.NORMALIZE_WHITESPACE+
+                doctest.REPORT_NDIFF)
+                )
         test.layer = FunctionalLayer
-
         suite.addTest(test)
     return suite
 
 def test_suite():
     suite = unittest.TestSuite()
     for name in [
-        'xmlrpc',
-        'traversal', 'form', 'url', 'security', 'rest',
-        'catalog', 'site', 'application', 'viewlet', 'lifecycle']:
+        'application',
+        'catalog',
+        'form',
+        'lifecycle',
+        'security',
+        'site',
+        'traversal',
+        'url',
+        'viewlet',
+        ]:
         suite.addTest(suiteFromPackage(name))
     return suite
 
