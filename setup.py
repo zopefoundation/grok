@@ -64,7 +64,6 @@ setup(
         'zc.catalog',
         'zope.annotation',
         'zope.app.appsetup',
-        'zope.app.http',
         'zope.app.publication',
         'zope.browserpage',
         'zope.catalog',

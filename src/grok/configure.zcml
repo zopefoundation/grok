@@ -15,7 +15,6 @@
   <include package="grok" file="meta.zcml" />
 
   <include package="zope.app.appsetup" />
-  <include package="zope.app.http" />
   <include package="zope.app.publication" />
   <include package="zope.annotation" />
   <include package="zope.browserpage" />
