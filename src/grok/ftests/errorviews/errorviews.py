@@ -1,0 +1,78 @@
+"""
+
+By default, the views rendered for error situations is handled by
+zope.errorviews::
+
+  >>> from zope.component import getMultiAdapter
+  >>> from zope.publisher.browser import TestRequest
+  >>> view = getMultiAdapter((Exception(), TestRequest()), name='index.html')
+  >>> print view()
+  A system error occurred.
+
+  >>> view.isSystemError()
+  True
+
+  >>> from zope.publisher.interfaces import NotFound
+  >>> request = TestRequest()
+  >>> error = NotFound(object(), request)
+  >>> view = getMultiAdapter((error, request), name='index.html')
+  >>> print view()
+  The requested resource can not be found.
+
+  >>> from zope.security.interfaces import Unauthorized
+  >>> request = TestRequest()
+  >>> request.setPrincipal(MockPrincipal())
+  >>> view = getMultiAdapter((Unauthorized(), request), name='index.html')
+  >>> print view()
+  Access to the requested resource is forbidden.
+
+The default views can be selectively overridden in your application::
+
+  >>> from grok import ExceptionView
+  >>> class MyExceptionView(ExceptionView):
+  ...     def render(self):
+  ...         return u'This is my idea of an exception view.'
+  >>> from grok.testing import grok_component
+  >>> grok_component('MyExceptionView', MyExceptionView)
+  True
+
+  >>> view = getMultiAdapter((Exception(), TestRequest()), name='index.html')
+  >>> print view()
+  This is my idea of an exception view.
+
+  >>> view.isSystemError()
+  True
+
+  >>> from grok import NotFoundView
+  >>> class MyNotFoundView(NotFoundView):
+  ...     def render(self):
+  ...         return u'This is my idea of a not found view.'
+  >>> from grok.testing import grok_component
+  >>> grok_component('MyNotFoundView', MyNotFoundView)
+  True
+
+  >>> request = TestRequest()
+  >>> error = NotFound(object(), request)
+  >>> view = getMultiAdapter((error, request), name='index.html')
+  >>> print view()
+  This is my idea of a not found view.
+
+  >>> from grok import UnauthorizedView
+  >>> class MyUnauthorizedView(UnauthorizedView):
+  ...     def render(self):
+  ...         return u'This is my idea of an unauthorized view.'
+  >>> from grok.testing import grok_component
+  >>> grok_component('MyUnauthorizedView', MyUnauthorizedView)
+  True
+
+  >>> request = TestRequest()
+  >>> request.setPrincipal(MockPrincipal())
+  >>> view = getMultiAdapter((Unauthorized(), request), name='index.html')
+  >>> print view()
+  This is my idea of an unauthorized view.
+
+"""
+import grok
+
+class MockPrincipal(object):
+    id = 'mockprincipal'

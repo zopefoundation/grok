@@ -21,16 +21,20 @@ provided here.
 import simplejson
 
 import zope.location
+from zope.container.interfaces import IReadContainer
+from zope.errorview.browser import ExceptionView, NotFoundView, UnauthorizedView
 from zope import component
 from zope import interface
-from zope.securitypolicy.role import Role as securitypolicy_Role
+from zope.interface.common.interfaces import IException
 from zope.publisher.browser import BrowserPage
-from zope.publisher.interfaces import NotFound
+from zope.publisher.defaultview import getDefaultViewName
 from zope.publisher.interfaces.browser import IBrowserPublisher
 from zope.publisher.interfaces.http import IHTTPRequest
+from zope.publisher.interfaces import INotFound
+from zope.publisher.interfaces import NotFound
 from zope.publisher.publish import mapply
-from zope.publisher.defaultview import getDefaultViewName
-from zope.container.interfaces import IReadContainer
+from zope.security.interfaces import IUnauthorized
+from zope.securitypolicy.role import Role as securitypolicy_Role
 
 import grok
 import martian.util
@@ -67,7 +71,7 @@ class View(grokcore.view.View):
 
     Implements the :class:`grokcore.view.interfaces.IGrokView`
     interface.
-    
+
     Each class that inherits from `grok.View` is designed to "render" a
     category of content objects by reducing them to a document (often an
     HTML document).  Every view has a name, and is invoked when users
@@ -149,6 +153,21 @@ class View(grokcore.view.View):
         grokcore.message.send(message, type=type, name='session')
 
 
+class ExceptionView(ExceptionView, grokcore.view.View):
+    grok.context(IException)
+    grok.name('index.html')
+
+
+class NotFoundView(NotFoundView, grokcore.view.View):
+    grok.context(INotFound)
+    grok.name('index.html')
+
+
+class UnauthorizedView(UnauthorizedView, grokcore.view.View):
+    grok.context(IUnauthorized)
+    grok.name('index.html')
+
+
 class Form(grokcore.formlib.Form, View):
     """The base class for forms in Grok applications.
 
@@ -201,7 +220,7 @@ class IndexesClass(object):
     :class:`grok.index.Field`, :class:`grok.index.Text`, or
     :class:`grok.index.Set` instances naming object attributes that
     should be indexed (and therefore searchable).::
-    
+
         class ArticleIndex(grok.Indexes):
             grok.site(Newspaper)
             grok.context(Article)

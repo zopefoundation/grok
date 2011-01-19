@@ -84,6 +84,7 @@ from grok.events import ApplicationInitializedEvent
 
 from grok.components import Application
 from grok.components import View, Form, AddForm, EditForm, DisplayForm
+from grok.components import ExceptionView, NotFoundView, UnauthorizedView
 from grok.components import XMLRPC, REST, JSON
 from grok.components import Indexes
 from grok.components import Role

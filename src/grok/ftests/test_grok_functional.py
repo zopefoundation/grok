@@ -62,6 +62,7 @@ def test_suite():
     for name in [
         'application',
         'catalog',
+        'errorviews',
         'form',
         'lifecycle',
         'security',
