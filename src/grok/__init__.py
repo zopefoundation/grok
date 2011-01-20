@@ -53,6 +53,7 @@ from grokcore.formlib import Fields
 
 from grokcore.annotation import Annotation
 
+from grokcore.site.interfaces import IApplication
 from grokcore.site import LocalUtility
 from grokcore.site import Site
 from grokcore.site import getApplication
