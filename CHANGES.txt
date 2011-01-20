@@ -1,8 +1,12 @@
 Grok changes
 ************
 
-1.4 (unreleased)
+1.4 (2011-01-20)
 ================
+
+- Define error view baseclasses for IException, INotFound and IUnauthorized
+  errors: grok.ExceptionView, grok.NotFoundView, grok.UnauthorizedView. Lifts
+  the indirect dependency on zope.app.http and zope.app.exception.
 
 - Moved the XMLRPC, REST component into separate packages
   grokcore.xmlrpc and grokcore.rest. Consequently the custom traverse

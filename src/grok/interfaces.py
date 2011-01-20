@@ -47,11 +47,16 @@ class IGrokBaseClasses(grokcore.annotation.interfaces.IBaseClasses,
                        grokcore.json.interfaces.IBaseClasses,
                        grokcore.traverser.interfaces.IBaseClasses,
                        grokcore.xmlrpc.interfaces.IBaseClasses):
-    Model = interface.Attribute("Base class for persistent content objects "
-                                "(models).")
+    Model = interface.Attribute(
+        "Base class for persistent content objects (models).")
     Container = interface.Attribute("Base class for containers.")
     OrderedContainer = interface.Attribute("Base class for ordered containers.")
     Application = interface.Attribute("Base class for applications.")
+    View = interface.Attribute("Base class views.")
+    ExceptionView = interface.Attribute("Base class for excetion views.")
+    NotFoundView = interface.Attribute("Base class notfound exception views.")
+    UnauthorizedView = interface.Attribute(
+        "Base class unauthorized exception views.")
     Indexes = interface.Attribute("Base class for catalog index definitions.")
     Role = interface.Attribute("Base class for roles.")
 
