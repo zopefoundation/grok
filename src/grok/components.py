@@ -22,7 +22,7 @@ import simplejson
 
 import zope.location
 from zope.container.interfaces import IReadContainer
-from zope.errorview.browser import ExceptionView, NotFoundView, UnauthorizedView
+import zope.errorview.browser
 from zope import component
 from zope import interface
 from zope.interface.common.interfaces import IException
@@ -153,19 +153,80 @@ class View(grokcore.view.View):
         grokcore.message.send(message, type=type, name='session')
 
 
-class ExceptionView(ExceptionView, grokcore.view.View):
+class ExceptionView(View, zope.errorview.browser.ExceptionView):
+    """Base class for rendering views for uncaught exceptions that occur during
+    the application run-time and are not otherwise rendered.
+
+    Note that when this class in not subclassed, the default error view
+    from zope.errorview is being rendered.
+    """
     grok.context(IException)
     grok.name('index.html')
 
+    def update(self):
+        return zope.errorview.browser.ExceptionView.update(self)
 
-class NotFoundView(NotFoundView, grokcore.view.View):
+    def render(self):
+        """An error view can either be rendered by an associated template, or
+        it can implement this method to render itself from Python. This is
+        useful if the view's output isn't XML/HTML but something computed in
+        Python (plain text, PDF, etc.)
+
+        Contrary to regular views, render() does *not* accept any parameters.
+        """
+        return zope.errorview.browser.ExceptionView.render(self)
+
+    render.base_method = True
+
+
+class NotFoundView(View, zope.errorview.browser.NotFoundView):
+    """Base class for rendering views for INotFound exceptions.
+
+    Note that when this class in not subclassed, the default error view
+    from zope.errorview is being rendered.
+    """
     grok.context(INotFound)
     grok.name('index.html')
 
+    def update(self):
+        return zope.errorview.browser.NotFoundView.update(self)
 
-class UnauthorizedView(UnauthorizedView, grokcore.view.View):
+    def render(self):
+        """An error view can either be rendered by an associated template, or
+        it can implement this method to render itself from Python. This is
+        useful if the view's output isn't XML/HTML but something computed in
+        Python (plain text, PDF, etc.)
+
+        Contrary to regular views, render() does *not* accept any parameters.
+        """
+        return zope.errorview.browser.NotFoundView.render(self)
+
+    render.base_method = True
+
+
+class UnauthorizedView(View, zope.errorview.browser.UnauthorizedView):
+    """Base class for rendering views for IUnauthorized exceptions.
+
+    Note that when this class in not subclassed, the default error view
+    from zope.errorview is being rendered.
+    """
     grok.context(IUnauthorized)
     grok.name('index.html')
+
+    def update(self):
+        return zope.errorview.browser.UnauthorizedView.update(self)
+
+    def render(self):
+        """An error view can either be rendered by an associated template, or
+        it can implement this method to render itself from Python. This is
+        useful if the view's output isn't XML/HTML but something computed in
+        Python (plain text, PDF, etc.)
+
+        Contrary to regular views, render() does *not* accept any parameters.
+        """
+        return zope.errorview.browser.UnauthorizedView.render(self)
+
+    render.base_method = True
 
 
 class Form(grokcore.formlib.Form, View):

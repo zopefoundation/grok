@@ -47,7 +47,6 @@ The default views can be selectively overridden in your application::
   >>> class MyNotFoundView(NotFoundView):
   ...     def render(self):
   ...         return u'This is my idea of a not found view.'
-  >>> from grok.testing import grok_component
   >>> grok_component('MyNotFoundView', MyNotFoundView)
   True
 
@@ -61,7 +60,6 @@ The default views can be selectively overridden in your application::
   >>> class MyUnauthorizedView(UnauthorizedView):
   ...     def render(self):
   ...         return u'This is my idea of an unauthorized view.'
-  >>> from grok.testing import grok_component
   >>> grok_component('MyUnauthorizedView', MyUnauthorizedView)
   True
 
@@ -71,8 +69,31 @@ The default views can be selectively overridden in your application::
   >>> print view()
   This is my idea of an unauthorized view.
 
+  >>> class WithTemplate(ExceptionView):
+  ...     grok.template('exceptionview_template')
+  >>> grok_component('WithTemplate', WithTemplate)
+  True
+
+  >>> view = getMultiAdapter((Exception(), TestRequest()), name='index.html')
+  >>> print view()
+  <html>
+  <body>
+  <h1>Something went wrong!</h1>
+  <p>Exception()</p>
+  </body>
+  </html>
+
 """
 import grok
 
 class MockPrincipal(object):
     id = 'mockprincipal'
+
+exceptionview_template = grok.PageTemplate("""\
+<html>
+<body>
+<h1>Something went wrong!</h1>
+<p tal:content="python: repr(context)"/>
+</body>
+</html>
+""")
