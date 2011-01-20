@@ -35,7 +35,6 @@ import grokcore.traverser.interfaces
 from grokcore.component.interfaces import IContext
 from grokcore.component.interfaces import IGrokErrors
 
-
 from grokcore.rest.interfaces import IREST, IRESTSkinType, IRESTLayer
 
 class IGrokBaseClasses(grokcore.annotation.interfaces.IBaseClasses,
@@ -157,7 +156,9 @@ class IGrokAPI(grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
     def getSite():
         """Get the current site."""
 
+    # XXX should be moved to the respective API declarations!
     IRESTSkinType = interface.Attribute('The REST skin type')
+    IApplication = interface.Attribute('The application model interface')
 
 
 class IGrokView(grokcore.view.interfaces.IGrokView):
