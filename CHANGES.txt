@@ -4,13 +4,12 @@ Grok changes
 1.5 (unreleased)
 ================
 
-- Nothing changed yet.
-
+- Fix tests now that error views no longer by default provide ISystemErrorView.
 
 1.4.2 (2011-01-20)
 ==================
 
-- Should've listed IApplicatio as part of the grok API too.
+- Should've listed IApplication as part of the grok API too.
 
 1.4.1 (2011-01-20)
 ==================

@@ -9,8 +9,12 @@ zope.errorviews::
   >>> print view()
   A system error occurred.
 
-  >>> view.isSystemError()
-  True
+Error views no longer by default provide ISystemErrorView. It would result in
+duplicate log output otherwise.
+
+  >>> from zope.browser.interfaces import ISystemErrorView
+  >>> ISystemErrorView.providedBy(view)
+  False
 
   >>> from zope.publisher.interfaces import NotFound
   >>> request = TestRequest()
@@ -39,9 +43,6 @@ The default views can be selectively overridden in your application::
   >>> view = getMultiAdapter((Exception(), TestRequest()), name='index.html')
   >>> print view()
   This is my idea of an exception view.
-
-  >>> view.isSystemError()
-  True
 
   >>> from grok import NotFoundView
   >>> class MyNotFoundView(NotFoundView):
