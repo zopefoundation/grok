@@ -4,8 +4,7 @@ Grok changes
 1.5 (unreleased)
 ================
 
-- Nothing changed yet.
-
+- Added import for Subscription and MultiSubscription components.
 
 1.4.3 (2011-02-08)
 ==================
