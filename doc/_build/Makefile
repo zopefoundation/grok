@@ -3,14 +3,14 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD = /home/jw/projects/grokdocumentation/groktoolkit/src/grok/bin/sphinxpython /home/jw/projects/grokdocumentation/groktoolkit/src/grok/bin/sphinx-build
+SPHINXBUILD = /home/jw/projects/forestsprint/groktoolkit/trunk/src/grok/bin/sphinxpython /home/jw/projects/forestsprint/groktoolkit/trunk/src/grok/bin/sphinx-build
 PAPER         =
-BUILDDIR      = /home/jw/projects/grokdocumentation/groktoolkit/src/grok/doc/_build
+BUILDDIR      = /home/jw/projects/forestsprint/groktoolkit/trunk/src/grok/doc/_build
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
-ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) /home/jw/projects/grokdocumentation/groktoolkit/src/grok/doc
+ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) /home/jw/projects/forestsprint/groktoolkit/trunk/src/grok/doc
 
 .PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest
 

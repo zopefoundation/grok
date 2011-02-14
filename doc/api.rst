@@ -50,8 +50,8 @@ Forms
 .. autofunction:: grok.AutoFields
 .. autofunction:: grok.Fields
 
-Utilities and Adapters
-----------------------
+Utilities, Adapters, Subscriptions
+----------------------------------
 
 .. autoclass:: grok.adapter
 .. autoclass:: grok.Adapter
@@ -62,6 +62,8 @@ Utilities and Adapters
 .. autoclass:: grok.local_utility
 .. autoclass:: grok.LocalUtility
 .. autoclass:: grok.MultiAdapter
+.. autoclass:: grok.MultiSubscription
+.. autoclass:: grok.Subscription
 .. autofunction:: grok.adapts
 .. autofunction:: grok.implements
 
@@ -88,8 +90,8 @@ Indexes
 .. autoclass:: grok.index.Set
 .. autoclass:: grok.index.Text
 
-Events
-------
+Events and event handling
+-------------------------
 
 .. autoclass:: grok.ApplicationInitializedEvent
 .. autoclass:: grok.ContainerModifiedEvent
@@ -109,6 +111,7 @@ Events
 .. autoclass:: grok.ObjectRemovedEvent
 .. autoclass:: grok.viewletmanager
 .. autofunction:: grok.notify
+.. autofunction:: grok.subscribe
 
 Directives
 ----------

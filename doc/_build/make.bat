@@ -5,8 +5,8 @@ REM Command file for Sphinx documentation
 if "%SPHINXBUILD%" == "" (
 	set SPHINXBUILD=sphinx-build
 )
-set BUILDDIR=/home/jw/projects/grokdocumentation/groktoolkit/src/grok/doc/_build
-set ALLSPHINXOPTS=-d %BUILDDIR%/doctrees %SPHINXOPTS% /home/jw/projects/grokdocumentation/groktoolkit/src/grok/doc
+set BUILDDIR=/home/jw/projects/forestsprint/groktoolkit/trunk/src/grok/doc/_build
+set ALLSPHINXOPTS=-d %BUILDDIR%/doctrees %SPHINXOPTS% /home/jw/projects/forestsprint/groktoolkit/trunk/src/grok/doc
 if NOT "%PAPER%" == "" (
 	set ALLSPHINXOPTS=-D latex_paper_size=%PAPER% %ALLSPHINXOPTS%
 )
