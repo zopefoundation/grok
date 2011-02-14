@@ -43,7 +43,7 @@ setup(
     install_requires=[
         'ZODB3',
         'grokcore.annotation >= 1.1',
-        'grokcore.component >= 2.1',
+        'grokcore.component >= 2.3',
         'grokcore.content',
         'grokcore.formlib >= 1.4',
         'grokcore.json',

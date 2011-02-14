@@ -20,10 +20,13 @@ from martian import ClassGrokker, InstanceGrokker, GlobalGrokker
 from martian import baseclass
 from martian.error import GrokError, GrokImportError
 
+from grokcore.component import Context
+from grokcore.component import GlobalUtility
 from grokcore.component import Adapter, MultiAdapter, GlobalUtility, Context
+from grokcore.component import Subscription, MultiSubscription
 from grokcore.component.decorators import subscribe, adapter, implementer
-from grokcore.component.directive import (
-    context, name, title, description, provides, global_utility, direct)
+from grokcore.component.directive import context, name, title, description
+from grokcore.component.directive import provides, global_utility, direct
 
 from grokcore.content import Model, Container, OrderedContainer
 
