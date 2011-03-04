@@ -30,9 +30,7 @@ The `@@contents.html` view of folders is protected by
 `zope.ManageContent` and should not be visible to unauthenticated
 users. Instead we are asked to authenticate ourselves::
 
-  >>> print http(r'''
-  ... GET /@@contents.html HTTP/1.1
-  ... ''')
+  >>> print http('GET /@@contents.html HTTP/1.1')
   HTTP/1.0 401 Unauthorized
   ...
 
@@ -46,9 +44,7 @@ Let's test this in the context of a Grok application:
 Now there is a ``contents.html`` view available for our application,
 which is protected by default::
 
-  >>> print http(r'''
-  ... GET /app/@@contents.html HTTP/1.1
-  ... ''')
+  >>> print http('GET /app/@@contents.html HTTP/1.1')
   HTTP/1.0 401 Unauthorized
   ...
 
@@ -60,9 +56,7 @@ the view just fine:
   >>> root_perms = IPrincipalPermissionManager(root)
   >>> root_perms.grantPermissionToPrincipal('zope.ManageContent',
   ...                                       'zope.anybody')
-  >>> print http(r'''
-  ... GET /@@contents.html HTTP/1.1
-  ... ''')
+  >>> print http('GET /@@contents.html HTTP/1.1')
   HTTP/1.0 200 Ok
   ...
 
