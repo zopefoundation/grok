@@ -20,7 +20,7 @@ from zope.interface.interfaces import IMethod, IInterface
 
 from zope.catalog.field import FieldIndex
 from zope.catalog.text import TextIndex
-from zc.catalog.catalogindex import SetIndex
+from zc.catalog.catalogindex import SetIndex, ValueIndex
 
 from martian.error import GrokError, GrokImportError
 from martian.util import frame_is_class
@@ -107,3 +107,14 @@ class Text(IndexDefinition):
 class Set(IndexDefinition):
     """A :class:`grok.Indexes` index supporting keyword searches of a field."""
     index_class = SetIndex
+
+
+class Value(IndexDefinition):
+    """A :class:`grok.Indexes` index similar to, but more flexible than
+    :class:`grok.Field` index.
+
+    The index allows searches for documents that contain any of a set of
+    values; between a set of values; any (non-None) values; and any empty
+    values.
+    """
+    index_class = ValueIndex
