@@ -4,6 +4,8 @@ Grok changes
 1.6 (unreleased)
 ================
 
+- Fix tests that relied on older versions of zope.testbrowser.
+
 - Added grok.index.Value component.
 
 1.5 (2011-02-14)
