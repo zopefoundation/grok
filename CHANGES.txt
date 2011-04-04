@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-1.6 (unreleased)
+1.6 (2011-04-04)
 ================
 
 - Fix tests that relied on older versions of zope.testbrowser.
