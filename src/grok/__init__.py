@@ -26,7 +26,8 @@ from grokcore.component import Adapter, MultiAdapter, GlobalUtility, Context
 from grokcore.component import Subscription, MultiSubscription
 from grokcore.component.decorators import subscribe, adapter, implementer
 from grokcore.component.directive import context, name, title, description
-from grokcore.component.directive import provides, global_utility, direct
+from grokcore.component.directive import provides, direct
+from grokcore.component.directive import global_utility, global_adapter
 
 from grokcore.content import Model, Container, OrderedContainer
 
