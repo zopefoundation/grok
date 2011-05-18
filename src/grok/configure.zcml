@@ -15,8 +15,6 @@
   <include package="grok" file="meta.zcml" />
 
   <include package="zope.annotation" />
-  <include package="zope.app.appsetup" />
-  <include package="zope.app.publication" />
   <include package="zope.browserpage" />
   <include package="zope.catalog" />
   <include package="zope.component" />
@@ -35,6 +33,10 @@
   <include package="zope.traversing" />
   <include package="zope.traversing.browser" />
 
+  <include package="zope.app.appsetup" />
+  <include package="zope.app.publication" />
+  <include package="zope.app.wsgi" />
+
   <include package="grokcore.annotation" />
   <include package="grokcore.formlib" />
   <include package="grokcore.json" />
@@ -45,7 +47,6 @@
   <include package="grokcore.viewlet" />
   <include package="grokcore.rest" />
   <include package="grokcore.xmlrpc" />
-
 
   <securityPolicy
       component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy" />

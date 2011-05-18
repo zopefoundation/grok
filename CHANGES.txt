@@ -4,6 +4,9 @@ Grok changes
 1.7 (unreleased)
 ================
 
+- Directly depend on zope.app.wsgi and configure it too to have the useful
+  IResult adapters for (temporary) files registered.
+
 - Import grokcore.component.global_adapter too.
 
 1.6 (2011-04-04)
