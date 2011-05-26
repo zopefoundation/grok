@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-1.7 (unreleased)
+1.7 (2011-05-26)
 ================
 
 - Directly depend on zope.app.wsgi and configure it too to have the useful
