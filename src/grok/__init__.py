@@ -35,6 +35,7 @@ from grokcore.security import Permission
 from grokcore.security import Public
 from grokcore.security import require
 
+from grokcore.view import ContentProvider
 from grokcore.view import PageTemplate
 from grokcore.view import PageTemplateFile
 from grokcore.view import DirectoryResource

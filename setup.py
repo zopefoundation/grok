@@ -51,7 +51,7 @@ setup(
         'grokcore.security >= 1.1',
         'grokcore.site > 1.4',
         'grokcore.traverser',
-        'grokcore.view',
+        'grokcore.view >= 2.6.1',
         'grokcore.viewlet >= 1.3',
         'grokcore.view [security_publication]',
         'grokcore.xmlrpc',
