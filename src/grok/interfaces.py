@@ -23,6 +23,7 @@ from zope.container.interfaces import IContainer as IContainerBase
 import grokcore.annotation.interfaces
 import grokcore.component.interfaces
 import grokcore.formlib.interfaces
+import grokcore.layout.interfaces
 import grokcore.json.interfaces
 import grokcore.security.interfaces
 import grokcore.rest.interfaces
@@ -44,6 +45,7 @@ class IGrokBaseClasses(grokcore.annotation.interfaces.IBaseClasses,
                        grokcore.site.interfaces.IBaseClasses,
                        grokcore.view.interfaces.IBaseClasses,
                        grokcore.json.interfaces.IBaseClasses,
+                       grokcore.layout.interfaces.IBaseClasses,
                        grokcore.traverser.interfaces.IBaseClasses,
                        grokcore.xmlrpc.interfaces.IBaseClasses):
     Model = interface.Attribute(
@@ -114,6 +116,7 @@ class IGrokEvents(interface.Interface):
 
 
 class IGrokAPI(grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
+               grokcore.layout.interfaces.IGrokcoreLayoutAPI,
                grokcore.security.interfaces.IGrokcoreSecurityAPI,
                grokcore.site.interfaces.IGrokcoreSiteAPI,
                grokcore.view.interfaces.IGrokcoreViewAPI,

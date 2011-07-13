@@ -42,6 +42,7 @@ import martian.util
 import grokcore.view
 import grokcore.site
 import grokcore.message
+import grokcore.layout
 from grok import interfaces, util
 
 # BBB this is for import backward compatibility.
@@ -66,7 +67,21 @@ class Application(grokcore.site.Site):
     interface.implements(grokcore.site.interfaces.IApplication)
 
 
-class View(grokcore.view.View):
+class ViewSupportMixin(object):
+
+    def application_url(self, name=None, data=None):
+        """Return the URL of the closest :class:`grok.Application` object in
+        the hierarchy or the URL of a named object (``name``
+        parameter) relative to the closest application object.
+        """
+        return util.application_url(self.request, self.context, name, data)
+
+    def flash(self, message, type='message'):
+        """Send a short message to the user."""
+        grokcore.message.send(message, type=type, name='session')
+
+
+class View(ViewSupportMixin, grokcore.view.View):
     """The base class for views with templates in Grok applications.
 
     Implements the :class:`grokcore.view.interfaces.IGrokView`
@@ -232,7 +247,7 @@ class UnauthorizedView(View, zope.errorview.browser.UnauthorizedView):
     render.base_method = True
 
 
-class Form(grokcore.formlib.Form, View):
+class Form(ViewSupportMixin, grokcore.formlib.Form):
     """The base class for forms in Grok applications.
 
     A class that inherits from :class:`grok.Form` is a
@@ -249,25 +264,38 @@ class Form(grokcore.formlib.Form, View):
     interface.implements(interfaces.IGrokForm)
 
 
-class AddForm(grokcore.formlib.AddForm, View):
+class AddForm(ViewSupportMixin, grokcore.formlib.AddForm):
     """Base class for add forms in Grok applications."""
     interface.implements(interfaces.IGrokForm)
 
 
-class DisplayForm(grokcore.formlib.DisplayForm, View):
+class DisplayForm(ViewSupportMixin, grokcore.formlib.DisplayForm):
     """Base class for display forms in Grok applications."""
     interface.implements(interfaces.IGrokForm)
 
 
-class EditForm(grokcore.formlib.EditForm, View):
+class EditForm(ViewSupportMixin, grokcore.formlib.EditForm):
     """Base class for edit forms in Grok applications."""
     interface.implements(interfaces.IGrokForm)
 
 
-class ViewishViewSupport(grokcore.view.ViewSupport):
+class Layout(ViewSupportMixin, grokcore.layout.Layout):
+    pass
 
-    def application_url(self, name=None, data=None):
-        return util.application_url(self.request, self.context, name, data)
+class Page(ViewSupportMixin, grokcore.layout.Page):
+    pass
+
+class FormPage(ViewSupportMixin, grokcore.layout.FormPage):
+    pass
+
+class AddFormPage(ViewSupportMixin, grokcore.layout.AddFormPage):
+    pass
+
+class EditFormPage(ViewSupportMixin, grokcore.layout.EditFormPage):
+    pass
+
+class DisplayFormPage(ViewSupportMixin, grokcore.layout.DisplayFormPage):
+    pass
 
 
 class IndexesClass(object):

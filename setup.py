@@ -46,6 +46,7 @@ setup(
         'grokcore.content',
         'grokcore.formlib >= 1.4',
         'grokcore.json',
+        'grokcore.layout',
         'grokcore.message',
         'grokcore.rest',
         'grokcore.security >= 1.1',
