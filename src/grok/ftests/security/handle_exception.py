@@ -35,7 +35,7 @@ class Cave(grok.View):
 class CaveErrorView(grok.View):
     """Default view for the CaveWasRobbedError.
     """
-    grok.name("index.html")
+    grok.name("index")
     grok.context(CaveWasRobbedError)
 
     def render(self):

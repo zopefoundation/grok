@@ -5,7 +5,7 @@ zope.errorviews::
 
   >>> from zope.component import getMultiAdapter
   >>> from zope.publisher.browser import TestRequest
-  >>> view = getMultiAdapter((Exception(), TestRequest()), name='index.html')
+  >>> view = getMultiAdapter((Exception(), TestRequest()), name='index')
   >>> print view()
   A system error occurred.
 
@@ -19,14 +19,14 @@ duplicate log output otherwise.
   >>> from zope.publisher.interfaces import NotFound
   >>> request = TestRequest()
   >>> error = NotFound(object(), request)
-  >>> view = getMultiAdapter((error, request), name='index.html')
+  >>> view = getMultiAdapter((error, request), name='index')
   >>> print view()
   The requested resource can not be found.
 
   >>> from zope.security.interfaces import Unauthorized
   >>> request = TestRequest()
   >>> request.setPrincipal(MockPrincipal())
-  >>> view = getMultiAdapter((Unauthorized(), request), name='index.html')
+  >>> view = getMultiAdapter((Unauthorized(), request), name='index')
   >>> print view()
   Access to the requested resource is forbidden.
 
@@ -40,7 +40,7 @@ The default views can be selectively overridden in your application::
   >>> grok_component('MyExceptionView', MyExceptionView)
   True
 
-  >>> view = getMultiAdapter((Exception(), TestRequest()), name='index.html')
+  >>> view = getMultiAdapter((Exception(), TestRequest()), name='index')
   >>> print view()
   This is my idea of an exception view.
 
@@ -53,7 +53,7 @@ The default views can be selectively overridden in your application::
 
   >>> request = TestRequest()
   >>> error = NotFound(object(), request)
-  >>> view = getMultiAdapter((error, request), name='index.html')
+  >>> view = getMultiAdapter((error, request), name='index')
   >>> print view()
   This is my idea of a not found view.
 
@@ -66,7 +66,7 @@ The default views can be selectively overridden in your application::
 
   >>> request = TestRequest()
   >>> request.setPrincipal(MockPrincipal())
-  >>> view = getMultiAdapter((Unauthorized(), request), name='index.html')
+  >>> view = getMultiAdapter((Unauthorized(), request), name='index')
   >>> print view()
   This is my idea of an unauthorized view.
 
@@ -75,7 +75,7 @@ The default views can be selectively overridden in your application::
   >>> grok_component('WithTemplate', WithTemplate)
   True
 
-  >>> view = getMultiAdapter((Exception(), TestRequest()), name='index.html')
+  >>> view = getMultiAdapter((Exception(), TestRequest()), name='index')
   >>> print view()
   <html>
   <body>

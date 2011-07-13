@@ -56,4 +56,30 @@
       name="index"
       />
 
+  <browser:defaultView
+    for="zope.interface.common.interfaces.IException"
+    name="index"
+  />
+
+  <browser:page
+    for="zope.interface.common.interfaces.IException"
+    class="zope.errorview.browser.ExceptionView"
+    name="index"
+    permission="zope.Public"
+  />
+
+  <browser:page
+    for="zope.security.interfaces.IUnauthorized"
+    class="zope.errorview.browser.UnauthorizedView"
+    name="index"
+    permission="zope.Public"
+  />
+
+  <browser:page
+    for="zope.publisher.interfaces.INotFound"
+    class="zope.errorview.browser.NotFoundView"
+    name="index"
+    permission="zope.Public"
+  />
+
 </configure>

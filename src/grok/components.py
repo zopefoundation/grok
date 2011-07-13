@@ -157,11 +157,12 @@ class ExceptionView(View, zope.errorview.browser.ExceptionView):
     """Base class for rendering views for uncaught exceptions that occur during
     the application run-time and are not otherwise rendered.
 
-    Note that when this class in not subclassed, the default error view
-    from zope.errorview is being rendered.
+    Note that when this class in not subclassed, the default error view from
+    zope.errorview is being rendered.
     """
+    grok.baseclass()
     grok.context(IException)
-    grok.name('index.html')
+    grok.name('index')
 
     def update(self):
         return zope.errorview.browser.ExceptionView.update(self)
@@ -182,11 +183,12 @@ class ExceptionView(View, zope.errorview.browser.ExceptionView):
 class NotFoundView(View, zope.errorview.browser.NotFoundView):
     """Base class for rendering views for INotFound exceptions.
 
-    Note that when this class in not subclassed, the default error view
-    from zope.errorview is being rendered.
+    Note that when this class in not subclassed, the default error view from
+    zope.errorview is being rendered.
     """
+    grok.baseclass()
     grok.context(INotFound)
-    grok.name('index.html')
+    grok.name('index')
 
     def update(self):
         return zope.errorview.browser.NotFoundView.update(self)
@@ -207,11 +209,12 @@ class NotFoundView(View, zope.errorview.browser.NotFoundView):
 class UnauthorizedView(View, zope.errorview.browser.UnauthorizedView):
     """Base class for rendering views for IUnauthorized exceptions.
 
-    Note that when this class in not subclassed, the default error view
-    from zope.errorview is being rendered.
+    Note that when this class in not subclassed, the default error view from
+    zope.errorview is being rendered.
     """
+    grok.baseclass()
     grok.context(IUnauthorized)
-    grok.name('index.html')
+    grok.name('index')
 
     def update(self):
         return zope.errorview.browser.UnauthorizedView.update(self)

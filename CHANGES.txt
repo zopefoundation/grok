@@ -4,8 +4,9 @@ Grok changes
 1.8 (unreleased)
 ================
 
-- Nothing changed yet.
+- Expose the ContentProvider component from grokcore.view
 
+- Declare the name "index" as default view name for error views.
 
 1.7 (2011-05-26)
 ================

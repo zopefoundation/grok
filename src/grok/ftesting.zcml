@@ -13,8 +13,6 @@
   <include package="grok" />
   <grok:grok package="grok.ftests" />
 
-  <browser:defaultView name="index.html" />
-
   <securityPolicy
       component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy"
       />
