@@ -1,0 +1,1 @@
+<html tal:content="context.__class__.__name__"></html>

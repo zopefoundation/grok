@@ -4,6 +4,8 @@ Grok changes
 1.8 (unreleased)
 ================
 
+- Incorporate grokcore.chameleon and have it configured by default.
+
 - Expose the Layout, Page, AddFormPage, EditFormPage, DisplayFormPage and
   FormPage components that are brought by grokcore.layout. The grok variants
   mixin application_url() and flash() functionality typically found in grok's
