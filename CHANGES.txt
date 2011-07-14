@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-1.8 (unreleased)
+1.8 (2011-07-14)
 ================
 
 - Incorporate grokcore.chameleon and have it configured by default.
