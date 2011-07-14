@@ -4,6 +4,14 @@ Grok changes
 1.8 (unreleased)
 ================
 
+- Expose the Layout, Page, AddFormPage, EditFormPage, DisplayFormPage and
+  FormPage components that are brought by grokcore.layout. The grok variants
+  mixin application_url() and flash() functionality typically found in grok's
+  viewish components.
+
+- Expose the ExecptionPage, NotFoundPage and UnauthorizedPage component from
+  grokcore.layout.
+
 - Expose the ContentProvider component from grokcore.view
 
 - Declare the name "index" as default view name for error views.
