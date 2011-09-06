@@ -115,14 +115,17 @@ class IGrokEvents(interface.Interface):
     ApplicationInitializedEvent = interface.Attribute("")
 
 
-class IGrokAPI(grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
+class IGrokAPI(grokcore.component.interfaces.IGrokcoreComponentAPI,
+               grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
                grokcore.layout.interfaces.IGrokcoreLayoutAPI,
                grokcore.security.interfaces.IGrokcoreSecurityAPI,
                grokcore.site.interfaces.IGrokcoreSiteAPI,
                grokcore.view.interfaces.IGrokcoreViewAPI,
                grokcore.viewlet.interfaces.IGrokcoreViewletAPI,
-               IGrokBaseClasses, IGrokDirectives,
-               IGrokEvents, IGrokErrors):
+               IGrokBaseClasses,
+               IGrokDirectives,
+               IGrokErrors,
+               IGrokEvents):
 
     # BBB this is deprecated
     def grok(dotted_name):

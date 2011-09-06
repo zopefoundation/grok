@@ -4,8 +4,9 @@ Grok changes
 1.9 (unreleased)
 ================
 
-- Nothing changed yet.
-
+- Added imports for `querySubscriptions()`, `queryMultiSubscriptions()`,
+  `queryOrderedSubscriptions()` and `queryOrderedMultiSubscriptions()` functions
+  that complement the Subscriptions and MultiSubscriptions components.
 
 1.8 (2011-07-14)
 ================
