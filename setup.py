@@ -57,6 +57,7 @@ setup(
         'grokcore.viewlet >= 1.3',
         'grokcore.view [security_publication]',
         'grokcore.xmlrpc',
+        'grokcore.catalog',
         'martian >= 0.14',
         'pytz',
         'setuptools',

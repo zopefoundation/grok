@@ -12,41 +12,12 @@
 #
 ##############################################################################
 """Grok directives.
-
-This module defines Grok directives: the markers that users place
-inside of their classes (and sometimes in their modules, too) to
-direct how Grok registers their components.  For example, the first
-directive defined below is `site`, which people programming Grok
-applications normally use like this::
-
-    class MyIndex(grok.Indexes):
-        grok.site(MySite)
-        ...
-
-If the set of directives in this module looks rather small, remember
-that most of the directives available in Grok actually come from the
-`grokcore` modules on which Grok depends, where they have been placed so
-that other projects can use them without having to pull in all of Grok.
-
 """
 
 import grok
 import martian
 import martian.util
 from grokcore.view.directive import TaggedValueStoreOnce
-from grokcore.rest.directive import restskin
-
-
-class site(martian.Directive):
-    """The `grok.site()` directive.
-
-    This directive is used when creating a `grok.Indexes` subclass, to
-    indicate the Grok site object for which the indexes should be built.
-
-    """
-    scope = martian.CLASS
-    store = martian.ONCE
-    validate = martian.validateInterfaceOrClass
 
 
 class permissions(martian.Directive):

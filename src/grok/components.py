@@ -282,77 +282,25 @@ class EditForm(ViewSupportMixin, grokcore.formlib.EditForm):
 class Layout(ViewSupportMixin, grokcore.layout.Layout):
     pass
 
+
 class Page(ViewSupportMixin, grokcore.layout.Page):
     pass
+
 
 class FormPage(ViewSupportMixin, grokcore.layout.FormPage):
     pass
 
+
 class AddFormPage(ViewSupportMixin, grokcore.layout.AddFormPage):
     pass
+
 
 class EditFormPage(ViewSupportMixin, grokcore.layout.EditFormPage):
     pass
 
+
 class DisplayFormPage(ViewSupportMixin, grokcore.layout.DisplayFormPage):
     pass
-
-
-class IndexesClass(object):
-    """Base class for index collections in a Grok application.
-
-    A `grok.Indexes` utility provides one or more Zope Database
-    content indexes for use in a :class:`grok.Site` or
-    :class:`grok.Application`.  The site or application that the
-    indexes are intended for should be named with the :func:`grok.site()`
-    directive, and the kind of object to index should be named with a
-    :func:`grok.context()` directive.
-
-    Inside their class, the developer should specify one or more
-    :class:`grok.index.Field`, :class:`grok.index.Text`, or
-    :class:`grok.index.Set` instances naming object attributes that
-    should be indexed (and therefore searchable).::
-
-        class ArticleIndex(grok.Indexes):
-            grok.site(Newspaper)
-            grok.context(Article)
-            author = index.Field()
-            title = index.Field()
-            body = index.Text()
-
-    See the :mod:`grok.index` module for more information on field
-    types.
-
-    .. note:: Indexes are persistent: they are stored in the Zope
-              database alongside the site or application that they
-              index.  They are created when the site or application is
-              first created (and made persistent), and so an
-              already-created site will not change just because the
-              definition of one of its :data:`grok.Indexes` changes;
-              it will either have to be deleted and re-created, or
-              some other operation performed to bring its indexes up
-              to date.
-
-    """
-    def __init__(self, name, bases=(), attrs=None):
-        if attrs is None:
-            return
-        indexes = {}
-        for name, value in attrs.items():
-            # Ignore everything that's not an index definition object
-            # except for values set by directives
-            if '.' in name:
-                setattr(self, name, value)
-                continue
-            if not interfaces.IIndexDefinition.providedBy(value):
-                continue
-            indexes[name] = value
-        self.__grok_indexes__ = indexes
-        # __grok_module__ is needed to make defined_locally() return True for
-        # inline templates
-        self.__grok_module__ = martian.util.caller_module()
-
-Indexes = IndexesClass('Indexes')
 
 
 class Role(securitypolicy_Role):

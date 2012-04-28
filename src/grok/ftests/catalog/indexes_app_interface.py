@@ -61,20 +61,25 @@ from zope import schema
 import grok
 from grok import index
 
+
 class IHerd(Interface):
     pass
+
 
 class Herd(grok.Container, grok.Application):
     grok.implements(IHerd)
 
+
 class Herd2(grok.Container, grok.Application):
     grok.implements(IHerd)
+
 
 class IMammoth(Interface):
     name = schema.TextLine(title=u'Name')
     age = schema.Int(title=u'Age')
     def message():
         """Message the mammoth has for the world."""
+
 
 class MammothIndexes(grok.Indexes):
     grok.site(IHerd)
@@ -83,6 +88,7 @@ class MammothIndexes(grok.Indexes):
     name = index.Field()
     age = index.Field()
     message = index.Text()
+
 
 class Mammoth(grok.Model):
     grok.implements(IMammoth)

@@ -32,6 +32,7 @@ from grokcore.component.directive import context, name, title, description
 from grokcore.component.directive import provides, direct
 from grokcore.component.directive import global_utility, global_adapter
 
+from grokcore.catalog import index
 from grokcore.content import Model, Container, OrderedContainer
 
 from grokcore.security import Permission
@@ -101,17 +102,20 @@ from grok.components import Layout, Page, FormPage
 from grok.components import AddFormPage, EditFormPage, DisplayFormPage
 from grok.components import ExceptionView, NotFoundView, UnauthorizedView
 from grok.components import XMLRPC, REST, JSON
-from grok.components import Indexes
-from grok.components import Role
 
+from grok.components import Role
+from grokcore.catalog import Indexes
 from grokcore.traverser import Traverser
 
 from grok.interfaces import IRESTSkinType, IRESTLayer
 from grok.interfaces import IApplicationInitializedEvent
 
+from grokcore.site import site
+from grokcore.rest import restskin
 from grokcore.traverser import traversable
-from grok.directive import (
-    permissions, site, restskin)
+
+# this will be moved to ... something else soon
+from grok.directive import permissions  
 
 # BBB These two functions are meant for test fixtures and should be
 # imported from grok.testing, not from grok.

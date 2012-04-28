@@ -39,6 +39,7 @@ def grok(module_name):
     zcml.do_grok('grokcore.formlib.meta', config)
     zcml.do_grok('grokcore.annotation.meta', config)
     zcml.do_grok('grokcore.site.meta', config)
+    zcml.do_grok('grokcore.catalog.meta', config)
     zcml.do_grok('grokcore.traverser.meta', config)
     zcml.do_grok('grokcore.rest.meta', config)
     zcml.do_grok('grokcore.xmlrpc.meta', config)

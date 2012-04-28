@@ -58,7 +58,6 @@ class IGrokBaseClasses(grokcore.annotation.interfaces.IBaseClasses,
     NotFoundView = interface.Attribute("Base class notfound exception views.")
     UnauthorizedView = interface.Attribute(
         "Base class unauthorized exception views.")
-    Indexes = interface.Attribute("Base class for catalog index definitions.")
     Role = interface.Attribute("Base class for roles.")
 
 
@@ -69,12 +68,6 @@ class IGrokDirectives(grokcore.component.interfaces.IDirectives,
 
     def permissions(permissions):
         """Specify the permissions that comprise a role.
-        """
-
-    def site(class_or_interface):
-        """Specifies the site that an indexes definition is for.
-
-        It can only be used inside grok.Indexes subclasses.
         """
 
 

@@ -13,6 +13,7 @@
   <include package="grokcore.viewlet" file="meta.zcml" />
   <include package="grokcore.annotation" file="meta.zcml" />
   <include package="grokcore.site" file="meta.zcml" />
+  <include package="grokcore.catalog" file="meta.zcml" />
   <grok:grok package=".meta" />
 
 </configure>
