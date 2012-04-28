@@ -8,7 +8,7 @@ the application) for the Indexes however, otherwise we get a GrokError:
     ...
   GrokError: No site specified for grok.Indexes subclass in module
   <module 'grok.tests.catalog.indexes_no_app' from ...>.
-  Use grok.site() to specify.
+  Use grokcore.site.site() to specify.
   
 """
 import grok
