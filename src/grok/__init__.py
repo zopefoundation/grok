@@ -66,12 +66,15 @@ from grokcore.layout import ExceptionPage
 
 from grokcore.annotation import Annotation
 
-from grokcore.site.interfaces import IApplication
+from grokcore.site import Application
+from grokcore.site import ApplicationInitializedEvent
 from grokcore.site.interfaces import IApplicationInitializedEvent
 from grokcore.site import LocalUtility
 from grokcore.site import Site
 from grokcore.site import getApplication
 from grokcore.site import local_utility
+from grokcore.site.interfaces import IApplication
+from grokcore.site.interfaces import IApplicationInitializedEvent
 
 from zope.event import notify
 from zope.site.hooks import getSite
@@ -95,9 +98,6 @@ from zope.container.contained import (
     ObjectRemovedEvent,
     ContainerModifiedEvent)
 
-from grok.events import ApplicationInitializedEvent
-
-from grok.components import Application
 from grok.components import View, Form, AddForm, EditForm, DisplayForm
 from grok.components import Layout, Page, FormPage
 from grok.components import AddFormPage, EditFormPage, DisplayFormPage

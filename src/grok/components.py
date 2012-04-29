@@ -52,21 +52,6 @@ from grokcore.json import JSON
 from grokcore.content import Model, Container, OrderedContainer
 
 
-class Application(grokcore.site.Site):
-    """Mixin for creating Grok application objects.
-
-    When a :class:`grok.Container` (or a :class:`grok.Model`, though
-    most developers use containers) also inherits from
-    :class:`grok.Application`, it not only gains the component
-    registration abilities of a :class:`grok.Site`, but will also be
-    listed in the Grok admin control panel as one of the applications
-    that the admin can install directly at the root of their Zope
-    database.
-
-    """
-    interface.implements(grokcore.site.interfaces.IApplication)
-
-
 class ViewSupportMixin(object):
 
     def application_url(self, name=None, data=None):
