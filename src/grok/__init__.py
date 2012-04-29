@@ -67,6 +67,7 @@ from grokcore.layout import ExceptionPage
 from grokcore.annotation import Annotation
 
 from grokcore.site.interfaces import IApplication
+from grokcore.site.interfaces import IApplicationInitializedEvent
 from grokcore.site import LocalUtility
 from grokcore.site import Site
 from grokcore.site import getApplication
@@ -108,14 +109,13 @@ from grokcore.catalog import Indexes
 from grokcore.traverser import Traverser
 
 from grok.interfaces import IRESTSkinType, IRESTLayer
-from grok.interfaces import IApplicationInitializedEvent
 
 from grokcore.site import site
 from grokcore.rest import restskin
 from grokcore.traverser import traversable
 
 # this will be moved to ... something else soon
-from grok.directive import permissions  
+from grok.directive import permissions
 
 # BBB These two functions are meant for test fixtures and should be
 # imported from grok.testing, not from grok.
