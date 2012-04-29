@@ -1,13 +1,13 @@
 """
-
 After grokking a module that defines an application, the application factory is
 available as a utility::
 
     >>> grok.testing.grok(__name__)
     >>> import zope.component
     >>> import grokcore.site.interfaces
-    >>> calendar_app = zope.component.getUtility(grokcore.site.interfaces.IApplication,
-    ...                                          name='grok.tests.application.application.Calendar')
+    >>> calendar_app = zope.component.getUtility(
+    ...     grokcore.site.interfaces.IApplication,
+    ...     name='grok.tests.application.application.Calendar')
     >>> calendar_app
     <class 'grok.tests.application.application.Calendar'>
 
@@ -25,7 +25,6 @@ Applications can be instanciated without any arguments::
 """
 
 import grok
-
 
 class Calendar(grok.Application):
     """A calendar application that knows about ancient

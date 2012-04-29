@@ -66,15 +66,15 @@ from grokcore.layout import ExceptionPage
 
 from grokcore.annotation import Annotation
 
-from grokcore.site import Application
-from grokcore.site import ApplicationInitializedEvent
-from grokcore.site.interfaces import IApplicationInitializedEvent
-from grokcore.site import LocalUtility
-from grokcore.site import Site
-from grokcore.site import getApplication
-from grokcore.site import local_utility
 from grokcore.site.interfaces import IApplication
 from grokcore.site.interfaces import IApplicationInitializedEvent
+from grokcore.site.interfaces import ApplicationInitializedEvent
+from grokcore.site import Application
+from grokcore.site import getApplication
+from grokcore.site import local_utility
+from grokcore.site import LocalUtility
+from grokcore.site import site
+from grokcore.site import Site
 
 from zope.event import notify
 from zope.site.hooks import getSite
@@ -110,7 +110,6 @@ from grokcore.traverser import Traverser
 
 from grok.interfaces import IRESTSkinType, IRESTLayer
 
-from grokcore.site import site
 from grokcore.rest import restskin
 from grokcore.traverser import traversable
 
