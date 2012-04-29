@@ -99,20 +99,3 @@ class RoleGrokker(martian.ClassGrokker):
                 args=(permission, name),
                 )
         return True
-
-
-class ApplicationGrokker(martian.ClassGrokker):
-    """Grokker for Grok application classes."""
-    martian.component(grok.Application)
-    martian.priority(500)
-
-    def grok(self, name, factory, module_info, config, **kw):
-        # XXX fail loudly if the same application name is used twice.
-        provides = grokcore.site.interfaces.IApplication
-        name = '%s.%s' % (module_info.dotted_name, name)
-        config.action(
-            discriminator=('utility', provides, name),
-            callable=component.provideUtility,
-            args=(factory, provides, name),
-            )
-        return True

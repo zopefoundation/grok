@@ -192,12 +192,3 @@ class IIndexDefinition(interface.Interface):
 class IContainer(IContext, IContainerBase):
     """A Grok container.
     """
-
-
-class IApplicationInitializedEvent(IObjectEvent):
-    """A Grok Application has been created with success and is now ready
-    to be used.
-
-    This event can be used to trigger the creation of contents or other tasks
-    that require the application to be fully operational : utilities installed
-    and indexes created in the catalog."""
