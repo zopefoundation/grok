@@ -6,6 +6,6 @@ The permissions() directive only accepts permission ids or permission classes:
   Traceback (most recent call last):
   ...
   GrokImportError: You can only pass unicode values, ASCII values, or
-  subclasses of grokcore.security.Permission to the 'permissions' directive.
+  subclasses of grok.Permission to the 'permissions' directive.
 
 """
