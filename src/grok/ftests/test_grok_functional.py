@@ -60,7 +60,6 @@ def suiteFromPackage(name):
 def test_suite():
     suite = unittest.TestSuite()
     for name in [
-        'application',
         'catalog',
         'chameleon',
         'errorviews',

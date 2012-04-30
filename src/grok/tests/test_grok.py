@@ -50,7 +50,6 @@ def test_suite():
     suite = unittest.TestSuite()
     for name in [
         'adapter',
-        'application',
         'baseclass',
         'conflict',
         'container',
