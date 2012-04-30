@@ -18,7 +18,7 @@ provides a convenient function called `create_application`::
   >>> app = grok.util.create_application(Cave, root, 'mycave')
   Cave <zope.lifecycleevent.ObjectCreatedEvent object at ...>
   Cave <zope.lifecycleevent.ObjectAddedEvent object at ...>
-  Cave <grok.events.ApplicationInitializedEvent object at ...>
+  Cave <grokcore.site.interfaces.ApplicationInitializedEvent object at ...>
 
 As we can see, the events are effectively trigged, and in the right
 order. The function returns the persisted application.

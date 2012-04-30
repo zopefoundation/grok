@@ -1,15 +1,23 @@
 import re
 import unittest
 import doctest
+import zope.component.eventtesting
+import zope.component.testlayer
+import grok
+
 from pkg_resources import resource_listdir
 from zope.testing import cleanup, renormalizing
-import zope.component.eventtesting
+from grokcore.view.templatereg import file_template_registry
 
-def setUpZope(test):
-    zope.component.eventtesting.setUp(test)
+class GrokTestLayer(zope.component.testlayer.ZCMLFileLayer):
+    def testSetUp(self):
+        zope.component.eventtesting.setUp()
+        file_template_registry.ignore_templates('^\.')
 
-def cleanUpZope(test):
-    cleanup.cleanUp()
+    def testTearDown(self):
+        cleanup.cleanUp()
+
+layer = GrokTestLayer(grok, zcml_file='configure.zcml')
 
 checker = renormalizing.RENormalizing([
     # str(Exception) has changed from Python 2.4 to 2.5 (due to
@@ -29,25 +37,35 @@ def suiteFromPackage(name):
             continue
         if filename == '__init__.py':
             continue
-
         dottedname = 'grok.tests.%s.%s' % (name, filename[:-3])
-        test = doctest.DocTestSuite(dottedname,
-                                    setUp=setUpZope,
-                                    tearDown=cleanUpZope,
-                                    checker=checker,
-                                    optionflags=doctest.ELLIPSIS+
-                                    doctest.NORMALIZE_WHITESPACE)
-
+        test = doctest.DocTestSuite(
+            dottedname,
+            checker=checker,
+            optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE)
+        test.layer = layer
         suite.addTest(test)
     return suite
 
 def test_suite():
     suite = unittest.TestSuite()
-    for name in ['adapter', 'error', 'event', 'security', 'catalog',
-                 'zcml', 'utility', 'xmlrpc', 'container', 'viewlet',
-                 'traversal', 'grokker', 'directive',
-                 'baseclass', 'application',
-                 'conflict']:
+    for name in [
+        'adapter',
+        'application',
+        'baseclass',
+        'catalog',
+        'conflict',
+        'container',
+        'directive',
+        'error',
+        'event',
+        'grokker',
+        'security',
+        'traversal',
+        'utility',
+        'viewlet',
+        'xmlrpc',
+        'zcml',
+        ]:
         suite.addTest(suiteFromPackage(name))
     return suite
 

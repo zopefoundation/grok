@@ -2,8 +2,9 @@
 Imported model and adapter won't be grokked:
 
   >>> import grok
-  >>> grok.testing.grok(__name__)
   >>> from grok.tests.adapter.adapter import IHome
+
+  >>> grok.testing.grok(__name__)
   >>> cave = Cave()
   >>> home = IHome(cave)
   Traceback (most recent call last):

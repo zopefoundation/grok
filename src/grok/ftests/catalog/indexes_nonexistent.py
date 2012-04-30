@@ -9,7 +9,7 @@ Let's set up a site in which we manage a couple of objects::
   >>> getRootFolder()['herd'] = herd
   Traceback (most recent call last):
     ...
-  GrokError: grok.Indexes in <module
+  GrokError: grokcore.catalog.Indexes in <module
   'grok.ftests.catalog.indexes_nonexistent' from ...>
   refers to an attribute or method 'foo' on interface <InterfaceClass
   grok.ftests.catalog.indexes_nonexistent.IMammoth>, but this does not
@@ -58,4 +58,4 @@ class MammothIndexes(grok.Indexes):
     foo = index.Field()
 
 
-    
+
