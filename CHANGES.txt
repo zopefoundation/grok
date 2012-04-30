@@ -4,8 +4,7 @@ Grok changes
 1.10 (unreleased)
 =================
 
-- Nothing changed yet.
-
+- The permissions() directive moved from grok to grokcore.security.
 
 1.9 (2011-09-06)
 ================

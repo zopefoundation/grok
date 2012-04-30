@@ -38,6 +38,7 @@ from grokcore.content import Model, Container, OrderedContainer
 from grokcore.security import Permission
 from grokcore.security import Public
 from grokcore.security import require
+from grokcore.security import permissions
 
 from grokcore.view import ContentProvider
 from grokcore.view import PageTemplate
@@ -112,9 +113,6 @@ from grok.interfaces import IRESTSkinType, IRESTLayer
 
 from grokcore.rest import restskin
 from grokcore.traverser import traversable
-
-# this will be moved to ... something else soon
-from grok.directive import permissions
 
 # BBB These two functions are meant for test fixtures and should be
 # imported from grok.testing, not from grok.
