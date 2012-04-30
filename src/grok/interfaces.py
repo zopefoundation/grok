@@ -61,14 +61,12 @@ class IGrokBaseClasses(grokcore.annotation.interfaces.IBaseClasses,
     Role = interface.Attribute("Base class for roles.")
 
 
-class IGrokDirectives(grokcore.component.interfaces.IDirectives,
-                      grokcore.security.interfaces.IDirectives,
-                      grokcore.site.interfaces.IDirectives,
-                      grokcore.view.interfaces.IDirectives):
-
-    def permissions(permissions):
-        """Specify the permissions that comprise a role.
-        """
+class IGrokDirectives(
+    grokcore.component.interfaces.IDirectives,
+    grokcore.security.interfaces.IDirectives,
+    grokcore.site.interfaces.IDirectives,
+    grokcore.view.interfaces.IDirectives):
+    pass
 
 
 class IGrokEvents(interface.Interface):
