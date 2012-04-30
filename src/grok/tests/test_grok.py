@@ -52,7 +52,6 @@ def test_suite():
         'adapter',
         'application',
         'baseclass',
-        'catalog',
         'conflict',
         'container',
         'directive',
