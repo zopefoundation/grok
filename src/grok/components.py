@@ -49,6 +49,7 @@ from grokcore.xmlrpc import XMLRPC
 from grokcore.rest import REST
 from grokcore.json import JSON
 from grokcore.content import Model, Container, OrderedContainer
+from grokcore.site import Application
 
 
 class ViewSupportMixin(object):
