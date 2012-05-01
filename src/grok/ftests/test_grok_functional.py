@@ -64,6 +64,7 @@ def test_suite():
         'chameleon',
         'errorviews',
         'form',
+        'forms',
         'lifecycle',
         'security',
         'site',

@@ -19,10 +19,11 @@ provided here.
 
 """
 import simplejson
-
+import os.path
 import zope.location
-from zope.container.interfaces import IReadContainer
 import zope.errorview.browser
+import zope.component
+from zope.container.interfaces import IReadContainer
 from zope import component
 from zope import interface
 from zope.interface.common.interfaces import IException
@@ -42,6 +43,7 @@ import grokcore.view
 import grokcore.site
 import grokcore.message
 import grokcore.layout
+import grokcore.layout.components
 from grok import interfaces, util
 
 # BBB this is for import backward compatibility.
@@ -272,22 +274,80 @@ class EditForm(ViewSupportMixin, grokcore.formlib.EditForm):
 class Layout(ViewSupportMixin, grokcore.layout.Layout):
     grok.baseclass()
 
-
 class Page(ViewSupportMixin, grokcore.layout.Page):
     grok.baseclass()
 
+# Default forms for form without the html and body tags
+default_form_template = grokcore.view.PageTemplateFile(
+    os.path.join('templates', 'default_edit_form.pt'))
 
-class FormPage(ViewSupportMixin, grokcore.layout.FormPage):
+default_form_template.__grok_name__ = 'default_edit_form'
+
+default_display_template = grokcore.view.PageTemplateFile(
+    os.path.join('templates', 'default_display_form.pt'))
+
+default_display_template.__grok_name__ = 'default_display_form'
+
+class LayoutAwareFormPage(grokcore.layout.components.LayoutAware):
+    """A mixin to make form aware of layouts.
+    """
+    def __call__(self):
+        """Calls update and returns the layout template which calls render.
+        """
+        mapply(self.update, (), self.request)
+        if self.request.response.getStatus() in (302, 303):
+            # A redirect was triggered somewhere in update().  Don't
+            # continue rendering the template or doing anything else.
+            return
+        # update_form() is what make a layout-aware form different from
+        # 'regular" layout-aware component.
+        self.update_form()
+        if self.request.response.getStatus() in (302, 303):
+            return
+        self.layout = zope.component.getMultiAdapter(
+            (self.request, self.context), grokcore.layout.ILayout)
+        return self.layout(self)
+
+
+class FormPage(
+    ViewSupportMixin,
+    LayoutAwareFormPage,
+    grokcore.formlib.Form
+    ):
+    """A form base class.
+    """
     grok.baseclass()
+    template = default_form_template
 
 
-class AddFormPage(ViewSupportMixin, grokcore.layout.AddFormPage):
+class AddFormPage(
+    ViewSupportMixin,
+    LayoutAwareFormPage,
+    grokcore.formlib.AddForm
+    ):
+    """Base add form.
+    """
     grok.baseclass()
+    template = default_form_template
 
 
-class EditFormPage(ViewSupportMixin, grokcore.layout.EditFormPage):
+class EditFormPage(
+    ViewSupportMixin,
+    LayoutAwareFormPage,
+    grokcore.formlib.EditForm
+    ):
+    """Base edit form.
+    """
     grok.baseclass()
+    template = default_form_template
 
 
-class DisplayFormPage(ViewSupportMixin, grokcore.layout.DisplayFormPage):
+class DisplayFormPage(
+    ViewSupportMixin,
+    LayoutAwareFormPage,
+    grokcore.formlib.DisplayForm
+    ):
+    """Base display form.
+    """
     grok.baseclass()
+    template = default_display_template

@@ -1,0 +1,61 @@
+<form action="." tal:attributes="action request/URL" method="post"
+      class="edit-form" enctype="multipart/form-data">
+
+  <h1 i18n:translate=""
+    tal:condition="view/label"
+    tal:content="view/label">Label</h1>
+
+  <div class="form-status"
+    tal:define="status view/status"
+    tal:condition="status">
+
+    <div i18n:translate="" tal:content="view/status">
+      Form status summary
+    </div>
+
+    <ul class="errors" tal:condition="view/errors">
+      <li tal:repeat="error view/error_views">
+         <span tal:replace="structure error">Error Type</span>
+      </li>
+    </ul>
+  </div>
+
+  <table class="form-fields">
+    <tbody>
+      <tal:block repeat="widget view/widgets">
+        <tr>
+          <td class="label" tal:define="hint widget/hint">
+            <label tal:condition="python:hint"
+                   tal:attributes="for widget/name">
+              <span class="required" tal:condition="widget/required"
+              >*</span><span i18n:translate=""
+                             tal:content="widget/label">label</span>
+            </label>
+            <label tal:condition="python:not hint"
+                   tal:attributes="for widget/name">
+              <span class="required" tal:condition="widget/required"
+              >*</span><span i18n:translate=""
+                             tal:content="widget/label">label</span>
+            </label>
+          </td>
+          <td class="field">
+            <div class="widget" tal:content="structure widget">
+              <input type="text" />
+            </div>
+            <div class="error" tal:condition="widget/error">
+              <span tal:replace="structure widget/error">error</span>
+            </div>
+          </td>
+        </tr>
+      </tal:block>
+    </tbody>
+  </table>
+
+  <div id="actionsView">
+    <span class="actionButtons" tal:condition="view/availableActions">
+      <input tal:repeat="action view/actions"
+             tal:replace="structure action/render"
+             />
+    </span>
+  </div>
+</form>
