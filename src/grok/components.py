@@ -138,6 +138,7 @@ class View(ViewSupportMixin, grokcore.view.View):
     rendered under ``self.context``.
 
     """
+    grok.baseclass()
     interface.implements(interfaces.IGrokView)
 
     def application_url(self, name=None, data=None):
@@ -245,43 +246,47 @@ class Form(ViewSupportMixin, grokcore.formlib.Form):
     * :class:`grok.EditForm`
 
     """
+    grok.baseclass()
     interface.implements(interfaces.IGrokForm)
 
 
 class AddForm(ViewSupportMixin, grokcore.formlib.AddForm):
     """Base class for add forms in Grok applications."""
+    grok.baseclass()
     interface.implements(interfaces.IGrokForm)
 
 
 class DisplayForm(ViewSupportMixin, grokcore.formlib.DisplayForm):
     """Base class for display forms in Grok applications."""
+    grok.baseclass()
     interface.implements(interfaces.IGrokForm)
 
 
 class EditForm(ViewSupportMixin, grokcore.formlib.EditForm):
     """Base class for edit forms in Grok applications."""
+    grok.baseclass()
     interface.implements(interfaces.IGrokForm)
 
 
 class Layout(ViewSupportMixin, grokcore.layout.Layout):
-    pass
+    grok.baseclass()
 
 
 class Page(ViewSupportMixin, grokcore.layout.Page):
-    pass
+    grok.baseclass()
 
 
 class FormPage(ViewSupportMixin, grokcore.layout.FormPage):
-    pass
+    grok.baseclass()
 
 
 class AddFormPage(ViewSupportMixin, grokcore.layout.AddFormPage):
-    pass
+    grok.baseclass()
 
 
 class EditFormPage(ViewSupportMixin, grokcore.layout.EditFormPage):
-    pass
+    grok.baseclass()
 
 
 class DisplayFormPage(ViewSupportMixin, grokcore.layout.DisplayFormPage):
-    pass
+    grok.baseclass()
