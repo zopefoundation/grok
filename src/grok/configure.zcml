@@ -38,6 +38,7 @@
   <include package="zope.app.publication" />
   <include package="zope.app.wsgi" />
 
+  <include package="grokcore.security" file="meta.zcml" />
   <include package="grokcore.annotation" />
   <include package="grokcore.chameleon" />
   <include package="grokcore.formlib" />

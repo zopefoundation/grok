@@ -13,7 +13,7 @@
 
   >>> from grok.tests.zcml.stoneage.cave import Cave
   >>> cave = Cave()
-  
+
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()
   >>> from zope import component

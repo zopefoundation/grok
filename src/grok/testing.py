@@ -43,7 +43,6 @@ def grok(module_name):
     zcml.do_grok('grokcore.traverser.meta', config)
     zcml.do_grok('grokcore.rest.meta', config)
     zcml.do_grok('grokcore.xmlrpc.meta', config)
-    zcml.do_grok('grok.meta', config)
     zcml.do_grok(module_name, config)
     config.execute_actions()
 

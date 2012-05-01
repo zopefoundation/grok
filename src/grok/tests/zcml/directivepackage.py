@@ -16,7 +16,7 @@
   >>> from grok.tests.zcml.stoneage.hunt.mammoth import Mammoth
   >>> manfred = Mammoth()
   >>> cave = Cave()
-  
+
   >>> from zope.publisher.browser import TestRequest
   >>> request = TestRequest()
   >>> from zope import component
@@ -28,7 +28,7 @@
   <h1>A comfy cave</h1>
   </body>
   </html>
-  
+
   >>> view = component.getMultiAdapter((manfred, request), name='index')
   >>> print view()
   <html>

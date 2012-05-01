@@ -52,6 +52,7 @@ setup(
         'grokcore.message',
         'grokcore.rest',
         'grokcore.security >= 1.1',
+        'grokcore.security[role]',
         'grokcore.site > 1.4',
         'grokcore.traverser',
         'grokcore.view >= 2.6.1',

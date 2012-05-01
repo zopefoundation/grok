@@ -3,8 +3,7 @@
 Let's first grok the meta module to define some basic grokkers::
 
   >>> import grok
-  >>> grok.testing.grok('grok.meta')
-  
+
 It is possible to grok an individual component. Let's define an adapter::
 
   >>> from zope.interface import Interface
