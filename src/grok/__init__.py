@@ -35,7 +35,7 @@ from grokcore.component.directive import global_utility, global_adapter
 from grokcore.catalog import index
 from grokcore.content import Model, Container, OrderedContainer
 
-from grokcore.security import Permission
+from grokcore.security import Permission, Role
 from grokcore.security import Public
 from grokcore.security import require
 from grokcore.security import permissions
@@ -105,7 +105,6 @@ from grok.components import AddFormPage, EditFormPage, DisplayFormPage
 from grok.components import ExceptionView, NotFoundView, UnauthorizedView
 from grok.components import XMLRPC, REST, JSON
 
-from grok.components import Role
 from grokcore.catalog import Indexes
 from grokcore.traverser import Traverser
 

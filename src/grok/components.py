@@ -34,7 +34,6 @@ from zope.publisher.interfaces import INotFound
 from zope.publisher.interfaces import NotFound
 from zope.publisher.publish import mapply
 from zope.security.interfaces import IUnauthorized
-from zope.securitypolicy.role import Role as securitypolicy_Role
 
 import grok
 import martian.util
@@ -286,18 +285,3 @@ class EditFormPage(ViewSupportMixin, grokcore.layout.EditFormPage):
 
 class DisplayFormPage(ViewSupportMixin, grokcore.layout.DisplayFormPage):
     pass
-
-
-class Role(securitypolicy_Role):
-    """Base class for roles in Grok applications.
-
-    A role is a description of a class of users that gives them a
-    machine-readable name, a human-readable title, and a set of
-    permissions which users belong to that role should possess::
-
-        class Editor(grok.Role):
-            grok.name('news.Editor')
-            grok.title('Editor')
-            grok.permissions('news.EditArticle', 'news.PublishArticle')
-
-    """
