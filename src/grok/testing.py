@@ -20,7 +20,7 @@ from grokcore.component import zcml
 from grokcore.component.testing import grok_component
 
 
-def grok(module_name):
+def grok(module_name=None):
     """Grok a module.
 
     Test helper to 'grok' a module named by `module_name`, a dotted
@@ -43,7 +43,8 @@ def grok(module_name):
     zcml.do_grok('grokcore.traverser.meta', config)
     zcml.do_grok('grokcore.rest.meta', config)
     zcml.do_grok('grokcore.xmlrpc.meta', config)
-    zcml.do_grok(module_name, config)
+    if module_name is not None:
+        zcml.do_grok(module_name, config)
     config.execute_actions()
 
 

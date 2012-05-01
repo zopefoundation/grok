@@ -4,20 +4,22 @@ import doctest
 import zope.component.eventtesting
 import zope.component.testlayer
 import grok
+import grok.testing
 
 from pkg_resources import resource_listdir
 from zope.testing import cleanup, renormalizing
 from grokcore.view.templatereg import file_template_registry
 
-class GrokTestLayer(zope.component.testlayer.ZCMLFileLayer):
+class GrokTestLayer(zope.component.testlayer.LayerBase):
     def testSetUp(self):
+        grok.testing.grok()
         zope.component.eventtesting.setUp()
         file_template_registry.ignore_templates('^\.')
 
     def testTearDown(self):
         cleanup.cleanUp()
 
-layer = GrokTestLayer(grok, zcml_file='configure.zcml')
+layer = GrokTestLayer(grok, name='grok.tests.layer')
 
 checker = renormalizing.RENormalizing([
     # str(Exception) has changed from Python 2.4 to 2.5 (due to
