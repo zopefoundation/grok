@@ -32,7 +32,6 @@ from grokcore.component.directive import context, name, title, description
 from grokcore.component.directive import provides, direct
 from grokcore.component.directive import global_utility, global_adapter
 
-from grokcore.catalog import index
 from grokcore.content import Model, Container, OrderedContainer
 
 from grokcore.security import Permission, Role
@@ -76,9 +75,9 @@ from grokcore.site import local_utility
 from grokcore.site import LocalUtility
 from grokcore.site import site
 from grokcore.site import Site
+from grokcore.site import getSite
 
 from zope.event import notify
-from zope.site.hooks import getSite
 from zope.lifecycleevent import (
     IObjectCreatedEvent, ObjectCreatedEvent,
     IObjectModifiedEvent, ObjectModifiedEvent,
@@ -106,6 +105,8 @@ from grok.components import ExceptionView, NotFoundView, UnauthorizedView
 from grok.components import XMLRPC, REST, JSON
 
 from grokcore.catalog import Indexes
+from grokcore.catalog import index
+
 from grokcore.traverser import Traverser
 
 from grok.interfaces import IRESTSkinType, IRESTLayer
