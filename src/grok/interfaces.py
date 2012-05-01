@@ -21,51 +21,65 @@ from zope.container.interfaces import IContainer as IContainerBase
 
 # Expose interfaces from grokcore.* packages as well:
 import grokcore.annotation.interfaces
+import grokcore.catalog.interfaces
 import grokcore.component.interfaces
 import grokcore.formlib.interfaces
-import grokcore.layout.interfaces
 import grokcore.json.interfaces
-import grokcore.security.interfaces
+import grokcore.layout.interfaces
 import grokcore.rest.interfaces
+import grokcore.security.interfaces
 import grokcore.site.interfaces
+import grokcore.traverser.interfaces
 import grokcore.view.interfaces
 import grokcore.viewlet.interfaces
 import grokcore.xmlrpc.interfaces
-import grokcore.traverser.interfaces
 
 from grokcore.component.interfaces import IContext
 from grokcore.component.interfaces import IGrokErrors
 
 from grokcore.rest.interfaces import IREST, IRESTSkinType, IRESTLayer
 
-class IGrokBaseClasses(grokcore.annotation.interfaces.IBaseClasses,
-                       grokcore.component.interfaces.IBaseClasses,
-                       grokcore.security.interfaces.IBaseClasses,
-                       grokcore.rest.interfaces.IBaseClasses,
-                       grokcore.site.interfaces.IBaseClasses,
-                       grokcore.view.interfaces.IBaseClasses,
-                       grokcore.json.interfaces.IBaseClasses,
-                       grokcore.layout.interfaces.IBaseClasses,
-                       grokcore.traverser.interfaces.IBaseClasses,
-                       grokcore.xmlrpc.interfaces.IBaseClasses):
+class IGrokBaseClasses(
+    grokcore.annotation.interfaces.IBaseClasses,
+    grokcore.catalog.interfaces.IBaseClasses,
+    grokcore.component.interfaces.IBaseClasses,
+    grokcore.json.interfaces.IBaseClasses,
+    grokcore.layout.interfaces.IBaseClasses,
+    grokcore.rest.interfaces.IBaseClasses,
+    grokcore.security.interfaces.IBaseClasses,
+    grokcore.site.interfaces.IBaseClasses,
+    grokcore.traverser.interfaces.IBaseClasses,
+    grokcore.view.interfaces.IBaseClasses,
+    grokcore.xmlrpc.interfaces.IBaseClasses,
+    ):
+    Container = interface.Attribute(
+        "Base class for containers.")
+
+    ExceptionView = interface.Attribute(
+        "Base class for excetion views.")
+
     Model = interface.Attribute(
         "Base class for persistent content objects (models).")
-    Container = interface.Attribute("Base class for containers.")
-    OrderedContainer = interface.Attribute("Base class for ordered containers.")
-    Application = interface.Attribute("Base class for applications.")
-    View = interface.Attribute("Base class views.")
-    ExceptionView = interface.Attribute("Base class for excetion views.")
-    NotFoundView = interface.Attribute("Base class notfound exception views.")
+
+    NotFoundView = interface.Attribute(
+        "Base class notfound exception views.")
+
+    OrderedContainer = interface.Attribute(
+        "Base class for ordered containers.")
+
     UnauthorizedView = interface.Attribute(
         "Base class unauthorized exception views.")
-    Role = interface.Attribute("Base class for roles.")
+
+    View = interface.Attribute(
+        "Base class views.")
 
 
 class IGrokDirectives(
     grokcore.component.interfaces.IDirectives,
     grokcore.security.interfaces.IDirectives,
     grokcore.site.interfaces.IDirectives,
-    grokcore.view.interfaces.IDirectives):
+    grokcore.view.interfaces.IDirectives,
+    ):
     pass
 
 
@@ -106,17 +120,20 @@ class IGrokEvents(interface.Interface):
     ApplicationInitializedEvent = interface.Attribute("")
 
 
-class IGrokAPI(grokcore.component.interfaces.IGrokcoreComponentAPI,
-               grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
-               grokcore.layout.interfaces.IGrokcoreLayoutAPI,
-               grokcore.security.interfaces.IGrokcoreSecurityAPI,
-               grokcore.site.interfaces.IGrokcoreSiteAPI,
-               grokcore.view.interfaces.IGrokcoreViewAPI,
-               grokcore.viewlet.interfaces.IGrokcoreViewletAPI,
-               IGrokBaseClasses,
-               IGrokDirectives,
-               IGrokErrors,
-               IGrokEvents):
+class IGrokAPI(
+    grokcore.component.interfaces.IGrokcoreComponentAPI,
+    grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
+    grokcore.layout.interfaces.IGrokcoreLayoutAPI,
+    grokcore.security.interfaces.IGrokcoreSecurityAPI,
+    grokcore.site.interfaces.IGrokcoreSiteAPI,
+    grokcore.view.interfaces.IGrokcoreViewAPI,
+    grokcore.rest.interfaces.IGrokcoreRestAPI,
+    grokcore.viewlet.interfaces.IGrokcoreViewletAPI,
+    IGrokBaseClasses,
+    IGrokDirectives,
+    IGrokErrors,
+    IGrokEvents,
+    ):
 
     # BBB this is deprecated
     def grok(dotted_name):
@@ -150,13 +167,6 @@ class IGrokAPI(grokcore.component.interfaces.IGrokcoreComponentAPI,
     def notify(event):
         """Send ``event`` to event subscribers."""
 
-    def getSite():
-        """Get the current site."""
-
-    # XXX should be moved to the respective API declarations!
-    IRESTSkinType = interface.Attribute('The REST skin type')
-    IApplication = interface.Attribute('The application model interface')
-
 
 class IGrokView(grokcore.view.interfaces.IGrokView):
     """Grok views all provide this interface."""
@@ -173,18 +183,6 @@ class IGrokView(grokcore.view.interfaces.IGrokView):
 
 class IGrokForm(grokcore.formlib.interfaces.IGrokForm, IGrokView):
     """All Grok forms provides this interface."""
-
-
-class IIndexDefinition(interface.Interface):
-    """Define an index for grok.Indexes.
-    """
-
-    def setup(catalog, name, context):
-        """Set up index called name in given catalog.
-
-        Use name for index name and attribute to index. Set up
-        index for interface or class context.
-        """
 
 
 class IContainer(IContext, IContainerBase):
