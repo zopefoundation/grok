@@ -4,7 +4,18 @@ Grok changes
 1.10 (unreleased)
 =================
 
-- The permissions() directive moved from grok to grokcore.security.
+-
+
+- Split off the Application component and the local_utility directive to
+  grokcore.site. A backwards compatibility import for Application is left
+  in place.
+
+- Split off the catalog and indexing components from grok into
+  grokcore.catalog.
+
+- The permissions() directive, the Permission component and the Role
+  component moved from grok to grokcore.security. The grok package imports
+  these component, so they can still be accessed through the grok api.
 
 1.9 (2011-09-06)
 ================
