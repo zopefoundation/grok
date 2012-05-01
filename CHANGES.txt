@@ -4,8 +4,6 @@ Grok changes
 1.10 (unreleased)
 =================
 
--
-
 - Split off the Application component and the local_utility directive to
   grokcore.site. A backwards compatibility import for Application is left
   in place.
