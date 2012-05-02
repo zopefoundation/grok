@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-1.10 (unreleased)
+1.10 (2012-05-02)
 =================
 
 - Split off the Application component and the local_utility directive to
