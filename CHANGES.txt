@@ -1,11 +1,10 @@
 Grok changes
 ************
 
-1.11 (unreleased)
-=================
+1.10.1 (2012-05-02)
+===================
 
-- Nothing changed yet.
-
+- Update version requirements.
 
 1.10 (2012-05-02)
 =================
