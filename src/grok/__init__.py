@@ -27,7 +27,9 @@ from grokcore.component import Subscription, MultiSubscription
 from grokcore.component import querySubscriptions, queryMultiSubscriptions
 from grokcore.component import queryOrderedSubscriptions
 from grokcore.component import queryOrderedMultiSubscriptions
+
 from grokcore.component.decorators import subscribe, adapter, implementer
+
 from grokcore.component.directive import context, name, title, description
 from grokcore.component.directive import provides, direct
 from grokcore.component.directive import global_utility, global_adapter
@@ -66,53 +68,68 @@ from grokcore.layout import ExceptionPage
 
 from grokcore.annotation import Annotation
 
-from grokcore.site.interfaces import IApplication
-from grokcore.site.interfaces import IApplicationInitializedEvent
-from grokcore.site.interfaces import ApplicationInitializedEvent
+from grokcore.site import IApplication
+from grokcore.site import IApplicationInitializedEvent
 from grokcore.site import Application
+from grokcore.site import ApplicationInitializedEvent
 from grokcore.site import getApplication
+from grokcore.site import getSite
 from grokcore.site import local_utility
 from grokcore.site import LocalUtility
 from grokcore.site import site
 from grokcore.site import Site
-from grokcore.site import getSite
 
 from zope.event import notify
-from zope.lifecycleevent import (
-    IObjectCreatedEvent, ObjectCreatedEvent,
-    IObjectModifiedEvent, ObjectModifiedEvent,
-    IObjectCopiedEvent, ObjectCopiedEvent)
+
+from zope.lifecycleevent import IObjectCopiedEvent
+from zope.lifecycleevent import IObjectCreatedEvent
+from zope.lifecycleevent import IObjectModifiedEvent
+from zope.lifecycleevent import ObjectCopiedEvent
+from zope.lifecycleevent import ObjectCreatedEvent
+from zope.lifecycleevent import ObjectModifiedEvent
+
 from zope.app.publication.interfaces import IBeforeTraverseEvent
 
 from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
-from zope.container.interfaces import (
-    IObjectAddedEvent,
-    IObjectMovedEvent,
-    IObjectRemovedEvent,
-    IContainerModifiedEvent)
-from zope.container.contained import (
-    ObjectAddedEvent,
-    ObjectMovedEvent,
-    ObjectRemovedEvent,
-    ContainerModifiedEvent)
+from zope.container.interfaces import IContainerModifiedEvent
+from zope.container.interfaces import IObjectAddedEvent
+from zope.container.interfaces import IObjectMovedEvent
+from zope.container.interfaces import IObjectRemovedEvent
+from zope.container.contained import ContainerModifiedEvent
+from zope.container.contained import ObjectAddedEvent
+from zope.container.contained import ObjectMovedEvent
+from zope.container.contained import ObjectRemovedEvent
 
-from grok.components import View, Form, AddForm, EditForm, DisplayForm
-from grok.components import Layout, Page, FormPage
-from grok.components import AddFormPage, EditFormPage, DisplayFormPage
-from grok.components import ExceptionView, NotFoundView, UnauthorizedView
-from grok.components import XMLRPC, REST, JSON
+from grok.components import AddForm
+from grok.components import AddFormPage
+from grok.components import DisplayForm
+from grok.components import DisplayFormPage
+from grok.components import EditForm
+from grok.components import EditFormPage
+from grok.components import ExceptionView
+from grok.components import Form
+from grok.components import FormPage
+from grok.components import Layout
+from grok.components import NotFoundView
+from grok.components import Page
+from grok.components import UnauthorizedView
+from grok.components import View
+
+from grokcore.json import JSON
+from grokcore.xmlrpc import XMLRPC
 
 from grokcore.catalog import Indexes
 from grokcore.catalog import index
 
 from grokcore.traverser import Traverser
-
-from grok.interfaces import IRESTSkinType, IRESTLayer
-
-from grokcore.rest import restskin
 from grokcore.traverser import traversable
+
+from grokcore.rest import IRESTLayer
+from grokcore.rest import IRESTSkinType
+from grokcore.rest import REST
+from grokcore.rest import restskin
 
 # BBB These two functions are meant for test fixtures and should be
 # imported from grok.testing, not from grok.

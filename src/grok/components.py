@@ -50,7 +50,9 @@ from grok import interfaces, util
 from grokcore.xmlrpc import XMLRPC
 from grokcore.rest import REST
 from grokcore.json import JSON
-from grokcore.content import Model, Container, OrderedContainer
+from grokcore.content import Container
+from grokcore.content import Model
+from grokcore.content import OrderedContainer
 from grokcore.site import Application
 
 
