@@ -4,8 +4,8 @@ Grok changes
 1.10.3 (unreleased)
 ===================
 
-- Nothing changed yet.
-
+- Make sure the correct layout is retrieved for layout aware form components
+  too.
 
 1.10.2 (2012-05-10)
 ===================

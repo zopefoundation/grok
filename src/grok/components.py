@@ -296,6 +296,7 @@ class LayoutAwareFormPage(grokcore.layout.components.LayoutAware):
     def __call__(self):
         """Calls update and returns the layout template which calls render.
         """
+        self.layout = self._get_layout()
         mapply(self.update, (), self.request)
         if self.request.response.getStatus() in (302, 303):
             # A redirect was triggered somewhere in update().  Don't
@@ -306,8 +307,6 @@ class LayoutAwareFormPage(grokcore.layout.components.LayoutAware):
         self.update_form()
         if self.request.response.getStatus() in (302, 303):
             return
-        self.layout = zope.component.getMultiAdapter(
-            (self.request, self.context), grokcore.layout.ILayout)
         return self.layout(self)
 
 
