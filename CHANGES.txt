@@ -1,8 +1,8 @@
 Grok changes
 ************
 
-1.11 (unreleased)
-=================
+1.10.2 (2012-05-10)
+===================
 
 - Import the grokcore.layout.layout directive into the grok namespace too.
 
