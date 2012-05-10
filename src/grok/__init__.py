@@ -62,6 +62,7 @@ from grokcore.formlib import action
 from grokcore.formlib import AutoFields
 from grokcore.formlib import Fields
 
+from grokcore.layout.interfaces import ILayout
 from grokcore.layout import UnauthorizedPage
 from grokcore.layout import NotFoundPage
 from grokcore.layout import ExceptionPage
