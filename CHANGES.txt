@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-1.10.3 (unreleased)
+1.10.3 (2012-05-10)
 ===================
 
 - Make sure the correct layout is retrieved for layout aware form components
