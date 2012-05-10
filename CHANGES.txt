@@ -4,8 +4,7 @@ Grok changes
 1.11 (unreleased)
 =================
 
-- Nothing changed yet.
-
+- Import the grokcore.layout.layout directive into the grok namespace too.
 
 1.10.1 (2012-05-02)
 ===================

@@ -65,6 +65,7 @@ from grokcore.formlib import Fields
 from grokcore.layout import UnauthorizedPage
 from grokcore.layout import NotFoundPage
 from grokcore.layout import ExceptionPage
+from grokcore.layout import layout
 
 from grokcore.annotation import Annotation
 
