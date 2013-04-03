@@ -4,8 +4,7 @@ Grok changes
 1.11.2 (unreleased)
 ===================
 
-- Nothing changed yet.
-
+- Fix brown paper bag release where not all resources were included. Again.
 
 1.11.1 (2013-04-03)
 ===================
