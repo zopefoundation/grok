@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-1.11.3 (unreleased)
+1.11.3 (2013-04-03)
 ===================
 
 - Fixed application_url() calls to use keyword arguments where the API
