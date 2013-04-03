@@ -21,7 +21,7 @@ tests_require = [
 
 setup(
     name='grok',
-    version='1.10.4.dev0',
+    version='1.11.dev0',
     author='Grok Team',
     author_email='grok-dev@zope.org',
     url='http://grok.zope.org',
@@ -54,7 +54,7 @@ setup(
         'grokcore.security[role] >= 1.6',
         'grokcore.site >= 1.6.1',
         'grokcore.traverser >= 1.1',
-        'grokcore.view >= 2.7',
+        'grokcore.view >= 2.8',
         'grokcore.viewlet >= 1.10',
         'grokcore.view [security_publication]',
         'grokcore.xmlrpc >= 1.2',

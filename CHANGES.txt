@@ -1,11 +1,11 @@
 Grok changes
 ************
 
-1.10.4 (unreleased)
-===================
+1.11 (unreleased)
+=================
 
-- Nothing changed yet.
-
+- Update ``grok.util.application_url()`` to work correctly with
+  ``grokcore.view.util.url()``.
 
 1.10.3 (2012-05-10)
 ===================

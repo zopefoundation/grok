@@ -19,7 +19,7 @@ import zope.location.location
 
 from zope import interface
 from zope.schema.interfaces import WrongType
-from grokcore.view.util import url
+from grokcore.view.util import url, ASIS
 from grokcore.site.util import getApplication
 
 
@@ -48,12 +48,12 @@ def applySkin(request, skin, skin_type):
     interface.directlyProvides(request, *ifaces)
 
 
-def application_url(request, obj, name=None, data={}):
+def application_url(request, obj, name=None, skin=ASIS, data={}):
     """Return the URL of the nearest enclosing :class:`grok.Application`.
 
     Raises :exc:`ValueError` if no application can be found.
     """
-    return url(request, getApplication(), name, data)
+    return url(request, getApplication(), name=name, skin=skin, data=data)
 
 
 def create_application(factory, container, name):
