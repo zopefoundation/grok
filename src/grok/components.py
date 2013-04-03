@@ -54,16 +54,17 @@ from grokcore.content import Container
 from grokcore.content import Model
 from grokcore.content import OrderedContainer
 from grokcore.site import Application
-
+from grokcore.view.util import ASIS
 
 class ViewSupportMixin(object):
 
-    def application_url(self, name=None, data=None):
+    def application_url(self, name=None, skin=ASIS, data=None):
         """Return the URL of the closest :class:`grok.Application` object in
         the hierarchy or the URL of a named object (``name``
         parameter) relative to the closest application object.
         """
-        return util.application_url(self.request, self.context, name, data)
+        return util.application_url(
+            self.request, self.context, name=name, skin=skin, data=data)
 
     def flash(self, message, type='message'):
         """Send a short message to the user."""
@@ -146,12 +147,13 @@ class View(ViewSupportMixin, grokcore.view.View):
     grok.baseclass()
     interface.implements(interfaces.IGrokView)
 
-    def application_url(self, name=None, data=None):
+    def application_url(self, name=None, skin=ASIS, data=None):
         """Return the URL of the closest :class:`grok.Application` object in
         the hierarchy or the URL of a named object (``name``
         parameter) relative to the closest application object.
         """
-        return util.application_url(self.request, self.context, name, data)
+        return util.application_url(
+            self.request, self.context, name=name, skin=skin, data=data)
 
     def flash(self, message, type='message'):
         """Send a short message to the user."""

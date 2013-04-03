@@ -21,10 +21,3 @@ eggs
 .mr.developer.cfg
 parts
 src/*.egg-info
-src/grok
-src/grokcore.view
-src/megrok.chameleon
-src/megrok.layout
-src/megrok.strictrequire
-src/zope.errorview
-tags
