@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-1.11 (unreleased)
+1.11 (2013-04-03)
 =================
 
 - Update ``grok.util.application_url()`` to work correctly with
