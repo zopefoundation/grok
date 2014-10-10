@@ -69,6 +69,7 @@ from grokcore.layout import ExceptionPage
 from grokcore.layout import layout
 
 from grokcore.annotation import Annotation
+from grokcore.annotation import queryAnnotation
 
 from grokcore.site import IApplication
 from grokcore.site import IApplicationInitializedEvent
