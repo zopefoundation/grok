@@ -1,8 +1,8 @@
 Grok changes
 ************
 
-1.11.4 (unreleased)
-===================
+1.12 (2014-10-20)
+=================
 
 - Add ``grok.queryAnnotation()`` and ``grok.deleteAnnotation()`` from
   ``grokcore.annotation``.
