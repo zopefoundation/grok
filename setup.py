@@ -41,7 +41,7 @@ setup(
     include_package_data = True,
     zip_safe=False,
     install_requires=[
-        'grokcore.annotation >= 1.4',
+        'grokcore.annotation >= 1.5',
         'grokcore.catalog',
         'grokcore.chameleon >= 1.0',
         'grokcore.component >= 2.5',
