@@ -4,7 +4,7 @@ Grok changes
 1.13 (unreleased)
 =================
 
-- Nothing changed yet.
+- Advertise the ``ObjectEditedEvent`` from grokcore.content.
 
 
 1.12 (2014-10-20)

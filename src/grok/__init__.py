@@ -87,24 +87,27 @@ from zope.event import notify
 
 from zope.lifecycleevent import IObjectCopiedEvent
 from zope.lifecycleevent import IObjectCreatedEvent
-from zope.lifecycleevent import IObjectModifiedEvent
 from zope.lifecycleevent import ObjectCopiedEvent
 from zope.lifecycleevent import ObjectCreatedEvent
-from zope.lifecycleevent import ObjectModifiedEvent
 
 from zope.app.publication.interfaces import IBeforeTraverseEvent
 
 from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
-from zope.container.interfaces import IContainerModifiedEvent
 from zope.container.interfaces import IObjectAddedEvent
 from zope.container.interfaces import IObjectMovedEvent
 from zope.container.interfaces import IObjectRemovedEvent
-from zope.container.contained import ContainerModifiedEvent
 from zope.container.contained import ObjectAddedEvent
 from zope.container.contained import ObjectMovedEvent
 from zope.container.contained import ObjectRemovedEvent
+
+from grokcore.content import IObjectModifiedEvent
+from grokcore.content import IContainerModifiedEvent
+from grokcore.content import IObjectEditedEvent
+from grokcore.content import ObjectModifiedEvent
+from grokcore.content import ContainerModifiedEvent
+from grokcore.content import ObjectEditedEvent
 
 from grok.components import AddForm
 from grok.components import AddFormPage
