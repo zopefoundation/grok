@@ -15,6 +15,7 @@
 """
 import grok
 import grokcore.site.interfaces
+import zope.component.hooks
 import zope.location.location
 
 from zope import interface
@@ -78,7 +79,13 @@ def create_application(factory, container, name):
     # This may raise a KeyError.
     container[name] = application
 
-    # Trigger the initialization event.
-    grok.notify(grok.ApplicationInitializedEvent(application))
+    # Trigger the initialization event with the new application as a
+    # current site.
+    current = zope.component.hooks.getSite()
+    zope.component.hooks.setSite(application)
+    try:
+        grok.notify(grok.ApplicationInitializedEvent(application))
+    finally:
+        zope.component.hooks.setSite(current)
 
     return application
