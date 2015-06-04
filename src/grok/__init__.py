@@ -79,6 +79,7 @@ from grokcore.site import ApplicationInitializedEvent
 from grokcore.site import getApplication
 from grokcore.site import getSite
 from grokcore.site import local_utility
+from grokcore.site import install_on
 from grokcore.site import LocalUtility
 from grokcore.site import site
 from grokcore.site import Site
