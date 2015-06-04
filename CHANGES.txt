@@ -6,9 +6,11 @@ Grok changes
 
 - Advertise the ``install_on`` directive from grokcore.site.
 
-- When the ``IApplicationInitializedEvent`` is triggered the new
-  application will be current Zope local site. The site is restored
-  after the event.
+- Replace ``ApplicationInitializedEvent`` with
+  ``ApplicationAddedEvent`` from grokcore.site.
+
+- Replace ``grok.util.create_application`` with the one from
+  grokcore.site.util. It is now importable directly from grok.
 
 
 1.13 (2015-06-04)

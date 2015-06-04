@@ -13,13 +13,10 @@
 ##############################################################################
 """Grok utility functions.
 """
-import grok
-import grokcore.site.interfaces
 import zope.component.hooks
 import zope.location.location
 
 from zope import interface
-from zope.schema.interfaces import WrongType
 from grokcore.view.util import url, ASIS
 from grokcore.site.util import getApplication
 
@@ -55,37 +52,3 @@ def application_url(request, obj, name=None, skin=ASIS, data={}):
     Raises :exc:`ValueError` if no application can be found.
     """
     return url(request, getApplication(), name=name, skin=skin, data=data)
-
-
-def create_application(factory, container, name):
-    """Creates an application and triggers the events from
-    the application lifecycle.
-    """
-    # Check the factory.
-    if not grokcore.site.interfaces.IApplication.implementedBy(factory):
-        raise WrongType(factory)
-
-    # Check the availability of the name in the container.
-    if name in container:
-        raise KeyError(name)
-
-    # Instanciate the application
-    application = factory()
-
-    # Trigger the creation event.
-    grok.notify(grok.ObjectCreatedEvent(application))
-
-    # Persist the application.
-    # This may raise a KeyError.
-    container[name] = application
-
-    # Trigger the initialization event with the new application as a
-    # current site.
-    current = zope.component.hooks.getSite()
-    zope.component.hooks.setSite(application)
-    try:
-        grok.notify(grok.ApplicationInitializedEvent(application))
-    finally:
-        zope.component.hooks.setSite(current)
-
-    return application

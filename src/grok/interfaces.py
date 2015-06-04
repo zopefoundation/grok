@@ -14,9 +14,6 @@
 """Grok interfaces
 """
 from zope import interface
-from zope.interface.interfaces import IInterface
-from zope.component.interfaces import IObjectEvent
-from zope.publisher.interfaces.http import IHTTPRequest
 from zope.container.interfaces import IContainer as IContainerBase
 
 # Expose interfaces from grokcore.* packages as well:
@@ -39,19 +36,20 @@ from grokcore.component.interfaces import IGrokErrors
 
 from grokcore.rest.interfaces import IREST, IRESTSkinType, IRESTLayer
 
+
 class IGrokBaseClasses(
-    grokcore.annotation.interfaces.IBaseClasses,
-    grokcore.catalog.interfaces.IBaseClasses,
-    grokcore.component.interfaces.IBaseClasses,
-    grokcore.json.interfaces.IBaseClasses,
-    grokcore.layout.interfaces.IBaseClasses,
-    grokcore.rest.interfaces.IBaseClasses,
-    grokcore.security.interfaces.IBaseClasses,
-    grokcore.site.interfaces.IBaseClasses,
-    grokcore.traverser.interfaces.IBaseClasses,
-    grokcore.view.interfaces.IBaseClasses,
-    grokcore.xmlrpc.interfaces.IBaseClasses,
-    ):
+        grokcore.annotation.interfaces.IBaseClasses,
+        grokcore.catalog.interfaces.IBaseClasses,
+        grokcore.component.interfaces.IBaseClasses,
+        grokcore.json.interfaces.IBaseClasses,
+        grokcore.layout.interfaces.IBaseClasses,
+        grokcore.rest.interfaces.IBaseClasses,
+        grokcore.security.interfaces.IBaseClasses,
+        grokcore.site.interfaces.IBaseClasses,
+        grokcore.traverser.interfaces.IBaseClasses,
+        grokcore.view.interfaces.IBaseClasses,
+        grokcore.xmlrpc.interfaces.IBaseClasses):
+
     Container = interface.Attribute(
         "Base class for containers.")
 
@@ -75,11 +73,10 @@ class IGrokBaseClasses(
 
 
 class IGrokDirectives(
-    grokcore.component.interfaces.IDirectives,
-    grokcore.security.interfaces.IDirectives,
-    grokcore.site.interfaces.IDirectives,
-    grokcore.view.interfaces.IDirectives,
-    ):
+        grokcore.component.interfaces.IDirectives,
+        grokcore.security.interfaces.IDirectives,
+        grokcore.site.interfaces.IDirectives,
+        grokcore.view.interfaces.IDirectives):
     pass
 
 
@@ -115,25 +112,24 @@ class IGrokEvents(interface.Interface):
 
     IBeforeTraverseEvent = interface.Attribute("")
 
-    IApplicationInitializedEvent = interface.Attribute("")
+    IApplicationAddedEvent = interface.Attribute("")
 
-    ApplicationInitializedEvent = interface.Attribute("")
+    ApplicationAddedEvent = interface.Attribute("")
 
 
 class IGrokAPI(
-    grokcore.component.interfaces.IGrokcoreComponentAPI,
-    grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
-    grokcore.layout.interfaces.IGrokcoreLayoutAPI,
-    grokcore.security.interfaces.IGrokcoreSecurityAPI,
-    grokcore.site.interfaces.IGrokcoreSiteAPI,
-    grokcore.view.interfaces.IGrokcoreViewAPI,
-    grokcore.rest.interfaces.IGrokcoreRestAPI,
-    grokcore.viewlet.interfaces.IGrokcoreViewletAPI,
-    IGrokBaseClasses,
-    IGrokDirectives,
-    IGrokErrors,
-    IGrokEvents,
-    ):
+        grokcore.component.interfaces.IGrokcoreComponentAPI,
+        grokcore.formlib.interfaces.IGrokcoreFormlibAPI,
+        grokcore.layout.interfaces.IGrokcoreLayoutAPI,
+        grokcore.security.interfaces.IGrokcoreSecurityAPI,
+        grokcore.site.interfaces.IGrokcoreSiteAPI,
+        grokcore.view.interfaces.IGrokcoreViewAPI,
+        grokcore.rest.interfaces.IGrokcoreRestAPI,
+        grokcore.viewlet.interfaces.IGrokcoreViewletAPI,
+        IGrokBaseClasses,
+        IGrokDirectives,
+        IGrokErrors,
+        IGrokEvents):
 
     # BBB this is deprecated
     def grok(dotted_name):
@@ -166,6 +162,11 @@ class IGrokAPI(
 
     def notify(event):
         """Send ``event`` to event subscribers."""
+
+    def create_application(factory, folder, name):
+        """Create and add a new Grok application to the given folder under
+        name.
+        """
 
 
 class IGrokView(grokcore.view.interfaces.IGrokView):

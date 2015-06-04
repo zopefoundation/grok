@@ -73,9 +73,9 @@ from grokcore.annotation import queryAnnotation
 from grokcore.annotation import deleteAnnotation
 
 from grokcore.site import IApplication
-from grokcore.site import IApplicationInitializedEvent
+from grokcore.site import IApplicationAddedEvent
 from grokcore.site import Application
-from grokcore.site import ApplicationInitializedEvent
+from grokcore.site import ApplicationAddedEvent
 from grokcore.site import getApplication
 from grokcore.site import getSite
 from grokcore.site import local_utility
@@ -83,6 +83,7 @@ from grokcore.site import install_on
 from grokcore.site import LocalUtility
 from grokcore.site import site
 from grokcore.site import Site
+from grokcore.site.util import create_application
 
 from zope.event import notify
 

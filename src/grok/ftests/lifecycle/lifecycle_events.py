@@ -8,6 +8,7 @@ application's life. This creation process is responsible for the
 local utilities and the catalog indexes' creation. Let's create a site
 to demonstrate the different steps.
 
+
   >>> root = getRootFolder()
 
 The life cycle of an application is made of 2 major events :
@@ -16,9 +17,11 @@ ObjectCreatedEvent and ObjectAddedEvent.
 ObjectCreatedEvent shoud be triggered when an application is
 instanciated. At this step, the application doesn't have a site
 manager yet.
-  
+
+  >>> from zope.component.hooks import setSite
+
   >>> site = Herd()
-  >>> notify(grok.ObjectCreatedEvent(site))
+  >>> grok.notify(grok.ObjectCreatedEvent(site))
   >>> setSite(site)
   Traceback (most recent call last):
   ...
@@ -47,17 +50,15 @@ utilities are created. We can safely use our application. An event is
 provided by Grok, to be fired at this step. The same test event shows
 that we can now work on an operational environment:
 
-  >>> notify(grok.ApplicationInitializedEvent(site))
+  >>> grok.notify(grok.ApplicationAddedEvent(site))
   <zope.catalog.catalog.Catalog object at ...>
 
 """
 import grok
 from grok import index
-from zope.event import notify
 from zope.schema import TextLine
 from zope.interface import Interface
 from zope.component import queryUtility
-from zope.site.hooks import setSite
 from zope.catalog.interfaces import ICatalog
 
 
@@ -66,7 +67,7 @@ class Herd(grok.Container, grok.Application):
 
 
 class IPachyderm(Interface):
-    tusks = TextLine(title = u"About the tusks")
+    tusks = TextLine(title=u"About the tusks")
 
 
 class TuskIndex(grok.Indexes):
@@ -77,7 +78,7 @@ class TuskIndex(grok.Indexes):
 
 
 @grok.subscribe(Herd, grok.IObjectAddedEvent)
-@grok.subscribe(Herd, grok.IApplicationInitializedEvent)
+@grok.subscribe(Herd, grok.IApplicationAddedEvent)
 def CatalogTester(application, event):
     catalog = queryUtility(ICatalog, context=application)
     if catalog is None:

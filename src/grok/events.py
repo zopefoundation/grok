@@ -17,16 +17,4 @@ The events described here are *not* trigged by Grok itself. They are
 conveniently provided to be used in your own application.
 
 """
-import grok
-import grokcore.site.interfaces
-from zope.interface import implements
-
-
-class ApplicationInitializedEvent(object):
-    """A Grok Application has been created and is now ready to be used.
-    """
-    implements(grok.IApplicationInitializedEvent)
-
-    def __init__(self, app):
-        assert grok.IApplication.providedBy(app)
-        self.object = app
+from grokcore.site.interfaces import ApplicationAddedEvent
