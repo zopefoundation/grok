@@ -14,6 +14,7 @@
 """Grok interfaces
 """
 from zope import interface
+from zope.component.interfaces import IObjectEvent
 from zope.container.interfaces import IContainer as IContainerBase
 
 # Expose interfaces from grokcore.* packages as well:
@@ -188,4 +189,12 @@ class IGrokForm(grokcore.formlib.interfaces.IGrokForm, IGrokView):
 
 class IContainer(IContext, IContainerBase):
     """A Grok container.
+    """
+
+
+class IDatabaseCreatedEvent(IObjectEvent):
+    """Event triggered the first time the database is created. It is only
+    triggered one time and can be used to add new applications or
+    utilities in the root of it.
+
     """

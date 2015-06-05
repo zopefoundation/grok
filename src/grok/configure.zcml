@@ -22,6 +22,7 @@
   <include package="zope.contentprovider" />
   <include package="zope.errorview" file="browser.zcml"/>
   <include package="zope.intid" />
+  <include package="zope.generations" />
   <include package="zope.keyreference" />
   <include package="zope.location" />
   <include package="zope.login" />
@@ -50,6 +51,8 @@
   <include package="grokcore.viewlet" />
   <include package="grokcore.rest" />
   <include package="grokcore.xmlrpc" />
+
+  <grok:grok package="grok.generations" />
 
   <securityPolicy
       component="zope.securitypolicy.zopepolicy.ZopeSecurityPolicy" />

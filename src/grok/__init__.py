@@ -126,6 +126,9 @@ from grok.components import Page
 from grok.components import UnauthorizedView
 from grok.components import View
 
+from grok.interfaces import IDatabaseCreatedEvent
+from grok.events import DatabaseCreatedEvent
+
 from grokcore.json import JSON
 from grokcore.xmlrpc import XMLRPC
 

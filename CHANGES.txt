@@ -9,6 +9,9 @@ Grok changes
 - Replace ``ApplicationInitializedEvent`` with
   ``ApplicationAddedEvent`` from grokcore.site.
 
+- Introduce a new event ``DatabaseCreatedEvent`` which is triggered
+  only one time when the database is created.
+
 - Replace ``grok.util.create_application`` with the one from
   grokcore.site.util. It is now importable directly from grok.
 

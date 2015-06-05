@@ -74,6 +74,7 @@ setup(
         'zope.component',
         'zope.container',
         'zope.contentprovider',
+        'zope.generations',
         'zope.errorview [browser]',
         'zope.event',
         'zope.exceptions',
