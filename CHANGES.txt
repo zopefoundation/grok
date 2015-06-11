@@ -4,13 +4,18 @@ Grok changes
 1.14 (unreleased)
 =================
 
+Note: There are a couple of changes that breaks backward compatibility
+with older versions.
+
 - Advertise the ``install_on`` directive from grokcore.site.
 
 - Replace ``ApplicationInitializedEvent`` with
   ``ApplicationAddedEvent`` from grokcore.site.
 
 - Introduce a new event ``DatabaseCreatedEvent`` which is triggered
-  only one time when the database is created.
+  only one time when the database is created. For existing application
+  upgrade to this new version, an event will still be send at the time
+  of the upgrade.
 
 - Replace ``grok.util.create_application`` with the one from
   grokcore.site.util. It is now importable directly from grok.
