@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-1.14 (unreleased)
+1.14 (2015-06-11)
 =================
 
 Note: There are a couple of changes that breaks backward compatibility
