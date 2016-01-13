@@ -45,20 +45,22 @@ class Index(grok.View):
     def update(self):
         wiki_url = self.url(self.context.__parent__)
         self.rendered_text, replacements = (
-            LINK_PATTERN.subn(r'<a href="%s/\1">\1</a>' % wiki_url, 
-                              self.context.text))
+            LINK_PATTERN.subn(
+                r'<a href="%s/\1">\1</a>' % wiki_url, self.context.text))
+
 
 class Edit(grok.View):
 
     def update(self):
         text = self.request.form.get('wikidata')
         if not text:
-            return # Just render the template
+            return  # Just render the template
 
         # Update the text and redirect
         self.context.update(text)
         self.flash('Saved.')
         self.redirect(self.url(self.context))
+
 
 class Messages(grok.View):
     @property
@@ -66,12 +68,14 @@ class Messages(grok.View):
         receiver = component.getUtility(IMessageReceiver)
         return receiver.receive()
 
+
 class WikiLayer(grok.IRESTLayer):
     # This skin will be visible as http://localhost:8080/++rest++wiki/...
     grok.restskin('wiki')
 
+
 class PageRest(grok.REST):
     grok.layer(WikiLayer)
-    
+
     def GET(self):
         return "Hello world"

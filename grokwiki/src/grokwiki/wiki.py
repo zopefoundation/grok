@@ -17,26 +17,32 @@
 import grok
 import grokwiki.page
 
+
 class Wiki(grok.Application, grok.Container):
     """This is Grok's sample wiki application."""
+
 
 class Index(grok.View):
     def render(self):
         self.redirect(self.url('home'))
 
+
 class Hello(grok.View):
     grok.baseclass()
-    
+
     def render(self):
         return "Hello"
+
 
 class Hoi(Hello):
     def render(self):
         return "Hoi"
 
+
 class Bonjour(Hello):
     def render(self):
         return "Bonjour"
+
 
 @grok.subscribe(Wiki, grok.IObjectAddedEvent)
 def setupHomepage(wiki, event):

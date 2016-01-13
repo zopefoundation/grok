@@ -4,7 +4,7 @@
   <include package="grokwiki" />
 
     <configure i18n_domain="grokwiki">
-    
+
       <unauthenticatedPrincipal id="zope.anybody"
                                 title="Unauthenticated User" />
       <unauthenticatedGroup id="zope.Anybody"
