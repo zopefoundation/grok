@@ -1,2 +1,7 @@
-include *.txt *.py
-recursive-include src *.*
+global-include *.mo
+include *.txt
+include *.rst
+include bootstrap.py
+include buildout.cfg
+include .travis.yml
+recursive-include src *.cpt *.pt *.py *.zcml
