@@ -30,7 +30,7 @@ site-definition ${site_zcml:output}
 
   # This sets up logging to to standard output.
   # The "path" setting can be the tokens STDOUT or STDERR
-  
+
 #  <logfile>
 #    path STDOUT
 #    formatter zope.exceptions.log.Formatter

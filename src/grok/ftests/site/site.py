@@ -3,7 +3,7 @@ A site can be created by mixing in grok.Site into a grok.Model or
 grok.Container.
 
   >>> from zope import interface
-  >>> from zope.location.interfaces import IPossibleSite, ISite
+  >>> from zope.component.interfaces import IPossibleSite, ISite
   >>> manfred = Mammoth()
   >>> IPossibleSite.providedBy(manfred)
   True
@@ -23,7 +23,7 @@ While manfred and herd are possible sites, they are not yet sites;
   False
   >>> ISite.providedBy(herd)
   False
-  
+
 When a site is added to a container it will be initialized as a site
 (when the ObjectAddedEvent is fired):
 
@@ -36,14 +36,18 @@ When a site is added to a container it will be initialized as a site
 """
 import grok
 
+
 class Mammoth(grok.Model, grok.Site):
     pass
+
 
 class Herd(grok.Container, grok.Site):
     pass
 
+
 class NonSite(grok.Model):
     pass
+
 
 class NonSiteContainer(grok.Container):
     pass

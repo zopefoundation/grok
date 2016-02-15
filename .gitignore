@@ -21,3 +21,4 @@ eggs
 .mr.developer.cfg
 parts
 src/*.egg-info
+var/
