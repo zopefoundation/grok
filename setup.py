@@ -18,6 +18,7 @@ tests_require = [
     'zope.app.wsgi[test]',
     'zope.configuration',
     'zope.testing',
+    'zope.testbrowser',
     ]
 
 setup(
