@@ -8,7 +8,7 @@ in which case Grok's traverser won't interfere:
   >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open("http://localhost/herd/manfred")
-  >>> print browser.contents
+  >>> print(browser.contents)
   <html>
   <body>
   <h1>Hello, Manfred!</h1>
@@ -17,7 +17,7 @@ in which case Grok's traverser won't interfere:
   </html>
 
   >>> browser.open("http://localhost/herd/ellie")
-  >>> print browser.contents
+  >>> print(browser.contents)
   <html>
   <body>
   <h1>Hello, Ellie!</h1>

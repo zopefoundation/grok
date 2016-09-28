@@ -6,7 +6,7 @@ Demonstrate the grokcore.chameleon template component has been registered.
   >>> getRootFolder()["mammoth"] = Mammoth()
   >>> browser = Browser()
   >>> browser.open("http://localhost/mammoth/@@index")
-  >>> print browser.contents
+  >>> print(browser.contents)
   <html>Mammoth</html>
 
 """

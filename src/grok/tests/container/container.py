@@ -14,14 +14,14 @@ you can store a lot of items in a scalable way.
     >>> from zope.container.btree import BTreeContainer
     >>> isinstance(bag, BTreeContainer)
     True
-     
+
 We had problems when switching to grok.Container with the __parent__ attribute
 being set, we better make sure this doesn't happen again:
 
     >>> skull = Bone()
-    >>> print skull.__parent__
+    >>> print(skull.__parent__)
     None
-    >>> print skull.__name__
+    >>> print(skull.__name__)
     None
     >>> bag['skull'] = skull
     >>> skull.__parent__
@@ -35,6 +35,6 @@ import grok
 
 class BoneBag(grok.Container):
     pass
-    
+
 class Bone(grok.Model):
     pass

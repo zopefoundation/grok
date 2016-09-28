@@ -54,7 +54,7 @@ We let instances of `Index` provide `IGrokSecurityView`::
 Now we can watch the view::
 
   >>> browser.open('http://localhost/app/@@index')
-  >>> print browser.contents
+  >>> print(browser.contents)
   Hello from index
 
 """

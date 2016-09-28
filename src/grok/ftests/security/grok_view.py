@@ -13,7 +13,7 @@ Now we can look at the view::
   >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open('http://localhost/app/@@index')
-  >>> print browser.contents
+  >>> print(browser.contents)
   Hello world
 
 """

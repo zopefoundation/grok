@@ -6,7 +6,7 @@ zope.errorviews::
   >>> from zope.component import getMultiAdapter
   >>> from zope.publisher.browser import TestRequest
   >>> view = getMultiAdapter((Exception(), TestRequest()), name='index')
-  >>> print view()
+  >>> print(view())
   A system error occurred.
 
 Error views no longer by default provide ISystemErrorView. It would result in
@@ -20,14 +20,14 @@ duplicate log output otherwise.
   >>> request = TestRequest()
   >>> error = NotFound(object(), request)
   >>> view = getMultiAdapter((error, request), name='index')
-  >>> print view()
+  >>> print(view())
   The requested resource can not be found.
 
   >>> from zope.security.interfaces import Unauthorized
   >>> request = TestRequest()
   >>> request.setPrincipal(MockPrincipal())
   >>> view = getMultiAdapter((Unauthorized(), request), name='index')
-  >>> print view()
+  >>> print(view())
   Access to the requested resource is forbidden.
 
 The default views can be selectively overridden in your application::
@@ -41,7 +41,7 @@ The default views can be selectively overridden in your application::
   True
 
   >>> view = getMultiAdapter((Exception(), TestRequest()), name='index')
-  >>> print view()
+  >>> print(view())
   This is my idea of an exception view.
 
   >>> from grok import NotFoundView
@@ -54,7 +54,7 @@ The default views can be selectively overridden in your application::
   >>> request = TestRequest()
   >>> error = NotFound(object(), request)
   >>> view = getMultiAdapter((error, request), name='index')
-  >>> print view()
+  >>> print(view()))
   This is my idea of a not found view.
 
   >>> from grok import UnauthorizedView
@@ -67,7 +67,7 @@ The default views can be selectively overridden in your application::
   >>> request = TestRequest()
   >>> request.setPrincipal(MockPrincipal())
   >>> view = getMultiAdapter((Unauthorized(), request), name='index')
-  >>> print view()
+  >>> print(view())
   This is my idea of an unauthorized view.
 
   >>> class WithTemplate(ExceptionView):
@@ -76,7 +76,7 @@ The default views can be selectively overridden in your application::
   True
 
   >>> view = getMultiAdapter((Exception(), TestRequest()), name='index')
-  >>> print view()
+  >>> print(view())
   <html>
   <body>
   <h1>Something went wrong!</h1>

@@ -82,6 +82,6 @@ class TuskIndex(grok.Indexes):
 def CatalogTester(application, event):
     catalog = queryUtility(ICatalog, context=application)
     if catalog is None:
-        print "Catalog can not be found !"
+        print("Catalog can not be found !")
     else:
-        print catalog
+        print(catalog)

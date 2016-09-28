@@ -9,22 +9,22 @@ Models can expose attributes using the grok.traversable directive.
 
 As always, we can access a model with a view::
   >>> browser.open("http://localhost/traversefoo/")
-  >>> print browser.contents
+  >>> print(browser.contents)
   foo
 
 'foo' is an exposed attribute, so it should be accessible::
   >>> browser.open("http://localhost/traversefoo/foo")
-  >>> print browser.contents
+  >>> print(browser.contents)
   foo
 
 'bar' is an exposed method, and should also be accessible::
   >>> browser.open("http://localhost/traversefoo/bar")
-  >>> print browser.contents
+  >>> print(browser.contents)
   bar
 
 'bar' is also exposed under the name 'namedbar', and can also be accessed::
   >>> browser.open("http://localhost/traversefoo/namedbar")
-  >>> print browser.contents
+  >>> print(browser.contents)
   bar
 
 Finally, attributes which are not exposed, should not be visible:

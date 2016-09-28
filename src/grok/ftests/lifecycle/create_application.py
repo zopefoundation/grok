@@ -22,9 +22,9 @@ provides a convenient function called `create_application`::
 As we can see, the events are effectively trigged, and in the right
 order. The function returns the persisted application.
 
-  >>> print app
+  >>> print(app)
   <grok.ftests.lifecycle.create_application.Cave object at ...>
-  >>> print app.__parent__
+  >>> print(app.__parent__)
   <zope.site.folder.Folder object at ...>
 
 However, if an error occurs during the creation process, the exception
@@ -48,6 +48,7 @@ factories implementing IApplication::
   WrongType: <class 'grok.ftests.lifecycle.create_application.Mammoth'>
 
 """
+from __future__ import print_function
 import grok
 
 
@@ -67,4 +68,4 @@ class Cave(grok.Container, grok.Application):
 @grok.subscribe(Cave, grok.IObjectAddedEvent)
 @grok.subscribe(Cave, grok.IApplicationAddedEvent)
 def EventPrinter(application, event):
-    print application.__class__.__name__, event
+    print(application.__class__.__name__, event)

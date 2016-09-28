@@ -22,7 +22,7 @@
   >>> from zope import component
 
   >>> view = component.getMultiAdapter((cave, request), name='index')
-  >>> print view()
+  >>> print(view())
   <html>
   <body>
   <h1>A comfy cave</h1>
@@ -30,7 +30,7 @@
   </html>
 
   >>> view = component.getMultiAdapter((manfred, request), name='index')
-  >>> print view()
+  >>> print(view())
   <html>
   <body>
   <h1>ME GROK HUNT MAMMOTH!</h1>

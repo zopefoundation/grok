@@ -13,10 +13,10 @@ Let's first try to look up the special traversed item:
   >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open("http://localhost/herd/special")
-  >>> print browser.contents
+  >>> print(browser.contents)
   special view
   >>> browser.open("http://localhost/herd/special/index")
-  >>> print browser.contents
+  >>> print(browser.contents)
   special view
 
 Even if we have a container item called 'special', we should still
@@ -24,16 +24,16 @@ get our special object:
 
   >>> herd['special'] = Mammoth('Special invisible mammoth')
   >>> browser.open("http://localhost/herd/special")
-  >>> print browser.contents
+  >>> print(browser.contents)
   special view
   >>> browser.open("http://localhost/herd/special/index")
-  >>> print browser.contents
+  >>> print(browser.contents)
   special view
-  
+
 The fall-back behavior should work for items that aren't traversed:
 
   >>> browser.open("http://localhost/herd/manfred")
-  >>> print browser.contents
+  >>> print(browser.contents)
   <html>
   <body>
   <h1>Hello, Manfred!</h1>
@@ -41,7 +41,7 @@ The fall-back behavior should work for items that aren't traversed:
   </html>
 
   >>> browser.open("http://localhost/herd/ellie")
-  >>> print browser.contents
+  >>> print(browser.contents)
   <html>
   <body>
   <h1>Hello, Ellie!</h1>
@@ -53,7 +53,7 @@ as a subitem of a container:
 
   >>> herd['subherd'] = Herd()
   >>> browser.open("http://localhost/herd/subherd")
-  >>> print browser.contents
+  >>> print(browser.contents)
   A herd
 
 """
@@ -65,7 +65,7 @@ class Herd(grok.Container):
         if name == 'special':
             return Special()
         return None
-    
+
 class HerdIndex(grok.View):
     grok.context(Herd)
     grok.name('index')
@@ -84,7 +84,7 @@ class Special(grok.Model):
 class SpecialIndex(grok.View):
     grok.context(Special)
     grok.name('index')
-    
+
     def render(self):
         return "special view"
 

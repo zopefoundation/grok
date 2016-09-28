@@ -8,7 +8,7 @@ also create a separate traverser component:
   >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open("http://localhost/herd/manfred")
-  >>> print browser.contents
+  >>> print(browser.contents)
   <html>
   <body>
   <h1>Hello, Manfred!</h1>
@@ -17,7 +17,7 @@ also create a separate traverser component:
   </html>
 
   >>> browser.open("http://localhost/herd/ellie")
-  >>> print browser.contents
+  >>> print(browser.contents)
   <html>
   <body>
   <h1>Hello, Ellie!</h1>

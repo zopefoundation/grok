@@ -27,15 +27,15 @@ just fine:
   ...    'paint.PaintingOwner', 'zope.anybody')
 
   >>> browser.open("http://localhost/@@cavepainting")
-  >>> print browser.contents
+  >>> print(browser.contents)
   What a beautiful painting.
 
   >>> browser.open("http://localhost/@@editcavepainting")
-  >>> print browser.contents
+  >>> print(browser.contents)
   Let's make it even prettier.
 
   >>> browser.open("http://localhost/@@erasecavepainting")
-  >>> print browser.contents
+  >>> print(browser.contents)
   Oops, mistake, let's erase it.
 
   >>> browser.open("http://localhost/@@approvecavepainting")

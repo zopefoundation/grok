@@ -8,7 +8,7 @@ implementing a 'traverse' method:
   >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open("http://localhost/herd/manfred")
-  >>> print browser.contents
+  >>> print(browser.contents)
   <html>
   <body>
   <h1>Hello, Manfred!</h1>
@@ -17,7 +17,7 @@ implementing a 'traverse' method:
   </html>
 
   >>> browser.open("http://localhost/herd/ellie")
-  >>> print browser.contents
+  >>> print(browser.contents)
   <html>
   <body>
   <h1>Hello, Ellie!</h1>
@@ -38,7 +38,7 @@ class Herd(grok.Model):
 
     def traverse(self, name):
         return self.getMammoth(name)
-    
+
 class Mammoth(grok.Model):
 
     def __init__(self, name):

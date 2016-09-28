@@ -20,14 +20,14 @@ object has been *added* to a container, not before.
   >>> browser.getControl("Add entry").click()
 
   >>> browser.open("http://localhost/zoo/ellie")
-  >>> print browser.contents
+  >>> print(browser.contents)
   Hi, my name is Ellie the Mammoth, and I\'m "Really small"
 
 Let's ensure the catalog has actually indexed the object with the
 right value:
 
   >>> browser.open("http://localhost/zoo/search")
-  >>> print browser.contents
+  >>> print(browser.contents)
   We found Ellie!
 
 """

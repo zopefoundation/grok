@@ -75,7 +75,7 @@ be (re-)registered using grok.global_utility:
   True
   >>> isinstance(night, NightClub)
   True
-  
+
   >>> spiky = component.getUtility(ISpikyClub)
   >>> ISpikyClub.providedBy(spiky)
   True
@@ -122,7 +122,7 @@ Let's look up an instance we registered this way:
   True
   >>> isinstance(small4, SmallClub)
   True
-  
+
 """
 
 import grok
@@ -151,7 +151,7 @@ class NormalClub(grok.GlobalUtility):
 
 class HugeClub(grok.GlobalUtility):
     grok.implements(IClub)
-    grok.name('huge')    
+    grok.name('huge')
 
 class SpikyClub(grok.GlobalUtility):
     grok.implements(ISpikyClub)
@@ -167,9 +167,10 @@ class SmallClub(grok.GlobalUtility):
     grok.provides(ISmallClub)
     grok.name('tiny')
 
+
+@interface.provider(IClubMaker)
 class ClubMaker(grok.GlobalUtility):
     grok.implements(IClub)
-    interface.classProvides(IClubMaker)
     grok.direct()
     grok.name('maker')
 
