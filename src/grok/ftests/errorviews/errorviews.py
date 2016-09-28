@@ -54,7 +54,7 @@ The default views can be selectively overridden in your application::
   >>> request = TestRequest()
   >>> error = NotFound(object(), request)
   >>> view = getMultiAdapter((error, request), name='index')
-  >>> print(view()))
+  >>> print(view())
   This is my idea of a not found view.
 
   >>> from grok import UnauthorizedView
