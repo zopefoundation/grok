@@ -17,11 +17,12 @@ The events described here are *not* trigged by Grok itself. They are
 conveniently provided to be used in your own application.
 
 """
-from zope.interface import implements
+from zope.interface import implementer
 from zope.component.interfaces import ObjectEvent
 from grokcore.site.interfaces import ApplicationAddedEvent  # BBB
 from grok.interfaces import IDatabaseCreatedEvent
 
 
+@implementer(IDatabaseCreatedEvent)
 class DatabaseCreatedEvent(ObjectEvent):
-    implements(IDatabaseCreatedEvent)
+    pass

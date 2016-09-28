@@ -71,6 +71,7 @@ class ViewSupportMixin(object):
         grokcore.message.send(message, type=type, name='session')
 
 
+@interface.implementer(interfaces.IGrokView)
 class View(ViewSupportMixin, grokcore.view.View):
     """The base class for views with templates in Grok applications.
 
@@ -145,7 +146,6 @@ class View(ViewSupportMixin, grokcore.view.View):
 
     """
     grok.baseclass()
-    interface.implements(interfaces.IGrokView)
 
     def application_url(self, name=None, skin=ASIS, data=None):
         """Return the URL of the closest :class:`grok.Application` object in
@@ -239,6 +239,7 @@ class UnauthorizedView(View, zope.errorview.browser.UnauthorizedView):
     render.base_method = True
 
 
+@interface.implementer(interfaces.IGrokForm)
 class Form(ViewSupportMixin, grokcore.formlib.Form):
     """The base class for forms in Grok applications.
 
@@ -254,25 +255,24 @@ class Form(ViewSupportMixin, grokcore.formlib.Form):
 
     """
     grok.baseclass()
-    interface.implements(interfaces.IGrokForm)
 
 
+@interface.implementer(interfaces.IGrokForm)
 class AddForm(ViewSupportMixin, grokcore.formlib.AddForm):
     """Base class for add forms in Grok applications."""
     grok.baseclass()
-    interface.implements(interfaces.IGrokForm)
 
 
+@interface.implementer(interfaces.IGrokForm)
 class DisplayForm(ViewSupportMixin, grokcore.formlib.DisplayForm):
     """Base class for display forms in Grok applications."""
     grok.baseclass()
-    interface.implements(interfaces.IGrokForm)
 
 
+@interface.implementer(interfaces.IGrokForm)
 class EditForm(ViewSupportMixin, grokcore.formlib.EditForm):
     """Base class for edit forms in Grok applications."""
     grok.baseclass()
-    interface.implements(interfaces.IGrokForm)
 
 
 class Layout(ViewSupportMixin, grokcore.layout.Layout):
