@@ -65,7 +65,7 @@ setup(
         'simplejson',
         'z3c.autoinclude',
         'zc.catalog',
-        'ZODB3',
+        'ZODB',
         'zope.annotation',
         'zope.app.appsetup',
         'zope.app.publication',
