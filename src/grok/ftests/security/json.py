@@ -1,8 +1,8 @@
 """
 Let's test whether require decorators work for json methods.
 
-  >>> from zope.app.wsgi.testlayer import Browser
-  >>> browser = Browser()
+  >>> from zope.testbrowser.wsgi import Browser
+  >>> browser = Browser(wsgi_app=wsgi_app())
 
 We can access the public method just fine::
 

@@ -8,8 +8,8 @@ application, like views does::
 
 And we can access the display form which display the application URL::
 
-  >>> from zope.app.wsgi.testlayer import Browser
-  >>> browser = Browser()
+  >>> from zope.testbrowser.wsgi import Browser
+  >>> browser = Browser(wsgi_app=wsgi_app())
   >>> browser.handleErrors = False
   >>> browser.open('http://localhost/world/arthur')
   >>> print(browser.contents)

@@ -9,8 +9,8 @@ We create an app::
 
 Now we can look at the view::
 
-  >>> from zope.app.wsgi.testlayer import Browser
-  >>> browser = Browser()
+  >>> from zope.testbrowser.wsgi import Browser
+  >>> browser = Browser(wsgi_app=wsgi_app())
   >>> browser.handleErrors = False
   >>> browser.open('http://localhost/app/@@index')
   >>> print(browser.contents)

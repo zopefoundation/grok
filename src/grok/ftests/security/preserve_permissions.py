@@ -7,6 +7,7 @@ Let's first define a ``@@contents.html`` that is protected by a Zope
 permission, ``zope.ManageContent``::
 
   >>> from zope.publisher.browser import BrowserPage
+  >>> from zope.testbrowser.wsgi import Browser
   >>> class Contents(BrowserPage):
   ...   def __init__(self, context, request):
   ...     self.context = context
@@ -62,8 +63,7 @@ the view just fine:
 
 The default view is accessible::
 
-  >>> from zope.app.wsgi.testlayer import Browser
-  >>> browser = Browser()
+  >>> browser = Browser(wsgi_app=wsgi_app())
   >>> browser.open('http://localhost/app')
   >>> print(browser.contents)
   Moo!

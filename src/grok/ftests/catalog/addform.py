@@ -4,8 +4,8 @@ catalogued, should a catalog be present.
 
   >>> getRootFolder()["zoo"] = Zoo()
 
-  >>> from zope.app.wsgi.testlayer import Browser
-  >>> browser = Browser()
+  >>> from zope.testbrowser.wsgi import Browser
+  >>> browser = Browser(wsgi_app=wsgi_app())
   >>> browser.handleErrors = False
 
 Let's demonstrate that an object that has not been added to a

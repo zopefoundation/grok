@@ -4,8 +4,8 @@ in which case Grok's traverser won't interfere:
 
   >>> getRootFolder()["herd"] = Herd('The Big Mammoth Herd')
 
-  >>> from zope.app.wsgi.testlayer import Browser
-  >>> browser = Browser()
+  >>> from zope.testbrowser.wsgi import Browser
+  >>> browser = Browser(wsgi_app=wsgi_app())
   >>> browser.handleErrors = False
   >>> browser.open("http://localhost/herd/manfred")
   >>> print(browser.contents)

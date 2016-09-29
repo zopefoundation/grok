@@ -8,8 +8,8 @@ as expected.
 
 Note we defined the user and the permission in the ftesting.zcml
 
-  >>> from zope.app.wsgi.testlayer import Browser
-  >>> browser = Browser()
+  >>> from zope.testbrowser.wsgi import Browser
+  >>> browser = Browser(wsgi_app=wsgi_app())
 
 If we try to acces a public site without authentication
 we will get the following goups 'zope.Anybody' and 'zope

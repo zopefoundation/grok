@@ -17,8 +17,8 @@ Set up a content object in the application root::
 Traverse to the view on the model object. We get the viewlets
 registered for the default layer, with the anybody permission::
 
-  >>> from zope.app.wsgi.testlayer import Browser
-  >>> browser = Browser()
+  >>> from zope.testbrowser.wsgi import Browser
+  >>> browser = Browser(wsgi_app=wsgi_app())
   >>> browser.handleErrors = False
   >>> browser.open("http://localhost/wilma/@@caveview")
   >>> print(browser.contents)
