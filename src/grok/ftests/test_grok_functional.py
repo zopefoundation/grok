@@ -11,7 +11,7 @@ import zope.app.wsgi.testlayer
 
 
 class Layer(
-    zope.testbrowser.wsgi.WSGILayer,
+    zope.testbrowser.wsgi.TestBrowserLayer,
     zope.app.wsgi.testlayer.BrowserLayer):
     pass
 
