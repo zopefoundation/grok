@@ -4,9 +4,12 @@ import grok
 
 from pkg_resources import resource_listdir
 from zope.testing import renormalizing
-from zope.app.wsgi.testlayer import BrowserLayer, http
 
-FunctionalLayer = BrowserLayer(grok)
+import zope.testbrowser.wsgi
+import zope.app.wsgi.testlayer
+
+
+layer = zope.app.wsgi.testlayer.BrowserLayer(grok)
 
 checker = renormalizing.RENormalizing([
     # Accommodate to exception wrapping in newer versions of mechanize
@@ -45,7 +48,9 @@ def http_call(method, path, data=None, **kw):
     if data is not None:
         request_string += '\r\n'
         request_string += data
-    return http(request_string, handle_errors=False)
+    return zope.app.wsgi.testlayer.http(request_string, handle_errors=False)
+
+
 def bprint(data):
     """Python 2 and 3 doctest compatible print.
 
@@ -70,15 +75,16 @@ def suiteFromPackage(name):
             checker=checker,
             extraglobs=dict(
                 http_call=http_call,
-                http=http,
-                getRootFolder=FunctionalLayer.getRootFolder),
+                wsgi_app=layer.make_wsgi_app,
+                http=zope.app.wsgi.testlayer.http,
                 print=bprint,
+                getRootFolder=layer.getRootFolder),
             optionflags=(
                 doctest.ELLIPSIS+
                 doctest.NORMALIZE_WHITESPACE+
                 doctest.REPORT_NDIFF)
                 )
-        test.layer = FunctionalLayer
+        test.layer = layer
         suite.addTest(test)
     return suite
 
@@ -99,6 +105,7 @@ def test_suite():
         ]:
         suite.addTest(suiteFromPackage(name))
     return suite
+
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')
