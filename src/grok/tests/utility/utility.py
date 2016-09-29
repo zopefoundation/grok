@@ -27,7 +27,7 @@ A utility can explicitly specify which interface it should be looked up with.
   >>> component.getUtility(ISpikyClub, name='spiky')
   Traceback (most recent call last):
     ...
-  ComponentLookupError: (<InterfaceClass grok.tests.utility.utility.ISpikyClub>,
+  zope.interface.interfaces.ComponentLookupError: (<InterfaceClass grok.tests.utility.utility.ISpikyClub>,
                          'spiky')
 
 If a utility implements more than one interface, it has to specify the one to

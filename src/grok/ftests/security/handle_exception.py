@@ -7,7 +7,7 @@ that we don't hit this:
   >>> browser = Browser()
   >>> browser.open("http://localhost/@@cave")
   Traceback (most recent call last):
-  HTTPError: HTTP Error 500: Internal Server Error
+  urllib.error.HTTPError: HTTP Error 500: Internal Server Error
   >>> browser.contents
   'It is gone!'
 

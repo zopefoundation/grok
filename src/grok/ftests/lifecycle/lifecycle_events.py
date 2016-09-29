@@ -25,7 +25,7 @@ manager yet.
   >>> setSite(site)
   Traceback (most recent call last):
   ...
-  ComponentLookupError: no site manager defined
+  zope.interface.interfaces.ComponentLookupError: no site manager defined
 
 As the application is instanciated and notified as "created", we can
 now persist it. This operation will fire the "ObjectAddedEvent". This

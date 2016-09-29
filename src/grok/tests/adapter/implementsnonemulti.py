@@ -5,7 +5,7 @@ interface:
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
-  GrokError: <class 'grok.tests.adapter.implementsnonemulti.Home'> must
+  martian.error.GrokError: <class 'grok.tests.adapter.implementsnonemulti.Home'> must
   implement at least one interface (use grok.implements to specify).
 """
 import grok

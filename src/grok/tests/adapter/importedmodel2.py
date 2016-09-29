@@ -4,7 +4,7 @@ Grok error because import model doesn't count as context:
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
-  GrokError: No module-level context for
+  martian.error.GrokError: No module-level context for
   <class 'grok.tests.adapter.importedmodel2.Painting'>,
   please use the 'context' directive.
 

@@ -2,7 +2,7 @@
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
-  GrokError: <class 'grok.tests.xmlrpc.nomethods.RemoteCaveman'> does not
+  martian.error.GrokError: <class 'grok.tests.xmlrpc.nomethods.RemoteCaveman'> does not
   define any public methods. Please add methods to this class to enable
   its registration.
 

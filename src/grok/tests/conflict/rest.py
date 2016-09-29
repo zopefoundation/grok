@@ -4,7 +4,7 @@ We cannot register two rest protocols under the same name::
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
-  ConfigurationConflictError: Conflicting configuration actions
+  zope.configuration.config.ConfigurationConflictError: Conflicting configuration actions
     For: ('restprotocol', 'foo')
 """
 

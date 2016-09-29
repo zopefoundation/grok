@@ -22,23 +22,27 @@ class GrokTestLayer(zope.component.testlayer.LayerBase):
 layer = GrokTestLayer(grok, name='grok.tests.layer')
 
 checker = renormalizing.RENormalizing([
-    # str(Exception) has changed from Python 2.4 to 2.5 (due to
-    # Exception now being a new-style class).  This changes the way
-    # exceptions appear in traceback printouts.
-    (re.compile(r"ConfigurationExecutionError: <class '([\w.]+)'>:"),
-                r'ConfigurationExecutionError: \1:'),
     (re.compile(
-        r'^GrokImportError: '),
-        'martian.error.GrokImportError: '),
+        r'zope.interface.interfaces.ComponentLookupError: '),
+        'ComponentLookupError: '),
     (re.compile(
-        r'^GrokError: '),
-        'martian.error.GrokError: '),
+        r'martian.error.GrokImportError: '),
+        'GrokImportError: '),
     (re.compile(
-        r'^ComponentLookupError: '),
-        'zope.interface.interfaces.ComponentLookupError: '),
+        r"<class 'martian.error.GrokError'>: "),
+        "GrokError: "),
     (re.compile(
-        r'^ConfigurationConflictError: '),
-        'zope.configuration.config.ConfigurationConflictError: '),
+        r'martian.error.GrokError: '),
+        'GrokError: '),
+    (re.compile(
+        r'zope.configuration.config.ConfigurationConflictError: '),
+        'ConfigurationConflictError: '),
+    (re.compile(
+        r'zope.configuration.xmlconfig.ZopeXMLConfigurationError: '),
+        'ZopeXMLConfigurationError: '),
+    (re.compile(
+        r'zope.configuration.config.ConfigurationExecutionError: '),
+        'ConfigurationExecutionError: '),
     ])
 
 def suiteFromPackage(name):

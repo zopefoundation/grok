@@ -5,7 +5,7 @@ interface:
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
-  GrokError: <class 'grok.tests.adapter.implementsmany.Home'> is implementing
+  martian.error.GrokError: <class 'grok.tests.adapter.implementsmany.Home'> is implementing
   more than one interface (use grok.provides to specify which one to use).
 """
 import grok

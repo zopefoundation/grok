@@ -73,7 +73,7 @@ While the manage view is locked::
   >>> browser.open('http://localhost/app/@@manage')
   Traceback (most recent call last):
   ...
-  httperror_seek_wrapper: HTTP Error 401: Unauthorized
+  urllib.error.HTTPError: HTTP Error 401: Unauthorized
 
 When we authenticate, everything works fine::
 

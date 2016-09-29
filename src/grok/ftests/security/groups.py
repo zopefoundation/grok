@@ -27,7 +27,7 @@ we will get an Unauthorized Message.
   >>> browser.open("http://localhost/@@protectedview")
   Traceback (most recent call last):
   ...
-  HTTPError: HTTP Error 401: Unauthorized
+  urllib.error.HTTPError: HTTP Error 401: Unauthorized
 
 If access the view with an authenticated request we should
 get the groups zope.Authenticated.

@@ -18,23 +18,27 @@ layer = Layer(grok)
 
 
 checker = renormalizing.RENormalizing([
-    # Accommodate to exception wrapping in newer versions of mechanize
-    (re.compile(r'httperror_seek_wrapper:', re.M), 'HTTPError:'),
     (re.compile(
-        r'^WrongType: '),
-        'zope.schema._bootstrapinterfaces.WrongType: '),
+        r'zope.schema._bootstrapinterfaces.WrongType: '),
+        'WrongType: '),
     (re.compile(
-        r'^ComponentLookupError: '),
-        'zope.interface.interfaces.ComponentLookupError: '),
+        r'zope.interface.interfaces.ComponentLookupError: '),
+        'ComponentLookupError: '),
     (re.compile(
-        r'^HTTPError: '),
-        'urllib.error.HTTPError: '),
+        r'urllib.error.HTTPError: '),
+        'HTTPError: '),
     (re.compile(
-        r'^ForbiddenAttribute: '),
-        'zope.security.interfaces.ForbiddenAttribute: '),
+        r'zope.security.interfaces.ForbiddenAttribute: '),
+        'ForbiddenAttribute: '),
     (re.compile(
-        r'^NotFound: '),
-        'zope.publisher.interfaces.NotFound: '),
+        r'zope.publisher.interfaces.NotFound: '),
+        'NotFound: '),
+    (re.compile(
+        r'zope.configuration.config.ConfigurationExecutionError: '),
+        'ConfigurationExecutionError: '),
+    (re.compile(
+        r'martian.error.GrokError: '),
+        'GrokError: '),
     ])
 
 def http_call(method, path, data=None, **kw):

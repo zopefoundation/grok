@@ -45,7 +45,7 @@ factories implementing IApplication::
   >>> james = grok.create_application(Mammoth, root, 'james')
   Traceback (most recent call last):
   ...
-  WrongType: <class 'grok.ftests.lifecycle.create_application.Mammoth'>
+  zope.schema._bootstrapinterfaces.WrongType: <class 'grok.ftests.lifecycle.create_application.Mammoth'>
 
 """
 from __future__ import print_function
