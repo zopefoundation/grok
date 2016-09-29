@@ -11,6 +11,21 @@ FunctionalLayer = BrowserLayer(grok)
 checker = renormalizing.RENormalizing([
     # Accommodate to exception wrapping in newer versions of mechanize
     (re.compile(r'httperror_seek_wrapper:', re.M), 'HTTPError:'),
+    (re.compile(
+        r'^WrongType: '),
+        'zope.schema._bootstrapinterfaces.WrongType: '),
+    (re.compile(
+        r'^ComponentLookupError: '),
+        'zope.interface.interfaces.ComponentLookupError: '),
+    (re.compile(
+        r'^HTTPError: '),
+        'urllib.error.HTTPError: '),
+    (re.compile(
+        r'^ForbiddenAttribute: '),
+        'zope.security.interfaces.ForbiddenAttribute: '),
+    (re.compile(
+        r'^NotFound: '),
+        'zope.publisher.interfaces.NotFound: '),
     ])
 
 def http_call(method, path, data=None, **kw):
