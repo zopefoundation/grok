@@ -24,8 +24,7 @@ GlobalUtilityInfo objects annotated on the module.
   >>> provides is None
   True
 
-  >>> name
-  u''
+  >>> print(name)
 
 """
 import grok
