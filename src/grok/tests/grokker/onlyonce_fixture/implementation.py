@@ -1,4 +1,4 @@
-from component import Alpha
+from .component import Alpha
 
 class AlphaSub(Alpha):
     pass

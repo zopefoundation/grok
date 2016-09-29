@@ -9,7 +9,7 @@ Zope 3 paradigm"items before views" is supported in the fallback.
   >>> herd['ellie'] = Mammoth('Ellie')
 
   >>> from zope.testbrowser.wsgi import Browser
-  >>> browser = Browser(wsgi_app=wsgi_app())
+  >>> browser = Browser()
   >>> browser.handleErrors = False
 
 When we look up 'manfred', we'll get the Mammoth object as expected:

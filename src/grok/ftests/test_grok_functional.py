@@ -9,7 +9,13 @@ import zope.testbrowser.wsgi
 import zope.app.wsgi.testlayer
 
 
-layer = zope.app.wsgi.testlayer.BrowserLayer(grok)
+class Layer(
+    zope.testbrowser.wsgi.WSGILayer,
+    zope.app.wsgi.testlayer.BrowserLayer):
+    pass
+
+layer = Layer(grok)
+
 
 checker = renormalizing.RENormalizing([
     # Accommodate to exception wrapping in newer versions of mechanize
@@ -75,8 +81,8 @@ def suiteFromPackage(name):
             checker=checker,
             extraglobs=dict(
                 http_call=http_call,
-                wsgi_app=layer.make_wsgi_app,
                 http=zope.app.wsgi.testlayer.http,
+                wsgi_app=layer.make_wsgi_app,
                 print=bprint,
                 getRootFolder=layer.getRootFolder),
             optionflags=(

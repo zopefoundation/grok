@@ -63,7 +63,7 @@ the view just fine:
 
 The default view is accessible::
 
-  >>> browser = Browser(wsgi_app=wsgi_app())
+  >>> browser = Browser()
   >>> browser.open('http://localhost/app')
   >>> print(browser.contents)
   Moo!

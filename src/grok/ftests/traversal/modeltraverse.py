@@ -5,7 +5,7 @@ implementing a 'traverse' method:
   >>> getRootFolder()["herd"] = Herd('The Big Mammoth Herd')
 
   >>> from zope.testbrowser.wsgi import Browser
-  >>> browser = Browser(wsgi_app=wsgi_app())
+  >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open("http://localhost/herd/manfred")
   >>> print(browser.contents)

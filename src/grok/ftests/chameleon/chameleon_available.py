@@ -4,7 +4,7 @@ Demonstrate the grokcore.chameleon template component has been registered.
 
   >>> from zope.testbrowser.wsgi import Browser
   >>> getRootFolder()["mammoth"] = Mammoth()
-  >>> browser = Browser(wsgi_app=wsgi_app())
+  >>> browser = Browser()
   >>> browser.open("http://localhost/mammoth/@@index")
   >>> print(browser.contents)
   <html>Mammoth</html>
