@@ -3,6 +3,7 @@ syntax:glob
 *.bak
 *.pyc
 *.pyo
+*.swo
 *.swp
 .installed.cfg
 .mr.developer.cfg
