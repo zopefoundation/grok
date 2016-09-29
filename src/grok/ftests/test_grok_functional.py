@@ -46,6 +46,15 @@ def http_call(method, path, data=None, **kw):
         request_string += '\r\n'
         request_string += data
     return http(request_string, handle_errors=False)
+def bprint(data):
+    """Python 2 and 3 doctest compatible print.
+
+    http://python3porting.com/problems.html#string-representation
+    """
+    if not isinstance(data, str):
+        data = data.decode()
+    print(data.strip())
+
 
 def suiteFromPackage(name):
     files = resource_listdir(__name__, name)
@@ -63,6 +72,7 @@ def suiteFromPackage(name):
                 http_call=http_call,
                 http=http,
                 getRootFolder=FunctionalLayer.getRootFolder),
+                print=bprint,
             optionflags=(
                 doctest.ELLIPSIS+
                 doctest.NORMALIZE_WHITESPACE+
