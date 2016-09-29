@@ -27,6 +27,18 @@ checker = renormalizing.RENormalizing([
     # exceptions appear in traceback printouts.
     (re.compile(r"ConfigurationExecutionError: <class '([\w.]+)'>:"),
                 r'ConfigurationExecutionError: \1:'),
+    (re.compile(
+        r'^GrokImportError: '),
+        'martian.error.GrokImportError: '),
+    (re.compile(
+        r'^GrokError: '),
+        'martian.error.GrokError: '),
+    (re.compile(
+        r'^ComponentLookupError: '),
+        'zope.interface.interfaces.ComponentLookupError: '),
+    (re.compile(
+        r'^ConfigurationConflictError: '),
+        'zope.configuration.config.ConfigurationConflictError: '),
     ])
 
 def suiteFromPackage(name):
