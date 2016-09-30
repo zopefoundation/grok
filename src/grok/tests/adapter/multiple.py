@@ -4,9 +4,7 @@ Multiple models lead to ambiguity:
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
-  martian.error.GrokError: Multiple possible contexts for
-  <class 'grok.tests.adapter.multiple.Home'>, please use the
-  'context' directive.
+  martian.error.GrokError: Multiple possible contexts for <class 'grok.tests.adapter.multiple.Home'>, please use the 'context' directive.
 
 """
 import grok

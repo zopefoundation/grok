@@ -18,30 +18,6 @@ class Layer(
 layer = Layer(grok)
 
 
-checker = renormalizing.RENormalizing([
-    (re.compile(
-        r'zope.schema._bootstrapinterfaces.WrongType: '),
-        'WrongType: '),
-    (re.compile(
-        r'zope.interface.interfaces.ComponentLookupError: '),
-        'ComponentLookupError: '),
-    (re.compile(
-        r'urllib.error.HTTPError: '),
-        'HTTPError: '),
-    (re.compile(
-        r'zope.security.interfaces.ForbiddenAttribute: '),
-        'ForbiddenAttribute: '),
-    (re.compile(
-        r'zope.publisher.interfaces.NotFound: '),
-        'NotFound: '),
-    (re.compile(
-        r'zope.configuration.config.ConfigurationExecutionError: '),
-        'ConfigurationExecutionError: '),
-    (re.compile(
-        r'martian.error.GrokError: '),
-        'GrokError: '),
-    ])
-
 def http_call(method, path, data=None, **kw):
     """Function to help make RESTful calls.
 
@@ -83,7 +59,7 @@ def suiteFromPackage(name):
         dottedname = 'grok.ftests.%s.%s' % (name, filename[:-3])
         test = doctest.DocTestSuite(
             dottedname,
-            checker=checker,
+            checker=renormalizing.RENormalizing(),
             extraglobs=dict(
                 getRootFolder=layer.getRootFolder,
                 http=zope.app.wsgi.testlayer.http,
@@ -94,7 +70,8 @@ def suiteFromPackage(name):
             optionflags=(
                 doctest.ELLIPSIS+
                 doctest.NORMALIZE_WHITESPACE+
-                doctest.REPORT_NDIFF)
+                doctest.REPORT_NDIFF+
+                renormalizing.IGNORE_EXCEPTION_MODULE_IN_PYTHON2)
                 )
         test.layer = layer
         suite.addTest(test)

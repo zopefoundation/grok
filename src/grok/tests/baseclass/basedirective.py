@@ -14,11 +14,8 @@ We can't look up SomeView as a view, as it's a base class:
 
   >>> view = component.getMultiAdapter((model, request), name='someview')
   Traceback (most recent call last):
-    ...
-  zope.interface.interfaces.ComponentLookupError: ((<grok.tests.baseclass.basedirective.Model object at 0x...>,
-  <zope.publisher.browser.TestRequest instance ...>),
-  <InterfaceClass zope.interface.Interface>,
-  'someview')
+  ...
+  zope.interface.interfaces.ComponentLookupError: ((<grok.tests.baseclass.basedirective.Model object at 0x...>, <zope.publisher.browser.TestRequest instance ...>), <InterfaceClass zope.interface.Interface>, 'someview')
 
 We can however get a subclass of SomeView:
 

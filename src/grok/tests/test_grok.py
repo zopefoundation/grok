@@ -23,26 +23,11 @@ layer = GrokTestLayer(grok, name='grok.tests.layer')
 
 checker = renormalizing.RENormalizing([
     (re.compile(
-        r'zope.interface.interfaces.ComponentLookupError: '),
-        'ComponentLookupError: '),
-    (re.compile(
-        r'martian.error.GrokImportError: '),
-        'GrokImportError: '),
+        r"martian.error.GrokError: "),
+        "GrokError: "),
     (re.compile(
         r"<class 'martian.error.GrokError'>: "),
         "GrokError: "),
-    (re.compile(
-        r'martian.error.GrokError: '),
-        'GrokError: '),
-    (re.compile(
-        r'zope.configuration.config.ConfigurationConflictError: '),
-        'ConfigurationConflictError: '),
-    (re.compile(
-        r'zope.configuration.xmlconfig.ZopeXMLConfigurationError: '),
-        'ZopeXMLConfigurationError: '),
-    (re.compile(
-        r'zope.configuration.config.ConfigurationExecutionError: '),
-        'ConfigurationExecutionError: '),
     ])
 
 def suiteFromPackage(name):
@@ -59,7 +44,11 @@ def suiteFromPackage(name):
         test = doctest.DocTestSuite(
             dottedname,
             checker=checker,
-            optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE)
+            optionflags=(
+                doctest.ELLIPSIS+
+                doctest.NORMALIZE_WHITESPACE+
+                renormalizing.IGNORE_EXCEPTION_MODULE_IN_PYTHON2
+            ))
         test.layer = layer
         suite.addTest(test)
     return suite
