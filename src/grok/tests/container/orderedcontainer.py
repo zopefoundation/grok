@@ -57,7 +57,7 @@ Adding a new object under an existing key, raises a DuplicationError::
   >>> bones['shin'] = Bone('Another Shin Bone')
   Traceback (most recent call last):
   ...
-  KeyError: u'shin'
+  KeyError: ...'shin'
 
 Reordering with a wrong set of keys should fail::
 
