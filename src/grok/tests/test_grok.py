@@ -59,9 +59,6 @@ def suiteFromPackage(name):
         test = doctest.DocTestSuite(
             dottedname,
             checker=checker,
-            extraglobs={
-                'print': grok.testing.bprint,
-            },
             optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE)
         test.layer = layer
         suite.addTest(test)

@@ -62,6 +62,16 @@ def http_call(method, path, data=None, **kw):
     return zope.app.wsgi.testlayer.http(request_string, handle_errors=False)
 
 
+def bprint(data):
+    """Python 2 and 3 doctest compatible print.
+
+    http://python3porting.com/problems.html#string-representation
+    """
+    if not isinstance(data, str):
+        data = data.decode()
+    print(data.strip())
+
+
 def suiteFromPackage(name):
     files = resource_listdir(__name__, name)
     suite = unittest.TestSuite()
@@ -74,13 +84,13 @@ def suiteFromPackage(name):
         test = doctest.DocTestSuite(
             dottedname,
             checker=checker,
-            extraglobs={
-                'getRootFolder': layer.getRootFolder,
-                'http': zope.app.wsgi.testlayer.http,
-                'http_call': http_call,
-                'print': grok.testing.bprint,
-                'wsgi_app': layer.make_wsgi_app,
-            },
+            extraglobs=dict(
+                getRootFolder=layer.getRootFolder,
+                http=zope.app.wsgi.testlayer.http,
+                http_call=http_call,
+                bprint=bprint,
+                wsgi_app=layer.make_wsgi_app,
+            ),
             optionflags=(
                 doctest.ELLIPSIS+
                 doctest.NORMALIZE_WHITESPACE+

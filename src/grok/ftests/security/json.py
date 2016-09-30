@@ -7,7 +7,7 @@ Let's test whether require decorators work for json methods.
 We can access the public method just fine::
 
   >>> browser.open('http://localhost/stomp')
-  >>> print(browser.contents)
+  >>> bprint(browser.contents)
   {"Manfred stomped.": ""}
 
 We cannot access the protected method however::
@@ -21,7 +21,7 @@ Let's log in as the manager now. We should be able to access the method now::
 
   >>> browser.addHeader('Authorization', 'Basic mgr:mgrpw')
   >>> browser.open('http://localhost/dance')
-  >>> print(browser.contents)
+  >>> bprint(browser.contents)
   {"Manfred doesn't like to dance.": ""}
 
 """
