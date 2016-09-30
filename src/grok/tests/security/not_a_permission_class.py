@@ -5,7 +5,6 @@ The permissions() directive only accepts permission ids or permission classes:
   >>> grok.testing.grok('grok.tests.security.not_a_permission_class_fixture')
   Traceback (most recent call last):
   ...
-  GrokImportError: You can only pass unicode values, ASCII values, or
-  subclasses of grok.Permission to the 'permissions' directive.
+  martian.error.GrokImportError: You can only pass unicode values, ASCII values, or subclasses of grok.Permission to the 'permissions' directive.
 
 """

@@ -22,12 +22,12 @@
   >>> from grok.tests.adapter import noarguments_fixture
   Traceback (most recent call last):
   ...
-  GrokImportError: @grok.adapter requires at least one argument.
+  martian.error.GrokImportError: @grok.adapter requires at least one argument.
 
   >>> from grok.tests.adapter import functionasargument_fixture
   Traceback (most recent call last):
   ...
-  GrokImportError: @grok.adapter requires at least one argument.
+  martian.error.GrokImportError: @grok.adapter requires at least one argument.
 
 """
 
