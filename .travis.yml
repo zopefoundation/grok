@@ -2,7 +2,7 @@ language: python
 python:
     - 2.7
 install:
-    - bin/pip install -UIr requirements.txt
+    - pip install -UIr requirements.txt
     - bin/buildout
 script:
     - bin/test -v1
