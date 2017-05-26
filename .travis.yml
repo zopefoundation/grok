@@ -2,7 +2,8 @@ language: python
 python:
     - 2.7
 install:
-    - pip install -UIr requirements.txt
+    - virtualenv .
+    - bin/pip install -UIr requirements.txt
     - bin/buildout
 script:
     - bin/test -v1
