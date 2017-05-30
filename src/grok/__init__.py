@@ -71,6 +71,8 @@ from grokcore.layout import layout
 from grokcore.annotation import Annotation
 from grokcore.annotation import queryAnnotation
 from grokcore.annotation import deleteAnnotation
+from grokcore.annotation import LazyAnnotation
+from grokcore.annotation import LazyAnnotationProperty
 
 from grokcore.site import IApplication
 from grokcore.site import IApplicationAddedEvent
