@@ -33,3 +33,8 @@ The easiest way to get started with grok is to use the
 Then follow the instructions in 
 [installation instructions](https://github.com/clozinski/grok.install/blob/master/INSTALL.md)
 
+This file and the README.txt have the same informatin.
+This README.md file is for github, using markdown formatting.  
+The README.txt file is for PyPi and uses reStructuredText, formatting.
+
+
