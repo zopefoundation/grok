@@ -27,10 +27,10 @@ he doesn't like.
 Getting grok
 ============
 
-The easiest way to get started with grok is to use the
-`grok.install <(https://github.com/clozinski/grok.install/>`_
+The easiest way to get started with grok is to use the 
+`grok.install  <https://github.com/clozinski/grok.install/>`_
+package
 
- package
 Then follow the instructions in 
-`installation instructions <(https://github.com/clozinski/grok.install/blob/master/INSTALL.md>`_
+`installation instructions <https://github.com/clozinski/grok.install/blob/master/INSTALL.md>`_
 
