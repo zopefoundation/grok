@@ -18,7 +18,6 @@ classes they define each typically inherit from one of the base classes
 provided here.
 
 """
-import simplejson
 import os.path
 import zope.location
 import zope.errorview.browser
@@ -55,6 +54,7 @@ from grokcore.content import Model
 from grokcore.content import OrderedContainer
 from grokcore.site import Application
 from grokcore.view.util import ASIS
+
 
 class ViewSupportMixin(object):
 

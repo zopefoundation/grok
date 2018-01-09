@@ -68,7 +68,6 @@ setup(
         'martian >= 0.14',
         'pytz',
         'setuptools',
-        'simplejson',
         'z3c.autoinclude',
         'zc.catalog',
         'ZODB',
