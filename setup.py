@@ -23,7 +23,7 @@ tests_require = [
 
 setup(
     name='grok',
-    version='1.14.2.dev0',
+    version='1.16.dev0',
     author='Grok Team',
     author_email='grok-dev@zope.org',
     url='http://grok.zope.org',
@@ -48,7 +48,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'grokcore.annotation >= 1.5',
+        'grokcore.annotation >= 1.6',
         'grokcore.catalog >= 2.1',
         'grokcore.chameleon >= 1.0',
         'grokcore.component >= 2.5',

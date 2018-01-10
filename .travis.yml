@@ -3,7 +3,8 @@ python:
     - 2.7
     - 3.5
 install:
-    - python bootstrap.py
+    - virtualenv .
+    - bin/pip install -UIr requirements.txt
     - bin/buildout
 script:
     - bin/test -v1

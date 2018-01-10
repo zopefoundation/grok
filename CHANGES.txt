@@ -1,11 +1,16 @@
 Grok changes
 ************
 
-1.14.2 (unreleased)
-===================
+1.16 (unreleased)
+=================
 
 - Nothing changed yet.
 
+
+1.15 (2017-05-30)
+=================
+
+- Advertise the LazyAnnotation and LazyAnnotationProperty.
 
 1.14.1 (2016-02-15)
 ===================
