@@ -16,7 +16,6 @@ Grok changes
 
 - Update tests.
 
-
 1.14 (2015-06-11)
 =================
 
@@ -36,19 +35,16 @@ with older versions.
 - Replace ``grok.util.create_application`` with the one from
   grokcore.site.util. It is now importable directly from grok.
 
-
 1.13 (2015-06-04)
 =================
 
 - Advertise the ``ObjectEditedEvent`` from grokcore.content.
-
 
 1.12 (2014-10-20)
 =================
 
 - Add ``grok.queryAnnotation()`` and ``grok.deleteAnnotation()`` from
   ``grokcore.annotation``.
-
 
 1.11.3 (2013-04-03)
 ===================
