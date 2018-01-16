@@ -25,8 +25,12 @@ checker = renormalizing.RENormalizing([
     # str(Exception) has changed from Python 2.4 to 2.5 (due to
     # Exception now being a new-style class).  This changes the way
     # exceptions appear in traceback printouts.
-    (re.compile(r"ConfigurationExecutionError: <class '([\w.]+)'>:"),
-                r'ConfigurationExecutionError: \1:'),
+    (re.compile(
+        r"ConfigurationExecutionError: <class '([\w.]+)'>:"),
+        r'ConfigurationExecutionError: \1:'),
+    (re.compile(
+        r"martian.error.GrokError: "),
+        "GrokError: "),
     ])
 
 def suiteFromPackage(name):
@@ -43,7 +47,11 @@ def suiteFromPackage(name):
         test = doctest.DocTestSuite(
             dottedname,
             checker=checker,
-            optionflags=doctest.ELLIPSIS+doctest.NORMALIZE_WHITESPACE)
+            optionflags=(
+                doctest.ELLIPSIS+
+                doctest.NORMALIZE_WHITESPACE+
+                renormalizing.IGNORE_EXCEPTION_MODULE_IN_PYTHON2
+            ))
         test.layer = layer
         suite.addTest(test)
     return suite

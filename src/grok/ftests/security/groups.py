@@ -8,7 +8,7 @@ as expected.
 
 Note we defined the user and the permission in the ftesting.zcml
 
-  >>> from zope.app.wsgi.testlayer import Browser
+  >>> from zope.testbrowser.wsgi import Browser
   >>> browser = Browser()
 
 If we try to acces a public site without authentication
@@ -27,7 +27,7 @@ we will get an Unauthorized Message.
   >>> browser.open("http://localhost/@@protectedview")
   Traceback (most recent call last):
   ...
-  HTTPError: HTTP Error 401: Unauthorized
+  urllib.error.HTTPError: HTTP Error 401: Unauthorized
 
 If access the view with an authenticated request we should
 get the groups zope.Authenticated.

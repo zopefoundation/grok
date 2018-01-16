@@ -13,7 +13,6 @@
 ##############################################################################
 """Grok
 """
-from zope.interface import implements
 from zope.component import adapts
 
 from martian import ClassGrokker, InstanceGrokker, GlobalGrokker
@@ -29,6 +28,7 @@ from grokcore.component import queryOrderedSubscriptions
 from grokcore.component import queryOrderedMultiSubscriptions
 
 from grokcore.component.decorators import subscribe, adapter, implementer
+from grokcore.component import implements
 
 from grokcore.component.directive import context, name, title, description
 from grokcore.component.directive import provides, direct

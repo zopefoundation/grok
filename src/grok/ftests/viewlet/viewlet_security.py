@@ -17,11 +17,11 @@ Set up a content object in the application root::
 Traverse to the view on the model object. We get the viewlets
 registered for the default layer, with the anybody permission::
 
-  >>> from zope.app.wsgi.testlayer import Browser
+  >>> from zope.testbrowser.wsgi import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open("http://localhost/wilma/@@caveview")
-  >>> print browser.contents
+  >>> print(browser.contents)
   Brack Bone
   T-Rex Bone
 
@@ -33,7 +33,7 @@ the ``GoldBone`` viewlet::
   >>> IPrincipalRoleManager(root).assignRoleToPrincipal(
   ...    'grok.BoneOwner', 'zope.anybody')
   >>> browser.open("http://localhost/wilma/@@caveview")
-  >>> print browser.contents
+  >>> print(browser.contents)
   Brack Bone
   Gold Bone
   T-Rex Bone
@@ -42,7 +42,7 @@ Now we traverse to the view through a skin. We gain the viewlet
 registered for a particular layer, ``LayeredBone``::
 
   >>> browser.open('http://localhost/++skin++boneskin/wilma/@@caveview')
-  >>> print browser.contents
+  >>> print(browser.contents)
   Brack Bone
   Gold Bone
   Layered Bone
@@ -52,7 +52,7 @@ Only viewlets registered for the CaveMan model, ``ManBone``, should up
 when traversing to fred::
 
   >>> browser.open('http://localhost/fred/@@caveview')
-  >>> print browser.contents
+  >>> print(browser.contents)
   Brack Bone
   Gold Bone
   Man Bone
@@ -63,7 +63,7 @@ Viewlets registered for a particular view, like ``LadyViewlet``,
 should only associate with that particular one::
 
   >>> browser.open('http://localhost/fred/@@fireview')
-  >>> print browser.contents
+  >>> print(browser.contents)
   Brack Bone
   Gold Bone
   Lady Viewlet

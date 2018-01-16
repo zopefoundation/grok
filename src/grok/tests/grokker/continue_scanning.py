@@ -30,13 +30,13 @@ class AlphaGrokker(martian.ClassGrokker):
     martian.priority(1) # we need to go before BetaGrokker
 
     def grok(self, name, factory, module_info, config, **kw):
-        print "alpha"
+        print("alpha")
         return True
 
 class BetaGrokker(martian.ClassGrokker):
     martian.component(Beta)
 
     def grok(self, name, factory, module_info, config, **kw):
-        print "beta"
+        print("beta")
         return True
-    
+

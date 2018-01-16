@@ -25,7 +25,7 @@ manager yet.
   >>> setSite(site)
   Traceback (most recent call last):
   ...
-  ComponentLookupError: no site manager defined
+  zope.interface.interfaces.ComponentLookupError: no site manager defined
 
 As the application is instanciated and notified as "created", we can
 now persist it. This operation will fire the "ObjectAddedEvent". This
@@ -82,6 +82,6 @@ class TuskIndex(grok.Indexes):
 def CatalogTester(application, event):
     catalog = queryUtility(ICatalog, context=application)
     if catalog is None:
-        print "Catalog can not be found !"
+        print("Catalog can not be found !")
     else:
-        print catalog
+        print(catalog)

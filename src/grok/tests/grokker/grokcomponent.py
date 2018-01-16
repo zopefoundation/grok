@@ -42,7 +42,7 @@ before will therefore fail::
   >>> grok.testing.grok_component('SecondAdapter', SecondAdapter)
   Traceback (most recent call last):
     ...
-  GrokError: No module-level context for <class 'grok.tests.grokker.grokcomponent.SecondAdapter'>, please use the 'context' directive.
+  martian.error.GrokError: No module-level context for <class 'grok.tests.grokker.grokcomponent.SecondAdapter'>, please use the 'context' directive.
 
 So we need to supply the context ourselves::
 

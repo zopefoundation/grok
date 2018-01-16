@@ -13,12 +13,12 @@ A grok.Role without any internationalization.
 The id, title and description should be unicode::
 
   >>> role = getUtility(IRole, name="RoleWithoutI18n")
-  >>> role.id
-  u'RoleWithoutI18n'
-  >>> role.title
-  u'RoleWithoutI18n'
-  >>> role.description
-  u'My role without i18n'
+  >>> print(role.id)
+  RoleWithoutI18n
+  >>> print(role.title)
+  RoleWithoutI18n
+  >>> print(role.description)
+  My role without i18n
   >>>
   >>> isinstance(role.id, Message)
   False

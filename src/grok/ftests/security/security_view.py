@@ -25,13 +25,13 @@ to use the `__call__` method::
 
 However, when we want to watch this view, we run into trouble::
 
-  >>> from zope.app.wsgi.testlayer import Browser
+  >>> from zope.testbrowser.wsgi import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open('http://localhost/app/@@index')
   Traceback (most recent call last):
   ...
-  ForbiddenAttribute: ('browserDefault', <...Index object at 0x...>)
+  zope.security.interfaces.ForbiddenAttribute: ('browserDefault', <...Index object at 0x...>)
 
 This happens, because we did not set any permissions for the
 `browserDefault` method, which in 'normal' Zope3 environments means,
@@ -54,7 +54,7 @@ We let instances of `Index` provide `IGrokSecurityView`::
 Now we can watch the view::
 
   >>> browser.open('http://localhost/app/@@index')
-  >>> print browser.contents
+  >>> print(browser.contents)
   Hello from index
 
 """

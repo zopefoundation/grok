@@ -10,7 +10,7 @@
 
   FormPage:
   >>> myform = getMultiAdapter((cow, request), name='myformpage')
-  >>> print myform()
+  >>> print(myform())
   <html>
    <body>
      <div class="layout"><form action="http://127.0.0.1" method="post"
@@ -52,7 +52,7 @@
 
   Display form:
   >>> myview = getMultiAdapter((cow, request), name='myview')
-  >>> print myview()
+  >>> print(myview())
   <html>
    <body>
      <div class="layout">...
@@ -72,7 +72,7 @@
   <grok.ftests.forms.forms.MyView object at ...>
   >>> myview.layout
   <grok.ftests.forms.forms.Master object at ...>
-  >>> print myview.content()
+  >>> print(myview.content())
    <table class="listing">
     <thead>
       <tr>
@@ -103,7 +103,7 @@
 
   Edit form:
   >>> myeditview = getMultiAdapter((cow, request), name='myeditview')
-  >>> print myeditview()
+  >>> print(myeditview())
   <html>
    <body>
      <div class="layout"><form action="http://127.0.0.1" method="post"
@@ -147,7 +147,7 @@
   <grok.ftests.forms.forms.MyEditView object at ...>
   >>> myeditview.layout
   <grok.ftests.forms.forms.Master object at ...>
-  >>> print myeditview.content()
+  >>> print(myeditview.content())
   <form action="http://127.0.0.1" method="post"
         class="edit-form" enctype="multipart/form-data">
      ...<span>Color</span>...

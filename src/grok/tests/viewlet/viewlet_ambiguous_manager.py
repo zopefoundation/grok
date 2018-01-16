@@ -5,9 +5,7 @@ a viewlet will not auto-associate but instead raise an error.
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
-  GrokError: Multiple possible viewletmanagers for
-  <class 'grok.tests.viewlet.viewlet_ambiguous_manager.Viewlet'>, please use
-  the 'viewletmanager' directive.
+  martian.error.GrokError: Multiple possible viewletmanagers for <class 'grok.tests.viewlet.viewlet_ambiguous_manager.Viewlet'>, please use the 'viewletmanager' directive.
 
 """
 

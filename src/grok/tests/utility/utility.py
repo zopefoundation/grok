@@ -26,9 +26,8 @@ A utility can explicitly specify which interface it should be looked up with.
 
   >>> component.getUtility(ISpikyClub, name='spiky')
   Traceback (most recent call last):
-    ...
-  ComponentLookupError: (<InterfaceClass grok.tests.utility.utility.ISpikyClub>,
-                         'spiky')
+  ...
+  zope.interface.interfaces.ComponentLookupError: (<InterfaceClass grok.tests.utility.utility.ISpikyClub>, 'spiky')
 
 If a utility implements more than one interface, it has to specify the one to
 use with 'grok.provides':
@@ -75,7 +74,7 @@ be (re-)registered using grok.global_utility:
   True
   >>> isinstance(night, NightClub)
   True
-  
+
   >>> spiky = component.getUtility(ISpikyClub)
   >>> ISpikyClub.providedBy(spiky)
   True
@@ -122,7 +121,7 @@ Let's look up an instance we registered this way:
   True
   >>> isinstance(small4, SmallClub)
   True
-  
+
 """
 
 import grok
@@ -151,7 +150,7 @@ class NormalClub(grok.GlobalUtility):
 
 class HugeClub(grok.GlobalUtility):
     grok.implements(IClub)
-    grok.name('huge')    
+    grok.name('huge')
 
 class SpikyClub(grok.GlobalUtility):
     grok.implements(ISpikyClub)
@@ -167,9 +166,10 @@ class SmallClub(grok.GlobalUtility):
     grok.provides(ISmallClub)
     grok.name('tiny')
 
+
+@interface.provider(IClubMaker)
 class ClubMaker(grok.GlobalUtility):
     grok.implements(IClub)
-    interface.classProvides(IClubMaker)
     grok.direct()
     grok.name('maker')
 

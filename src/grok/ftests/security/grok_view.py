@@ -9,11 +9,11 @@ We create an app::
 
 Now we can look at the view::
 
-  >>> from zope.app.wsgi.testlayer import Browser
+  >>> from zope.testbrowser.wsgi import Browser
   >>> browser = Browser()
   >>> browser.handleErrors = False
   >>> browser.open('http://localhost/app/@@index')
-  >>> print browser.contents
+  >>> print(browser.contents)
   Hello world
 
 """
