@@ -4,8 +4,7 @@ Grok changes
 1.16 (unreleased)
 =================
 
-- Nothing changed yet.
-
+- Python 3 compatibility.
 
 1.15 (2017-05-30)
 =================
