@@ -1,8 +1,8 @@
 Grok changes
 ************
 
-1.16 (unreleased)
-=================
+3.0.0 (2018-01-16)
+==================
 
 - Python 3 compatibility.
 
