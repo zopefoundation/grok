@@ -60,17 +60,17 @@ class Fireplace(grok.Model):
 class IHome(interface.Interface):
     pass
 
-@grok.implementer(IHome)
 class Home(grok.MultiAdapter):
     grok.adapts(Cave, Fireplace)
+    grok.implements(IHome)
 
     def __init__(self, cave, fireplace):
         self.cave = cave
         self.fireplace = fireplace
 
-@grok.implementer(IHome)
 class Home2(grok.MultiAdapter):
     grok.adapts(Cave, Fireplace)
+    grok.implements(IHome)
     grok.name('home2')
 
     def __init__(self, cave, fireplace):
@@ -80,9 +80,9 @@ class Home2(grok.MultiAdapter):
 class IFireplace(interface.Interface):
     pass
 
-@grok.implementer(IHome, IFireplace)
 class Home3(grok.MultiAdapter):
     grok.adapts(Cave, Fireplace)
+    grok.implements(IHome, IFireplace)
     grok.provides(IHome)
     grok.name('home3')
 

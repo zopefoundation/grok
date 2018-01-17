@@ -25,13 +25,12 @@ class Cave(grok.Model):
 class IHome(interface.Interface):
     pass
 
-@grok.implementer(IHome)
 class Home(grok.Adapter):
-    pass
+    grok.implements(IHome)
 
 class IFireplace(interface.Interface):
     pass
 
-@grok.implementer(IFireplace, IHome)
 class Fireplace(grok.Adapter):
+    grok.implements(IFireplace, IHome)
     grok.provides(IFireplace)

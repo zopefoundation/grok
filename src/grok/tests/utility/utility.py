@@ -145,31 +145,31 @@ class INightClub(interface.Interface):
 class IClubMaker(interface.Interface):
     pass
 
-@grok.implementer(IClub)
 class NormalClub(grok.GlobalUtility):
-    pass
+    grok.implements(IClub)
 
-@grok.implementer(IClub)
 class HugeClub(grok.GlobalUtility):
+    grok.implements(IClub)
     grok.name('huge')
 
-@grok.implementer(ISpikyClub)
 class SpikyClub(grok.GlobalUtility):
+    grok.implements(ISpikyClub)
     grok.provides(IClub)
     grok.name('spiky')
 
-@grok.implementer(INightClub, ISpikyClub)
 class NightClub(grok.GlobalUtility):
+    grok.implements(INightClub, ISpikyClub)
     grok.provides(INightClub)
 
-@grok.implementer(ISmallClub, ITinyClub)
 class SmallClub(grok.GlobalUtility):
+    grok.implements(ISmallClub, ITinyClub)
     grok.provides(ISmallClub)
     grok.name('tiny')
 
+
 @interface.provider(IClubMaker)
-@grok.implementer(IClub)
 class ClubMaker(grok.GlobalUtility):
+    grok.implements(IClub)
     grok.direct()
     grok.name('maker')
 
@@ -179,13 +179,11 @@ class IFireplace(interface.Interface):
 class IHome(interface.Interface):
     pass
 
-@grok.implementer(IFireplace)
 class Fireplace(object):
-    pass
+    grok.implements(IFireplace)
 
-@grok.implementer(IFireplace, IHome)
 class Home(object):
-    pass
+    grok.implements(IFireplace, IHome)
 
 grok.global_utility(Fireplace)
 grok.global_utility(Fireplace, name='hot')

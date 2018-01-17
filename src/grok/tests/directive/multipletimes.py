@@ -36,13 +36,11 @@ class IClub(interface.Interface):
 class ICave(interface.Interface):
     pass
 
-@grok.implementer(IClub)
 class Club(object):
-    pass
+    grok.implements(IClub)
 
-@grok.implementer(ICave)
 class Cave(object):
-    pass
+    grok.implements(ICave)
 
 grok.global_utility(Club, provides=IClub, name='foo')
 grok.global_utility(Cave)

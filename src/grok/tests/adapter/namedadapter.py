@@ -26,6 +26,6 @@ class Cave(grok.Model):
 class IHome(interface.Interface):
     pass
 
-@grok.implementer(IHome)
 class Home(grok.Adapter):
+    grok.implements(IHome)
     grok.name('home')

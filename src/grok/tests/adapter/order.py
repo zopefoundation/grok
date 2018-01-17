@@ -19,9 +19,8 @@ from zope import interface
 class IHome(interface.Interface):
     pass
 
-@grok.implementer(IHome)
 class Home(grok.Adapter):
-    pass
+    grok.implements(IHome)
 
 class Cave(grok.Model):
     pass

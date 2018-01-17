@@ -22,6 +22,5 @@ class ZCave(grok.Model):
 class IHome(interface.Interface):
     pass
 
-@grok.implementer(IHome)
 class Home(grok.Adapter):
-    pass
+    grok.implements(IHome)
