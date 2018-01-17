@@ -67,14 +67,17 @@ class Second(grok.View):
     def render(self):
         return self.application_url('second')
 
+@grok.implementer(IMarker)
 class Cave(grok.Application, grok.Container):
-    grok.implements(IMarker)
+    pass
 
+@grok.implementer(IMarker)
 class CaveMan(grok.Model):
-    grok.implements(IMarker)
+    pass
 
+@grok.implementer(IMarker)
 class Corridors(grok.Container):
-    grok.implements(IMarker)
+    pass
 
 class IMammothSkin(IDefaultBrowserLayer):
     grok.skin('mammothskin')

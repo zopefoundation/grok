@@ -21,5 +21,6 @@ class IHome(interface.Interface):
 class IFireplace(interface.Interface):
     pass
 
+@grok.implementer(IHome, IFireplace)
 class Home(grok.Adapter):
-    grok.implements(IHome, IFireplace)
+    pass

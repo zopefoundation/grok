@@ -4,8 +4,8 @@ Grok changes
 3.0.1 (unreleased)
 ==================
 
-- Nothing changed yet.
-
+- Replace the use of `grok.implements()` with the `@grok.implementer()`
+  directive throughout.
 
 3.0.0 (2018-01-16)
 ==================

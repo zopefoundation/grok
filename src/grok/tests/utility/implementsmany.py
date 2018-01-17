@@ -16,5 +16,6 @@ class IClub(interface.Interface):
 class ISpikyClub(interface.Interface):
     pass
 
+@grok.implementer(IClub, ISpikyClub)
 class Club(grok.GlobalUtility):
-    grok.implements(IClub, ISpikyClub)
+    pass

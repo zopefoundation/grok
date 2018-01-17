@@ -21,5 +21,6 @@ grok.context(Cave)
 class IPainting(interface.Interface):
     pass
 
+@grok.implementer(IPainting)
 class Painting(grok.Adapter):
-    grok.implements(IPainting)
+    pass
