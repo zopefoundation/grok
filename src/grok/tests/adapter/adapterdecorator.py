@@ -49,12 +49,13 @@ class IMoreHome(interface.Interface):
 class IYetAnotherHome(interface.Interface):
     pass
 
+@grok.implementer(ICave)
 class Cave(grok.Model):
-    grok.implements(ICave)
     pass
 
+@grok.implementer(IHome)
 class Home(object):
-    grok.implements(IHome)
+    pass
 
 @grok.adapter(Cave)
 @grok.implementer(IHome)

@@ -16,9 +16,9 @@ from zope import interface
 class IPainting(interface.Interface):
     pass
 
+@grok.implementer(IPainting)
 class Painting(grok.Adapter):
     """
     Grokking of this should fail because there's no model (only an
     imported one which doesn't count).
     """
-    grok.implements(IPainting)

@@ -171,8 +171,8 @@ class ICowProperties(interface.Interface):
     color = schema.TextLine(title=u"Color")
 
 
+@grok.implementer(ICowProperties)
 class Cow(grok.Context):
-    grok.implements(ICowProperties)
     color = u"globally dark"
 
 
