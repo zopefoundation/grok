@@ -50,8 +50,9 @@ class IMammoth(interface.Interface):
     name = schema.TextLine(title=u"Name")
     size = schema.TextLine(title=u"Size")
 
+@grok.implementer(IMammoth)
 class Mammoth(grok.Model):
-    grok.implements(IMammoth)
+    pass
 
 class Index(grok.View):
     grok.context(Mammoth)
