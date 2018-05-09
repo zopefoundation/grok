@@ -5,6 +5,7 @@ import os
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
+
 long_description = (
     read('README.txt')
     + '\n' +
@@ -57,7 +58,7 @@ setup(
         'grokcore.annotation >= 1.6',
         'grokcore.catalog >= 2.1',
         'grokcore.chameleon >= 1.0',
-        'grokcore.component >= 2.5',
+        'grokcore.component >= 3.1',
         'grokcore.content >= 1.2',
         'grokcore.formlib >= 1.10',
         'grokcore.json >= 1.2',
@@ -71,7 +72,7 @@ setup(
         'grokcore.view >= 2.8',
         'grokcore.viewlet >= 1.10',
         'grokcore.xmlrpc >= 1.2',
-        'martian >= 0.14',
+        'martian >= 1.2',
         'pytz',
         'setuptools',
         'z3c.autoinclude',
