@@ -4,13 +4,12 @@ Grok changes
 3.0.2 (unreleased)
 ==================
 
-- Nothing changed yet.
-
+- Expose ``grok.ignore`` to allow not grokking something in a module.
 
 3.0.1 (2018-01-17)
 ==================
 
-- Replace the use of `grok.implements()` with the `@grok.implementer()`
+- Replace the use of ``grok.implements()`` with the ``@grok.implementer()``
   directive throughout.
 
 3.0.0 (2018-01-16)

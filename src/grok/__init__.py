@@ -16,7 +16,7 @@
 from zope.component import adapts
 
 from martian import ClassGrokker, InstanceGrokker, GlobalGrokker
-from martian import baseclass
+from martian import baseclass, ignore
 from martian.error import GrokError, GrokImportError
 
 from grokcore.component import Context
