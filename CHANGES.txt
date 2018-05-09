@@ -1,8 +1,8 @@
 Grok changes
 ************
 
-3.0.2 (unreleased)
-==================
+3.1 (2018-05-09)
+================
 
 - Expose ``grok.ignore`` to allow not grokking something in a module.
 
