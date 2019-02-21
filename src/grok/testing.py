@@ -55,7 +55,7 @@ def warn(message, category=None, stacklevel=1):
     Modified copy from zope.deprecation.tests to:
 
       * make the signature identical to warnings.warn
-      * to check for \*.pyc and \*.pyo files.
+      * to check for .pyc and .pyo files.
 
     When zope.deprecation is fixed, this warn function can be removed again.
     """
