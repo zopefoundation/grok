@@ -18,7 +18,7 @@ conveniently provided to be used in your own application.
 
 """
 from zope.interface import implementer
-from zope.component.interfaces import ObjectEvent
+from zope.interface.interfaces import ObjectEvent
 from grokcore.site.interfaces import ApplicationAddedEvent  # BBB
 from grok.interfaces import IDatabaseCreatedEvent
 
