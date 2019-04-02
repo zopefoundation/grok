@@ -4,7 +4,7 @@ Grok changes
 3.2 (unreleased)
 ================
 
-- Nothing changed yet.
+- Fix DeprecationWarnings.
 
 
 3.1 (2018-05-09)

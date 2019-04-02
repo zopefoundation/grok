@@ -14,7 +14,7 @@
 """Grok interfaces
 """
 from zope import interface
-from zope.component.interfaces import IObjectEvent
+from zope.interface.interfaces import IObjectEvent
 from zope.container.interfaces import IContainer as IContainerBase
 
 # Expose interfaces from grokcore.* packages as well:
