@@ -14,11 +14,14 @@ Old-style classes are also supported:
 import grok
 from zope import interface
 
+
 class Cave:
     pass
 
+
 class IHome(interface.Interface):
     pass
+
 
 @grok.implementer(IHome)
 class Home(grok.Adapter):

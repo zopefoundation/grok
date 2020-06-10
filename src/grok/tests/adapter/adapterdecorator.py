@@ -34,38 +34,48 @@
 import grok
 from zope import interface
 
+
 class IDummy(interface.Interface):
     pass
+
 
 class ICave(interface.Interface):
     pass
 
+
 class IHome(interface.Interface):
     pass
+
 
 class IMoreHome(interface.Interface):
     pass
 
+
 class IYetAnotherHome(interface.Interface):
     pass
+
 
 @grok.implementer(ICave)
 class Cave(grok.Model):
     pass
 
+
 @grok.implementer(IHome)
 class Home(object):
     pass
+
 
 @grok.adapter(Cave)
 @grok.implementer(IHome)
 def home_for_cave(cave):
     return Home()
 
+
 @grok.adapter(ICave)
 @grok.implementer(IMoreHome)
 def more_home_for_cave(cave):
     return Home()
+
 
 @grok.implementer(IYetAnotherHome)
 def yet_another_home_for_cave(cave):

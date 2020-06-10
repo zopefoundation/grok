@@ -11,8 +11,10 @@ that is never used.
 import grok
 import zope.interface
 
+
 class Foo(grok.Permission):
     grok.name('foo')
+
 
 class MissingPermission(grok.XMLRPC):
     grok.context(zope.interface.Interface)

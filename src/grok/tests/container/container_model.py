@@ -14,8 +14,10 @@ registered as the default context object:
 """
 import grok
 
+
 class BoneBag(grok.Container):
     pass
+
 
 class Index(grok.View):
     """A simple view to test whether BoneBag is really registered as a model.

@@ -87,8 +87,10 @@ The default views can be selectively overridden in your application::
 """
 import grok
 
+
 class MockPrincipal(object):
     id = 'mockprincipal'
+
 
 exceptionview_template = grok.PageTemplate("""\
 <html>

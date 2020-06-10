@@ -58,4 +58,4 @@ Now we can use the SecondAdapter as well::
 
 The next optional argument is module_info and the final argument is
 templates.
-"""
+"""  # noqa: E501

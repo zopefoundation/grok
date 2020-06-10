@@ -19,8 +19,10 @@ Now we can look at the view::
 """
 import grok
 
+
 class App(grok.Application, grok.Container):
     pass
+
 
 class Index(grok.View):
     def render(self):

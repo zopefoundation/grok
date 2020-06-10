@@ -10,11 +10,12 @@ Grok error because import model doesn't count as context:
 
 """
 import grok
-from grok.tests.adapter.adapter import Cave
 from zope import interface
+
 
 class IPainting(interface.Interface):
     pass
+
 
 @grok.implementer(IPainting)
 class Painting(grok.Adapter):

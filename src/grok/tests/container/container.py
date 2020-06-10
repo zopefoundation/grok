@@ -33,8 +33,10 @@ being set, we better make sure this doesn't happen again:
 
 import grok
 
+
 class BoneBag(grok.Container):
     pass
+
 
 class Bone(grok.Model):
     pass

@@ -25,15 +25,18 @@ Delete an item::
 """
 
 import grok
+from zope.container.interfaces import IContainerModifiedEvent
+
 
 class OrderedBones(grok.OrderedContainer):
     pass
+
 
 class Bone(grok.Model):
     def __init__(self, name):
         self.name = name
 
-from zope.container.interfaces import IContainerModifiedEvent
+
 @grok.subscribe(OrderedBones, IContainerModifiedEvent)
 def container_changed(object, event):
     print('Container has changed!')

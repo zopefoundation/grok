@@ -1,6 +1,7 @@
 import martian
 from .component import Alpha
 
+
 class AlphaGrokker(martian.ClassGrokker):
     martian.component(Alpha)
 

@@ -13,12 +13,13 @@ Base classes shouldn't be grokked. The way is to use the
   Traceback (most recent call last):
   ...
   zope.interface.interfaces.ComponentLookupError: ((<grok.tests.baseclass.base.ModelBase object at 0x...>, <zope.publisher.browser.TestRequest instance ...>), <InterfaceClass zope.interface.Interface>, 'anotherview')
-
-"""
+"""  # noqa: E501
 import grok
+
 
 class ModelBase(grok.Model):
     pass
+
 
 class AnotherView(grok.View):
     grok.baseclass()

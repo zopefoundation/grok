@@ -1,5 +1,5 @@
-import re
-import unittest, doctest
+import unittest
+import doctest
 import grok
 import grok.testing
 
@@ -11,9 +11,10 @@ import zope.app.wsgi.testlayer
 
 
 class Layer(
-    zope.testbrowser.wsgi.TestBrowserLayer,
-    zope.app.wsgi.testlayer.BrowserLayer):
+        zope.testbrowser.wsgi.TestBrowserLayer,
+        zope.app.wsgi.testlayer.BrowserLayer):
     pass
+
 
 layer = Layer(grok)
 
@@ -58,30 +59,31 @@ def suiteFromPackage(name):
                 wsgi_app=layer.make_wsgi_app,
             ),
             optionflags=(
-                doctest.ELLIPSIS+
-                doctest.NORMALIZE_WHITESPACE+
-                doctest.REPORT_NDIFF+
+                doctest.ELLIPSIS +
+                doctest.NORMALIZE_WHITESPACE +
+                doctest.REPORT_NDIFF +
                 renormalizing.IGNORE_EXCEPTION_MODULE_IN_PYTHON2)
                 )
         test.layer = layer
         suite.addTest(test)
     return suite
 
+
 def test_suite():
     suite = unittest.TestSuite()
     for name in [
-        'catalog',
-        'chameleon',
-        'errorviews',
-        'form',
-        'forms',
-        'lifecycle',
-        'security',
-        'site',
-        'traversal',
-        'url',
-        'viewlet',
-        ]:
+            'catalog',
+            'chameleon',
+            'errorviews',
+            'form',
+            'forms',
+            'lifecycle',
+            'security',
+            'site',
+            'traversal',
+            'url',
+            'viewlet',
+            ]:
         suite.addTest(suiteFromPackage(name))
     return suite
 

@@ -46,23 +46,29 @@ just fine:
 import grok
 import zope.interface
 
+
 class ViewPermission(grok.Permission):
     grok.name('paint.ViewPainting')
+
 
 class EditPermission(grok.Permission):
     grok.name('paint.EditPainting')
 
+
 class ErasePermission(grok.Permission):
     grok.name('paint.ErasePainting')
 
+
 class ApprovePermission(grok.Permission):
     grok.name('paint.ApprovePainting')
+
 
 class PaintingOwner(grok.Role):
     grok.name('paint.PaintingOwner')
     grok.title('Painting Owner')
     grok.permissions(
         'paint.ViewPainting', 'paint.EditPainting', 'paint.ErasePainting')
+
 
 class CavePainting(grok.View):
 
@@ -72,6 +78,7 @@ class CavePainting(grok.View):
     def render(self):
         return 'What a beautiful painting.'
 
+
 class EditCavePainting(grok.View):
 
     grok.context(zope.interface.Interface)
@@ -80,6 +87,7 @@ class EditCavePainting(grok.View):
     def render(self):
         return 'Let\'s make it even prettier.'
 
+
 class EraseCavePainting(grok.View):
 
     grok.context(zope.interface.Interface)
@@ -87,6 +95,7 @@ class EraseCavePainting(grok.View):
 
     def render(self):
         return 'Oops, mistake, let\'s erase it.'
+
 
 class ApproveCavePainting(grok.View):
 

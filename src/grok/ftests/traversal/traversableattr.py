@@ -36,9 +36,11 @@ Finally, attributes which are not exposed, should not be visible:
 """
 import grok
 
+
 class Bar(grok.Model):
     def __init__(self, name):
         self.name = name
+
 
 class BarIndex(grok.View):
     grok.context(Bar)
@@ -46,6 +48,7 @@ class BarIndex(grok.View):
 
     def render(self):
         return self.context.name
+
 
 class Foo(grok.Model):
     grok.traversable('bar')
@@ -56,12 +59,15 @@ class Foo(grok.Model):
         self.name = name
 
     foo = Bar('foo')
+
     def bar(self):
         return Bar('bar')
     z = "i'm not called"
 
+
 class FooIndex(grok.View):
     grok.context(Foo)
     grok.name('index')
+
     def render(self):
         return self.context.name

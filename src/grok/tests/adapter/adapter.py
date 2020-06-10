@@ -19,18 +19,23 @@
 import grok
 from zope import interface
 
+
 class Cave(grok.Model):
     pass
 
+
 class IHome(interface.Interface):
     pass
+
 
 @grok.implementer(IHome)
 class Home(grok.Adapter):
     pass
 
+
 class IFireplace(interface.Interface):
     pass
+
 
 @grok.implementer(IFireplace, IHome)
 class Fireplace(grok.Adapter):

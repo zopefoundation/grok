@@ -18,8 +18,10 @@ from zope import interface
 
 grok.context(Cave)
 
+
 class IPainting(interface.Interface):
     pass
+
 
 @grok.implementer(IPainting)
 class Painting(grok.Adapter):

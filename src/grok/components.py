@@ -262,8 +262,10 @@ class EditForm(ViewSupportMixin, grokcore.formlib.EditForm):
 class Layout(ViewSupportMixin, grokcore.layout.Layout):
     grok.baseclass()
 
+
 class Page(ViewSupportMixin, grokcore.layout.Page):
     grok.baseclass()
+
 
 # Default forms for form without the html and body tags
 default_form_template = grokcore.view.PageTemplateFile(
@@ -275,6 +277,7 @@ default_display_template = grokcore.view.PageTemplateFile(
     os.path.join('templates', 'default_display_form.pt'))
 
 default_display_template.__grok_name__ = 'default_display_form'
+
 
 class LayoutAwareFormPage(grokcore.layout.components.LayoutAware):
     """A mixin to make form aware of layouts.
@@ -297,10 +300,9 @@ class LayoutAwareFormPage(grokcore.layout.components.LayoutAware):
 
 
 class FormPage(
-    ViewSupportMixin,
-    LayoutAwareFormPage,
-    grokcore.formlib.Form
-    ):
+        ViewSupportMixin,
+        LayoutAwareFormPage,
+        grokcore.formlib.Form):
     """A form base class.
     """
     grok.baseclass()
@@ -308,10 +310,9 @@ class FormPage(
 
 
 class AddFormPage(
-    ViewSupportMixin,
-    LayoutAwareFormPage,
-    grokcore.formlib.AddForm
-    ):
+        ViewSupportMixin,
+        LayoutAwareFormPage,
+        grokcore.formlib.AddForm):
     """Base add form.
     """
     grok.baseclass()
@@ -319,10 +320,9 @@ class AddFormPage(
 
 
 class EditFormPage(
-    ViewSupportMixin,
-    LayoutAwareFormPage,
-    grokcore.formlib.EditForm
-    ):
+        ViewSupportMixin,
+        LayoutAwareFormPage,
+        grokcore.formlib.EditForm):
     """Base edit form.
     """
     grok.baseclass()
@@ -330,10 +330,9 @@ class EditFormPage(
 
 
 class DisplayFormPage(
-    ViewSupportMixin,
-    LayoutAwareFormPage,
-    grokcore.formlib.DisplayForm
-    ):
+        ViewSupportMixin,
+        LayoutAwareFormPage,
+        grokcore.formlib.DisplayForm):
     """Base display form.
     """
     grok.baseclass()

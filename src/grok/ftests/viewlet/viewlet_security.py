@@ -110,22 +110,28 @@ from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 class Gold(grok.Permission):
     grok.name('bone.gold')
 
+
 class CaveWoman(grok.Model):
     pass
+
 
 class CaveMan(grok.Model):
     pass
 
+
 class CaveView(grok.View):
     grok.context(Interface)
+
 
 class FireView(grok.View):
     grok.context(Interface)
     grok.template('caveview')
 
+
 class Pot(grok.ViewletManager):
     grok.context(Interface)
     grok.name('pot')
+
 
 class TRexBone(grok.Viewlet):
     grok.context(Interface)
@@ -134,6 +140,7 @@ class TRexBone(grok.Viewlet):
     def render(self):
         return "T-Rex Bone"
 
+
 class BrackerBone(grok.Viewlet):
     grok.context(Interface)
     grok.viewletmanager(Pot)
@@ -141,10 +148,12 @@ class BrackerBone(grok.Viewlet):
     def render(self):
         return "Brack Bone"
 
+
 class BoneOwner(grok.Role):
     grok.name('grok.BoneOwner')
     grok.title('Bone Ownwer')
     grok.permissions('bone.gold')
+
 
 class GoldBone(grok.Viewlet):
     grok.context(Interface)
@@ -154,8 +163,10 @@ class GoldBone(grok.Viewlet):
     def render(self):
         return 'Gold Bone'
 
+
 class IBoneLayer(IDefaultBrowserLayer):
     grok.skin('boneskin')
+
 
 class LayeredBone(grok.Viewlet):
     grok.context(Interface)
@@ -165,12 +176,14 @@ class LayeredBone(grok.Viewlet):
     def render(self):
         return 'Layered Bone'
 
+
 class ManBone(grok.Viewlet):
     grok.viewletmanager(Pot)
     grok.context(CaveMan)
 
     def render(self):
         return "Man Bone"
+
 
 class LadyViewlet(grok.Viewlet):
     grok.context(Interface)
@@ -180,9 +193,11 @@ class LadyViewlet(grok.Viewlet):
     def render(self):
         return 'Lady Viewlet'
 
+
 class NamedViewletManager(grok.ViewletManager):
     grok.context(Interface)
     grok.name('managerwithname')
+
 
 class NamedViewlet(grok.Viewlet):
     grok.context(Interface)
@@ -191,4 +206,3 @@ class NamedViewlet(grok.Viewlet):
 
     def render(self):
         return "NamedViewlet"
-

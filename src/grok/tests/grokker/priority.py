@@ -1,6 +1,6 @@
 """
-We define grokkers for the three base classes Alpha, Beta, and Gamma with different
-priorities:
+We define grokkers for the three base classes Alpha, Beta, and Gamma with
+different priorities:
 
 - AlphaGrokker with priority 0 (default)
 - BetaGrokker with priority 1
@@ -20,6 +20,7 @@ grokkers get executed in the order of priority (highest first)::
 """
 import martian
 
+
 class Alpha(object):
     pass
 
@@ -27,8 +28,10 @@ class Alpha(object):
 class Beta(object):
     pass
 
+
 class Gamma(object):
     pass
+
 
 class AlphaGrokker(martian.ClassGrokker):
     martian.component(Alpha)
@@ -37,6 +40,7 @@ class AlphaGrokker(martian.ClassGrokker):
         print("alpha")
         return True
 
+
 class BetaGrokker(martian.ClassGrokker):
     martian.component(Beta)
     martian.priority(1)
@@ -44,6 +48,7 @@ class BetaGrokker(martian.ClassGrokker):
     def grok(self, name, factory, module_info, **kw):
         print("beta")
         return True
+
 
 class GammaGrokker(martian.ClassGrokker):
     martian.component(Gamma)

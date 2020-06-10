@@ -22,8 +22,9 @@ with anything else:
     ...
   martian.error.GrokImportError: The 'context' directive can only be called with a class or an interface.
 
-"""
+"""  # noqa: E501
 import grok
+
 
 def function_context():
     def a():
@@ -32,15 +33,19 @@ def function_context():
     class FunctionContext(object):
         grok.context(a)
 
+
 def string_context():
     class StringContext(object):
         grok.context('string')
+
 
 def module_context():
     class ModuleContext(object):
         grok.context(grok)
 
+
 def instance_context():
     obj = object()
+
     class InstanceContext(object):
         grok.context(obj)
