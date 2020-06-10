@@ -8,6 +8,8 @@ Grok changes
 
 - Use zopefoundation/meta/config to harmonize package structure.
 
+- Drop support for Python 3.4, add 3.7 + 3.8.
+
 3.1 (2018-05-09)
 ================
 
