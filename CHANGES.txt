@@ -6,6 +6,7 @@ Grok changes
 
 - Fix DeprecationWarnings.
 
+- Use zopefoundation/meta/config to harmonize package structure.
 
 3.1 (2018-05-09)
 ================

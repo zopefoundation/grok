@@ -6,10 +6,7 @@ We expect this grok to fail, and give
   >>> try:
   ...     grok.testing.grok(__name__)
   ... except ConfigurationExecutionError as error:
-  ...     if sys.version_info[0] >= 3:
-  ...         error_component = error.args[1].component
-  ...     else:
-  ...         error_component = error.evalue.component
+  ...     error_component = error.evalue.component
   >>> error_component
   <class 'grok.tests.error.error.CavePainting'>
 
