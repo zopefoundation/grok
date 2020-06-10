@@ -36,7 +36,7 @@ The default views can be selectively overridden in your application::
   >>> class MyExceptionView(ExceptionView):
   ...     def render(self):
   ...         return u'This is my idea of an exception view.'
-  >>> from grok.testing import grok_component
+  >>> from grokcore.component.testing import grok_component
   >>> grok_component('MyExceptionView', MyExceptionView)
   True
 

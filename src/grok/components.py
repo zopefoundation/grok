@@ -22,21 +22,13 @@ import os.path
 import zope.location
 import zope.errorview.browser
 import zope.component
-from zope.container.interfaces import IReadContainer
-from zope import component
 from zope import interface
 from zope.interface.common.interfaces import IException
-from zope.publisher.browser import BrowserPage
-from zope.publisher.defaultview import getDefaultViewName
-from zope.publisher.interfaces.browser import IBrowserPublisher
-from zope.publisher.interfaces.http import IHTTPRequest
 from zope.publisher.interfaces import INotFound
-from zope.publisher.interfaces import NotFound
 from zope.publisher.publish import mapply
 from zope.security.interfaces import IUnauthorized
 
 import grok
-import martian.util
 
 import grokcore.view
 import grokcore.site
@@ -45,14 +37,6 @@ import grokcore.layout
 import grokcore.layout.components
 from grok import interfaces, util
 
-# BBB this is for import backward compatibility.
-from grokcore.xmlrpc import XMLRPC
-from grokcore.rest import REST
-from grokcore.json import JSON
-from grokcore.content import Container
-from grokcore.content import Model
-from grokcore.content import OrderedContainer
-from grokcore.site import Application
 from grokcore.view.util import ASIS
 
 
