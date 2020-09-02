@@ -9,13 +9,15 @@ by "name" or by class.
 """
 
 import grok
-import zope.interface
+
 
 class FirstPermission(grok.Permission):
     grok.name('first permission')
 
+
 class SecondPermission(grok.Permission):
     grok.name('second permission')
+
 
 class RoleComprisingTwoPermissionsByName(grok.Role):
     grok.name('ByName')
@@ -23,6 +25,7 @@ class RoleComprisingTwoPermissionsByName(grok.Role):
         'first permission',
         'second permission'
         )
+
 
 class RoleComprisingTwoPermissionsByClass(grok.Role):
     grok.name('ByClass')

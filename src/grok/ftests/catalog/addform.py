@@ -39,20 +39,25 @@ from zope.catalog.catalog import Catalog
 from zope.catalog.interfaces import ICatalog
 from zope.catalog.field import FieldIndex
 
+
 def setup_catalog(catalog):
     catalog['name'] = FieldIndex('name', IMammoth)
+
 
 class Zoo(grok.Site, grok.Container):
     grok.local_utility(IntIds, provides=IIntIds)
     grok.local_utility(Catalog, provides=ICatalog, setup=setup_catalog)
 
+
 class IMammoth(interface.Interface):
     name = schema.TextLine(title=u"Name")
     size = schema.TextLine(title=u"Size")
 
+
 @grok.implementer(IMammoth)
 class Mammoth(grok.Model):
     pass
+
 
 class Index(grok.View):
     grok.context(Mammoth)
@@ -60,6 +65,7 @@ class Index(grok.View):
     def render(self):
         return 'Hi, my name is %s, and I\'m "%s"' % (self.context.name,
                                                      self.context.size)
+
 
 class Search(grok.View):
     grok.context(Zoo)
@@ -71,6 +77,7 @@ class Search(grok.View):
         if len(list(results)) == 1:
             return 'We found Ellie!'
         return "Couldn't find Ellie."
+
 
 class AddMammoth(grok.AddForm):
     grok.context(Zoo)

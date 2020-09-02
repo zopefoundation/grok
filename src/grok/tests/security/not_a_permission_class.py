@@ -7,4 +7,4 @@ The permissions() directive only accepts permission ids or permission classes:
   ...
   martian.error.GrokImportError: You can only pass unicode values, ASCII values, or subclasses of grok.Permission to the 'permissions' directive.
 
-"""
+"""  # noqa: E501

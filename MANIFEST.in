@@ -1,7 +1,20 @@
-global-include *.mo
-include *.txt
+# Generated from:
+# https://github.com/zopefoundation/meta/tree/master/config/pure-python
 include *.rst
-include bootstrap.py
-include buildout.cfg
-include .travis.yml
-recursive-include src *.cpt *.pt *.py *.zcml
+include *.txt
+
+exclude *.cfg
+exclude MANIFEST.in
+exclude tox.ini
+recursive-exclude doc *
+recursive-exclude etc *
+recursive-exclude grokwiki *
+
+recursive-include src *.cpt
+recursive-include src *.gif
+recursive-include src *.pt
+recursive-include src *.py
+recursive-include src *.rst
+recursive-include src *.txt
+recursive-include src *.xml
+recursive-include src *.zcml

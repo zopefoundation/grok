@@ -51,14 +51,18 @@ specify the one to use:
 import grok
 from zope import interface
 
+
 class Cave(grok.Model):
     pass
+
 
 class Fireplace(grok.Model):
     pass
 
+
 class IHome(interface.Interface):
     pass
+
 
 @grok.implementer(IHome)
 class Home(grok.MultiAdapter):
@@ -67,6 +71,7 @@ class Home(grok.MultiAdapter):
     def __init__(self, cave, fireplace):
         self.cave = cave
         self.fireplace = fireplace
+
 
 @grok.implementer(IHome)
 class Home2(grok.MultiAdapter):
@@ -77,8 +82,10 @@ class Home2(grok.MultiAdapter):
         self.cave = cave
         self.fireplace = fireplace
 
+
 class IFireplace(interface.Interface):
     pass
+
 
 @grok.implementer(IHome, IFireplace)
 class Home3(grok.MultiAdapter):

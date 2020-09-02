@@ -1,8 +1,10 @@
 import grok
 from zope import interface
 
+
 class IDummy(interface.Interface):
     pass
+
 
 @grok.adapter
 @grok.implementer(IDummy)

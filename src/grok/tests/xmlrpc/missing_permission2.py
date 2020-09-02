@@ -6,10 +6,11 @@ before it can be used in @grok.require().
   Traceback (most recent call last):
   ...
   zope.configuration.config.ConfigurationExecutionError: <class 'martian.error.GrokError'>: Undefined permission 'doesnt.exist' in <class 'grok.tests.xmlrpc.missing_permission2.MissingPermission'>. Use grok.Permission first...
-"""
+"""  # noqa: E501
 
 import grok
 import zope.interface
+
 
 class MissingPermission(grok.XMLRPC):
     grok.context(zope.interface.Interface)
@@ -17,4 +18,3 @@ class MissingPermission(grok.XMLRPC):
     @grok.require('doesnt.exist')
     def foo(self):
         pass
-

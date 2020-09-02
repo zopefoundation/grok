@@ -22,11 +22,13 @@ We can however get a subclass of SomeView:
   >>> view = component.getMultiAdapter((model, request), name='anotherview')
   >>> view.render()
   'hello world'
-"""
+"""  # noqa: E501
 import grok
+
 
 class Model(grok.Model):
     pass
+
 
 class SomeView(grok.View):
     grok.baseclass()
@@ -34,6 +36,6 @@ class SomeView(grok.View):
     def render(self):
         return "hello world"
 
+
 class AnotherView(SomeView):
     pass
-

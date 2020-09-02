@@ -52,8 +52,10 @@ import zope.interface
 import grok
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
+
 class IMarker(zope.interface.Interface):
     pass
+
 
 class Index(grok.View):
     grok.context(IMarker)
@@ -61,32 +63,39 @@ class Index(grok.View):
     def render(self):
         return self.application_url()
 
+
 class Second(grok.View):
     grok.context(IMarker)
 
     def render(self):
         return self.application_url('second')
 
+
 @grok.implementer(IMarker)
 class Cave(grok.Application, grok.Container):
     pass
+
 
 @grok.implementer(IMarker)
 class CaveMan(grok.Model):
     pass
 
+
 @grok.implementer(IMarker)
 class Corridors(grok.Container):
     pass
 
+
 class IMammothSkin(IDefaultBrowserLayer):
     grok.skin('mammothskin')
+
 
 class Third(grok.View):
     grok.context(IMarker)
 
     def render(self):
         return self.application_url('third', skin=IMammothSkin)
+
 
 class Fourth(grok.View):
     grok.context(IMarker)

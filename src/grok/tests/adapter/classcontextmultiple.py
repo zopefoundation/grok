@@ -5,6 +5,4 @@ You can't call grok.context multiple times on class level:
   Traceback (most recent call last):
     ...
   martian.error.GrokImportError: The 'context' directive can only be called once per class or module.
-
-"""
-
+"""  # noqa: E501

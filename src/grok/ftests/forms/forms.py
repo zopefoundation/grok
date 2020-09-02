@@ -154,9 +154,7 @@
      ... value="globally dark" ...
      ... value="Apply" ...
   </form>
-
-
-"""
+"""  # noqa: E501
 import grokcore.component as grok
 
 from grokcore.view import templatedir
@@ -187,6 +185,7 @@ class MyView(DisplayFormPage):
 
 class MyEditView(EditFormPage):
     grok.context(Cow)
+
 
 class MyFormPage(FormPage):
     grok.context(Cow)

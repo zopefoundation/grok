@@ -6,6 +6,11 @@ Grok changes
 
 - Fix DeprecationWarnings.
 
+- Use zopefoundation/meta/config to harmonize package structure.
+
+- Drop support for Python 3.4, add 3.7 + 3.8.
+
+- Remove some backward compatibility imports.
 
 3.1 (2018-05-09)
 ================

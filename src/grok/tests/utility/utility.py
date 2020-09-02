@@ -122,50 +122,62 @@ Let's look up an instance we registered this way:
   >>> isinstance(small4, SmallClub)
   True
 
-"""
+"""  # noqa: E501
 
 import grok
 from zope import interface
 
+
 class IClub(interface.Interface):
     pass
+
 
 class ISpikyClub(IClub):
     pass
 
+
 class ISmallClub(IClub):
     pass
+
 
 class ITinyClub(IClub):
     pass
 
+
 class INightClub(interface.Interface):
     pass
 
+
 class IClubMaker(interface.Interface):
     pass
+
 
 @grok.implementer(IClub)
 class NormalClub(grok.GlobalUtility):
     pass
 
+
 @grok.implementer(IClub)
 class HugeClub(grok.GlobalUtility):
     grok.name('huge')
+
 
 @grok.implementer(ISpikyClub)
 class SpikyClub(grok.GlobalUtility):
     grok.provides(IClub)
     grok.name('spiky')
 
+
 @grok.implementer(INightClub, ISpikyClub)
 class NightClub(grok.GlobalUtility):
     grok.provides(INightClub)
+
 
 @grok.implementer(ISmallClub, ITinyClub)
 class SmallClub(grok.GlobalUtility):
     grok.provides(ISmallClub)
     grok.name('tiny')
+
 
 @interface.provider(IClubMaker)
 @grok.implementer(IClub)
@@ -173,19 +185,24 @@ class ClubMaker(grok.GlobalUtility):
     grok.direct()
     grok.name('maker')
 
+
 class IFireplace(interface.Interface):
     pass
 
+
 class IHome(interface.Interface):
     pass
+
 
 @grok.implementer(IFireplace)
 class Fireplace(object):
     pass
 
+
 @grok.implementer(IFireplace, IHome)
 class Home(object):
     pass
+
 
 grok.global_utility(Fireplace)
 grok.global_utility(Fireplace, name='hot')
@@ -197,5 +214,4 @@ grok.global_utility(NightClub, provides=ISpikyClub)
 grok.global_utility(SmallClub, provides=ITinyClub)
 grok.global_utility(SmallClub, name='small')
 
-grok.global_utility(SmallClub(), name='smallish',
-                    direct=True)
+grok.global_utility(SmallClub(), name='smallish', direct=True)

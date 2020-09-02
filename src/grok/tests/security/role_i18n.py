@@ -30,7 +30,8 @@ The id, title and description should be unicode::
 A grok.Role registered with the name and description directives only, both
 internationalized.
 The id is taken from the name directive and should not be a Message object.
-The title is taken from the name directive because the title directive is not used.
+The title is taken from the name directive because the title directive is not
+used.
 ::
 
   >>> role = getUtility(IRole, name="RoleWithI18n")
@@ -53,7 +54,6 @@ A grok.Role registered with name, title and description directives::
 """
 
 import grok
-import zope.interface
 from zope.i18nmessageid import MessageFactory
 
 _ = MessageFactory("testi18n")

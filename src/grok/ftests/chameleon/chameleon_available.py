@@ -14,8 +14,10 @@ import grok
 
 grok.templatedir('templates')
 
+
 class Mammoth(grok.Model):
     pass
+
 
 class Index(grok.View):
     grok.context(Mammoth)

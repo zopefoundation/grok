@@ -26,6 +26,7 @@ Same for the edit form::
 import grok
 from zope import schema
 
+
 class IceWorld(grok.Application, grok.Container):
     pass
 
@@ -40,6 +41,7 @@ class Index(grok.DisplayForm):
 
     grok.context(Mammoth)
 
+
 index = grok.PageTemplate("""
 <p>
    Test display: application <tal:replace tal:replace="view/application_url" />
@@ -49,6 +51,7 @@ index = grok.PageTemplate("""
 class Edit(grok.EditForm):
 
     grok.context(Mammoth)
+
 
 edit = grok.PageTemplate("""
 <p>
