@@ -70,8 +70,10 @@ Reordering with a wrong set of keys should fail::
 
 import grok
 
+
 class OrderedBones(grok.OrderedContainer):
     pass
+
 
 class Bone(grok.Model):
     def __init__(self, name):

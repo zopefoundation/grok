@@ -59,22 +59,28 @@ as a subitem of a container:
 """
 import grok
 
+
 class Herd(grok.Container):
     pass
 
+
 class Traverser(grok.Traverser):
     grok.context(Herd)
+
     def traverse(self, name):
         if name == 'special':
             return Special()
         return None
 
+
 class Mammoth(grok.Model):
     def __init__(self, name):
         self.name = name
 
+
 class Special(grok.Model):
     pass
+
 
 class SpecialIndex(grok.View):
     grok.context(Special)
@@ -83,10 +89,13 @@ class SpecialIndex(grok.View):
     def render(self):
         return "special view"
 
+
 grok.context(Mammoth)
+
 
 class Index(grok.View):
     pass
+
 
 index = grok.PageTemplate("""\
 <html>

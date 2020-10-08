@@ -6,24 +6,24 @@ a viewlet will not auto-associate but instead raise an error.
   Traceback (most recent call last):
     ...
   martian.error.GrokError: Multiple possible viewletmanagers for <class 'grok.tests.viewlet.viewlet_ambiguous_manager.Viewlet'>, please use the 'viewletmanager' directive.
-
-"""
+"""  # noqa: E501
 
 import grok
 from zope.interface import Interface
+
 
 class ViewletManager(grok.ViewletManager):
     grok.name('foo')
     grok.context(Interface)
 
+
 class ViewletManager2(grok.ViewletManager):
     grok.name('bar')
     grok.context(Interface)
+
 
 class Viewlet(grok.Viewlet):
     grok.context(Interface)
 
     def render(self):
         return "Render method"
-
-

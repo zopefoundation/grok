@@ -15,16 +15,21 @@ Explicit module-level context in case of multiple models:
 import grok
 from zope import interface
 
+
 class Cave(grok.Model):
     pass
+
 
 class Club(grok.Model):
     pass
 
+
 grok.context(Cave)
+
 
 class IHome(interface.Interface):
     pass
+
 
 @grok.implementer(IHome)
 class Home(grok.Adapter):

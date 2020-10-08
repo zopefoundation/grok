@@ -28,6 +28,7 @@ implementing a 'traverse' method:
 """
 import grok
 
+
 class Herd(grok.Model):
 
     def __init__(self, name):
@@ -39,21 +40,26 @@ class Herd(grok.Model):
     def traverse(self, name):
         return self.getMammoth(name)
 
+
 class Mammoth(grok.Model):
 
     def __init__(self, name):
         self.name = name
 
+
 grok.context(Mammoth)
+
 
 class Index(grok.View):
     pass
+
 
 index = grok.PageTemplate("""\
 <html>
 <body>
 <h1>Hello, <span tal:replace="context/name/title" />!</h1>
-<p><span tal:replace="context/name/title" /> is part of <span tal:replace="context/__parent__/name" />.</p>
+<p><span tal:replace="context/name/title" /> is part of
+<span tal:replace="context/__parent__/name" />.</p>
 </body>
 </html>
 """)

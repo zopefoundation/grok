@@ -16,12 +16,15 @@ properly:
 import grok
 from zope import interface
 
+
 class IHome(interface.Interface):
     pass
+
 
 @grok.implementer(IHome)
 class Home(grok.Adapter):
     pass
+
 
 class Cave(grok.Model):
     pass

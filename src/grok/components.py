@@ -22,21 +22,13 @@ import os.path
 import zope.location
 import zope.errorview.browser
 import zope.component
-from zope.container.interfaces import IReadContainer
-from zope import component
 from zope import interface
 from zope.interface.common.interfaces import IException
-from zope.publisher.browser import BrowserPage
-from zope.publisher.defaultview import getDefaultViewName
-from zope.publisher.interfaces.browser import IBrowserPublisher
-from zope.publisher.interfaces.http import IHTTPRequest
 from zope.publisher.interfaces import INotFound
-from zope.publisher.interfaces import NotFound
 from zope.publisher.publish import mapply
 from zope.security.interfaces import IUnauthorized
 
 import grok
-import martian.util
 
 import grokcore.view
 import grokcore.site
@@ -45,14 +37,6 @@ import grokcore.layout
 import grokcore.layout.components
 from grok import interfaces, util
 
-# BBB this is for import backward compatibility.
-from grokcore.xmlrpc import XMLRPC
-from grokcore.rest import REST
-from grokcore.json import JSON
-from grokcore.content import Container
-from grokcore.content import Model
-from grokcore.content import OrderedContainer
-from grokcore.site import Application
 from grokcore.view.util import ASIS
 
 
@@ -278,8 +262,10 @@ class EditForm(ViewSupportMixin, grokcore.formlib.EditForm):
 class Layout(ViewSupportMixin, grokcore.layout.Layout):
     grok.baseclass()
 
+
 class Page(ViewSupportMixin, grokcore.layout.Page):
     grok.baseclass()
+
 
 # Default forms for form without the html and body tags
 default_form_template = grokcore.view.PageTemplateFile(
@@ -291,6 +277,7 @@ default_display_template = grokcore.view.PageTemplateFile(
     os.path.join('templates', 'default_display_form.pt'))
 
 default_display_template.__grok_name__ = 'default_display_form'
+
 
 class LayoutAwareFormPage(grokcore.layout.components.LayoutAware):
     """A mixin to make form aware of layouts.
@@ -313,10 +300,9 @@ class LayoutAwareFormPage(grokcore.layout.components.LayoutAware):
 
 
 class FormPage(
-    ViewSupportMixin,
-    LayoutAwareFormPage,
-    grokcore.formlib.Form
-    ):
+        ViewSupportMixin,
+        LayoutAwareFormPage,
+        grokcore.formlib.Form):
     """A form base class.
     """
     grok.baseclass()
@@ -324,10 +310,9 @@ class FormPage(
 
 
 class AddFormPage(
-    ViewSupportMixin,
-    LayoutAwareFormPage,
-    grokcore.formlib.AddForm
-    ):
+        ViewSupportMixin,
+        LayoutAwareFormPage,
+        grokcore.formlib.AddForm):
     """Base add form.
     """
     grok.baseclass()
@@ -335,10 +320,9 @@ class AddFormPage(
 
 
 class EditFormPage(
-    ViewSupportMixin,
-    LayoutAwareFormPage,
-    grokcore.formlib.EditForm
-    ):
+        ViewSupportMixin,
+        LayoutAwareFormPage,
+        grokcore.formlib.EditForm):
     """Base edit form.
     """
     grok.baseclass()
@@ -346,10 +330,9 @@ class EditFormPage(
 
 
 class DisplayFormPage(
-    ViewSupportMixin,
-    LayoutAwareFormPage,
-    grokcore.formlib.DisplayForm
-    ):
+        ViewSupportMixin,
+        LayoutAwareFormPage,
+        grokcore.formlib.DisplayForm):
     """Base display form.
     """
     grok.baseclass()

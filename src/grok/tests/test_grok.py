@@ -10,14 +10,16 @@ from pkg_resources import resource_listdir
 from zope.testing import cleanup, renormalizing
 from grokcore.view.templatereg import file_template_registry
 
+
 class GrokTestLayer(zope.component.testlayer.LayerBase):
     def testSetUp(self):
         grok.testing.grok()
         zope.component.eventtesting.setUp()
-        file_template_registry.ignore_templates('^\.')
+        file_template_registry.ignore_templates(r'^\.')
 
     def testTearDown(self):
         cleanup.cleanUp()
+
 
 layer = GrokTestLayer(grok, name='grok.tests.layer')
 
@@ -32,6 +34,7 @@ checker = renormalizing.RENormalizing([
         r"martian.error.GrokError: "),
         "GrokError: "),
     ])
+
 
 def suiteFromPackage(name):
     files = resource_listdir(__name__, name)
@@ -48,34 +51,36 @@ def suiteFromPackage(name):
             dottedname,
             checker=checker,
             optionflags=(
-                doctest.ELLIPSIS+
-                doctest.NORMALIZE_WHITESPACE+
+                doctest.ELLIPSIS +
+                doctest.NORMALIZE_WHITESPACE +
                 renormalizing.IGNORE_EXCEPTION_MODULE_IN_PYTHON2
             ))
         test.layer = layer
         suite.addTest(test)
     return suite
 
+
 def test_suite():
     suite = unittest.TestSuite()
     for name in [
-        'adapter',
-        'baseclass',
-        'conflict',
-        'container',
-        'directive',
-        'error',
-        'event',
-        'grokker',
-        'security',
-        'traversal',
-        'utility',
-        'viewlet',
-        'xmlrpc',
-        'zcml',
-        ]:
+            'adapter',
+            'baseclass',
+            'conflict',
+            'container',
+            'directive',
+            'error',
+            'event',
+            'grokker',
+            'security',
+            'traversal',
+            'utility',
+            'viewlet',
+            'xmlrpc',
+            'zcml'
+            ]:
         suite.addTest(suiteFromPackage(name))
     return suite
+
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')

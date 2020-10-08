@@ -1,10 +1,13 @@
 import grok
 
+
 class Cave(grok.Model):
     pass
 
+
 class Index(grok.View):
     pass
+
 
 index = grok.PageTemplate("""\
 <html>

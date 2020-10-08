@@ -85,17 +85,22 @@ When we authenticate, everything works fine::
 """
 import grok
 
+
 class ManageApp(grok.Permission):
     grok.name('app.Manage')
 
+
 class App(grok.Application, grok.Container):
     pass
+
 
 class Index(grok.View):
     def render(self):
         return 'Moo!'
 
+
 class Manage(grok.View):
     grok.require('app.Manage')
+
     def render(self):
         return 'Woo!'

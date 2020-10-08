@@ -15,7 +15,7 @@ attributes can be mentioned.
   'attr'
 """
 import grok
-from zope import interface
+
 
 class Club(grok.Model):
     grok.traversable('asdf', name='attr')

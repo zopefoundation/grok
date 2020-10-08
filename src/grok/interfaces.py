@@ -35,7 +35,9 @@ import grokcore.xmlrpc.interfaces
 from grokcore.component.interfaces import IContext
 from grokcore.component.interfaces import IGrokErrors
 
-from grokcore.rest.interfaces import IREST, IRESTSkinType, IRESTLayer
+from grokcore.rest.interfaces import IREST  # noqa: F401
+from grokcore.rest.interfaces import IRESTSkinType  # noqa: F401
+from grokcore.rest.interfaces import IRESTLayer  # noqa: F401
 
 
 class IGrokBaseClasses(
@@ -133,35 +135,6 @@ class IGrokAPI(
         IGrokDirectives,
         IGrokErrors,
         IGrokEvents):
-
-    # BBB this is deprecated
-    def grok(dotted_name):
-        """Grok a module or package specified by ``dotted_name``.
-
-        NOTE: This function will be removed from the public Grok
-        public API.  For tests and interpreter sessions, use
-        grok.testing.grok().
-        """
-
-    # BBB this is deprecated
-    def grok_component(name, component, context=None, module_info=None,
-                       templates=None):
-        """Grok an arbitrary object. Can be useful during testing.
-
-        name - the name of the component (class name, or global instance name
-               as it would appear in a module).
-        component - the object (class, etc) to grok.
-        context - the context object (optional).
-        module_info - the module being grokked (optional).
-        templates - the templates registry (optional).
-
-        Note that context, module_info and templates might be required
-        for some grokkers which rely on them.
-
-        NOTE: This function will be removed from the public Grok
-        public API.  For tests and interpreter sessions, use
-        grok.testing.grok_component().
-        """
 
     def notify(event):
         """Send ``event`` to event subscribers."""

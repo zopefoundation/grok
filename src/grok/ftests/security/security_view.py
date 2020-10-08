@@ -57,12 +57,14 @@ Now we can watch the view::
   >>> print(browser.contents)
   Hello from index
 
-"""
+"""  # noqa: E501
 import grok
 from zope.publisher.browser import BrowserPage
 
+
 class App(grok.Application, grok.Container):
     pass
+
 
 class Index(BrowserPage):
     def __call__(self):

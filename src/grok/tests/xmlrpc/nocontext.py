@@ -7,8 +7,9 @@ whether it's hooked up at all:
   Traceback (most recent call last):
     ...
   martian.error.GrokError: No module-level context for <class 'grok.tests.xmlrpc.nocontext.HomeRPC'>, please use the 'context' directive.
-"""
+"""  # noqa: E501
 import grok
+
 
 class HomeRPC(grok.XMLRPC):
 

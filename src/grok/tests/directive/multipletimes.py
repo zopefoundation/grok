@@ -30,19 +30,24 @@ GlobalUtilityInfo objects annotated on the module.
 import grok
 from zope import interface
 
+
 class IClub(interface.Interface):
     pass
 
+
 class ICave(interface.Interface):
     pass
+
 
 @grok.implementer(IClub)
 class Club(object):
     pass
 
+
 @grok.implementer(ICave)
 class Cave(object):
     pass
+
 
 grok.global_utility(Club, provides=IClub, name='foo')
 grok.global_utility(Cave)

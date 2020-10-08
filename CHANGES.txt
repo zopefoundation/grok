@@ -1,11 +1,22 @@
 Grok changes
 ************
 
-3.2 (unreleased)
+3.3 (unreleased)
+================
+
+- Nothing changed yet.
+
+
+3.2 (2020-09-02)
 ================
 
 - Fix DeprecationWarnings.
 
+- Use zopefoundation/meta/config to harmonize package structure.
+
+- Drop support for Python 3.4, add 3.7 + 3.8.
+
+- Remove some backward compatibility imports.
 
 3.1 (2018-05-09)
 ================

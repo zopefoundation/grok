@@ -38,10 +38,11 @@ registered for::
 """
 
 import grok
-from zope import interface
+
 
 class AContext(grok.Model):
     pass
+
 
 class ViewWithItems(grok.View):
     grok.name('with_items')
@@ -49,14 +50,17 @@ class ViewWithItems(grok.View):
     def render(self):
         return ''
 
+
 class ViewItemsManager(grok.ViewletManager):
     grok.name('view_items_manager')
+
 
 class ItemOneViewlet(grok.Viewlet):
     grok.name('item_one')
 
     def render(self):
         return "Item one reporting, sir!"
+
 
 class ItemTwoViewlet(grok.Viewlet):
     grok.name('item_two')

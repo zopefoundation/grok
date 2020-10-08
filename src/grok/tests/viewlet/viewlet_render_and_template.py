@@ -5,16 +5,17 @@ associated with it at the same time.
   >>> grok.testing.grok(__name__)
   Traceback (most recent call last):
     ...
-  zope.configuration.config.ConfigurationExecutionError: martian.error.GrokError: Multiple possible ways to render viewlet <class 'grok.tests.viewlet.viewlet_render_and_template.Viewlet'>. It has both a 'render' method as well as an associated template.  in:
-
-"""
+  zope.configuration.config.ConfigurationExecutionError: martian.error.GrokError: Multiple possible ways to render viewlet <class 'grok.tests.viewlet.viewlet_render_and_template.Viewlet'>. It has both a 'render' method as well as an associated template.
+"""  # noqa: E501
 
 import grok
 from zope.interface import Interface
 
+
 class ViewletManager(grok.ViewletManager):
     grok.name('foo')
     grok.context(Interface)
+
 
 class Viewlet(grok.Viewlet):
     grok.viewletmanager(ViewletManager)
@@ -22,5 +23,3 @@ class Viewlet(grok.Viewlet):
 
     def render(self):
         return "Render method but also a template!"
-
-

@@ -3,6 +3,7 @@
 Let's first grok the meta module to define some basic grokkers::
 
   >>> import grok
+  >>> from grokcore.component.testing import grok_component
 
 It is possible to grok an individual component. Let's define an adapter::
 
@@ -17,7 +18,7 @@ It is possible to grok an individual component. Let's define an adapter::
 
 To grok this adapter, you can simply write this::
 
-  >>> grok.testing.grok_component('MyAdapter', MyAdapter)
+  >>> grok_component('MyAdapter', MyAdapter)
   True
 
 We can now use the adapter::
@@ -39,14 +40,14 @@ an extra argument however::
 This adapter does not supply its own context. Trying to do what we did
 before will therefore fail::
 
-  >>> grok.testing.grok_component('SecondAdapter', SecondAdapter)
+  >>> grok_component('SecondAdapter', SecondAdapter)
   Traceback (most recent call last):
     ...
   martian.error.GrokError: No module-level context for <class 'grok.tests.grokker.grokcomponent.SecondAdapter'>, please use the 'context' directive.
 
 So we need to supply the context ourselves::
 
-  >>> grok.testing.grok_component('SecondAdapter', SecondAdapter, context=SomeClass)
+  >>> grok_component('SecondAdapter', SecondAdapter, context=SomeClass)
   True
 
 Now we can use the SecondAdapter as well::
@@ -57,4 +58,4 @@ Now we can use the SecondAdapter as well::
 
 The next optional argument is module_info and the final argument is
 templates.
-"""
+"""  # noqa: E501
