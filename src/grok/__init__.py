@@ -111,15 +111,15 @@ from zope.component import adapts
 from zope.container.contained import ObjectAddedEvent
 from zope.container.contained import ObjectMovedEvent
 from zope.container.contained import ObjectRemovedEvent
-from zope.container.interfaces import IObjectAddedEvent
-from zope.container.interfaces import IObjectMovedEvent
-from zope.container.interfaces import IObjectRemovedEvent
 from zope.event import notify
 from zope.interface import moduleProvides
 from zope.lifecycleevent import IObjectCopiedEvent
 from zope.lifecycleevent import IObjectCreatedEvent
 from zope.lifecycleevent import ObjectCopiedEvent
 from zope.lifecycleevent import ObjectCreatedEvent
+from zope.lifecycleevent.interfaces import IObjectAddedEvent
+from zope.lifecycleevent.interfaces import IObjectMovedEvent
+from zope.lifecycleevent.interfaces import IObjectRemovedEvent
 from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 

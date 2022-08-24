@@ -4,7 +4,9 @@ Grok changes
 3.3 (unreleased)
 ================
 
-* Add support for Python 3.9, 3.10.
+- Add support for Python 3.9, 3.10.
+
+- Fix deprecation warnings.
 
 
 3.2 (2020-09-02)
