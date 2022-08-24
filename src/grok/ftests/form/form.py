@@ -23,8 +23,9 @@ Same for the edit form::
 
 
 """
-import grok
 from zope import schema
+
+import grok
 
 
 class IceWorld(grok.Application, grok.Container):

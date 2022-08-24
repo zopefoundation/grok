@@ -13,8 +13,9 @@ that we don't hit this:
 
 """
 
-import grok
 from zope.interface import Interface
+
+import grok
 
 
 class CaveWasRobbedError(Exception):

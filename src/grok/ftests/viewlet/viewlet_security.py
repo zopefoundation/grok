@@ -102,9 +102,10 @@ get those names.
 """
 
 
-import grok
 from zope.interface import Interface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+
+import grok
 
 
 class Gold(grok.Permission):

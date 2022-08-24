@@ -1,13 +1,14 @@
-import unittest
 import doctest
-import grok
-import grok.testing
+import unittest
 
 from pkg_resources import resource_listdir
+
+import zope.app.wsgi.testlayer
+import zope.testbrowser.wsgi
 from zope.testing import renormalizing
 
-import zope.testbrowser.wsgi
-import zope.app.wsgi.testlayer
+import grok
+import grok.testing
 
 
 class Layer(

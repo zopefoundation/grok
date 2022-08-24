@@ -13,10 +13,6 @@
 ##############################################################################
 """Grok interfaces
 """
-from zope import interface
-from zope.interface.interfaces import IObjectEvent
-from zope.container.interfaces import IContainer as IContainerBase
-
 # Expose interfaces from grokcore.* packages as well:
 import grokcore.annotation.interfaces
 import grokcore.catalog.interfaces
@@ -31,13 +27,14 @@ import grokcore.traverser.interfaces
 import grokcore.view.interfaces
 import grokcore.viewlet.interfaces
 import grokcore.xmlrpc.interfaces
-
 from grokcore.component.interfaces import IContext
 from grokcore.component.interfaces import IGrokErrors
-
 from grokcore.rest.interfaces import IREST  # noqa: F401
-from grokcore.rest.interfaces import IRESTSkinType  # noqa: F401
 from grokcore.rest.interfaces import IRESTLayer  # noqa: F401
+from grokcore.rest.interfaces import IRESTSkinType  # noqa: F401
+from zope import interface
+from zope.container.interfaces import IContainer as IContainerBase
+from zope.interface.interfaces import IObjectEvent
 
 
 class IGrokBaseClasses(

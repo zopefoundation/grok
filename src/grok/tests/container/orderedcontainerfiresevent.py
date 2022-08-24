@@ -24,8 +24,9 @@ Delete an item::
 
 """
 
-import grok
 from zope.container.interfaces import IContainerModifiedEvent
+
+import grok
 
 
 class OrderedBones(grok.OrderedContainer):

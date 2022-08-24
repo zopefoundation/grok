@@ -44,8 +44,9 @@ And of course you can access the protected view.
   True
 """
 
-import grok
 import zope.interface
+
+import grok
 
 
 class PublicView(grok.View):

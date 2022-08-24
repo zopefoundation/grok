@@ -31,13 +31,16 @@ right value:
   We found Ellie!
 
 """
-import grok
-from zope import schema, interface, component
+from zope import component
+from zope import interface
+from zope import schema
+from zope.catalog.catalog import Catalog
+from zope.catalog.field import FieldIndex
+from zope.catalog.interfaces import ICatalog
 from zope.intid import IntIds
 from zope.intid.interfaces import IIntIds
-from zope.catalog.catalog import Catalog
-from zope.catalog.interfaces import ICatalog
-from zope.catalog.field import FieldIndex
+
+import grok
 
 
 def setup_catalog(catalog):

@@ -8,8 +8,9 @@ a viewlet will not auto-associate but instead raise an error.
   martian.error.GrokError: Multiple possible viewletmanagers for <class 'grok.tests.viewlet.viewlet_ambiguous_manager.Viewlet'>, please use the 'viewletmanager' directive.
 """  # noqa: E501
 
-import grok
 from zope.interface import Interface
+
+import grok
 
 
 class ViewletManager(grok.ViewletManager):

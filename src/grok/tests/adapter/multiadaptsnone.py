@@ -9,9 +9,9 @@ using grok.adapts:
   must specify which contexts it adapts
   (use the 'adapts' directive to specify).
 """
-import grok
-
 from zope import interface
+
+import grok
 
 
 class IHome(interface.Interface):

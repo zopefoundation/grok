@@ -43,8 +43,9 @@ just fine:
   urllib.error.HTTPError: HTTP Error 401: Unauthorized
 """
 
-import grok
 import zope.interface
+
+import grok
 
 
 class ViewPermission(grok.Permission):

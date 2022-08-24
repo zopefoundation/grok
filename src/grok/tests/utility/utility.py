@@ -124,8 +124,9 @@ Let's look up an instance we registered this way:
 
 """  # noqa: E501
 
-import grok
 from zope import interface
+
+import grok
 
 
 class IClub(interface.Interface):

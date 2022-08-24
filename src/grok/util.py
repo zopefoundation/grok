@@ -15,10 +15,10 @@
 """
 import zope.component.hooks
 import zope.location.location
-
-from zope import interface
-from grokcore.view.util import url, ASIS
 from grokcore.site.util import getApplication
+from grokcore.view.util import ASIS
+from grokcore.view.util import url
+from zope import interface
 
 
 def safely_locate_maybe(obj, parent, name):
