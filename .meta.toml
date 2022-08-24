@@ -22,4 +22,28 @@ coverage-command = [
     ]
 
 [coverage]
-fail-under = 0
+fail-under = 88
+
+[flake8]
+additional-config = [
+    "# F401 imported but unused",
+    "per-file-ignores =",
+    "    src/grok/__init__.py: F401",
+    ]
+
+[manifest]
+additional-rules = [
+    "include documentation.cfg",
+    "include grokwiki.cfg",
+    "recursive-include docs *.bat",
+    "recursive-include etc *.in",
+    "recursive-include etc *.txt",
+    "recursive-include grokwiki *.css",
+    "recursive-include grokwiki *.pt",
+    "recursive-include grokwiki *.py",
+    "recursive-include grokwiki *.txt",
+    "recursive-include grokwiki *.zcml",
+    "recursive-include src *.cpt",
+    "recursive-include src *.pt",
+    "recursive-include src *.zcml",
+    ]
