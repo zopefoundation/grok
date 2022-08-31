@@ -1,14 +1,17 @@
+import doctest
 import re
 import unittest
-import doctest
-import zope.component.eventtesting
-import zope.component.testlayer
-import grok
-import grok.testing
 
 from pkg_resources import resource_listdir
-from zope.testing import cleanup, renormalizing
+
+import zope.component.eventtesting
+import zope.component.testlayer
 from grokcore.view.templatereg import file_template_registry
+from zope.testing import cleanup
+from zope.testing import renormalizing
+
+import grok
+import grok.testing
 
 
 class GrokTestLayer(zope.component.testlayer.LayerBase):

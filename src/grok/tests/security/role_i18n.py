@@ -53,8 +53,10 @@ A grok.Role registered with name, title and description directives::
   True
 """
 
-import grok
 from zope.i18nmessageid import MessageFactory
+
+import grok
+
 
 _ = MessageFactory("testi18n")
 

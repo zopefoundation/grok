@@ -1,5 +1,7 @@
-from setuptools import setup, find_packages
 import os
+
+from setuptools import find_packages
+from setuptools import setup
 
 
 def read(*rnames):
@@ -20,6 +22,7 @@ tests_require = [
     'zope.configuration',
     'zope.testbrowser',
     'zope.testing',
+    'zope.testrunner',
     ]
 
 setup(
@@ -28,7 +31,7 @@ setup(
     author='Grok Team',
     author_email='grok-dev@zope.org',
     url='http://grok.zope.org',
-    download_url='http://cheeseshop.python.org/pypi/grok/',
+    download_url='https://pypi.org/project/grok/',
     description='Grok: Now even cavemen can use Zope 3!',
     long_description=long_description,
     license='ZPL',
@@ -49,6 +52,9 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
     ],
     packages=find_packages('src'),
@@ -110,5 +116,8 @@ setup(
         'zope.traversing',
         ],
     tests_require=tests_require,
-    extras_require={'test': tests_require},
+    extras_require={
+        'test': tests_require,
+        'docs': ['Sphinx']
+    },
 )

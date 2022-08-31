@@ -26,8 +26,9 @@ Let's log in as the manager now. We should be able to access the method now::
 
 """
 
-import grok
 import zope.interface
+
+import grok
 
 
 class MammothJSON(grok.JSON):

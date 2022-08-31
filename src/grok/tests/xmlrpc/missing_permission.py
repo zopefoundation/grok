@@ -9,8 +9,9 @@ before it can be used in grok.require() in an XMLRPC class.
 
 """  # noqa: E501
 
-import grok
 import zope.interface
+
+import grok
 
 
 class MissingPermission(grok.XMLRPC):

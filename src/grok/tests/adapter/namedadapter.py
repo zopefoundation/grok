@@ -17,8 +17,9 @@ You can register a named adapter by using grok.name:
   True
 """  # noqa: E501
 
-import grok
 from zope import interface
+
+import grok
 
 
 class Cave(grok.Model):

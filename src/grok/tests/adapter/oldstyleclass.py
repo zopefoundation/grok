@@ -11,8 +11,9 @@ Old-style classes are also supported:
   >>> isinstance(home, Home)
   True
 """
-import grok
 from zope import interface
+
+import grok
 
 
 class Cave:

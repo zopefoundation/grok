@@ -58,8 +58,9 @@ Now we can watch the view::
   Hello from index
 
 """  # noqa: E501
-import grok
 from zope.publisher.browser import BrowserPage
+
+import grok
 
 
 class App(grok.Application, grok.Container):

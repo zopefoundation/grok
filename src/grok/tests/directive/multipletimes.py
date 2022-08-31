@@ -27,8 +27,9 @@ GlobalUtilityInfo objects annotated on the module.
   >>> print(name)
 
 """
-import grok
 from zope import interface
+
+import grok
 
 
 class IClub(interface.Interface):

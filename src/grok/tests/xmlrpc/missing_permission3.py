@@ -8,8 +8,9 @@ that is never used.
 
 """
 
-import grok
 import zope.interface
+
+import grok
 
 
 class Foo(grok.Permission):

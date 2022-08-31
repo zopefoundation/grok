@@ -1,20 +1,27 @@
 # Generated from:
 # https://github.com/zopefoundation/meta/tree/master/config/pure-python
+include *.md
 include *.rst
 include *.txt
+include buildout.cfg
+include tox.ini
 
-exclude *.cfg
-exclude MANIFEST.in
-exclude tox.ini
-recursive-exclude doc *
-recursive-exclude etc *
-recursive-exclude grokwiki *
+recursive-include docs *.py
+recursive-include docs *.rst
+recursive-include docs *.txt
+recursive-include docs Makefile
 
-recursive-include src *.cpt
-recursive-include src *.gif
-recursive-include src *.pt
 recursive-include src *.py
-recursive-include src *.rst
-recursive-include src *.txt
-recursive-include src *.xml
+include documentation.cfg
+include grokwiki.cfg
+recursive-include docs *.bat
+recursive-include etc *.in
+recursive-include etc *.txt
+recursive-include grokwiki *.css
+recursive-include grokwiki *.pt
+recursive-include grokwiki *.py
+recursive-include grokwiki *.txt
+recursive-include grokwiki *.zcml
+recursive-include src *.cpt
+recursive-include src *.pt
 recursive-include src *.zcml

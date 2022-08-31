@@ -13,8 +13,9 @@ properly:
   True
 
 """
-import grok
 from zope import interface
+
+import grok
 
 
 class IHome(interface.Interface):

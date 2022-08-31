@@ -19,9 +19,16 @@ provided here.
 
 """
 import os.path
-import zope.location
-import zope.errorview.browser
+
+import grokcore.layout
+import grokcore.layout.components
+import grokcore.message
+import grokcore.site
+import grokcore.view
 import zope.component
+import zope.errorview.browser
+import zope.location
+from grokcore.view.util import ASIS
 from zope import interface
 from zope.interface.common.interfaces import IException
 from zope.publisher.interfaces import INotFound
@@ -29,15 +36,8 @@ from zope.publisher.publish import mapply
 from zope.security.interfaces import IUnauthorized
 
 import grok
-
-import grokcore.view
-import grokcore.site
-import grokcore.message
-import grokcore.layout
-import grokcore.layout.components
-from grok import interfaces, util
-
-from grokcore.view.util import ASIS
+from grok import interfaces
+from grok import util
 
 
 class ViewSupportMixin(object):

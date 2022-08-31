@@ -1,0 +1,49 @@
+# Generated from:
+# https://github.com/zopefoundation/meta/tree/master/config/pure-python
+[meta]
+template = "pure-python"
+commit-id = "4689333adccd5ee16eda132085f840cc33248b57"
+
+[python]
+with-windows = false
+with-pypy = true
+with-future-python = false
+with-legacy-python = true
+with-docs = true
+with-sphinx-doctests = false
+
+[tox]
+use-flake8 = true
+testenv-commands = [
+    "zope-testrunner --tests-pattern ^f?tests$ --test-path=src {posargs:-cv}",
+    ]
+coverage-command = [
+    "coverage run -m zope.testrunner --tests-pattern ^f?tests$ --test-path=src []",
+    ]
+
+[coverage]
+fail-under = 88
+
+[flake8]
+additional-config = [
+    "# F401 imported but unused",
+    "per-file-ignores =",
+    "    src/grok/__init__.py: F401",
+    ]
+
+[manifest]
+additional-rules = [
+    "include documentation.cfg",
+    "include grokwiki.cfg",
+    "recursive-include docs *.bat",
+    "recursive-include etc *.in",
+    "recursive-include etc *.txt",
+    "recursive-include grokwiki *.css",
+    "recursive-include grokwiki *.pt",
+    "recursive-include grokwiki *.py",
+    "recursive-include grokwiki *.txt",
+    "recursive-include grokwiki *.zcml",
+    "recursive-include src *.cpt",
+    "recursive-include src *.pt",
+    "recursive-include src *.zcml",
+    ]

@@ -156,10 +156,14 @@
   </form>
 """  # noqa: E501
 import grokcore.component as grok
-
 from grokcore.view import templatedir
-from grok import Layout, DisplayFormPage, EditFormPage, FormPage
-from zope import interface, schema
+from zope import interface
+from zope import schema
+
+from grok import DisplayFormPage
+from grok import EditFormPage
+from grok import FormPage
+from grok import Layout
 
 
 templatedir('templates')
