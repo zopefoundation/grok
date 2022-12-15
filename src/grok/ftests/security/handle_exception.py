@@ -5,9 +5,11 @@ that we don't hit this:
 
   >>> from zope.testbrowser.wsgi import Browser
   >>> browser = Browser()
+  >>> # Work around https://github.com/python/cpython/issues/90113
+  >>> browser.raiseHttpErrors = False
   >>> browser.open("http://localhost/@@cave")
-  Traceback (most recent call last):
-  urllib.error.HTTPError: HTTP Error 500: Internal Server Error
+  >>> print(browser.headers['status'])
+  500 Internal Server Error
   >>> browser.contents
   'It is gone!'
 
