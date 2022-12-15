@@ -12,10 +12,12 @@ We can access the public method just fine::
 
 We cannot access the protected method however::
 
+  >>> # Work around https://github.com/python/cpython/issues/90113
+  >>> browser.raiseHttpErrors = False
   >>> browser.open('http://localhost/dance')
-  Traceback (most recent call last):
-    ...
-  urllib.error.HTTPError: HTTP Error 401: Unauthorized
+  >>> print(browser.headers['status'])
+  401 Unauthorized
+
 
 Let's log in as the manager now. We should be able to access the method now::
 
