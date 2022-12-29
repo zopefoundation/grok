@@ -25,4 +25,5 @@
   <h1>A comfy cave</h1>
   </body>
   </html>
+  <BLANKLINE>
 """

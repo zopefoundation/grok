@@ -170,12 +170,12 @@ templatedir('templates')
 
 
 class ICowProperties(interface.Interface):
-    color = schema.TextLine(title=u"Color")
+    color = schema.TextLine(title="Color")
 
 
 @grok.implementer(ICowProperties)
 class Cow(grok.Context):
-    color = u"globally dark"
+    color = "globally dark"
 
 
 class Master(Layout):

@@ -1,4 +1,3 @@
-
 import grokcore.component
 import zope.event
 from zope.generations.interfaces import IInstallableSchemaManager

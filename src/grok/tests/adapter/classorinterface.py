@@ -30,22 +30,22 @@ def function_context():
     def a():
         pass
 
-    class FunctionContext(object):
+    class FunctionContext:
         grok.context(a)
 
 
 def string_context():
-    class StringContext(object):
+    class StringContext:
         grok.context('string')
 
 
 def module_context():
-    class ModuleContext(object):
+    class ModuleContext:
         grok.context(grok)
 
 
 def instance_context():
     obj = object()
 
-    class InstanceContext(object):
+    class InstanceContext:
         grok.context(obj)
