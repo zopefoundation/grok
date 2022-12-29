@@ -5,7 +5,6 @@ from pkg_resources import resource_listdir
 
 import zope.app.wsgi.testlayer
 import zope.testbrowser.wsgi
-from zope.testing import renormalizing
 
 import grok
 import grok.testing
@@ -51,7 +50,6 @@ def suiteFromPackage(name):
         dottedname = 'grok.ftests.{}.{}'.format(name, filename[:-3])
         test = doctest.DocTestSuite(
             dottedname,
-            checker=renormalizing.RENormalizing(),
             extraglobs=dict(
                 getRootFolder=layer.getRootFolder,
                 http=zope.app.wsgi.testlayer.http,
@@ -61,8 +59,7 @@ def suiteFromPackage(name):
             optionflags=(
                 doctest.ELLIPSIS +
                 doctest.NORMALIZE_WHITESPACE +
-                doctest.REPORT_NDIFF +
-                renormalizing.IGNORE_EXCEPTION_MODULE_IN_PYTHON2)
+                doctest.REPORT_NDIFF)
                 )
         test.layer = layer
         suite.addTest(test)
