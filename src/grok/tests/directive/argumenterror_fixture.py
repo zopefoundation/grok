@@ -1,5 +1,5 @@
 import grok
 
 
-class Foo(object):
+class Foo:
     grok.name('too', 'many', 'arguments')

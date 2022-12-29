@@ -23,7 +23,7 @@ def func():
     grok.context(Cave)
 
 
-class SomeClass(object):
+class SomeClass:
 
     def meth(self):
         """We don't allow calling `grok.context` from anything else

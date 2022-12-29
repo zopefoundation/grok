@@ -1,5 +1,5 @@
 import martian
 
 
-class Alpha(object):
+class Alpha:
     martian.baseclass()

@@ -68,7 +68,7 @@ class Herd(grok.Container, grok.Application):
 
 
 class IPachyderm(Interface):
-    tusks = TextLine(title=u"About the tusks")
+    tusks = TextLine(title="About the tusks")
 
 
 class TuskIndex(grok.Indexes):

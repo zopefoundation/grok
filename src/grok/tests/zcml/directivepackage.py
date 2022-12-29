@@ -28,6 +28,7 @@
   <h1>A comfy cave</h1>
   </body>
   </html>
+  <BLANKLINE>
 
   >>> view = component.getMultiAdapter((manfred, request), name='index')
   >>> print(view())
@@ -36,4 +37,5 @@
   <h1>ME GROK HUNT MAMMOTH!</h1>
   </body>
   </html>
+  <BLANKLINE>
 """

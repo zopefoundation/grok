@@ -14,8 +14,8 @@ When a GrokImportError occurs, ZCML will give the proper stack trace:
   ... </configure>''', context=context)
   Traceback (most recent call last):
     ...
-  zope.configuration.xmlconfig.ZopeXMLConfigurationError: File "<string>", line 6.4-6.57 martian.error.GrokError: No module-level context for <class 'grok.tests.zcml.directiveerror.CavePainting'>, please use the 'context' directive.
-
+  zope.configuration.xmlconfig.ZopeXMLConfigurationError: File "<string>", line 6.4-6.57
+      martian.error.GrokError: No module-level context for <class 'grok.tests.zcml.directiveerror.CavePainting'>, please use the 'context' directive.
 """  # noqa: E501
 import grok
 

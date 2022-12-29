@@ -40,7 +40,7 @@ from grok import interfaces
 from grok import util
 
 
-class ViewSupportMixin(object):
+class ViewSupportMixin:
 
     def application_url(self, name=None, skin=ASIS, data=None):
         """Return the URL of the closest :class:`grok.Application` object in

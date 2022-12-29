@@ -9,6 +9,6 @@ class Club(grok.Model):
     pass
 
 
-class Anything(object):
+class Anything:
     grok.context(Cave)
     grok.context(Club)

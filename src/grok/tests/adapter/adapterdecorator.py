@@ -62,7 +62,7 @@ class Cave(grok.Model):
 
 
 @grok.implementer(IHome)
-class Home(object):
+class Home:
     pass
 
 
