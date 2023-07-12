@@ -110,16 +110,16 @@ from zope.app.publication.interfaces import IBeforeTraverseEvent
 from zope.component import adapts
 from zope.event import notify
 from zope.interface import moduleProvides
-from zope.lifecycleevent.interfaces import IObjectAddedEvent
-from zope.lifecycleevent.interfaces import IObjectCopiedEvent
-from zope.lifecycleevent.interfaces import IObjectCreatedEvent
-from zope.lifecycleevent.interfaces import IObjectMovedEvent
-from zope.lifecycleevent.interfaces import IObjectRemovedEvent
 from zope.lifecycleevent import ObjectAddedEvent
 from zope.lifecycleevent import ObjectCopiedEvent
 from zope.lifecycleevent import ObjectCreatedEvent
 from zope.lifecycleevent import ObjectMovedEvent
 from zope.lifecycleevent import ObjectRemovedEvent
+from zope.lifecycleevent.interfaces import IObjectAddedEvent
+from zope.lifecycleevent.interfaces import IObjectCopiedEvent
+from zope.lifecycleevent.interfaces import IObjectCreatedEvent
+from zope.lifecycleevent.interfaces import IObjectMovedEvent
+from zope.lifecycleevent.interfaces import IObjectRemovedEvent
 from zope.publisher.interfaces.browser import IBrowserRequest
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
