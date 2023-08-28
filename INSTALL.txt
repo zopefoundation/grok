@@ -6,27 +6,22 @@ Preparing for grok development
 
 The Grok development sandbox is set up via `zc.buildout`_
 
-.. _zc.buildout: http://cheeseshop.python.org/pypi/zc.buildout
+.. _zc.buildout: https://pypi.org/project/zc.buildout
 
-You may have setuptools already installed for your system Python. In
-that case, you may need to upgrade it first because buildout requires
-a very recent version::
+Clone ``grok`` from Github:
 
-    $ sudo easy_install -U setuptools
+    $ git clone git@github.com:zopefoundation/grok.git
 
-If this command fails because easy_install is not available, there is
-a good chance you do not have setuptools available for your system
-Python. If so, there is no problem because setuptools will be
-installed locally by buildout.
+Go inside this directory and create a ``venv`` and install ``zc.buildout``:
 
-Bootstrap the buildout environment::
-
-    $ python bootstrap/bootstrap.py
+    $ cd grok
+    $ python3 -m venv .
+    $ bin/pip install zc.buildout
 
 and run the buildout command::
 
     $ bin/buildout
-    [lots of stuff will be downloaded and installed here]
+    [lots of stuff will be downloaded and installed here, ignore the warnings]
 
 Note that if you have more than one sandbox for a Zope-based web
 application, it will probably make sense to share the eggs between the
