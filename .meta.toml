@@ -2,7 +2,7 @@
 # https://github.com/zopefoundation/meta/tree/master/config/pure-python
 [meta]
 template = "pure-python"
-commit-id = "b2749126"
+commit-id = "b21fbbf2"
 
 [python]
 with-windows = false
@@ -33,6 +33,7 @@ additional-config = [
 
 [manifest]
 additional-rules = [
+    "include *.yaml",
     "include documentation.cfg",
     "include grokwiki.cfg",
     "recursive-include docs *.bat",

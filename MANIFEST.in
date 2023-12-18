@@ -12,6 +12,7 @@ recursive-include docs *.txt
 recursive-include docs Makefile
 
 recursive-include src *.py
+include *.yaml
 include documentation.cfg
 include grokwiki.cfg
 recursive-include docs *.bat
