@@ -16,8 +16,9 @@
   True
 """
 
-import grok
 from zope import interface
+
+import grok
 
 
 class Cave(grok.Model):

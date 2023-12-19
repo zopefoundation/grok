@@ -27,8 +27,9 @@ GlobalUtilityInfo objects annotated on the module.
   >>> print(name)
 
 """
-import grok
 from zope import interface
+
+import grok
 
 
 class IClub(interface.Interface):
@@ -40,12 +41,12 @@ class ICave(interface.Interface):
 
 
 @grok.implementer(IClub)
-class Club(object):
+class Club:
     pass
 
 
 @grok.implementer(ICave)
-class Cave(object):
+class Cave:
     pass
 
 

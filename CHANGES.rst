@@ -1,10 +1,22 @@
 Grok changes
 ************
 
-3.3 (unreleased)
+4.0 (unreleased)
 ================
 
-- Nothing changed yet.
+* Update import paths for lifecycle events.
+
+* Drop support for Python 2.7, 3.5, 3.6.
+
+* Add support for Python 3.11.
+
+
+3.3 (2022-09-01)
+================
+
+- Add support for Python 3.9, 3.10.
+
+- Fix deprecation warnings.
 
 
 3.2 (2020-09-02)

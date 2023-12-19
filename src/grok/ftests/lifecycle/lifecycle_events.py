@@ -54,12 +54,13 @@ that we can now work on an operational environment:
   <zope.catalog.catalog.Catalog object at ...>
 
 """
+from zope.catalog.interfaces import ICatalog
+from zope.component import queryUtility
+from zope.interface import Interface
+from zope.schema import TextLine
+
 import grok
 from grok import index
-from zope.schema import TextLine
-from zope.interface import Interface
-from zope.component import queryUtility
-from zope.catalog.interfaces import ICatalog
 
 
 class Herd(grok.Container, grok.Application):
@@ -67,7 +68,7 @@ class Herd(grok.Container, grok.Application):
 
 
 class IPachyderm(Interface):
-    tusks = TextLine(title=u"About the tusks")
+    tusks = TextLine(title="About the tusks")
 
 
 class TuskIndex(grok.Indexes):

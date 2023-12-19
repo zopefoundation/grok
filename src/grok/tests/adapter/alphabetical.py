@@ -12,8 +12,9 @@ Grok does not depend on the alphabetical order:
   True
 
 """
-import grok
 from zope import interface
+
+import grok
 
 
 class ZCave(grok.Model):

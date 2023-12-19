@@ -19,7 +19,7 @@ The decorated event handling function can also be called directly:
 import grok
 
 
-class Mammoth(object):
+class Mammoth:
     def __init__(self, name):
         self.name = name
 

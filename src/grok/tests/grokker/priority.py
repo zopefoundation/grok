@@ -21,15 +21,15 @@ grokkers get executed in the order of priority (highest first)::
 import martian
 
 
-class Alpha(object):
+class Alpha:
     pass
 
 
-class Beta(object):
+class Beta:
     pass
 
 
-class Gamma(object):
+class Gamma:
     pass
 
 

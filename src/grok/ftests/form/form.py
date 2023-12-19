@@ -23,8 +23,9 @@ Same for the edit form::
 
 
 """
-import grok
 from zope import schema
+
+import grok
 
 
 class IceWorld(grok.Application, grok.Container):
@@ -33,8 +34,8 @@ class IceWorld(grok.Application, grok.Container):
 
 class Mammoth(grok.Model):
     class fields:
-        name = schema.TextLine(title=u"Name")
-        size = schema.TextLine(title=u"Size", default=u"Quite normal")
+        name = schema.TextLine(title="Name")
+        size = schema.TextLine(title="Size", default="Quite normal")
 
 
 class Index(grok.DisplayForm):

@@ -53,8 +53,10 @@ A grok.Role registered with name, title and description directives::
   True
 """
 
-import grok
 from zope.i18nmessageid import MessageFactory
+
+import grok
+
 
 _ = MessageFactory("testi18n")
 
@@ -66,10 +68,10 @@ class RoleWithoutI18n(grok.Role):
 
 class RoleWithI18n(grok.Role):
     grok.name(_('RoleWithI18n'))
-    grok.description(_(u'My role with i18n'))
+    grok.description(_('My role with i18n'))
 
 
 class RoleWithI18nTitle(grok.Role):
     grok.name('RoleWithI18nTitle')
     grok.title(_('RoleWithI18n'))
-    grok.description(_(u'My role with i18n'))
+    grok.description(_('My role with i18n'))

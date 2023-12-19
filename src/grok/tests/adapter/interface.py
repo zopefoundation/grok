@@ -21,8 +21,9 @@ You can also specify interfaces instead of classes with
   True
 
 """
-import grok
 from zope import interface
+
+import grok
 
 
 class ICave(interface.Interface):

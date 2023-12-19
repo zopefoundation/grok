@@ -7,8 +7,9 @@ specify which interface to use for the registration:
     ...
   martian.error.GrokError: <class 'grok.tests.utility.implementsmany2.Club'> is implementing more than one interface (use grok.provides to specify which one to use).
 """  # noqa: E501
-import grok
 from zope import interface
+
+import grok
 
 
 class IClub(interface.Interface):
@@ -20,7 +21,7 @@ class ISpikyClub(interface.Interface):
 
 
 @grok.implementer(IClub, ISpikyClub)
-class Club(object):
+class Club:
     pass
 
 

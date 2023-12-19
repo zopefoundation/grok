@@ -1,5 +1,7 @@
-from setuptools import setup, find_packages
 import os
+
+from setuptools import find_packages
+from setuptools import setup
 
 
 def read(*rnames):
@@ -7,12 +9,9 @@ def read(*rnames):
 
 
 long_description = (
-    read('README.txt')
+    read('README.rst')
     + '\n' +
-    read('CHANGES.txt')
-    + '\n' +
-    'Download\n'
-    '********\n'
+    read('CHANGES.rst')
     )
 
 tests_require = [
@@ -20,15 +19,15 @@ tests_require = [
     'zope.configuration',
     'zope.testbrowser',
     'zope.testing',
+    'zope.testrunner',
     ]
 
 setup(
     name='grok',
-    version='3.3.dev0',
+    version='4.0.dev0',
     author='Grok Team',
-    author_email='grok-dev@zope.org',
-    url='http://grok.zope.org',
-    download_url='http://cheeseshop.python.org/pypi/grok/',
+    author_email='zope-dev@zope.dev',
+    url='https://github.com/zopefoundation/grok',
     description='Grok: Now even cavemen can use Zope 3!',
     long_description=long_description,
     license='ZPL',
@@ -42,19 +41,20 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',
         'Framework :: Zope :: 3',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
     ],
     packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,
     zip_safe=False,
+    python_requires='>=3.7',
     install_requires=[
         'grokcore.annotation >= 1.6',
         'grokcore.catalog >= 2.1',
@@ -110,5 +110,8 @@ setup(
         'zope.traversing',
         ],
     tests_require=tests_require,
-    extras_require={'test': tests_require},
+    extras_require={
+        'test': tests_require,
+        'docs': ['Sphinx']
+    },
 )

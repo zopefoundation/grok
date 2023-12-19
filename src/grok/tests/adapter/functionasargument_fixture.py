@@ -1,5 +1,6 @@
-import grok
 from zope import interface
+
+import grok
 
 
 class IDummy(interface.Interface):

@@ -12,9 +12,11 @@ Explicit module-level context for an imported model:
   True
 
 """
+from zope import interface
+
 import grok
 from grok.tests.adapter.adapter import Cave
-from zope import interface
+
 
 grok.context(Cave)
 

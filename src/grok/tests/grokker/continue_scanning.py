@@ -19,11 +19,11 @@ Thus, both Grokkers are executed, with AlphaGrokker coming before BetaGrokker::
 import martian
 
 
-class Alpha(object):
+class Alpha:
     pass
 
 
-class Beta(object):
+class Beta:
     pass
 
 

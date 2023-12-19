@@ -1,10 +1,9 @@
-
 import grokcore.component
-import grok.events
 import zope.event
-
 from zope.generations.interfaces import IInstallableSchemaManager
 from zope.generations.utility import getRootFolder
+
+import grok.events
 
 
 class GrokDatabaseCreated(grokcore.component.GlobalUtility):

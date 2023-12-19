@@ -4,18 +4,20 @@ Unauthorized:
 
   >>> from zope.testbrowser.wsgi import Browser
   >>> browser = Browser()
+  >>> # Work around https://github.com/python/cpython/issues/90113
+  >>> browser.raiseHttpErrors = False
 
   >>> browser.open("http://localhost/@@cavepainting")
-  Traceback (most recent call last):
-  urllib.error.HTTPError: HTTP Error 401: Unauthorized
+  >>> print(browser.headers['status'])
+  401 Unauthorized
 
   >>> browser.open("http://localhost/@@editcavepainting")
-  Traceback (most recent call last):
-  urllib.error.HTTPError: HTTP Error 401: Unauthorized
+  >>> print(browser.headers['status'])
+  401 Unauthorized
 
   >>> browser.open("http://localhost/@@erasecavepainting")
-  Traceback (most recent call last):
-  urllib.error.HTTPError: HTTP Error 401: Unauthorized
+  >>> print(browser.headers['status'])
+  401 Unauthorized
 
 Let's now grant anonymous the PaintingOwner role locally (so that we
 don't have to modify the global setup).  Then we can access the views
@@ -39,12 +41,13 @@ just fine:
   Oops, mistake, let's erase it.
 
   >>> browser.open("http://localhost/@@approvecavepainting")
-  Traceback (most recent call last):
-  urllib.error.HTTPError: HTTP Error 401: Unauthorized
+  >>> print(browser.headers['status'])
+  401 Unauthorized
 """
 
-import grok
 import zope.interface
+
+import grok
 
 
 class ViewPermission(grok.Permission):

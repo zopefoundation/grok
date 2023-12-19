@@ -31,13 +31,16 @@ right value:
   We found Ellie!
 
 """
-import grok
-from zope import schema, interface, component
+from zope import component
+from zope import interface
+from zope import schema
+from zope.catalog.catalog import Catalog
+from zope.catalog.field import FieldIndex
+from zope.catalog.interfaces import ICatalog
 from zope.intid import IntIds
 from zope.intid.interfaces import IIntIds
-from zope.catalog.catalog import Catalog
-from zope.catalog.interfaces import ICatalog
-from zope.catalog.field import FieldIndex
+
+import grok
 
 
 def setup_catalog(catalog):
@@ -50,8 +53,8 @@ class Zoo(grok.Site, grok.Container):
 
 
 class IMammoth(interface.Interface):
-    name = schema.TextLine(title=u"Name")
-    size = schema.TextLine(title=u"Size")
+    name = schema.TextLine(title="Name")
+    size = schema.TextLine(title="Size")
 
 
 @grok.implementer(IMammoth)
@@ -63,8 +66,8 @@ class Index(grok.View):
     grok.context(Mammoth)
 
     def render(self):
-        return 'Hi, my name is %s, and I\'m "%s"' % (self.context.name,
-                                                     self.context.size)
+        return 'Hi, my name is {}, and I\'m "{}"'.format(
+            self.context.name, self.context.size)
 
 
 class Search(grok.View):

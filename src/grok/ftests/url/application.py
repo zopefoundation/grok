@@ -49,8 +49,9 @@ application_url also works with empty containers::
 
 """
 import zope.interface
-import grok
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+
+import grok
 
 
 class IMarker(zope.interface.Interface):

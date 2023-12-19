@@ -6,8 +6,9 @@ Multiple calls of grok.require in one class are not allowed.
      ...
   martian.error.GrokError: grok.require was called multiple times in <class 'grok.tests.xmlrpc.multiple_require.MultipleXMLRPC'>. It may only be set once for a class.
 """  # noqa: E501
-import grok
 import zope.interface
+
+import grok
 
 
 class One(grok.Permission):

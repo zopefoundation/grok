@@ -31,8 +31,9 @@
 
 """
 
-import grok
 from zope import interface
+
+import grok
 
 
 class IDummy(interface.Interface):
@@ -61,7 +62,7 @@ class Cave(grok.Model):
 
 
 @grok.implementer(IHome)
-class Home(object):
+class Home:
     pass
 
 

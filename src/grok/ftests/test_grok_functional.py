@@ -1,13 +1,13 @@
-import unittest
 import doctest
-import grok
-import grok.testing
+import unittest
 
 from pkg_resources import resource_listdir
-from zope.testing import renormalizing
 
-import zope.testbrowser.wsgi
 import zope.app.wsgi.testlayer
+import zope.testbrowser.wsgi
+
+import grok
+import grok.testing
 
 
 class Layer(
@@ -30,9 +30,9 @@ def http_call(method, path, data=None, **kw):
 
     if path.startswith('http://localhost'):
         path = path[len('http://localhost'):]
-    request_string = '%s %s HTTP/1.1\n' % (method, path)
+    request_string = '{} {} HTTP/1.1\n'.format(method, path)
     for key, value in kw.items():
-        request_string += '%s: %s\n' % (key, value)
+        request_string += '{}: {}\n'.format(key, value)
     if data is not None:
         request_string += '\r\n'
         request_string += data
@@ -47,22 +47,19 @@ def suiteFromPackage(name):
             continue
         if filename == '__init__.py':
             continue
-        dottedname = 'grok.ftests.%s.%s' % (name, filename[:-3])
+        dottedname = 'grok.ftests.{}.{}'.format(name, filename[:-3])
         test = doctest.DocTestSuite(
             dottedname,
-            checker=renormalizing.RENormalizing(),
             extraglobs=dict(
                 getRootFolder=layer.getRootFolder,
                 http=zope.app.wsgi.testlayer.http,
                 http_call=http_call,
-                bprint=grok.testing.bprint,
                 wsgi_app=layer.make_wsgi_app,
             ),
             optionflags=(
                 doctest.ELLIPSIS +
                 doctest.NORMALIZE_WHITESPACE +
-                doctest.REPORT_NDIFF +
-                renormalizing.IGNORE_EXCEPTION_MODULE_IN_PYTHON2)
+                doctest.REPORT_NDIFF)
                 )
         test.layer = layer
         suite.addTest(test)

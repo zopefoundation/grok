@@ -9,9 +9,9 @@ interface:
   implementing more than one interface
   (use grok.provides to specify which one to use).
 """
-import grok
-
 from zope import interface
+
+import grok
 
 
 class Cave(grok.Model):

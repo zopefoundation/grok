@@ -1,7 +1,7 @@
 import grok
 
 
-class NotAPermissionSubclass(object):
+class NotAPermissionSubclass:
     grok.name('not really a permission')
 
 

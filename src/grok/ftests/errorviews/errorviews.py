@@ -88,7 +88,7 @@ The default views can be selectively overridden in your application::
 import grok
 
 
-class MockPrincipal(object):
+class MockPrincipal:
     id = 'mockprincipal'
 
 

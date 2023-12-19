@@ -24,10 +24,12 @@ Everybody'
 If we try to acces a protect view by an anonyoums user
 we will get an Unauthorized Message.
 
+  >>> # Work around https://github.com/python/cpython/issues/90113
+  >>> browser.raiseHttpErrors = False
   >>> browser.open("http://localhost/@@protectedview")
-  Traceback (most recent call last):
-  ...
-  urllib.error.HTTPError: HTTP Error 401: Unauthorized
+  >>> print(browser.headers['status'])
+  401 Unauthorized
+
 
 If access the view with an authenticated request we should
 get the groups zope.Authenticated.
@@ -44,8 +46,9 @@ And of course you can access the protected view.
   True
 """
 
-import grok
 import zope.interface
+
+import grok
 
 
 class PublicView(grok.View):

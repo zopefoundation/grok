@@ -156,22 +156,26 @@
   </form>
 """  # noqa: E501
 import grokcore.component as grok
-
 from grokcore.view import templatedir
-from grok import Layout, DisplayFormPage, EditFormPage, FormPage
-from zope import interface, schema
+from zope import interface
+from zope import schema
+
+from grok import DisplayFormPage
+from grok import EditFormPage
+from grok import FormPage
+from grok import Layout
 
 
 templatedir('templates')
 
 
 class ICowProperties(interface.Interface):
-    color = schema.TextLine(title=u"Color")
+    color = schema.TextLine(title="Color")
 
 
 @grok.implementer(ICowProperties)
 class Cow(grok.Context):
-    color = u"globally dark"
+    color = "globally dark"
 
 
 class Master(Layout):

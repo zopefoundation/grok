@@ -9,8 +9,9 @@ Grok error because import model doesn't count as context:
   please use the 'context' directive.
 
 """
-import grok
 from zope import interface
+
+import grok
 
 
 class IPainting(interface.Interface):

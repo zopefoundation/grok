@@ -12,6 +12,7 @@ Demonstrate the grokcore.chameleon template component has been registered.
 """
 import grok
 
+
 grok.templatedir('templates')
 
 

@@ -93,7 +93,7 @@ Indexes
 Events and event handling
 -------------------------
 
-.. autoclass:: grok.ApplicationInitializedEvent
+.. autoclass:: grok.ApplicationAddedEvent
 .. autoclass:: grok.ContainerModifiedEvent
 .. autoclass:: grok.IBeforeTraverseEvent
 .. autoclass:: grok.IContainerModifiedEvent
@@ -143,5 +143,4 @@ Grokkers
 .. autoclass:: grok.GrokImportError
 .. autoclass:: grok.InstanceGrokker
 .. autofunction:: grok.testing.grok
-.. autofunction:: grok.testing.grok_component
 .. autofunction:: grok.testing.warn

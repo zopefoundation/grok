@@ -7,8 +7,9 @@ Multiple models lead to ambiguity:
   martian.error.GrokError: Multiple possible contexts for <class 'grok.tests.adapter.multiple.Home'>, please use the 'context' directive.
 
 """  # noqa: E501
-import grok
 from zope import interface
+
+import grok
 
 
 class Cave(grok.Model):
