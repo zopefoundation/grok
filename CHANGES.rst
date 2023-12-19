@@ -4,11 +4,11 @@ Grok changes
 4.0 (unreleased)
 ================
 
+* Add support for Python 3.11, 3.12.
+
 * Update import paths for lifecycle events.
 
 * Drop support for Python 2.7, 3.5, 3.6.
-
-* Add support for Python 3.11.
 
 
 3.3 (2022-09-01)
