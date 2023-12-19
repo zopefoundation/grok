@@ -2,7 +2,7 @@
 # https://github.com/zopefoundation/meta/tree/master/config/pure-python
 [meta]
 template = "pure-python"
-commit-id = "b21fbbf2"
+commit-id = "1a1f5e27"
 
 [python]
 with-windows = false
@@ -19,6 +19,9 @@ testenv-commands = [
     ]
 coverage-command = [
     "coverage run -m zope.testrunner --tests-pattern ^f?tests$ --test-path=src []",
+    ]
+testenv-setenv = [
+    "ZOPE_INTERFACE_STRICT_IRO=1",
     ]
 
 [coverage]
