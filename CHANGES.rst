@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-4.0 (unreleased)
+4.0 (2023-12-19)
 ================
 
 * Add support for Python 3.11, 3.12.
