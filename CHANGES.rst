@@ -4,7 +4,9 @@ Grok changes
 4.1 (unreleased)
 ================
 
-- Nothing changed yet.
+- Fix GrokWiki example app.
+
+- Fix installation documentation.
 
 
 4.0 (2023-12-19)

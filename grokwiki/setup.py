@@ -20,6 +20,7 @@ Grok: Now even cavemen can use wikis!
                       'grokui.admin',
                       'grokcore.startup',
                       'grokcore.message',
+                      'zope.dublincore',
                       ],
     entry_points="""
     [console_scripts]

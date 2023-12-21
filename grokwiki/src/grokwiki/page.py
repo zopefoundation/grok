@@ -40,6 +40,11 @@ class Layout(grok.View):
     pass
 
 
+class StaticResource(grok.DirectoryResource):
+    grok.name('grokwiki')
+    grok.path('static')
+
+
 class Index(grok.View):
 
     def update(self):

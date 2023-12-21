@@ -52,7 +52,7 @@ CREDITS
 
 * Reinout van Rees
 
-* Maurits van Rees
+* Michael Howitz (release manager)
 
 * ME GROK (team mascot)
 
