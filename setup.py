@@ -9,12 +9,9 @@ def read(*rnames):
 
 
 long_description = (
-    read('README.txt')
+    read('README.rst')
     + '\n' +
-    read('CHANGES.txt')
-    + '\n' +
-    'Download\n'
-    '********\n'
+    read('CHANGES.rst')
     )
 
 tests_require = [
@@ -27,11 +24,10 @@ tests_require = [
 
 setup(
     name='grok',
-    version='4.0.dev0',
+    version='4.1.dev0',
     author='Grok Team',
-    author_email='grok-dev@zope.org',
-    url='http://grok.zope.org',
-    download_url='https://pypi.org/project/grok/',
+    author_email='zope-dev@zope.dev',
+    url='https://github.com/zopefoundation/grok',
     description='Grok: Now even cavemen can use Zope 3!',
     long_description=long_description,
     license='ZPL',
@@ -51,6 +47,7 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
     ],
@@ -58,6 +55,7 @@ setup(
     package_dir={'': 'src'},
     include_package_data=True,
     zip_safe=False,
+    python_requires='>=3.7',
     install_requires=[
         'grokcore.annotation >= 1.6',
         'grokcore.catalog >= 2.1',
