@@ -37,10 +37,10 @@ applications you might consider to use `grokproject
 <http://pypi.python.org/pypi/grokproject>`_ instead.
 
 
-Running the demo applications
------------------------------
+Running the demo application
+----------------------------
 
-You can start Zope with the demo applications installed with the
+You can start Zope with the demo application installed with the
 following command:
 
     $ bin/paster serve parts/etc/deploy.ini
@@ -57,25 +57,9 @@ installed in the ``bin`` directory::
 
     $ bin/test
 
-Generating the website files
+Generating the documentation
 ----------------------------
 
-Grok's tutorial documents for the website can easily be generated
-using the following scripts in ``bin``::
+Grok's tutorial documents can easily be generated using the following call::
 
-    $ bin/grokdocs2html
-
-The output is by default written to ``build/html/``.
-
-Run::
-
-    $ bin/grokdocs2html -h
-
-to get all options supported.
-
-With::
-
-    $ bin/grokdocs2latex
-
-you get LaTeX output which can be used to generate PDF docs. This
-requires a working LaTeX installed on your system.
+    $ tox -e docs

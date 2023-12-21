@@ -22,8 +22,8 @@ wiring components together.  That means neither a configuration
 language like ZCML nor a lot of repetition are needed to create a web
 application with grok.
 
-You can find out much more about Grok at our `<website
-https://web.archive.org/web/20221005185405/http://grok.zope.org>`_.
+You can find out much more about Grok at our `website
+<https://web.archive.org/web/20221005185405/http://grok.zope.org>`_.
 
 Who is grok?
 ============
@@ -52,4 +52,4 @@ You can also get grok from GitHub::
 
   git clone https://github.com/zopefoundation/grok.git
 
-Then follow the instructions of ``INSTALL.txt``.
+Then follow the instructions in ``INSTALL.rst``.

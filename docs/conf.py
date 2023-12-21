@@ -58,9 +58,9 @@ copyright = u'2006-2011, The Zope Foundation and Grok developers and community'
 # built documents.
 #
 # The short X.Y version.
-version = '1.4'
+version = '4.1'
 # The full version, including alpha/beta/rc tags.
-release = '1.4'
+release = version
 if release.endswith('dev'):
     release = '%s (unreleased)' % release
 
@@ -132,7 +132,7 @@ html_theme = 'default'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+# html_static_path = ['_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -229,4 +229,4 @@ man_pages = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {'python': ('http://docs.python.org/', None)}
