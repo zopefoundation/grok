@@ -40,15 +40,17 @@ from zope.interface.interfaces import IObjectEvent
 class IGrokBaseClasses(
         grokcore.annotation.interfaces.IBaseClasses,
         grokcore.catalog.interfaces.IBaseClasses,
-        grokcore.component.interfaces.IBaseClasses,
         grokcore.json.interfaces.IBaseClasses,
         grokcore.layout.interfaces.IBaseClasses,
         grokcore.rest.interfaces.IBaseClasses,
-        grokcore.security.interfaces.IBaseClasses,
         grokcore.site.interfaces.IBaseClasses,
         grokcore.traverser.interfaces.IBaseClasses,
-        grokcore.view.interfaces.IBaseClasses,
-        grokcore.xmlrpc.interfaces.IBaseClasses):
+        grokcore.xmlrpc.interfaces.IBaseClasses,
+
+        # In order to have a consistent IRO, these go last.
+        grokcore.component.interfaces.IBaseClasses,
+        grokcore.security.interfaces.IBaseClasses,
+        grokcore.view.interfaces.IBaseClasses):
 
     Container = interface.Attribute(
         "Base class for containers.")

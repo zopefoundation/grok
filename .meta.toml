@@ -20,6 +20,9 @@ testenv-commands = [
 coverage-command = [
     "coverage run -m zope.testrunner --tests-pattern ^f?tests$ --test-path=src []",
     ]
+testenv-setenv = [
+    "ZOPE_INTERFACE_STRICT_IRO=1",
+    ]
 
 [coverage]
 fail-under = 91
