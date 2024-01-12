@@ -41,7 +41,6 @@ def grok(module_name=None):
     zcml.do_grok('grokcore.site.meta', config)
     zcml.do_grok('grokcore.catalog.meta', config)
     zcml.do_grok('grokcore.traverser.meta', config)
-    zcml.do_grok('grokcore.rest.meta', config)
     if module_name is not None:
         zcml.do_grok(module_name, config)
     config.execute_actions()

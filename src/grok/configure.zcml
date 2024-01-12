@@ -49,7 +49,6 @@
   <include package="grokcore.view" />
   <include package="grokcore.view" file="publication_security.zcml" />
   <include package="grokcore.viewlet" />
-  <include package="grokcore.rest" />
 
   <grok:grok package="grok.generations" />
 

@@ -12,6 +12,8 @@ Grok changes
 
   - ``grokcore.xmlrpc``
 
+  - ``grokcore.rest``
+
 
 4.0 (2023-12-19)
 ================

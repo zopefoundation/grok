@@ -72,15 +72,3 @@ class Messages(grok.View):
     def messages(self):
         receiver = component.getUtility(IMessageReceiver)
         return receiver.receive()
-
-
-class WikiLayer(grok.IRESTLayer):
-    # This skin will be visible as http://localhost:8080/++rest++wiki/...
-    grok.restskin('wiki')
-
-
-class PageRest(grok.REST):
-    grok.layer(WikiLayer)
-
-    def GET(self):
-        return "Hello world"

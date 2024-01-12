@@ -66,7 +66,6 @@ setup(
         'grokcore.json >= 1.2',
         'grokcore.layout >= 1.6',
         'grokcore.message',
-        'grokcore.rest >= 1.3',
         'grokcore.security[role] >= 1.6',
         'grokcore.site >= 1.7',
         'grokcore.traverser >= 1.1',

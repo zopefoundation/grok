@@ -60,10 +60,6 @@ from grokcore.layout import NotFoundPage
 from grokcore.layout import UnauthorizedPage
 from grokcore.layout import layout
 from grokcore.layout.interfaces import ILayout
-from grokcore.rest import REST
-from grokcore.rest import IRESTLayer
-from grokcore.rest import IRESTSkinType
-from grokcore.rest import restskin
 from grokcore.security import Permission
 from grokcore.security import Public
 from grokcore.security import Role
