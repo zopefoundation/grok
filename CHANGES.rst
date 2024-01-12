@@ -14,6 +14,8 @@ Grok changes
 
   - ``grokcore.rest``
 
+  - ``grokui.admin`` (only used in grokwiki example project)
+
 
 4.0 (2023-12-19)
 ================

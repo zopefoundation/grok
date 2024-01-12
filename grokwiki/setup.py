@@ -17,7 +17,6 @@ Grok: Now even cavemen can use wikis!
 
     install_requires=['setuptools',
                       'grok',
-                      'grokui.admin',
                       'grokcore.startup',
                       'grokcore.message',
                       'zope.dublincore',
