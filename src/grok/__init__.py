@@ -98,7 +98,6 @@ from grokcore.viewlet import ViewletManager
 from grokcore.viewlet import order
 from grokcore.viewlet import view
 from grokcore.viewlet import viewletmanager
-from grokcore.xmlrpc import XMLRPC
 from martian import ClassGrokker
 from martian import GlobalGrokker
 from martian import InstanceGrokker

@@ -26,7 +26,6 @@ import grokcore.site.interfaces
 import grokcore.traverser.interfaces
 import grokcore.view.interfaces
 import grokcore.viewlet.interfaces
-import grokcore.xmlrpc.interfaces
 from grokcore.component.interfaces import IContext
 from grokcore.component.interfaces import IGrokErrors
 from grokcore.rest.interfaces import IREST  # noqa: F401
@@ -47,8 +46,7 @@ class IGrokBaseClasses(
         grokcore.security.interfaces.IBaseClasses,
         grokcore.site.interfaces.IBaseClasses,
         grokcore.traverser.interfaces.IBaseClasses,
-        grokcore.view.interfaces.IBaseClasses,
-        grokcore.xmlrpc.interfaces.IBaseClasses):
+        grokcore.view.interfaces.IBaseClasses):
 
     Container = interface.Attribute(
         "Base class for containers.")

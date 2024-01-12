@@ -1,12 +1,16 @@
 Grok changes
 ************
 
-4.1 (unreleased)
+5.0 (unreleased)
 ================
 
 - Fix GrokWiki example app.
 
 - Fix installation documentation.
+
+- Drop dependency on archived packages:
+
+  - ``grokcore.xmlrpc``
 
 
 4.0 (2023-12-19)

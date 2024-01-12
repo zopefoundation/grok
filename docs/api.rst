@@ -36,7 +36,6 @@ View components
 .. autoclass:: grok.Viewlet
 .. autoclass:: grok.viewletmanager
 .. autoclass:: grok.ViewletManager
-.. autoclass:: grok.XMLRPC
 .. autofunction:: grok.url
 
 Forms

@@ -50,7 +50,6 @@
   <include package="grokcore.view" file="publication_security.zcml" />
   <include package="grokcore.viewlet" />
   <include package="grokcore.rest" />
-  <include package="grokcore.xmlrpc" />
 
   <grok:grok package="grok.generations" />
 

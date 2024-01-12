@@ -59,7 +59,6 @@ def test_suite():
             'traversal',
             'utility',
             'viewlet',
-            'xmlrpc',
             'zcml'
             ]:
         suite.addTest(suiteFromPackage(name))
