@@ -42,7 +42,6 @@
   <include package="grokcore.annotation" />
   <include package="grokcore.chameleon" />
   <include package="grokcore.formlib" />
-  <include package="grokcore.json" />
   <include package="grokcore.layout" />
   <include package="grokcore.site" />
   <include package="grokcore.traverser" />

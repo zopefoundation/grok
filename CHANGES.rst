@@ -14,6 +14,8 @@ Grok changes
 
   - ``grokcore.rest``
 
+  - ``grokcore.json``
+
   - ``grokui.admin`` (only used in grokwiki example project)
 
 

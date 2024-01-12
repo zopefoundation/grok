@@ -54,7 +54,6 @@ from grokcore.content import OrderedContainer
 from grokcore.formlib import AutoFields
 from grokcore.formlib import Fields
 from grokcore.formlib import action
-from grokcore.json import JSON
 from grokcore.layout import ExceptionPage
 from grokcore.layout import NotFoundPage
 from grokcore.layout import UnauthorizedPage

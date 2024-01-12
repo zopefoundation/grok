@@ -63,7 +63,6 @@ setup(
         'grokcore.component >= 3.1',
         'grokcore.content >= 1.2',
         'grokcore.formlib >= 1.10',
-        'grokcore.json >= 1.2',
         'grokcore.layout >= 1.6',
         'grokcore.message',
         'grokcore.security[role] >= 1.6',

@@ -20,7 +20,6 @@ View components
 .. autoclass:: grok.DirectoryResource
 .. autoclass:: grok.IBrowserRequest
 .. autoclass:: grok.IDefaultBrowserLayer
-.. autoclass:: grok.JSON
 .. autoclass:: grok.layer
 .. autoclass:: grok.PageTemplate
 .. autoclass:: grok.PageTemplateFile

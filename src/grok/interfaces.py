@@ -18,7 +18,6 @@ import grokcore.annotation.interfaces
 import grokcore.catalog.interfaces
 import grokcore.component.interfaces
 import grokcore.formlib.interfaces
-import grokcore.json.interfaces
 import grokcore.layout.interfaces
 import grokcore.security.interfaces
 import grokcore.site.interfaces
@@ -36,7 +35,6 @@ class IGrokBaseClasses(
         grokcore.annotation.interfaces.IBaseClasses,
         grokcore.catalog.interfaces.IBaseClasses,
         grokcore.component.interfaces.IBaseClasses,
-        grokcore.json.interfaces.IBaseClasses,
         grokcore.layout.interfaces.IBaseClasses,
         grokcore.security.interfaces.IBaseClasses,
         grokcore.site.interfaces.IBaseClasses,
