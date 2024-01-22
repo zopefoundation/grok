@@ -1,8 +1,24 @@
 Grok changes
 ************
 
-4.1 (unreleased)
+5.0 (unreleased)
 ================
+
+Breaking changes
+----------------
+
+- Drop dependency on archived packages:
+
+  - ``grokcore.xmlrpc``
+
+  - ``grokcore.rest``
+
+  - ``grokcore.json``
+
+  - ``grokui.admin`` (only used in grokwiki example project)
+  
+Fixes
+-----
 
 - Fix GrokWiki example app.
 

@@ -54,16 +54,11 @@ from grokcore.content import OrderedContainer
 from grokcore.formlib import AutoFields
 from grokcore.formlib import Fields
 from grokcore.formlib import action
-from grokcore.json import JSON
 from grokcore.layout import ExceptionPage
 from grokcore.layout import NotFoundPage
 from grokcore.layout import UnauthorizedPage
 from grokcore.layout import layout
 from grokcore.layout.interfaces import ILayout
-from grokcore.rest import REST
-from grokcore.rest import IRESTLayer
-from grokcore.rest import IRESTSkinType
-from grokcore.rest import restskin
 from grokcore.security import Permission
 from grokcore.security import Public
 from grokcore.security import Role
@@ -98,7 +93,6 @@ from grokcore.viewlet import ViewletManager
 from grokcore.viewlet import order
 from grokcore.viewlet import view
 from grokcore.viewlet import viewletmanager
-from grokcore.xmlrpc import XMLRPC
 from martian import ClassGrokker
 from martian import GlobalGrokker
 from martian import InstanceGrokker

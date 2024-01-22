@@ -20,15 +20,10 @@ View components
 .. autoclass:: grok.DirectoryResource
 .. autoclass:: grok.IBrowserRequest
 .. autoclass:: grok.IDefaultBrowserLayer
-.. autoclass:: grok.IRESTLayer
-.. autoclass:: grok.IRESTSkinType
-.. autoclass:: grok.JSON
 .. autoclass:: grok.layer
 .. autoclass:: grok.PageTemplate
 .. autoclass:: grok.PageTemplateFile
 .. autoclass:: grok.path
-.. autoclass:: grok.REST
-.. autoclass:: grok.restskin
 .. autoclass:: grok.skin
 .. autoclass:: grok.template
 .. autoclass:: grok.view
@@ -36,7 +31,6 @@ View components
 .. autoclass:: grok.Viewlet
 .. autoclass:: grok.viewletmanager
 .. autoclass:: grok.ViewletManager
-.. autoclass:: grok.XMLRPC
 .. autofunction:: grok.url
 
 Forms
@@ -126,7 +120,6 @@ Directives
 .. autoclass:: grok.permissions
 .. autoclass:: grok.provides
 .. autoclass:: grok.require
-.. autoclass:: grok.restskin
 .. autoclass:: grok.site
 .. autoclass:: grok.skin
 .. autoclass:: grok.template

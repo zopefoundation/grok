@@ -25,14 +25,12 @@ Core
   MRO stuff. Since we don't support non-persistent local utilities yet this
   may be a rare case.
 
-- What about local utilities that don't subclass persistent? Perhaps we 
+- What about local utilities that don't subclass persistent? Perhaps we
   can look for IPersistent and give an error if the utility doesn't
   state it is.
 
 - Change error messages: whenever we report about a callable, add
   () to the name. Core Python expections do this.
-
-- JSON support similar to XMLRPC.
 
 
 Schema/formlib support

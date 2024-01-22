@@ -49,7 +49,6 @@ def test_suite():
     for name in [
             'adapter',
             'baseclass',
-            'conflict',
             'container',
             'directive',
             'error',
@@ -59,7 +58,6 @@ def test_suite():
             'traversal',
             'utility',
             'viewlet',
-            'xmlrpc',
             'zcml'
             ]:
         suite.addTest(suiteFromPackage(name))

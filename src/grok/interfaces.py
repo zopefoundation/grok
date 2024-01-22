@@ -18,20 +18,14 @@ import grokcore.annotation.interfaces
 import grokcore.catalog.interfaces
 import grokcore.component.interfaces
 import grokcore.formlib.interfaces
-import grokcore.json.interfaces
 import grokcore.layout.interfaces
-import grokcore.rest.interfaces
 import grokcore.security.interfaces
 import grokcore.site.interfaces
 import grokcore.traverser.interfaces
 import grokcore.view.interfaces
 import grokcore.viewlet.interfaces
-import grokcore.xmlrpc.interfaces
 from grokcore.component.interfaces import IContext
 from grokcore.component.interfaces import IGrokErrors
-from grokcore.rest.interfaces import IREST  # noqa: F401
-from grokcore.rest.interfaces import IRESTLayer  # noqa: F401
-from grokcore.rest.interfaces import IRESTSkinType  # noqa: F401
 from zope import interface
 from zope.container.interfaces import IContainer as IContainerBase
 from zope.interface.interfaces import IObjectEvent
@@ -41,14 +35,11 @@ class IGrokBaseClasses(
         grokcore.annotation.interfaces.IBaseClasses,
         grokcore.catalog.interfaces.IBaseClasses,
         grokcore.component.interfaces.IBaseClasses,
-        grokcore.json.interfaces.IBaseClasses,
         grokcore.layout.interfaces.IBaseClasses,
-        grokcore.rest.interfaces.IBaseClasses,
         grokcore.security.interfaces.IBaseClasses,
         grokcore.site.interfaces.IBaseClasses,
         grokcore.traverser.interfaces.IBaseClasses,
-        grokcore.view.interfaces.IBaseClasses,
-        grokcore.xmlrpc.interfaces.IBaseClasses):
+        grokcore.view.interfaces.IBaseClasses):
 
     Container = interface.Attribute(
         "Base class for containers.")
@@ -124,7 +115,6 @@ class IGrokAPI(
         grokcore.security.interfaces.IGrokcoreSecurityAPI,
         grokcore.site.interfaces.IGrokcoreSiteAPI,
         grokcore.view.interfaces.IGrokcoreViewAPI,
-        grokcore.rest.interfaces.IGrokcoreRestAPI,
         grokcore.viewlet.interfaces.IGrokcoreViewletAPI,
         IGrokBaseClasses,
         IGrokDirectives,
