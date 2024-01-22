@@ -4,9 +4,8 @@ Grok changes
 5.0 (unreleased)
 ================
 
-- Fix GrokWiki example app.
-
-- Fix installation documentation.
+Breaking changes
+----------------
 
 - Drop dependency on archived packages:
 
@@ -17,6 +16,13 @@ Grok changes
   - ``grokcore.json``
 
   - ``grokui.admin`` (only used in grokwiki example project)
+  
+Fixes
+-----
+
+- Fix GrokWiki example app.
+
+- Fix installation documentation.
 
 
 4.0 (2023-12-19)
