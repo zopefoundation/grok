@@ -20,9 +20,6 @@ testenv-commands = [
 coverage-command = [
     "coverage run -m zope.testrunner --tests-pattern ^f?tests$ --test-path=src []",
     ]
-testenv-deps = [
-    "pypy3: cffi",
-    ]
 
 [coverage]
 fail-under = 91
