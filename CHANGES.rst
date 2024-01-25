@@ -1,8 +1,8 @@
 Grok changes
 ************
 
-5.0 (unreleased)
-================
+5.0a2 (2024-01-25)
+==================
 
 - Split ``dependencies.zcml`` off ``configure.zcml`` for easier reuse.
 
