@@ -1,0 +1,51 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:grok="http://namespaces.zope.org/grok">
+
+  <include package="zope.app.publication" file="meta.zcml" />
+  <include package="zope.browserpage" file="meta.zcml" />
+  <include package="zope.component" file="meta.zcml" />
+  <include package="zope.i18n" file="meta.zcml" />
+  <include package="zope.principalregistry" file="meta.zcml" />
+  <include package="zope.publisher" file="meta.zcml" />
+  <include package="zope.security" file="meta.zcml" />
+  <include package="zope.securitypolicy" file="meta.zcml" />
+
+  <include package="grok" file="meta.zcml" />
+
+  <include package="zope.annotation" />
+  <include package="zope.browserpage" />
+  <include package="zope.catalog" />
+  <include package="zope.component" />
+  <include package="zope.contentprovider" />
+  <include package="zope.errorview" file="browser.zcml"/>
+  <include package="zope.intid" />
+  <include package="zope.generations" />
+  <include package="zope.keyreference" />
+  <include package="zope.location" />
+  <include package="zope.login" />
+  <include package="zope.password" />
+  <include package="zope.principalregistry" />
+  <include package="zope.publisher" />
+  <include package="zope.security " />
+  <include package="zope.securitypolicy" />
+  <include package="zope.site" />
+  <include package="zope.traversing" />
+  <include package="zope.traversing.browser" />
+
+  <include package="zope.app.appsetup" />
+  <include package="zope.app.publication" />
+  <include package="zope.app.wsgi" />
+
+  <include package="grokcore.annotation" />
+  <include package="grokcore.chameleon" />
+  <include package="grokcore.formlib" />
+  <include package="grokcore.layout" />
+  <include package="grokcore.site" />
+  <include package="grokcore.traverser" />
+  <include package="grokcore.view" />
+  <include package="grokcore.view" file="publication_security.zcml" />
+  <include package="grokcore.viewlet" />
+
+</configure>

@@ -4,7 +4,7 @@ Grok changes
 5.0 (unreleased)
 ================
 
-- Nothing changed yet.
+- Split ``dependencies.zcml`` off ``configure.zcml`` for easier reuse.
 
 
 5.0a1 (2024-01-22)
@@ -22,7 +22,7 @@ Breaking changes
   - ``grokcore.json``
 
   - ``grokui.admin`` (only used in grokwiki example project)
-  
+
 Fixes
 -----
 
