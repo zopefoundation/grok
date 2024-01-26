@@ -4,7 +4,7 @@ Grok changes
 5.0 (unreleased)
 ================
 
-- Nothing changed yet.
+- Split ``default.zcml`` off ``configure.zcml`` for easier exclude.
 
 
 5.0a2 (2024-01-25)
