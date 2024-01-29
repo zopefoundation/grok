@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-5.0 (unreleased)
+5.0 (2024-01-29)
 ================
 
 Breaking changes
