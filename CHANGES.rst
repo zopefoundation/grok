@@ -4,24 +4,6 @@ Grok changes
 5.0 (unreleased)
 ================
 
-- Nothing changed yet.
-
-
-5.0a3 (2024-01-26)
-==================
-
-- Split ``default.zcml`` off ``configure.zcml`` for easier exclude.
-
-
-5.0a2 (2024-01-25)
-==================
-
-- Split ``dependencies.zcml`` off ``configure.zcml`` for easier reuse.
-
-
-5.0a1 (2024-01-22)
-==================
-
 Breaking changes
 ----------------
 
@@ -41,6 +23,13 @@ Fixes
 - Fix GrokWiki example app.
 
 - Fix installation documentation.
+
+Changes
+-------
+
+- Split ``default.zcml`` off ``configure.zcml`` for easier exclude.
+
+- Split ``dependencies.zcml`` off ``configure.zcml`` for easier reuse.
 
 
 4.0 (2023-12-19)

@@ -5,7 +5,8 @@ from setuptools import setup
 
 
 def read(*rnames):
-    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
+    with open(os.path.join(os.path.dirname(__file__), *rnames)) as f:
+        return f.read()
 
 
 long_description = (
@@ -107,7 +108,6 @@ setup(
         'zope.site',
         'zope.traversing',
         ],
-    tests_require=tests_require,
     extras_require={
         'test': tests_require,
         'docs': ['Sphinx']
