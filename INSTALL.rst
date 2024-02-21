@@ -12,7 +12,7 @@ Clone ``grok`` from Github:
 
     $ git clone git@github.com:zopefoundation/grok.git
 
-Go inside this directory and create a ``venv`` and install ``zc.buildout``:
+Go inside this directory and create a ``venv`` and install ``zc.buildout``::
 
     $ cd grok
     $ python3 -m venv .
