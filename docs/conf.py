@@ -58,7 +58,7 @@ copyright = u'2006-2011, The Zope Foundation and Grok developers and community'
 # built documents.
 #
 # The short X.Y version.
-version = '4.1'
+version = '5.0'
 # The full version, including alpha/beta/rc tags.
 release = version
 if release.endswith('dev'):
