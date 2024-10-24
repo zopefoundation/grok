@@ -24,7 +24,7 @@ class RoleComprisingTwoPermissionsByName(grok.Role):
     grok.permissions(
         'first permission',
         'second permission'
-        )
+    )
 
 
 class RoleComprisingTwoPermissionsByClass(grok.Role):
@@ -32,4 +32,4 @@ class RoleComprisingTwoPermissionsByClass(grok.Role):
     grok.permissions(
         FirstPermission,
         SecondPermission
-        )
+    )

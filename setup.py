@@ -13,7 +13,7 @@ long_description = (
     read('README.rst')
     + '\n' +
     read('CHANGES.rst')
-    )
+)
 
 tests_require = [
     'zope.app.wsgi[test]',
@@ -21,7 +21,7 @@ tests_require = [
     'zope.testbrowser',
     'zope.testing',
     'zope.testrunner',
-    ]
+]
 
 setup(
     name='grok',
@@ -43,12 +43,12 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Framework :: Zope :: 3',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
     ],
@@ -56,7 +56,7 @@ setup(
     package_dir={'': 'src'},
     include_package_data=True,
     zip_safe=False,
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     install_requires=[
         'grokcore.annotation >= 1.6',
         'grokcore.catalog >= 2.1',
@@ -107,7 +107,7 @@ setup(
         'zope.securitypolicy',
         'zope.site',
         'zope.traversing',
-        ],
+    ],
     extras_require={
         'test': tests_require,
         'docs': ['Sphinx']

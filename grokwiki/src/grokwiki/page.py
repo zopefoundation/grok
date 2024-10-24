@@ -14,19 +14,21 @@
 """The grok demo wiki
 """
 import re
-import grok
 
 from z3c.flashmessage.interfaces import IMessageReceiver
 from zope import component
 
-LINK_PATTERN = re.compile('\[\[(.*?)\]\]')
+import grok
+
+
+LINK_PATTERN = re.compile('\\[\\[(.*?)\\]\\]')
 find_wiki_links = LINK_PATTERN.findall
 
 
 class WikiPage(grok.Model):
 
     def __init__(self):
-        self.text = u"GROK EMPTY WIKI PAGE. FILL!"
+        self.text = "GROK EMPTY WIKI PAGE. FILL!"
 
     def update(self, text):
         links = find_wiki_links(text)
