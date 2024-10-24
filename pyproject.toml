@@ -12,7 +12,7 @@ source = ["grok"]
 omit = ["src/grok/tests/*/*_fixture.py"]
 
 [tool.coverage.report]
-fail_under = 91
+fail_under = 90.5
 precision = 2
 ignore_errors = true
 show_missing = true

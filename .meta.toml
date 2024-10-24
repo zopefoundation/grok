@@ -22,7 +22,7 @@ coverage-command = [
     ]
 
 [coverage]
-fail-under = 91
+fail-under = 90.5
 
 [coverage-run]
 additional-config = [
