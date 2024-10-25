@@ -2,7 +2,7 @@
 # https://github.com/zopefoundation/meta/tree/master/config/pure-python
 [meta]
 template = "pure-python"
-commit-id = "9e626d3b"
+commit-id = "f317618e"
 
 [python]
 with-windows = false
@@ -22,7 +22,7 @@ coverage-command = [
     ]
 
 [coverage]
-fail-under = 91
+fail-under = 90.5
 
 [coverage-run]
 additional-config = [

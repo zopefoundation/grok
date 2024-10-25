@@ -22,5 +22,6 @@ class BoneBag(grok.Container):
 class Index(grok.View):
     """A simple view to test whether BoneBag is really registered as a model.
     """
+
     def render(self):
         return "Hello world"

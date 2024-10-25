@@ -282,6 +282,7 @@ default_display_template.__grok_name__ = 'default_display_form'
 class LayoutAwareFormPage(grokcore.layout.components.LayoutAware):
     """A mixin to make form aware of layouts.
     """
+
     def __call__(self):
         """Calls update and returns the layout template which calls render.
         """

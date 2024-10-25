@@ -35,7 +35,7 @@ def suiteFromPackage(name):
             continue
         if filename == '__init__.py':
             continue
-        dottedname = 'grok.tests.{}.{}'.format(name, filename[:-3])
+        dottedname = f'grok.tests.{name}.{filename[:-3]}'
         test = doctest.DocTestSuite(
             dottedname,
             optionflags=doctest.ELLIPSIS + doctest.NORMALIZE_WHITESPACE)
@@ -59,6 +59,6 @@ def test_suite():
             'utility',
             'viewlet',
             'zcml'
-            ]:
+    ]:
         suite.addTest(suiteFromPackage(name))
     return suite

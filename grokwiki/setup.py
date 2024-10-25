@@ -1,4 +1,6 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from setuptools import setup
+
 
 setup(
     name='grokwiki',
@@ -25,5 +27,5 @@ Grok: Now even cavemen can use wikis!
     [console_scripts]
     interactive_debug_prompt = grokcore.startup.startup:interactive_debug_prompt
     [paste.app_factory]
-    main = grokcore.startup:application_factory""",
+    main = grokcore.startup:application_factory""",  # noqa E501 line too long
 )
