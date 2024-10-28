@@ -25,7 +25,7 @@ tests_require = [
 
 setup(
     name='grok',
-    version='5.1.dev0',
+    version='5.1',
     author='Grok Team',
     author_email='zope-dev@zope.dev',
     url='https://github.com/zopefoundation/grok',
