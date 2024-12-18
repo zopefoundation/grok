@@ -4,7 +4,7 @@ Grok changes
 5.2 (unreleased)
 ================
 
-- Nothing changed yet.
+- Make ``grokwiki`` example project work again.
 
 
 5.1 (2024-10-28)
