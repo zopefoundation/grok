@@ -50,7 +50,8 @@ password 'grok', you should be able to add the grok-based applications
 (such as grokwiki) from the menu.
 
 If you are using python >3.13 and encounter a ``No module named 'cgi'`` error, install the legacy cgi package:
-``./bin/pip install legacy-cgi``
+
+    $ ./bin/pip install legacy-cgi
 
 Running the tests
 -----------------
