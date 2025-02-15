@@ -6,6 +6,8 @@ Grok changes
 
 - Make ``grokwiki`` example project work again.
 
+- Re-enable ``zpassword`` in ``buildout.cfg``.
+
 
 5.1 (2024-10-28)
 ================
