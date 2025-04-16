@@ -1,6 +1,8 @@
 <configure xmlns="http://namespaces.zope.org/zope"
            xmlns:grok="http://namespaces.zope.org/grok">
   <include package="grok" />
-  <includeDependencies package="." />
+  <include package="zope.dublincore" />
+  <include package="grokui.admin" />
+  <include package="grokcore.message" />
   <grok:grok package="." />
 </configure>

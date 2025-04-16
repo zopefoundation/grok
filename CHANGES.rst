@@ -8,6 +8,7 @@ Grok changes
 
 - Re-enable ``zpassword`` in ``buildout.cfg``.
 
+- Drop support for deprecated ``z3c.autoinclude``.
 
 5.1 (2024-10-28)
 ================
