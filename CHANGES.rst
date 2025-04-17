@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-5.2 (unreleased)
+6.0 (unreleased)
 ================
 
 - Make ``grokwiki`` example project work again.
