@@ -9,16 +9,14 @@ Grok changes
 * Require ``grokcore.view[security-publication]`` (with hyphen instead of
   underscore) as it seems to get name mangled somewhere along the way.
 
-
-
 6.0 (2025-04-17)
 ================
 
-- Make ``grokwiki`` example project work again.
+* Make ``grokwiki`` example project work again.
 
-- Re-enable ``zpassword`` in ``buildout.cfg``.
+* Re-enable ``zpassword`` in ``buildout.cfg``.
 
-- Drop support for deprecated ``z3c.autoinclude``.
+* Drop support for deprecated ``z3c.autoinclude``.
 
 5.1 (2024-10-28)
 ================
@@ -34,29 +32,29 @@ Grok changes
 Breaking changes
 ----------------
 
-- Drop dependency on archived packages:
+* Drop dependency on archived packages:
 
-  - ``grokcore.xmlrpc``
+  * ``grokcore.xmlrpc``
 
-  - ``grokcore.rest``
+  * ``grokcore.rest``
 
-  - ``grokcore.json``
+  * ``grokcore.json``
 
-  - ``grokui.admin`` (only used in grokwiki example project)
+  * ``grokui.admin`` (only used in grokwiki example project)
 
 Fixes
 -----
 
-- Fix GrokWiki example app.
+* Fix GrokWiki example app.
 
-- Fix installation documentation.
+* Fix installation documentation.
 
 Changes
 -------
 
-- Split ``default.zcml`` off ``configure.zcml`` for easier exclude.
+* Split ``default.zcml`` off ``configure.zcml`` for easier exclude.
 
-- Split ``dependencies.zcml`` off ``configure.zcml`` for easier reuse.
+* Split ``dependencies.zcml`` off ``configure.zcml`` for easier reuse.
 
 
 4.0 (2023-12-19)
@@ -72,47 +70,47 @@ Changes
 3.3 (2022-09-01)
 ================
 
-- Add support for Python 3.9, 3.10.
+* Add support for Python 3.9, 3.10.
 
-- Fix deprecation warnings.
+* Fix deprecation warnings.
 
 
 3.2 (2020-09-02)
 ================
 
-- Fix DeprecationWarnings.
+* Fix DeprecationWarnings.
 
-- Use zopefoundation/meta/config to harmonize package structure.
+* Use zopefoundation/meta/config to harmonize package structure.
 
-- Drop support for Python 3.4, add 3.7 + 3.8.
+* Drop support for Python 3.4, add 3.7 + 3.8.
 
-- Remove some backward compatibility imports.
+* Remove some backward compatibility imports.
 
 3.1 (2018-05-09)
 ================
 
-- Expose ``grok.ignore`` to allow not grokking something in a module.
+* Expose ``grok.ignore`` to allow not grokking something in a module.
 
 3.0.1 (2018-01-17)
 ==================
 
-- Replace the use of ``grok.implements()`` with the ``@grok.implementer()``
+* Replace the use of ``grok.implements()`` with the ``@grok.implementer()``
   directive throughout.
 
 3.0.0 (2018-01-16)
 ==================
 
-- Python 3 compatibility.
+* Python 3 compatibility.
 
 1.15 (2017-05-30)
 =================
 
-- Advertise the LazyAnnotation and LazyAnnotationProperty.
+* Advertise the LazyAnnotation and LazyAnnotationProperty.
 
 1.14.1 (2016-02-15)
 ===================
 
-- Update tests.
+* Update tests.
 
 1.14 (2015-06-11)
 =================
@@ -120,241 +118,241 @@ Changes
 Note: There are a couple of changes that breaks backward compatibility
 with older versions.
 
-- Advertise the ``install_on`` directive from grokcore.site.
+* Advertise the ``install_on`` directive from grokcore.site.
 
-- Replace ``ApplicationInitializedEvent`` with
+* Replace ``ApplicationInitializedEvent`` with
   ``ApplicationAddedEvent`` from grokcore.site.
 
-- Introduce a new event ``DatabaseCreatedEvent`` which is triggered
+* Introduce a new event ``DatabaseCreatedEvent`` which is triggered
   only one time when the database is created. For existing application
   upgrade to this new version, an event will still be send at the time
   of the upgrade.
 
-- Replace ``grok.util.create_application`` with the one from
+* Replace ``grok.util.create_application`` with the one from
   grokcore.site.util. It is now importable directly from grok.
 
 1.13 (2015-06-04)
 =================
 
-- Advertise the ``ObjectEditedEvent`` from grokcore.content.
+* Advertise the ``ObjectEditedEvent`` from grokcore.content.
 
 1.12 (2014-10-20)
 =================
 
-- Add ``grok.queryAnnotation()`` and ``grok.deleteAnnotation()`` from
+* Add ``grok.queryAnnotation()`` and ``grok.deleteAnnotation()`` from
   ``grokcore.annotation``.
 
 1.11.3 (2013-04-03)
 ===================
 
-- Fixed application_url() calls to use keyword arguments where the API
+* Fixed application_url() calls to use keyword arguments where the API
   defines keyword arguments.
 
 1.11.2 (2013-04-03)
 ===================
 
-- Fix brown paper bag release where not all resources were included. Again.
+* Fix brown paper bag release where not all resources were included. Again.
 
 1.11.1 (2013-04-03)
 ===================
 
-- Fix brown paper bag release where not all resources were included.
+* Fix brown paper bag release where not all resources were included.
 
 1.11 (2013-04-03)
 =================
 
-- Update ``grok.util.application_url()`` to work correctly with
+* Update ``grok.util.application_url()`` to work correctly with
   ``grokcore.view.util.url()``.
 
 1.10.3 (2012-05-10)
 ===================
 
-- Make sure the correct layout is retrieved for layout aware form components
+* Make sure the correct layout is retrieved for layout aware form components
   too.
 
 1.10.2 (2012-05-10)
 ===================
 
-- Import the grokcore.layout.layout directive into the grok namespace too.
+* Import the grokcore.layout.layout directive into the grok namespace too.
 
 1.10.1 (2012-05-02)
 ===================
 
-- Update version requirements.
+* Update version requirements.
 
 1.10 (2012-05-02)
 =================
 
-- Split off the Application component and the local_utility directive to
+* Split off the Application component and the local_utility directive to
   grokcore.site. A backwards compatibility import for Application is left
   in place.
 
-- Split off the catalog and indexing components from grok into
+* Split off the catalog and indexing components from grok into
   grokcore.catalog.
 
-- The permissions() directive, the Permission component and the Role
+* The permissions() directive, the Permission component and the Role
   component moved from grok to grokcore.security. The grok package imports
   these component, so they can still be accessed through the grok api.
 
 1.9 (2011-09-06)
 ================
 
-- Added imports for `querySubscriptions()`, `queryMultiSubscriptions()`,
+* Added imports for `querySubscriptions()`, `queryMultiSubscriptions()`,
   `queryOrderedSubscriptions()` and `queryOrderedMultiSubscriptions()` functions
   that complement the Subscriptions and MultiSubscriptions components.
 
 1.8 (2011-07-14)
 ================
 
-- Incorporate grokcore.chameleon and have it configured by default.
+* Incorporate grokcore.chameleon and have it configured by default.
 
-- Expose the Layout, Page, AddFormPage, EditFormPage, DisplayFormPage and
+* Expose the Layout, Page, AddFormPage, EditFormPage, DisplayFormPage and
   FormPage components that are brought by grokcore.layout. The grok variants
   mixin application_url() and flash() functionality typically found in grok's
   viewish components.
 
-- Expose the ExecptionPage, NotFoundPage and UnauthorizedPage component from
+* Expose the ExecptionPage, NotFoundPage and UnauthorizedPage component from
   grokcore.layout.
 
-- Expose the ContentProvider component from grokcore.view
+* Expose the ContentProvider component from grokcore.view
 
-- Declare the name "index" as default view name for error views.
+* Declare the name "index" as default view name for error views.
 
 1.7 (2011-05-26)
 ================
 
-- Directly depend on zope.app.wsgi and configure it too to have the useful
+* Directly depend on zope.app.wsgi and configure it too to have the useful
   IResult adapters for (temporary) files registered.
 
-- Import grokcore.component.global_adapter too.
+* Import grokcore.component.global_adapter too.
 
 1.6 (2011-04-04)
 ================
 
-- Fix tests that relied on older versions of zope.testbrowser.
+* Fix tests that relied on older versions of zope.testbrowser.
 
-- Added grok.index.Value component.
+* Added grok.index.Value component.
 
 1.5 (2011-02-14)
 ================
 
-- Added import for Subscription and MultiSubscription components.
+* Added import for Subscription and MultiSubscription components.
 
 1.4.3 (2011-02-08)
 ==================
 
-- Fix tests now that error views no longer by default provide ISystemErrorView.
+* Fix tests now that error views no longer by default provide ISystemErrorView.
 
 1.4.2 (2011-01-20)
 ==================
 
-- Should've listed IApplication as part of the grok API too.
+* Should've listed IApplication as part of the grok API too.
 
 1.4.1 (2011-01-20)
 ==================
 
-- Grok should still provide IApplication in the grok API, even now that it
+* Grok should still provide IApplication in the grok API, even now that it
   got moved to grokcore.site.interfaces.
 
 1.4 (2011-01-20)
 ================
 
-- Define error view baseclasses for IException, INotFound and IUnauthorized
+* Define error view baseclasses for IException, INotFound and IUnauthorized
   errors: grok.ExceptionView, grok.NotFoundView, grok.UnauthorizedView. Lifts
   the indirect dependency on zope.app.http and zope.app.exception.
 
-- Moved the XMLRPC, REST component into separate packages
+* Moved the XMLRPC, REST component into separate packages
   grokcore.xmlrpc and grokcore.rest. Consequently the custom traverse
   components that Grok defined were moved to grokcore.traverser. Grok
   the-python-package acts more and more like an import-hub.
 
-- To build the docs we now use `collective.recipe.sphinxbuilder`
+* To build the docs we now use `collective.recipe.sphinxbuilder`
   instead of our own, early hack (get rid of `grokdocs`
   subpackage). Buildout now generates ``grokdocs2html`` and
   ``grokdocs2pdf`` which should do what you think they do.
 
-- The `IApplication` interface, and getApplication() moved to
+* The `IApplication` interface, and getApplication() moved to
   ``grokcore.site``.
 
 1.3 (2010-11-03)
 ================
 
-- The `IGrokSecurityView` interface has been to ``grokcore.view``.
+* The `IGrokSecurityView` interface has been to ``grokcore.view``.
 
-- The `make_checker` util function has been moved to ``grokcore.view``.
+* The `make_checker` util function has been moved to ``grokcore.view``.
 
-- The base publisher has been moved to ``grokcore.view`` as an
+* The base publisher has been moved to ``grokcore.view`` as an
   optional feature : security_publication.
 
-- The JSON component and grokker are now moved to
+* The JSON component and grokker are now moved to
   ``grokcore.json``. Grok now depends on this new grokore package.
 
-- Update to latest martian and grokcore.component.
+* Update to latest martian and grokcore.component.
 
 1.2.1 (2010-10-26)
 ==================
 
-- Grok tutorial example projects updated.
+* Grok tutorial example projects updated.
 
-- Documentation updates in preparation for the Grok Toolkit 1.2 release.
+* Documentation updates in preparation for the Grok Toolkit 1.2 release.
 
-- Use zc.buildout-1.5.2.
+* Use zc.buildout-1.5.2.
 
 1.2 (2010-10-13)
 ================
 
-- No changes were necessary.
+* No changes were necessary.
 
 1.2a (2010-10-07)
 =================
 
-- Grok and the Grok Toolkit now use zc.buildout-1.5.1 that should simplify
+* Grok and the Grok Toolkit now use zc.buildout-1.5.1 that should simplify
   Grok's installation story significantly. It is now possible to use a system
   Python installation for installing Grok. This obsoletes the ``virtualenv``
   requirement.
 
-- Grok and the Grok Toolkit will use the ZTK-1.0 release. Note though that
+* Grok and the Grok Toolkit will use the ZTK-1.0 release. Note though that
   several package versions are overridden to include bugfix releases.
 
-- Various dependencies have been updated.
+* Various dependencies have been updated.
 
-- Removed z3c.testsetup-specific test collector from grok.testing. You can
+* Removed z3c.testsetup-specific test collector from grok.testing. You can
   still use z3c.testsetup with grok, but have to declare the dependency in your
   project's ``setup.py`` explicitly.
 
-- The grok.View component now uses the grokcore.message package for its
+* The grok.View component now uses the grokcore.message package for its
   `flash` method.
 
-- Grok test zcml now explicitly sets a defaultView name (to `index.html`).
+* Grok test zcml now explicitly sets a defaultView name (to `index.html`).
   This has been added since we no longer depend on packages such as
   zope.app.zcmlfiles, that used to take care of that configuration step.
 
-- Internationalization of title and description of roles are not lost anymore.
+* Internationalization of title and description of roles are not lost anymore.
 
-- `create_application` now raises a `KeyError`, in cases of key duplication,
+* `create_application` now raises a `KeyError`, in cases of key duplication,
   to match the ``zope.container`` behavior. Tests have been adapted accordingly.
 
-- Added `KeyError` error handling to the existing `DuplicationError`, to fit
+* Added `KeyError` error handling to the existing `DuplicationError`, to fit
   the ``zope.container`` changes. Tests have been adapted accordingly.
 
 1.1.1 (2010-05-30)
 ==================
 
-- Make use of the groktoolkit 1.1.1 that includes several bugfix releases
+* Make use of the groktoolkit 1.1.1 that includes several bugfix releases
   of Grok's dependencies such as:
 
-  - zope.password, where the SSHAPasswordManager was fixed.
+  * zope.password, where the SSHAPasswordManager was fixed.
 
-  - zope.publisher, that fixes the long standing XML-RPC "hanging" bug.
+  * zope.publisher, that fixes the long standing XML-RPC "hanging" bug.
 
-- Cleanups in the buildout parts.
+* Cleanups in the buildout parts.
 
-- Remove zope.app.twisted.
+* Remove zope.app.twisted.
 
 1.1 (2010-05-18)
 ================
 
-- Add zope.pluggablauth as a dependency.
+* Add zope.pluggablauth as a dependency.
 
 1.1rc1 (2010-02-25)
 ===================
@@ -753,7 +751,7 @@ Feature changes
     $ easy_install -U grokproject
 
 * Added testsetup classes in grok.testing to improve easy setup of
-  unit- and functional tests.
+  unit* and functional tests.
 
 * Add support for viewlets and viewlet managers, ``grok.Viewlet``
   and ``grok.ViewletManager``.
@@ -910,17 +908,17 @@ Restructuring
 
 * The new pluggable template language support includes some restructuring:
 
-  - GrokPageTemplate is now split up into two. BaseTemplate, on which all
+  * GrokPageTemplate is now split up into two. BaseTemplate, on which all
     templates need to be based, and GrokTemplate, which also provides a
     set of methods for easy integration of templating languages.
 
-  - All objects based on GrokTemplate are now grokked, instead of having
+  * All objects based on GrokTemplate are now grokked, instead of having
     separate grokkers for each type of template.
 
-  - The View is now completely template-language agnostic, which makes it
+  * The View is now completely template-language agnostic, which makes it
     easy to hook in new page template languages.
 
-  - There are now new interfaces (ITemplate and ITemplateFileFactory)
+  * There are now new interfaces (ITemplate and ITemplateFileFactory)
     used when you implement support for a new templating language.
 
 * Changed the way grok's functional tests are set up.  Instead of each
