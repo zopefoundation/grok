@@ -1,6 +1,12 @@
 Grok changes
 ************
 
+6.2 (unreleased)
+================
+
+- Nothing changed yet.
+
+
 6.1 (2025-06-10)
 ================
 
