@@ -6,6 +6,10 @@ Grok changes
 
 * Drop support for Python 3.8.
 
+* Require ``grokcore.view[security-publication]`` (with hyphen instead of
+  underscore) as it seems to get name mangled somewhere along the way.
+
+
 
 6.0 (2025-04-17)
 ================
