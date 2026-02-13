@@ -1,15 +1,109 @@
 # Generated with zope.meta (https://zopemeta.readthedocs.io/) from:
 # https://github.com/zopefoundation/meta/tree/master/src/zope/meta/pure-python
-# 
-# Generated from:
-# https://github.com/zopefoundation/meta/tree/master/config/pure-python
-
 [build-system]
 requires = [
     "setuptools >= 78.1.1,< 81",
     "wheel",
 ]
 build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "grok"
+version = "6.2.dev0"
+description = "Grok: Now even cavemen can use Zope 3!"
+license = "ZPL"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Topic :: Internet :: WWW/HTTP",
+    "Framework :: Zope :: 3",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+dynamic = ["readme"]
+requires-python = ">=3.10"
+authors = [
+    {name = "Grok Team",email = "zope-dev@zope.dev"},
+]
+maintainers = [
+    {name = "Plone Foundation and contributors",email = "zope-dev@zope.dev"},
+]
+dependencies = [
+    "grokcore.annotation >= 1.6",
+    "grokcore.catalog >= 2.1",
+    "grokcore.chameleon >= 1.0",
+    "grokcore.component >= 3.1",
+    "grokcore.content >= 1.2",
+    "grokcore.formlib >= 1.10",
+    "grokcore.layout >= 1.6",
+    "grokcore.message",
+    "grokcore.security[role] >= 1.6",
+    "grokcore.site >= 1.7",
+    "grokcore.traverser >= 1.1",
+    "grokcore.view [security-publication] >= 4.1",
+    "grokcore.viewlet >= 1.10",
+    "martian >= 1.2",
+    "pytz",
+    "setuptools",
+    "zc.catalog",
+    "ZODB",
+    "zope.annotation",
+    "zope.app.appsetup",
+    "zope.app.publication",
+    "zope.app.wsgi",
+    "zope.browserpage",
+    "zope.catalog",
+    "zope.component",
+    "zope.container",
+    "zope.contentprovider",
+    "zope.errorview [browser]",
+    "zope.event",
+    "zope.exceptions",
+    "zope.generations",
+    "zope.i18n",
+    "zope.i18nmessageid",
+    "zope.interface",
+    "zope.intid",
+    "zope.keyreference",
+    "zope.lifecycleevent",
+    "zope.location",
+    "zope.login",
+    "zope.password",
+    "zope.principalregistry",
+    "zope.publisher",
+    "zope.schema",
+    "zope.security",
+    "zope.securitypolicy",
+    "zope.site",
+    "zope.traversing",
+]
+
+[project.optional-dependencies]
+test = [
+    "zope.app.wsgi[test]",
+    "zope.configuration",
+    "zope.testbrowser",
+    "zope.testing",
+    "zope.testrunner",
+]
+docs = ["Sphinx"]
+
+[project.urls]
+Source = "https://github.com/zopefoundation/grok"
+Documentation = "https://grok.readthedocs.io/"
+Issues = "https://github.com/zopefoundation/grok/issues"
+Changelog = "https://raw.githubusercontent.com/zopefoundation/grok/master/CHANGES.rst"
 
 [tool.coverage.run]
 branch = true
@@ -34,3 +128,7 @@ exclude_lines = [
 
 [tool.coverage.html]
 directory = "parts/htmlcov"
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.rst", "CHANGES.rst"]}
+
