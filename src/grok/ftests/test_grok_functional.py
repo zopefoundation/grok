@@ -1,7 +1,8 @@
 import doctest
+import importlib.resources
+import importlib.util
+import pathlib
 import unittest
-
-from pkg_resources import resource_listdir
 
 import zope.app.wsgi.testlayer
 import zope.testbrowser.wsgi
@@ -40,9 +41,16 @@ def http_call(method, path, data=None, **kw):
 
 
 def suiteFromPackage(name):
-    files = resource_listdir(__name__, name)
+    try:
+        with importlib.resources.as_file(
+                importlib.resources.files(__name__).joinpath(name)) as path:
+            filenames = [f.name for f in pathlib.Path(path).iterdir()]
+    except (AttributeError, TypeError):  # pragma: no cover - PY3.11 and below
+        spec = importlib.util.find_spec(__name__)
+        package_path = pathlib.Path(spec.origin).parent / name
+        filenames = [f.name for f in package_path.iterdir()]
     suite = unittest.TestSuite()
-    for filename in files:
+    for filename in filenames:
         if not filename.endswith('.py'):
             continue
         if filename == '__init__.py':
