@@ -1,5 +1,7 @@
 import doctest
 import importlib.resources
+import importlib.util
+import pathlib
 import unittest
 
 import zope.component.eventtesting
@@ -25,8 +27,14 @@ layer = GrokTestLayer(grok, name='grok.tests.layer')
 
 
 def suiteFromPackage(name):
-    package_files = importlib.resources.files(__name__).joinpath(name)
-    filenames = [f.name for f in package_files.iterdir()]
+    try:
+        with importlib.resources.as_file(
+                importlib.resources.files(__name__).joinpath(name)) as path:
+            filenames = [f.name for f in pathlib.Path(path).iterdir()]
+    except (AttributeError, TypeError):  # PY3.11 and below
+        spec = importlib.util.find_spec(__name__)
+        package_path = pathlib.Path(spec.origin).parent / name
+        filenames = [f.name for f in package_path.iterdir()]
     suite = unittest.TestSuite()
     for filename in filenames:
         if not filename.endswith('.py'):
