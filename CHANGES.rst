@@ -4,7 +4,7 @@ Grok changes
 6.2 (unreleased)
 ================
 
-- Nothing changed yet.
+* Drop support for Python 3.9.
 
 
 6.1 (2025-06-10)
