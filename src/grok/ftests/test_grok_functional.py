@@ -45,7 +45,7 @@ def suiteFromPackage(name):
         with importlib.resources.as_file(
                 importlib.resources.files(__name__).joinpath(name)) as path:
             filenames = [f.name for f in pathlib.Path(path).iterdir()]
-    except (AttributeError, TypeError):  # PY3.11 and below
+    except (AttributeError, TypeError):  # pragma: no cover - PY3.11 and below
         spec = importlib.util.find_spec(__name__)
         package_path = pathlib.Path(spec.origin).parent / name
         filenames = [f.name for f in package_path.iterdir()]
