@@ -1,7 +1,6 @@
 import doctest
+import importlib.resources
 import unittest
-
-from pkg_resources import resource_listdir
 
 import zope.app.wsgi.testlayer
 import zope.testbrowser.wsgi
@@ -40,9 +39,10 @@ def http_call(method, path, data=None, **kw):
 
 
 def suiteFromPackage(name):
-    files = resource_listdir(__name__, name)
+    package_files = importlib.resources.files(__name__).joinpath(name)
+    filenames = [f.name for f in package_files.iterdir()]
     suite = unittest.TestSuite()
-    for filename in files:
+    for filename in filenames:
         if not filename.endswith('.py'):
             continue
         if filename == '__init__.py':

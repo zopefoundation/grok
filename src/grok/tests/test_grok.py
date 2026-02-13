@@ -1,7 +1,6 @@
 import doctest
+import importlib.resources
 import unittest
-
-from pkg_resources import resource_listdir
 
 import zope.component.eventtesting
 import zope.component.testlayer
@@ -26,9 +25,10 @@ layer = GrokTestLayer(grok, name='grok.tests.layer')
 
 
 def suiteFromPackage(name):
-    files = resource_listdir(__name__, name)
+    package_files = importlib.resources.files(__name__).joinpath(name)
+    filenames = [f.name for f in package_files.iterdir()]
     suite = unittest.TestSuite()
-    for filename in files:
+    for filename in filenames:
         if not filename.endswith('.py'):
             continue
         if filename.endswith('_fixture.py'):
