@@ -1,7 +1,7 @@
 Grok changes
 ************
 
-6.2 (unreleased)
+6.2 (2026-02-16)
 ================
 
 * Move package metadata from setup.py to pyproject.toml.

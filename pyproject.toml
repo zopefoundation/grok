@@ -10,7 +10,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "grok"
-version = "6.2.dev0"
+version = "6.2"
 description = "Grok: Now even cavemen can use Zope 3!"
 license = "ZPL-2.1"
 classifiers = [
