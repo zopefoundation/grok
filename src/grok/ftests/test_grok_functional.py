@@ -29,8 +29,7 @@ def http_call(method, path, data=None, **kw):
     kw - any request parameters
     """
 
-    if path.startswith('http://localhost'):
-        path = path[len('http://localhost'):]
+    path = path.removeprefix('http://localhost')
     request_string = f'{method} {path} HTTP/1.1\n'
     for key, value in kw.items():
         request_string += f'{key}: {value}\n'
